@@ -30,6 +30,7 @@ void* GetKey(DispatchableType inst)
 std::map<void*, VkLayerInstanceDispatchTable> instance_dispatch;
 std::map<void*, VkLayerDispatchTable> device_dispatch;
 
+
 // actual data we're recording in this layer
 struct CommandStats
 {
@@ -48,6 +49,16 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_CreateInstance(
 {
     //MessageBox(NULL, L"Com Object Function Called", L"COMServer", MB_OK | MB_SETFOREGROUND);
     printf("HELLO\n");
+
+    //printf("supposed file: '%s\n", VK_DBG_LAYER_ACTION_LOG_MSG);
+    /* executable.exe
+    TCHAR buffer[MAX_PATH] = { 0 };
+    GetModuleFileName(NULL, buffer, MAX_PATH);
+    */
+
+
+    //ShellExecute(NULL, "open", "\", NULL, NULL, SW_SHOWDEFAULT);
+
     VkLayerInstanceCreateInfo* layerCreateInfo = (VkLayerInstanceCreateInfo*)pCreateInfo->pNext;
 
     // step through the chain of pNext until we get to the link info

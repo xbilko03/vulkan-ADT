@@ -1,5 +1,5 @@
 ﻿# CMakeList.txt : CMake project for dbgrv2, include source and define
-# project specific logic here.
+# project specific logic	re.
 #
 cmake_minimum_required (VERSION 3.8)
 
