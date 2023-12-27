@@ -31,21 +31,24 @@ ${CMAKE_SOURCE_DIR}/libs/imgui/imgui_widgets.cpp
 ${CMAKE_SOURCE_DIR}/libs/imgui/imstb_rectpack.h
 ${CMAKE_SOURCE_DIR}/libs/imgui/imstb_textedit.h
 ${CMAKE_SOURCE_DIR}/libs/imgui/imconfig.h
-${CMAKE_SOURCE_DIR}/libs/imgui/backends/imgui_impl_vulkan.cpp
-${CMAKE_SOURCE_DIR}/libs/imgui/backends/imgui_impl_vulkan.h
+${CMAKE_SOURCE_DIR}/libs/imgui/backends/imgui_impl_opengl2.cpp
+${CMAKE_SOURCE_DIR}/libs/imgui/backends/imgui_impl_opengl2.h
 ${CMAKE_SOURCE_DIR}/libs/imgui/backends/imgui_impl_glfw.cpp
 ${CMAKE_SOURCE_DIR}/libs/imgui/backends/imgui_impl_glfw.h
 )
+
+find_package(OpenGL REQUIRED)
+include_directories( ${OPENGL_INCLUDE_DIRS})
 
 project ("dbgrv2")
 
 # Add source to this project's executable.
 add_executable (dbgrv2 "appUI/appUI.cpp" ${imgui})
+target_link_libraries(dbgrv2 vulkan glfw ${OPENGL_LIBRARIES})
 
 option(BUILD_SHARED_LIBS ON)
 add_library(dbgrv2layer SHARED ${CMAKE_SOURCE_DIR}/layer/layer.cpp)
 
-target_link_libraries(dbgrv2 vulkan glfw)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET dbgrv2 PROPERTY CXX_STANDARD 20)

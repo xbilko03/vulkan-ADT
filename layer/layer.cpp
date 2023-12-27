@@ -49,16 +49,18 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_CreateInstance(
 {
     //MessageBox(NULL, L"Com Object Function Called", L"COMServer", MB_OK | MB_SETFOREGROUND);
     printf("HELLO\n");
-
-    //printf("supposed file: '%s\n", VK_DBG_LAYER_ACTION_LOG_MSG);
-    /* executable.exe
-    TCHAR buffer[MAX_PATH] = { 0 };
-    GetModuleFileName(NULL, buffer, MAX_PATH);
-    */
-
-
-    //ShellExecute(NULL, "open", "\", NULL, NULL, SW_SHOWDEFAULT);
-
+    /* temporary UI starter */
+    char* wname = "VK_DEBUGGER";
+    if (FindWindow(0, wname) == NULL)
+    {
+        //system("C:\\Users\\jozef\\Desktop\\projects\\dbgrv2\\out\\build\\x64-debug\\dbgrv2.exe");
+        
+        STARTUPINFO info = { sizeof(info) };
+        PROCESS_INFORMATION processInfo;
+        CreateProcess("C:\\Users\\jozef\\Desktop\\projects\\dbgrv2\\out\\build\\x64-debug\\dbgrv2.exe", NULL, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo);
+        CloseHandle(processInfo.hProcess);
+        CloseHandle(processInfo.hThread);
+    }
     VkLayerInstanceCreateInfo* layerCreateInfo = (VkLayerInstanceCreateInfo*)pCreateInfo->pNext;
 
     // step through the chain of pNext until we get to the link info
