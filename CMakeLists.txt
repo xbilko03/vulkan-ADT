@@ -43,11 +43,11 @@ include_directories( ${OPENGL_INCLUDE_DIRS})
 project ("dbgrv2")
 
 # Add source to this project's executable.
-add_executable (dbgrv2 "appUI/appUI.cpp" ${imgui})
+add_executable (dbgrv2 "appUI/appUI.cpp" "appUI/appUI.h" ${imgui})
 target_link_libraries(dbgrv2 vulkan glfw ${OPENGL_LIBRARIES})
 
 option(BUILD_SHARED_LIBS ON)
-add_library(dbgrv2layer SHARED ${CMAKE_SOURCE_DIR}/layer/layer.cpp)
+add_library(dbgrv2layer SHARED ${CMAKE_SOURCE_DIR}/layer/layer.cpp ${CMAKE_SOURCE_DIR}/layer/layer.h)
 
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
