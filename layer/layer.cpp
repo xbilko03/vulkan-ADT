@@ -1,5 +1,15 @@
-#include "layer.h"
-#include "winsock.h"
+#include <vulkan.h>
+#include <vk_layer.h>
+
+#include <assert.h>
+#include <string.h>
+#include <mutex>
+#include <map>
+
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <windows.h>
+#include "../appUI/winsock.h"
 
 std::mutex global_lock;
 typedef std::lock_guard<std::mutex> scoped_lock;
@@ -30,7 +40,7 @@ struct CommandStats
 std::map<VkCommandBuffer, CommandStats> commandbuffer_stats;
 
 /* Layer init and shutdown */
-VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_CreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
 {
     /* Start UI */
     /* If there is a running window already, do nothing. */
@@ -38,7 +48,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_CreateInstance(const VkInstanceC
     {
         STARTUPINFO info = { sizeof(info) };
         PROCESS_INFORMATION processInfo;
-        CreateProcess("C:\\Users\\jozef\\Desktop\\projects\\dbgrv2\\out\\build\\x64-debug\\dbgrv2.exe", NULL, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo);
+        CreateProcess("C:\\Users\\jozef\\Desktop\\projects\\dbgrv2\\out\\build\\x64-debug\\vkdebugger.exe", NULL, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo);
         CloseHandle(processInfo.hProcess);
         CloseHandle(processInfo.hThread);
     }
@@ -52,6 +62,9 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_CreateInstance(const VkInstanceC
     INIT_LAYER_WINSOCK(&ConnectSocket);
 
     /* Send to UI */
+    SEND_TO_UI(&ConnectSocket, sendbuf);
+    SEND_TO_UI(&ConnectSocket, sendbuf);
+    SEND_TO_UI(&ConnectSocket, sendbuf);
     SEND_TO_UI(&ConnectSocket, sendbuf);
 
     /* Stop communication */
@@ -95,13 +108,13 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_CreateInstance(const VkInstanceC
     return VK_SUCCESS;
 }
 
-VK_LAYER_EXPORT void VKAPI_CALL SampleLayer_DestroyInstance(VkInstance instance, const VkAllocationCallbacks* pAllocator)
+VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyInstance(VkInstance instance, const VkAllocationCallbacks* pAllocator)
 {
     scoped_lock l(global_lock);
     instance_dispatch.erase(GetKey(instance));
 }
 
-VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_CreateDevice(
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(
     VkPhysicalDevice                            physicalDevice,
     const VkDeviceCreateInfo* pCreateInfo,
     const VkAllocationCallbacks* pAllocator,
@@ -149,7 +162,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_CreateDevice(
     return VK_SUCCESS;
 }
 
-VK_LAYER_EXPORT void VKAPI_CALL SampleLayer_DestroyDevice(VkDevice device, const VkAllocationCallbacks* pAllocator)
+VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDevice(VkDevice device, const VkAllocationCallbacks* pAllocator)
 {
     scoped_lock l(global_lock);
     device_dispatch.erase(GetKey(device));
@@ -158,14 +171,14 @@ VK_LAYER_EXPORT void VKAPI_CALL SampleLayer_DestroyDevice(VkDevice device, const
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Actual layer implementation
 
-VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_BeginCommandBuffer(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo* pBeginInfo)
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BeginCommandBuffer(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo* pBeginInfo)
 {
     scoped_lock l(global_lock);
     commandbuffer_stats[commandBuffer] = CommandStats();
     return device_dispatch[GetKey(commandBuffer)].BeginCommandBuffer(commandBuffer, pBeginInfo);
 }
 
-VK_LAYER_EXPORT void VKAPI_CALL SampleLayer_CmdDraw(
+VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDraw(
     VkCommandBuffer                             commandBuffer,
     uint32_t                                    vertexCount,
     uint32_t                                    instanceCount,
@@ -181,7 +194,7 @@ VK_LAYER_EXPORT void VKAPI_CALL SampleLayer_CmdDraw(
     device_dispatch[GetKey(commandBuffer)].CmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
 }
 
-VK_LAYER_EXPORT void VKAPI_CALL SampleLayer_CmdDrawIndexed(
+VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndexed(
     VkCommandBuffer                             commandBuffer,
     uint32_t                                    indexCount,
     uint32_t                                    instanceCount,
@@ -198,7 +211,7 @@ VK_LAYER_EXPORT void VKAPI_CALL SampleLayer_CmdDrawIndexed(
     device_dispatch[GetKey(commandBuffer)].CmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 }
 
-VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_EndCommandBuffer(VkCommandBuffer commandBuffer)
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EndCommandBuffer(VkCommandBuffer commandBuffer)
 {
     scoped_lock l(global_lock);
 
@@ -211,7 +224,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_EndCommandBuffer(VkCommandBuffer
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Enumeration function
 
-VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_EnumerateInstanceLayerProperties(uint32_t* pPropertyCount,
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceLayerProperties(uint32_t* pPropertyCount,
     VkLayerProperties* pProperties)
 {
     if (pPropertyCount) *pPropertyCount = 1;
@@ -228,16 +241,16 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_EnumerateInstanceLayerProperties
     return VK_SUCCESS;
 }
 
-VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_EnumerateDeviceLayerProperties(
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceLayerProperties(
     VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkLayerProperties* pProperties)
 {
-    return SampleLayer_EnumerateInstanceLayerProperties(pPropertyCount, pProperties);
+    return DebuggerLayer_EnumerateInstanceLayerProperties(pPropertyCount, pProperties);
 }
 
-VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_EnumerateInstanceExtensionProperties(
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceExtensionProperties(
     const char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
 {
-    if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_SampleLayer"))
+    if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DebuggerLayer"))
         return VK_ERROR_LAYER_NOT_PRESENT;
 
     // don't expose any extensions
@@ -245,12 +258,12 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_EnumerateInstanceExtensionProper
     return VK_SUCCESS;
 }
 
-VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_EnumerateDeviceExtensionProperties(
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceExtensionProperties(
     VkPhysicalDevice physicalDevice, const char* pLayerName,
     uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
 {
     // pass through any queries that aren't to us
-    if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_SampleLayer"))
+    if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DebuggerLayer"))
     {
         if (physicalDevice == VK_NULL_HANDLE)
             return VK_SUCCESS;
@@ -266,9 +279,9 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_EnumerateDeviceExtensionProperti
 
 // GetProcAddr functions, entry points of the layer
 
-#define GETPROCADDR(func) if(!strcmp(pName, "vk" #func)) return (PFN_vkVoidFunction)&SampleLayer_##func;
+#define GETPROCADDR(func) if(!strcmp(pName, "vk" #func)) return (PFN_vkVoidFunction)&DebuggerLayer_##func;
 
-VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL SampleLayer_GetDeviceProcAddr(VkDevice device, const char* pName)
+VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetDeviceProcAddr(VkDevice device, const char* pName)
 {
     // device chain functions we intercept
     GETPROCADDR(GetDeviceProcAddr);
@@ -287,7 +300,7 @@ VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL SampleLayer_GetDeviceProcAddr(VkDe
     }
 }
 
-VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL SampleLayer_GetInstanceProcAddr(VkInstance instance, const char* pName)
+VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetInstanceProcAddr(VkInstance instance, const char* pName)
 {
     // instance chain functions we intercept
     GETPROCADDR(GetInstanceProcAddr);

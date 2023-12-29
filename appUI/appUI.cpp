@@ -1,28 +1,21 @@
-﻿// Dear ImGui: standalone example application for GLFW + OpenGL2, using legacy fixed pipeline
-// (GLFW is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan/Metal graphics context creation, etc.)
+﻿#include <stdio.h>
 
-// Learn about Dear ImGui:
-// - FAQ                  https://dearimgui.com/faq
-// - Getting Started      https://dearimgui.com/getting-started
-// - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
-// - Introduction, links and more at the top of imgui.cpp
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl2.h"
 
-// **DO NOT USE THIS CODE IF YOUR CODE/ENGINE IS USING MODERN OPENGL (SHADERS, VBO, VAO, etc.)**
-// **Prefer using the code in the example_glfw_opengl2/ folder**
-// See imgui_impl_glfw.cpp for details.
+#include <GLFW/glfw3.h>
 
-#include "appUI.h"
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include "winsock.h"
+
+#define DEFAULT_BUFLEN 512
 
 #pragma comment(lib, "Ws2_32.lib")
-#define DEFAULT_PORT "27015"
-#define DEFAULT_BUFLEN 512
 struct addrinfo* result = NULL, * ptr = NULL, hints;
 #define WINDOW_NAME "VK_DEBUGGER"
 
-
-// [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
-// To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
-// Your own project should not be affected, as you are likely to link with a newer binary of GLFW that is adequate for your version of Visual Studio.
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
@@ -31,131 +24,36 @@ static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
-
-// Main code
 int main(int, char**)
 {
     bool dataTransport = true;
+    int iResult;
+    SOCKET ClientSocket = INVALID_SOCKET;
+    char recvbuf[DEFAULT_BUFLEN];
+    int recvbuflen = DEFAULT_BUFLEN;
 
-    if (dataTransport)
-    {
-        WSADATA wsaData;
-        int iResult;
+    INIT_UI_WINSOCK(&ClientSocket);
 
-        SOCKET ListenSocket = INVALID_SOCKET;
-        SOCKET ClientSocket = INVALID_SOCKET;
-
-        struct addrinfo* result = NULL;
-        struct addrinfo hints;
-
-        int iSendResult;
-        char recvbuf[DEFAULT_BUFLEN];
-        int recvbuflen = DEFAULT_BUFLEN;
-
-        // Initialize Winsock
-        iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-        if (iResult != 0) {
-            printf("WSAStartup failed with error: %d\n", iResult);
-            return 1;
+    // Receive until the peer shuts down the connection
+    do {
+        iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
+        if (iResult > 0) {
+            printf("Bytes received [server]: %d\n", iResult);
         }
-
-        ZeroMemory(&hints, sizeof(hints));
-        hints.ai_family = AF_INET;
-        hints.ai_socktype = SOCK_STREAM;
-        hints.ai_protocol = IPPROTO_TCP;
-        hints.ai_flags = AI_PASSIVE;
-
-        // Resolve the server address and port
-        iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
-        if (iResult != 0) {
-            printf("getaddrinfo failed with error: %d\n", iResult);
-            WSACleanup();
-            return 1;
-        }
-
-        // Create a SOCKET for the server to listen for client connections.
-        ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
-        if (ListenSocket == INVALID_SOCKET) {
-            printf("socket failed with error: %ld\n", WSAGetLastError());
-            freeaddrinfo(result);
-            WSACleanup();
-            return 1;
-        }
-
-        // Setup the TCP listening socket
-        iResult = bind(ListenSocket, result->ai_addr, (int)result->ai_addrlen);
-        if (iResult == SOCKET_ERROR) {
-            printf("bind failed with error: %d\n", WSAGetLastError());
-            freeaddrinfo(result);
-            closesocket(ListenSocket);
-            WSACleanup();
-            return 1;
-        }
-
-        freeaddrinfo(result);
-
-        iResult = listen(ListenSocket, SOMAXCONN);
-        if (iResult == SOCKET_ERROR) {
-            printf("listen failed with error: %d\n", WSAGetLastError());
-            closesocket(ListenSocket);
-            WSACleanup();
-            return 1;
-        }
-
-        // Accept a client socket
-        ClientSocket = accept(ListenSocket, NULL, NULL);
-        if (ClientSocket == INVALID_SOCKET) {
-            printf("accept failed with error: %d\n", WSAGetLastError());
-            closesocket(ListenSocket);
-            WSACleanup();
-            return 1;
-        }
-
-        // No longer need server socket
-        closesocket(ListenSocket);
-
-        // Receive until the peer shuts down the connection
-        do {
-
-            iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-            if (iResult > 0) {
-                printf("Bytes received [server]: %d\n", iResult);
-
-                // Echo the buffer back to the sender
-                iSendResult = send(ClientSocket, recvbuf, iResult, 0);
-                if (iSendResult == SOCKET_ERROR) {
-                    printf("send failed with error [server]: %d\n", WSAGetLastError());
-                    closesocket(ClientSocket);
-                    WSACleanup();
-                    return 1;
-                }
-                printf("Bytes sent [server]: %d\n", iSendResult);
-            }
-            else if (iResult == 0)
-                printf("Connection closing...\n");
-            else {
-                printf("recv failed with error [server]: %d\n", WSAGetLastError());
-                closesocket(ClientSocket);
-                WSACleanup();
-                return 1;
-            }
-
-        } while (iResult > 0);
-
-        // shutdown the connection since we're done
-        iResult = shutdown(ClientSocket, SD_SEND);
-        if (iResult == SOCKET_ERROR) {
-            printf("shutdown failed with error: %d\n", WSAGetLastError());
+        else if (iResult == 0)
+            printf("Connection closing...\n");
+        else {
+            printf("recv failed with error [server]: %d\n", WSAGetLastError());
             closesocket(ClientSocket);
             WSACleanup();
             return 1;
         }
 
-        // cleanup
-        closesocket(ClientSocket);
-        WSACleanup();
-    }
+    } while (iResult > 0);
 
+    EXIT_UI_WINSOCK(&ClientSocket);
+
+    /* Create UI */
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
         return 1;

@@ -40,18 +40,18 @@ ${CMAKE_SOURCE_DIR}/libs/imgui/backends/imgui_impl_glfw.h
 find_package(OpenGL REQUIRED)
 include_directories( ${OPENGL_INCLUDE_DIRS})
 
-project ("dbgrv2")
+project("vkdebugger")
 
 # Add source to this project's executable.
-add_executable (dbgrv2 "appUI/appUI.cpp" "appUI/appUI.h" ${imgui} "layer/winsock.h" "layer/winsock.cpp")
-target_link_libraries(dbgrv2 vulkan glfw ${OPENGL_LIBRARIES})
+add_executable(vkdebugger "appUI/appUI.cpp"  ${imgui} "appUI/winsock.h" "appUI/winsock.cpp")
+target_link_libraries(vkdebugger vulkan glfw ${OPENGL_LIBRARIES})
 
 option(BUILD_SHARED_LIBS ON)
-add_library(dbgrv2layer SHARED ${CMAKE_SOURCE_DIR}/layer/layer.cpp ${CMAKE_SOURCE_DIR}/layer/layer.h "layer/winsock.h" "layer/winsock.cpp")
+add_library(dbgrvlayer SHARED ${CMAKE_SOURCE_DIR}/layer/layer.cpp  "appUI/winsock.h" "appUI/winsock.cpp")
 
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET dbgrv2 PROPERTY CXX_STANDARD 20)
+  set_property(TARGET vkdebugger PROPERTY CXX_STANDARD 20)
 endif()
 
 # TODO: Add tests and install targets if needed.

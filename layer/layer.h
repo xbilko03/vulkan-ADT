@@ -1,9 +1,0 @@
-#include <vulkan.h>
-#include <vk_layer.h>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <assert.h>
-#include <string.h>
-#include <mutex>
-#include <map>
-#include <windows.h>
