@@ -13,6 +13,13 @@
 
 #include "appUI.h"
 
+#pragma comment(lib, "Ws2_32.lib")
+#define DEFAULT_PORT "27015"
+#define DEFAULT_BUFLEN 512
+struct addrinfo* result = NULL, * ptr = NULL, hints;
+#define WINDOW_NAME "VK_DEBUGGER"
+
+
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
 // Your own project should not be affected, as you are likely to link with a newer binary of GLFW that is adequate for your version of Visual Studio.
@@ -112,22 +119,22 @@ int main(int, char**)
 
             iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
             if (iResult > 0) {
-                printf("Bytes received: %d\n", iResult);
+                printf("Bytes received [server]: %d\n", iResult);
 
                 // Echo the buffer back to the sender
                 iSendResult = send(ClientSocket, recvbuf, iResult, 0);
                 if (iSendResult == SOCKET_ERROR) {
-                    printf("send failed with error: %d\n", WSAGetLastError());
+                    printf("send failed with error [server]: %d\n", WSAGetLastError());
                     closesocket(ClientSocket);
                     WSACleanup();
                     return 1;
                 }
-                printf("Bytes sent: %d\n", iSendResult);
+                printf("Bytes sent [server]: %d\n", iSendResult);
             }
             else if (iResult == 0)
                 printf("Connection closing...\n");
             else {
-                printf("recv failed with error: %d\n", WSAGetLastError());
+                printf("recv failed with error [server]: %d\n", WSAGetLastError());
                 closesocket(ClientSocket);
                 WSACleanup();
                 return 1;
@@ -154,7 +161,7 @@ int main(int, char**)
         return 1;
 
     // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(1280, 720, "VK_DEBUGGER", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(1280, 720, WINDOW_NAME, nullptr, nullptr);
     if (window == nullptr)
         return 1;
     glfwMakeContextCurrent(window);

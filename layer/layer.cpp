@@ -1,9 +1,15 @@
 #include "layer.h"
-// single global lock, for simplicity
+#include "winsock.h"
+
 std::mutex global_lock;
 typedef std::lock_guard<std::mutex> scoped_lock;
 
-// use the loader's dispatch table pointer as a key for dispatch map lookups
+#pragma comment(lib, "Ws2_32.lib")
+#define DEFAULT_BUFLEN 512
+#define VK_LAYER_EXPORT extern "C" __declspec(dllexport)
+#define WINDOW_NAME "VK_DEBUGGER"
+
+/* use the loader's dispatch table pointer as a key for dispatch map lookups */
 template<typename DispatchableType>
 void* GetKey(DispatchableType inst)
 {
@@ -23,19 +29,12 @@ struct CommandStats
 
 std::map<VkCommandBuffer, CommandStats> commandbuffer_stats;
 
-///////////////////////////////////////////////////////////////////////////////////////////
-// Layer init and shutdown
-
-VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_CreateInstance(
-    const VkInstanceCreateInfo* pCreateInfo,
-    const VkAllocationCallbacks* pAllocator,
-    VkInstance* pInstance)
+/* Layer init and shutdown */
+VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_CreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
 {
-    //MessageBox(NULL, L"Com Object Function Called", L"COMServer", MB_OK | MB_SETFOREGROUND);
-    printf("HELLO\n");
     /* Start UI */
-    char* wname = "VK_DEBUGGER";
-    if (FindWindow(0, wname) == NULL)
+    /* If there is a running window already, do nothing. */
+    if (FindWindow(0, WINDOW_NAME) == NULL)
     {
         STARTUPINFO info = { sizeof(info) };
         PROCESS_INFORMATION processInfo;
@@ -44,118 +43,19 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_CreateInstance(
         CloseHandle(processInfo.hThread);
     }
 
-    /* Create a socket. */
-    struct addrinfo* result = NULL,
-        * ptr = NULL,
-        hints;
-
-    // Initialize Winsock
-    WSADATA wsaData;
-    int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (iResult != 0) {
-        printf("WSAStartup failed with error: %d\n", iResult);
-        exit(1);
-    }
-
-    ZeroMemory(&hints, sizeof(hints));
-    hints.ai_family = AF_INET;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_protocol = IPPROTO_TCP;
-
-    // Resolve the server address and port
-    iResult = getaddrinfo("localhost", DEFAULT_PORT, &hints, &result);
-    if (iResult != 0) {
-        printf("getaddrinfo failed: %d\n", iResult);
-        WSACleanup();
-        exit(1);
-    }
+    /* Send data */
+    char* sendbuf = "this is a test";
+    int iResult;
     SOCKET ConnectSocket = INVALID_SOCKET;
-    // Attempt to connect to the first address returned by
-    // the call to getaddrinfo
-    ptr = result;
 
-    // Attempt to connect to an address until one succeeds
-    for (ptr = result; ptr != NULL;ptr = ptr->ai_next) {
+    /* Connect to UI */
+    INIT_LAYER_WINSOCK(&ConnectSocket);
 
-        // Create a SOCKET for connecting to server
-        ConnectSocket = socket(ptr->ai_family, ptr->ai_socktype,
-            ptr->ai_protocol);
-        if (ConnectSocket == INVALID_SOCKET) {
-            printf("socket failed with error: %ld\n", WSAGetLastError());
-            WSACleanup();
-            exit(1);
-        }
+    /* Send to UI */
+    SEND_TO_UI(&ConnectSocket, sendbuf);
 
-        // Connect to server.
-        iResult = connect(ConnectSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
-        if (iResult == SOCKET_ERROR) {
-            closesocket(ConnectSocket);
-            ConnectSocket = INVALID_SOCKET;
-            continue;
-        }
-        break;
-    }
-
-    // Should really try the next address returned by getaddrinfo
-    // if the connect call failed
-    // But for this simple example we just free the resources
-    // returned by getaddrinfo and print an error message
-
-    freeaddrinfo(result);
-
-    if (ConnectSocket == INVALID_SOCKET) {
-        printf("Unable to connect to server!\n");
-        WSACleanup();
-        exit(1);
-    }
-    /* Send and receive data. */
-    int recvbuflen = DEFAULT_BUFLEN;
-    const char* sendbuf = "this is a test";
-    char recvbuf[DEFAULT_BUFLEN];
-
-    // Send an initial buffer
-    iResult = send(ConnectSocket, sendbuf, (int)strlen(sendbuf), 0);
-    if (iResult == SOCKET_ERROR) {
-        printf("send failed: %d\n", WSAGetLastError());
-        closesocket(ConnectSocket);
-        WSACleanup();
-        exit(1);
-    }
-
-    printf("Bytes Sent: %ld\n", iResult);
-
-    // shutdown the connection for sending since no more data will be sent
-    // the client can still use the ConnectSocket for receiving data
-    iResult = shutdown(ConnectSocket, SD_SEND);
-    if (iResult == SOCKET_ERROR) {
-        printf("shutdown failed: %d\n", WSAGetLastError());
-        closesocket(ConnectSocket);
-        WSACleanup();
-        exit(1);
-    }
-
-    // Receive data until the server closes the connection
-    do {
-        iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
-        if (iResult > 0)
-            printf("Bytes received: %d\n", iResult);
-        else if (iResult == 0)
-            printf("Connection closed\n");
-        else
-            printf("recv failed: %d\n", WSAGetLastError());
-    } while (iResult > 0);
-    /*  Disconnect. */
-    // shutdown the send half of the connection since no more data will be sent
-    iResult = shutdown(ConnectSocket, SD_SEND);
-    if (iResult == SOCKET_ERROR) {
-        printf("shutdown failed: %d\n", WSAGetLastError());
-        closesocket(ConnectSocket);
-        WSACleanup();
-        exit(1);
-    }
-    // cleanup
-    closesocket(ConnectSocket);
-    WSACleanup();
+    /* Stop communication */
+    EXIT_WINSOCK(&ConnectSocket);
 
     VkLayerInstanceCreateInfo* layerCreateInfo = (VkLayerInstanceCreateInfo*)pCreateInfo->pNext;
 
@@ -364,7 +264,6 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL SampleLayer_EnumerateDeviceExtensionProperti
     return VK_SUCCESS;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////
 // GetProcAddr functions, entry points of the layer
 
 #define GETPROCADDR(func) if(!strcmp(pName, "vk" #func)) return (PFN_vkVoidFunction)&SampleLayer_##func;

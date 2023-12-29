@@ -43,11 +43,11 @@ include_directories( ${OPENGL_INCLUDE_DIRS})
 project ("dbgrv2")
 
 # Add source to this project's executable.
-add_executable (dbgrv2 "appUI/appUI.cpp" "appUI/appUI.h" ${imgui})
+add_executable (dbgrv2 "appUI/appUI.cpp" "appUI/appUI.h" ${imgui} "layer/winsock.h" "layer/winsock.cpp")
 target_link_libraries(dbgrv2 vulkan glfw ${OPENGL_LIBRARIES})
 
 option(BUILD_SHARED_LIBS ON)
-add_library(dbgrv2layer SHARED ${CMAKE_SOURCE_DIR}/layer/layer.cpp ${CMAKE_SOURCE_DIR}/layer/layer.h)
+add_library(dbgrv2layer SHARED ${CMAKE_SOURCE_DIR}/layer/layer.cpp ${CMAKE_SOURCE_DIR}/layer/layer.h "layer/winsock.h" "layer/winsock.cpp")
 
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
