@@ -52,8 +52,6 @@ int SEND_TO_UI(SOCKET* ConnectSocket, char* sendbuf)
         WSACleanup();
         return 1;
     }
-
-    printf("Bytes Sent: %ld\n", iResult);
     /* OK */
     return 0;
 }

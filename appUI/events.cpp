@@ -1,16 +1,15 @@
 #include <stdio.h>
 #include <list>
-#include <string>
 
 #include "events.h"
+#define TRACKED_API_COUNT 14
 
 struct api_call
 {
     std::string name;
     int count;
 };
-
-api_call apiArray[512] =
+std::array <api_call, ARRAYLEN> apiArray =
 {
     api_call{"vkCreateInstance",0},
     api_call{"vkDestroyInstance",0},
@@ -27,6 +26,7 @@ api_call apiArray[512] =
     api_call{"vkGetDeviceProcAddr",0},
     api_call{"vkGetInstanceProcAddr",0}
 };
+
 enum api_call_enum {
     vkCreateInstance,
     vkDestroyInstance,
@@ -44,48 +44,68 @@ enum api_call_enum {
     vkGetInstanceProcAddr
 };
 
+bool cmp_input(const char* str1, const char* str2)
+{
+    if(strncmp(str1,str2, strlen(str2)) == 0)
+        return true;
+    
+    return false;
+}
+
 void layer_event(const char* input)
 {
     /* Trace api calls */
-    if (input == "vkCreateInstance")
+    if (cmp_input(input, "vkCreateInstance"))
         apiArray[vkCreateInstance].count++;
 
-    else if (input == "vkDestroyInstance")
+    else if (cmp_input(input, "vkDestroyInstance"))
         apiArray[vkDestroyInstance].count++;
 
-    else if (input == "vkCreateDevice")
+    else if (cmp_input(input, "vkCreateDevice"))
         apiArray[vkCreateDevice].count++;
 
-    else if (input == "vkDestroyDevice")
+    else if (cmp_input(input, "vkDestroyDevice"))
         apiArray[vkDestroyDevice].count++;
 
-    else if (input == "vkBeginCommandBuffer")
+    else if (cmp_input(input, "vkBeginCommandBuffer"))
         apiArray[vkBeginCommandBuffer].count++;
 
-    else if (input == "vkCmdDraw")
+    else if (cmp_input(input, "vkCmdDraw"))
         apiArray[vkCmdDraw].count++;
 
-    else if (input == "vkCmdDrawIndexed")
+    else if (cmp_input(input, "vkCmdDrawIndexed"))
         apiArray[vkCmdDrawIndexed].count++;
 
-    else if (input == "vkEndCommandBuffer")
+    else if (cmp_input(input, "vkEndCommandBuffer"))
         apiArray[vkEndCommandBuffer].count++;
 
-    else if (input == "vkEnumerateInstanceLayerProperties")
+    else if (cmp_input(input, "vkEnumerateInstanceLayerProperties"))
         apiArray[vkEnumerateInstanceLayerProperties].count++;
 
-    else if (input == "vkEnumerateDeviceLayerProperties")
+    else if (cmp_input(input, "vkEnumerateDeviceLayerProperties"))
         apiArray[vkEnumerateDeviceLayerProperties].count++;
 
-    else if (input == "vkEnumerateInstanceExtensionProperties")
+    else if (cmp_input(input, "vkEnumerateInstanceExtensionProperties"))
         apiArray[vkEnumerateInstanceExtensionProperties].count++;
 
-    else if (input == "vkEnumerateDeviceExtensionProperties")
+    else if (cmp_input(input, "vkEnumerateDeviceExtensionProperties"))
         apiArray[vkEnumerateDeviceExtensionProperties].count++;
 
-    else if (input == "vkGetDeviceProcAddr")
+    else if (cmp_input(input, "vkGetDeviceProcAddr"))
         apiArray[vkGetDeviceProcAddr].count++;
 
-    else if (input == "vkGetInstanceProcAddr")
+    else if (cmp_input(input, "vkGetInstanceProcAddr"))
         apiArray[vkGetInstanceProcAddr].count++;
+}
+int GetApiStatsLen()
+{
+    return TRACKED_API_COUNT;
+}
+std::string GetApiName(int index)
+{
+    return apiArray[index].name;
+}
+int GetApiCount(int index)
+{
+    return apiArray[index].count;
 }

@@ -28,8 +28,6 @@ static void glfw_error_callback(int error, const char* description)
 }
 DWORD WINAPI mythread(__in LPVOID lpParameter)
 {
-    printf("Thread inside %d \n", GetCurrentThreadId());
-
     /* Create socket */
     int iResult;
     SOCKET ClientSocket = INVALID_SOCKET;
@@ -41,12 +39,10 @@ DWORD WINAPI mythread(__in LPVOID lpParameter)
     do {
         iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
         if (iResult > 0) {
-            printf("Bytes received [server]: %d\n", iResult);
-            /* New data from layer received */
-            glfwPostEmptyEvent();
             /* Parse data */
             layer_event(recvbuf);
-            /* ... */
+            /* New data from layer received */
+            glfwPostEmptyEvent();
         }
         else if (iResult == 0)
             printf("Connection closing...\n");
@@ -66,27 +62,47 @@ DWORD WINAPI mythread(__in LPVOID lpParameter)
 }
 void ShowTable(const char* dataType)
 {
-    bool disable_menu = true;
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
+    ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+    ImGui::BeginChild(dataType, ImVec2(0, 260), ImGuiChildFlags_Border, window_flags);
+
+    if (strcmp(dataType, "api_statistics") == 0)
     {
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
-        if (!disable_menu)
-            window_flags |= ImGuiWindowFlags_MenuBar;
-        ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
-        ImGui::BeginChild("ChildR", ImVec2(0, 260), ImGuiChildFlags_Border, window_flags);
-        if (ImGui::BeginTable("split", 1, ImGuiTableFlags_Resizable | ImGuiTableFlags_NoSavedSettings))
+        if (ImGui::BeginTable("split", 2, ImGuiTableFlags_Resizable | ImGuiTableFlags_NoSavedSettings))
+        {
+                for (int i = 0; i < GetApiStatsLen(); i++)
+                {
+                    char buf[64];
+                    sprintf(buf, "%s", GetApiName(i).c_str());
+                    ImGui::TableNextColumn();
+                    ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
+                    sprintf(buf, "%d", GetApiCount(i));
+                    ImGui::TableNextColumn();
+                    ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
+                }
+            ImGui::EndTable();
+        }
+    }
+    else if (strcmp(dataType, "api_history") == 0)
+    {
+        if (ImGui::BeginTable("split", 2, ImGuiTableFlags_Resizable | ImGuiTableFlags_NoSavedSettings))
         {
             for (int i = 0; i < 100; i++)
             {
-                char buf[32];
-                sprintf(buf, "%03d", i);
+                char buf[64];
+                sprintf(buf, "%d",i);
+                ImGui::TableNextColumn();
+                ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
+                sprintf(buf, "call name");
                 ImGui::TableNextColumn();
                 ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
             }
             ImGui::EndTable();
         }
-        ImGui::EndChild();
-        ImGui::PopStyleVar();
     }
+
+    ImGui::EndChild();
+    ImGui::PopStyleVar();
 }
 int main(int, char**)
 {
@@ -124,7 +140,7 @@ int main(int, char**)
     // Our state
     bool show_demo_window = false;
     bool show_api_calls = false;
-    bool show_api_calls_statistics = false;
+    bool show_api_calls_statistics = true;
     bool show_api_calls_history = false;
 
     bool show_another_window = false;
