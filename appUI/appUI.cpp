@@ -87,15 +87,17 @@ void ShowTable(const char* dataType)
     {
         if (ImGui::BeginTable("split", 2, ImGuiTableFlags_Resizable | ImGuiTableFlags_NoSavedSettings))
         {
-            for (int i = 0; i < 100; i++)
+            int counter = 0;
+            for (auto i : GetApiCallHistory())
             {
                 char buf[64];
-                sprintf(buf, "%d",i);
+                sprintf(buf, "%d",counter);
                 ImGui::TableNextColumn();
                 ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
-                sprintf(buf, "call name");
+                sprintf(buf, "%s", GetApiEventName(i).c_str());
                 ImGui::TableNextColumn();
                 ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
+                counter++;
             }
             ImGui::EndTable();
         }

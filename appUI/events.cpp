@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <list>
 
 #include "events.h"
 #define TRACKED_API_COUNT 14
@@ -44,6 +43,13 @@ enum api_call_enum {
     vkGetInstanceProcAddr
 };
 
+std::list <int> api_call_history;
+
+void new_call(int ID)
+{
+    apiArray[ID].count++;
+    api_call_history.push_back(ID);
+}
 bool cmp_input(const char* str1, const char* str2)
 {
     if(strncmp(str1,str2, strlen(str2)) == 0)
@@ -51,51 +57,37 @@ bool cmp_input(const char* str1, const char* str2)
     
     return false;
 }
-
 void layer_event(const char* input)
 {
     /* Trace api calls */
     if (cmp_input(input, "vkCreateInstance"))
-        apiArray[vkCreateInstance].count++;
-
+        new_call(vkCreateInstance);
     else if (cmp_input(input, "vkDestroyInstance"))
-        apiArray[vkDestroyInstance].count++;
-
+        new_call(vkDestroyInstance);
     else if (cmp_input(input, "vkCreateDevice"))
-        apiArray[vkCreateDevice].count++;
-
+        new_call(vkCreateDevice);
     else if (cmp_input(input, "vkDestroyDevice"))
-        apiArray[vkDestroyDevice].count++;
-
+        new_call(vkDestroyDevice);
     else if (cmp_input(input, "vkBeginCommandBuffer"))
-        apiArray[vkBeginCommandBuffer].count++;
-
+        new_call(vkBeginCommandBuffer);
     else if (cmp_input(input, "vkCmdDraw"))
-        apiArray[vkCmdDraw].count++;
-
+        new_call(vkCmdDraw);
     else if (cmp_input(input, "vkCmdDrawIndexed"))
-        apiArray[vkCmdDrawIndexed].count++;
-
+        new_call(vkCmdDrawIndexed);
     else if (cmp_input(input, "vkEndCommandBuffer"))
-        apiArray[vkEndCommandBuffer].count++;
-
+        new_call(vkEndCommandBuffer);
     else if (cmp_input(input, "vkEnumerateInstanceLayerProperties"))
-        apiArray[vkEnumerateInstanceLayerProperties].count++;
-
+        new_call(vkEnumerateInstanceLayerProperties);
     else if (cmp_input(input, "vkEnumerateDeviceLayerProperties"))
-        apiArray[vkEnumerateDeviceLayerProperties].count++;
-
+        new_call(vkEnumerateDeviceLayerProperties);
     else if (cmp_input(input, "vkEnumerateInstanceExtensionProperties"))
-        apiArray[vkEnumerateInstanceExtensionProperties].count++;
-
+        new_call(vkEnumerateInstanceExtensionProperties);
     else if (cmp_input(input, "vkEnumerateDeviceExtensionProperties"))
-        apiArray[vkEnumerateDeviceExtensionProperties].count++;
-
+        new_call(vkEnumerateDeviceExtensionProperties);
     else if (cmp_input(input, "vkGetDeviceProcAddr"))
-        apiArray[vkGetDeviceProcAddr].count++;
-
+        new_call(vkGetDeviceProcAddr);
     else if (cmp_input(input, "vkGetInstanceProcAddr"))
-        apiArray[vkGetInstanceProcAddr].count++;
+        new_call(vkGetInstanceProcAddr);
 }
 int GetApiStatsLen()
 {
@@ -108,4 +100,57 @@ std::string GetApiName(int index)
 int GetApiCount(int index)
 {
     return apiArray[index].count;
+}
+std::string GetApiEventName(int ID)
+{
+    switch (ID)
+    {
+    case vkCreateInstance:
+        return "vkCreateInstance";
+        break;
+    case vkDestroyInstance:
+        return "vkDestroyInstance";
+        break;
+    case vkCreateDevice:
+        return "vkCreateDevice";
+        break;
+    case vkDestroyDevice:
+        return "vkDestroyDevice";
+        break;
+    case vkBeginCommandBuffer:
+        return "vkBeginCommandBuffer";
+        break;
+    case vkCmdDraw:
+        return "vkCmdDraw";
+        break;
+    case vkCmdDrawIndexed:
+        return "vkCmdDrawIndexed";
+        break;
+    case vkEndCommandBuffer:
+        return "vkEndCommandBuffer";
+        break;
+    case vkEnumerateInstanceLayerProperties:
+        return "vkEnumerateInstanceLayerProperties";
+        break;
+    case vkEnumerateDeviceLayerProperties:
+        return "vkEnumerateDeviceLayerProperties";
+        break;
+    case vkEnumerateInstanceExtensionProperties:
+        return "vkEnumerateInstanceExtensionProperties";
+        break;
+    case vkEnumerateDeviceExtensionProperties:
+        return "vkEnumerateDeviceExtensionProperties";
+        break;
+    case vkGetDeviceProcAddr:
+        return "vkGetDeviceProcAddr";
+        break;
+    case vkGetInstanceProcAddr:
+        return "vkGetInstanceProcAddr";
+        break;
+    }
+    return "";
+}
+std::list <int> GetApiCallHistory()
+{
+    return api_call_history;
 }
