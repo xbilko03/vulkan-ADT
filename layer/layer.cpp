@@ -19,6 +19,8 @@ typedef std::lock_guard<std::mutex> scoped_lock;
 #define VK_LAYER_EXPORT extern "C" __declspec(dllexport)
 #define WINDOW_NAME "VK_DEBUGGER"
 
+SOCKET ConnectSocket = INVALID_SOCKET;
+
 /* use the loader's dispatch table pointer as a key for dispatch map lookups */
 template<typename DispatchableType>
 void* GetKey(DispatchableType inst)
@@ -52,23 +54,14 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanc
         CloseHandle(processInfo.hProcess);
         CloseHandle(processInfo.hThread);
     }
-
     /* Send data */
-    char* sendbuf = "this is a test";
     int iResult;
-    SOCKET ConnectSocket = INVALID_SOCKET;
 
     /* Connect to UI */
     INIT_LAYER_WINSOCK(&ConnectSocket);
 
-    /* Send to UI */
-    SEND_TO_UI(&ConnectSocket, sendbuf);
-    SEND_TO_UI(&ConnectSocket, sendbuf);
-    SEND_TO_UI(&ConnectSocket, sendbuf);
-    SEND_TO_UI(&ConnectSocket, sendbuf);
-
-    /* Stop communication */
-    EXIT_WINSOCK(&ConnectSocket);
+    /* Send data to UI */
+    SEND_TO_UI(&ConnectSocket, "vkCreateInstance");
 
     VkLayerInstanceCreateInfo* layerCreateInfo = (VkLayerInstanceCreateInfo*)pCreateInfo->pNext;
 
@@ -111,16 +104,18 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanc
 VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyInstance(VkInstance instance, const VkAllocationCallbacks* pAllocator)
 {
     scoped_lock l(global_lock);
+    SEND_TO_UI(&ConnectSocket, "vkDestroyInstance");
+
+    /* Stop communication */
+    EXIT_WINSOCK(&ConnectSocket);
     instance_dispatch.erase(GetKey(instance));
+
 }
 
-VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(
-    VkPhysicalDevice                            physicalDevice,
-    const VkDeviceCreateInfo* pCreateInfo,
-    const VkAllocationCallbacks* pAllocator,
-    VkDevice* pDevice)
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(VkPhysicalDevice physicalDevice, const VkDeviceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDevice* pDevice)
 {
     VkLayerDeviceCreateInfo* layerCreateInfo = (VkLayerDeviceCreateInfo*)pCreateInfo->pNext;
+    SEND_TO_UI(&ConnectSocket, "vkCreateDevice");
 
     // step through the chain of pNext until we get to the link info
     while (layerCreateInfo && (layerCreateInfo->sType != VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO ||
@@ -165,6 +160,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(
 VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDevice(VkDevice device, const VkAllocationCallbacks* pAllocator)
 {
     scoped_lock l(global_lock);
+    SEND_TO_UI(&ConnectSocket, "vkDestroyDevice");
     device_dispatch.erase(GetKey(device));
 }
 
@@ -174,18 +170,15 @@ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDevice(VkDevice device, con
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BeginCommandBuffer(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo* pBeginInfo)
 {
     scoped_lock l(global_lock);
+    SEND_TO_UI(&ConnectSocket, "vkBeginCommandBuffer");
     commandbuffer_stats[commandBuffer] = CommandStats();
     return device_dispatch[GetKey(commandBuffer)].BeginCommandBuffer(commandBuffer, pBeginInfo);
 }
 
-VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDraw(
-    VkCommandBuffer                             commandBuffer,
-    uint32_t                                    vertexCount,
-    uint32_t                                    instanceCount,
-    uint32_t                                    firstVertex,
-    uint32_t                                    firstInstance)
+VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDraw( VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
 {
     scoped_lock l(global_lock);
+    SEND_TO_UI(&ConnectSocket, "vkCmdDraw");
 
     commandbuffer_stats[commandBuffer].drawCount++;
     commandbuffer_stats[commandBuffer].instanceCount += instanceCount;
@@ -194,15 +187,10 @@ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDraw(
     device_dispatch[GetKey(commandBuffer)].CmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
 }
 
-VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndexed(
-    VkCommandBuffer                             commandBuffer,
-    uint32_t                                    indexCount,
-    uint32_t                                    instanceCount,
-    uint32_t                                    firstIndex,
-    int32_t                                     vertexOffset,
-    uint32_t                                    firstInstance)
+VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndexed(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance)
 {
     scoped_lock l(global_lock);
+    SEND_TO_UI(&ConnectSocket, "vkCmdDrawIndexed");
 
     commandbuffer_stats[commandBuffer].drawCount++;
     commandbuffer_stats[commandBuffer].instanceCount += instanceCount;
@@ -214,6 +202,7 @@ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndexed(
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EndCommandBuffer(VkCommandBuffer commandBuffer)
 {
     scoped_lock l(global_lock);
+    SEND_TO_UI(&ConnectSocket, "vkEndCommandBuffer");
 
     CommandStats& s = commandbuffer_stats[commandBuffer];
     printf("Command buffer %p ended with %u draws, %u instances and %u vertices", commandBuffer, s.drawCount, s.instanceCount, s.vertCount);
@@ -228,6 +217,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceLayerProperti
     VkLayerProperties* pProperties)
 {
     if (pPropertyCount) *pPropertyCount = 1;
+    SEND_TO_UI(&ConnectSocket, "vkEnumerateInstanceLayerProperties");
 
     if (pProperties)
     {
@@ -244,12 +234,14 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceLayerProperti
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceLayerProperties(
     VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkLayerProperties* pProperties)
 {
+    SEND_TO_UI(&ConnectSocket, "vkEnumerateDeviceLayerProperties");
     return DebuggerLayer_EnumerateInstanceLayerProperties(pPropertyCount, pProperties);
 }
 
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceExtensionProperties(
     const char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
 {
+    SEND_TO_UI(&ConnectSocket, "vkEnumerateInstanceExtensionProperties");
     if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DebuggerLayer"))
         return VK_ERROR_LAYER_NOT_PRESENT;
 
@@ -262,6 +254,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceExtensionProper
     VkPhysicalDevice physicalDevice, const char* pLayerName,
     uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
 {
+    SEND_TO_UI(&ConnectSocket, "vkEnumerateDeviceExtensionProperties");
     // pass through any queries that aren't to us
     if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DebuggerLayer"))
     {
@@ -283,6 +276,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceExtensionProper
 
 VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetDeviceProcAddr(VkDevice device, const char* pName)
 {
+    SEND_TO_UI(&ConnectSocket, "vkGetDeviceProcAddr");
     // device chain functions we intercept
     GETPROCADDR(GetDeviceProcAddr);
     GETPROCADDR(EnumerateDeviceLayerProperties);
@@ -302,6 +296,7 @@ VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetDeviceProcAddr(Vk
 
 VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetInstanceProcAddr(VkInstance instance, const char* pName)
 {
+    SEND_TO_UI(&ConnectSocket, "vkGetInstanceProcAddr");
     // instance chain functions we intercept
     GETPROCADDR(GetInstanceProcAddr);
     GETPROCADDR(EnumerateInstanceLayerProperties);

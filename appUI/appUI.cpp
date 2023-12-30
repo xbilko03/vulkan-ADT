@@ -10,6 +10,8 @@
 #include <ws2tcpip.h>
 #include "winsock.h"
 
+#include "events.h"
+
 #define DEFAULT_BUFLEN 512
 
 #pragma comment(lib, "Ws2_32.lib")
@@ -24,14 +26,15 @@ static void glfw_error_callback(int error, const char* description)
 {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
-int main(int, char**)
+DWORD WINAPI mythread(__in LPVOID lpParameter)
 {
-    bool dataTransport = true;
+    printf("Thread inside %d \n", GetCurrentThreadId());
+
+    /* Create socket */
     int iResult;
     SOCKET ClientSocket = INVALID_SOCKET;
     char recvbuf[DEFAULT_BUFLEN];
     int recvbuflen = DEFAULT_BUFLEN;
-
     INIT_UI_WINSOCK(&ClientSocket);
 
     // Receive until the peer shuts down the connection
@@ -39,6 +42,11 @@ int main(int, char**)
         iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
         if (iResult > 0) {
             printf("Bytes received [server]: %d\n", iResult);
+            /* New data from layer received */
+            glfwPostEmptyEvent();
+            /* Parse data */
+            layer_event(recvbuf);
+            /* ... */
         }
         else if (iResult == 0)
             printf("Connection closing...\n");
@@ -48,10 +56,43 @@ int main(int, char**)
             WSACleanup();
             return 1;
         }
-
     } while (iResult > 0);
 
+    /* Destroy socket */
     EXIT_UI_WINSOCK(&ClientSocket);
+    printf("socket destroyed\n");
+
+    return 0;
+}
+void ShowTable(const char* dataType)
+{
+    bool disable_menu = true;
+    {
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
+        if (!disable_menu)
+            window_flags |= ImGuiWindowFlags_MenuBar;
+        ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+        ImGui::BeginChild("ChildR", ImVec2(0, 260), ImGuiChildFlags_Border, window_flags);
+        if (ImGui::BeginTable("split", 1, ImGuiTableFlags_Resizable | ImGuiTableFlags_NoSavedSettings))
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                char buf[32];
+                sprintf(buf, "%03d", i);
+                ImGui::TableNextColumn();
+                ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
+            }
+            ImGui::EndTable();
+        }
+        ImGui::EndChild();
+        ImGui::PopStyleVar();
+    }
+}
+int main(int, char**)
+{
+    DWORD mythreadid;
+    /* Collect data from socket continuously */
+    CreateThread(0, 0, mythread, 0, 0, &mythreadid);
 
     /* Create UI */
     glfwSetErrorCallback(glfw_error_callback);
@@ -80,36 +121,23 @@ int main(int, char**)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL2_Init();
 
-    // Load Fonts
-    // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
-    // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
-    // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
-    // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
-    // - Use '#define IMGUI_ENABLE_FREETYPE' in your imconfig file to use Freetype for higher quality font rendering.
-    // - Read 'docs/FONTS.md' for more instructions and details.
-    // - Remember that in C/C++ if you want to include a backslash \ in a string literal you need to write a double backslash \\ !
-    //io.Fonts->AddFontDefault();
-    //io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
-    //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
-    //IM_ASSERT(font != nullptr);
-
     // Our state
-    bool show_demo_window = true;
+    bool show_demo_window = false;
+    bool show_api_calls = false;
+    bool show_api_calls_statistics = false;
+    bool show_api_calls_history = false;
+
     bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    ImVec4 background_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
-        // Poll and handle events (inputs, window resize, etc.)
-        // You can read the io.WantCaptureMouse, io.WantCaptureKeyboard flags to tell if dear imgui wants to use your inputs.
-        // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
-        // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
-        // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
-        glfwPollEvents();
+        /* Create base UI */
+
+        /* Refresh UI */
+
+        glfwWaitEvents();
 
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL2_NewFrame();
@@ -120,45 +148,37 @@ int main(int, char**)
         if (show_demo_window)
             ImGui::ShowDemoWindow(&show_demo_window);
 
-        // 2. Show a simple window that we create ourselves. We use a Begin/End pair to create a named window.
+        ImGui::Begin("Menu");
+        ImGui::Checkbox("Demo Window", &show_demo_window);
+
+        ImGui::Checkbox("API Calls", &show_api_calls);
+
+        if (show_api_calls)
         {
-            static float f = 0.0f;
-            static int counter = 0;
-
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-            ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-            ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-            ImGui::Checkbox("Another Window", &show_another_window);
-
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-            if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
-            ImGui::SameLine();
-            ImGui::Text("counter = %d", counter);
-
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+            ImGui::Begin("API Calls");
+            ImGui::Checkbox("Statistics", &show_api_calls_statistics);
+            if (show_api_calls_statistics)
+            {
+                ShowTable("api_statistics");
+            }
+            ImGui::Checkbox("History", &show_api_calls_history);
+            if (show_api_calls_history)
+            {
+                ShowTable("api_history");
+            }
             ImGui::End();
         }
 
-        // 3. Show another simple window.
-        if (show_another_window)
-        {
-            ImGui::Begin("Another Window", &show_another_window);   // Pass a pointer to our bool variable (the window will have a closing button that will clear the bool when clicked)
-            ImGui::Text("Hello from another window!");
-            if (ImGui::Button("Close Me"))
-                show_another_window = false;
-            ImGui::End();
-        }
+        if (ImGui::Button("Exit"))
+            break;
+        ImGui::End();
 
         // Rendering
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
-        glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+        glClearColor(background_color.x * background_color.w, background_color.y * background_color.w, background_color.z * background_color.w, background_color.w);
         glClear(GL_COLOR_BUFFER_BIT);
 
         // If you are using this code with non-legacy OpenGL header/contexts (which you should not, prefer using imgui_impl_opengl3.cpp!!),
@@ -173,11 +193,12 @@ int main(int, char**)
         glfwSwapBuffers(window);
     }
 
-    // Cleanup
+    /* Destroy UI */
     ImGui_ImplOpenGL2_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
+    /* Destroy window */
     glfwDestroyWindow(window);
     glfwTerminate();
 
