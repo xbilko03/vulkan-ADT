@@ -9,3 +9,4 @@ int GetApiCount(int index);
 void layer_event(const char* input);
 std::string GetApiEventName(int ID);
 std::list <int> GetApiCallHistory();
+int GetCmdBuffVal(int ID);

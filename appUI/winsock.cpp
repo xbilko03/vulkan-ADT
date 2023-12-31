@@ -42,7 +42,7 @@ int EXIT_UI_WINSOCK(SOCKET* ConnectSocket)
     WSACleanup();
     return 0;
 }
-int SEND_TO_UI(SOCKET* ConnectSocket, char* sendbuf)
+int SEND_TO_UI(SOCKET* ConnectSocket, const char* sendbuf)
 {
     /* Send an initial buffer */
     int iResult = send(*ConnectSocket, sendbuf, (int)strlen(sendbuf), 0);

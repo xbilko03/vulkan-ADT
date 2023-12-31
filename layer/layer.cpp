@@ -2,9 +2,9 @@
 #include <vk_layer.h>
 
 #include <assert.h>
-#include <string.h>
 #include <mutex>
 #include <map>
+#include <string> 
 
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -171,18 +171,14 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BeginCommandBuffer(VkCommandBu
 {
     scoped_lock l(global_lock);
     SEND_TO_UI(&ConnectSocket, "vkBeginCommandBuffer");
-    commandbuffer_stats[commandBuffer] = CommandStats();
     return device_dispatch[GetKey(commandBuffer)].BeginCommandBuffer(commandBuffer, pBeginInfo);
 }
 
 VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDraw( VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
 {
     scoped_lock l(global_lock);
-    SEND_TO_UI(&ConnectSocket, "vkCmdDraw");
-
-    commandbuffer_stats[commandBuffer].drawCount++;
-    commandbuffer_stats[commandBuffer].instanceCount += instanceCount;
-    commandbuffer_stats[commandBuffer].vertCount += instanceCount * vertexCount;
+    std::string callData = "vkCmdDraw(" + std::to_string(instanceCount) + "," + std::to_string(vertexCount) + ")";
+    SEND_TO_UI(&ConnectSocket, callData.c_str());
 
     device_dispatch[GetKey(commandBuffer)].CmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
 }
@@ -190,11 +186,8 @@ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDraw( VkCommandBuffer commandBu
 VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndexed(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance)
 {
     scoped_lock l(global_lock);
-    SEND_TO_UI(&ConnectSocket, "vkCmdDrawIndexed");
-
-    commandbuffer_stats[commandBuffer].drawCount++;
-    commandbuffer_stats[commandBuffer].instanceCount += instanceCount;
-    commandbuffer_stats[commandBuffer].vertCount += instanceCount * indexCount;
+    std::string callData = "vkCmdDrawIndexed(" + std::to_string(instanceCount) + "," + std::to_string(indexCount) + ")";
+    SEND_TO_UI(&ConnectSocket, callData.c_str());
 
     device_dispatch[GetKey(commandBuffer)].CmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 }
@@ -203,9 +196,6 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EndCommandBuffer(VkCommandBuff
 {
     scoped_lock l(global_lock);
     SEND_TO_UI(&ConnectSocket, "vkEndCommandBuffer");
-
-    CommandStats& s = commandbuffer_stats[commandBuffer];
-    printf("Command buffer %p ended with %u draws, %u instances and %u vertices", commandBuffer, s.drawCount, s.instanceCount, s.vertCount);
 
     return device_dispatch[GetKey(commandBuffer)].EndCommandBuffer(commandBuffer);
 }

@@ -60,6 +60,21 @@ DWORD WINAPI mythread(__in LPVOID lpParameter)
 
     return 0;
 }
+
+void AddTableItem(const char* text)
+{
+    char buf[64];
+    sprintf(buf, "%s", text);
+    ImGui::TableNextColumn();
+    ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
+}
+void AddTableItem(const int value)
+{
+    char buf[64];
+    sprintf(buf, "%d", value);
+    ImGui::TableNextColumn();
+    ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
+}
 void ShowTable(const char* dataType)
 {
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
@@ -72,13 +87,8 @@ void ShowTable(const char* dataType)
         {
                 for (int i = 0; i < GetApiStatsLen(); i++)
                 {
-                    char buf[64];
-                    sprintf(buf, "%s", GetApiName(i).c_str());
-                    ImGui::TableNextColumn();
-                    ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
-                    sprintf(buf, "%d", GetApiCount(i));
-                    ImGui::TableNextColumn();
-                    ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
+                    AddTableItem(GetApiName(i).c_str());
+                    AddTableItem(GetApiCount(i));
                 }
             ImGui::EndTable();
         }
@@ -90,15 +100,36 @@ void ShowTable(const char* dataType)
             int counter = 0;
             for (auto i : GetApiCallHistory())
             {
-                char buf[64];
-                sprintf(buf, "%d",counter);
-                ImGui::TableNextColumn();
-                ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
-                sprintf(buf, "%s", GetApiEventName(i).c_str());
-                ImGui::TableNextColumn();
-                ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
+                AddTableItem(counter);
+                AddTableItem(GetApiEventName(i).c_str());
                 counter++;
             }
+            ImGui::EndTable();
+        }
+    }
+    else if (strcmp(dataType, "show_command_buffer_statistics_total") == 0)
+    {
+        if (ImGui::BeginTable("split", 2, ImGuiTableFlags_Resizable | ImGuiTableFlags_NoSavedSettings))
+        {
+            AddTableItem("Draw Calls");
+            AddTableItem(GetCmdBuffVal(0));
+            AddTableItem("Instances");
+            AddTableItem(GetCmdBuffVal(1));
+            AddTableItem("Vertices");
+            AddTableItem(GetCmdBuffVal(2));
+            ImGui::EndTable();
+        }
+    }
+    else if (strcmp(dataType, "show_command_buffer_statistics_current") == 0)
+    {
+        if (ImGui::BeginTable("split", 2, ImGuiTableFlags_Resizable | ImGuiTableFlags_NoSavedSettings))
+        {
+            AddTableItem("Draw Calls");
+            AddTableItem(GetCmdBuffVal(3));
+            AddTableItem("Instances");
+            AddTableItem(GetCmdBuffVal(4));
+            AddTableItem("Vertices");
+            AddTableItem(GetCmdBuffVal(5));
             ImGui::EndTable();
         }
     }
@@ -145,6 +176,10 @@ int main(int, char**)
     bool show_api_calls_statistics = true;
     bool show_api_calls_history = false;
 
+    bool show_command_buffer = false;
+    bool show_command_buffer_statistics_total = true;
+    bool show_command_buffer_statistics_current = false;
+
     bool show_another_window = false;
     ImVec4 background_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -176,14 +211,22 @@ int main(int, char**)
             ImGui::Begin("API Calls");
             ImGui::Checkbox("Statistics", &show_api_calls_statistics);
             if (show_api_calls_statistics)
-            {
                 ShowTable("api_statistics");
-            }
             ImGui::Checkbox("History", &show_api_calls_history);
             if (show_api_calls_history)
-            {
                 ShowTable("api_history");
-            }
+            ImGui::End();
+        }
+        ImGui::Checkbox("Command Buffer", &show_command_buffer);
+        if (show_command_buffer)
+        {
+            ImGui::Begin("Command Buffer");
+            ImGui::Checkbox("Total", &show_command_buffer_statistics_total);
+            if (show_command_buffer_statistics_total)
+                ShowTable("show_command_buffer_statistics_total");
+            ImGui::Checkbox("Current", &show_command_buffer_statistics_current);
+            if (show_command_buffer_statistics_current)
+                ShowTable("show_command_buffer_statistics_current");
             ImGui::End();
         }
 

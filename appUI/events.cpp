@@ -2,30 +2,30 @@
 
 #include "events.h"
 #define TRACKED_API_COUNT 14
+#define CMD_BUFFER_COUNT 6
 
-struct api_call
+struct pair_val
 {
     std::string name;
-    int count;
+    int value;
 };
-std::array <api_call, ARRAYLEN> apiArray =
+std::array <pair_val, ARRAYLEN> apiArray =
 {
-    api_call{"vkCreateInstance",0},
-    api_call{"vkDestroyInstance",0},
-    api_call{"vkCreateDevice",0},
-    api_call{"vkDestroyDevice",0},
-    api_call{"vkBeginCommandBuffer",0},
-    api_call{"vkCmdDraw",0},
-    api_call{"vkCmdDrawIndexed",0},
-    api_call{"vkEndCommandBuffer",0},
-    api_call{"vkEnumerateInstanceLayerProperties",0},
-    api_call{"vkEnumerateDeviceLayerProperties",0},
-    api_call{"vkEnumerateInstanceExtensionProperties",0},
-    api_call{"vkEnumerateDeviceExtensionProperties",0},
-    api_call{"vkGetDeviceProcAddr",0},
-    api_call{"vkGetInstanceProcAddr",0}
+    pair_val{"vkCreateInstance",0},
+    pair_val{"vkDestroyInstance",0},
+    pair_val{"vkCreateDevice",0},
+    pair_val{"vkDestroyDevice",0},
+    pair_val{"vkBeginCommandBuffer",0},
+    pair_val{"vkCmdDraw",0},
+    pair_val{"vkCmdDrawIndexed",0},
+    pair_val{"vkEndCommandBuffer",0},
+    pair_val{"vkEnumerateInstanceLayerProperties",0},
+    pair_val{"vkEnumerateDeviceLayerProperties",0},
+    pair_val{"vkEnumerateInstanceExtensionProperties",0},
+    pair_val{"vkEnumerateDeviceExtensionProperties",0},
+    pair_val{"vkGetDeviceProcAddr",0},
+    pair_val{"vkGetInstanceProcAddr",0}
 };
-
 enum api_call_enum {
     vkCreateInstance,
     vkDestroyInstance,
@@ -43,19 +43,71 @@ enum api_call_enum {
     vkGetInstanceProcAddr
 };
 
+std::array <pair_val, CMD_BUFFER_COUNT> cmdbuffArray =
+{
+    pair_val{"DrawCalls",0},
+    pair_val{"Instances",0},
+    pair_val{"Vertices",0},
+    pair_val{"cDrawCalls",0},
+    pair_val{"cInstances",0},
+    pair_val{"cVertices",0}
+};
+enum cmd_buff_enum {
+    cmdbuffDrawCalls,
+    cmdbuffInstances,
+    cmdbuffVertices,
+    cmdbuffcDrawCalls,
+    cmdbuffcInstances,
+    cmdbuffcVertices
+};
+
 std::list <int> api_call_history;
 
 void new_call(int ID)
 {
-    apiArray[ID].count++;
+    apiArray[ID].value++;
     api_call_history.push_back(ID);
 }
 bool cmp_input(const char* str1, const char* str2)
 {
-    if(strncmp(str1,str2, strlen(str2)) == 0)
+    if (strncmp(str1, str2, strlen(str2)) == 0)
         return true;
-    
+
     return false;
+}
+std::string GetNextArg(std::string args)
+{
+    if(args.find(",") == std::string::npos)
+        return args;
+    return args.substr(0, args.find(","));
+}
+void parse_arguments(const char* input)
+{
+    if (cmp_input(input, "vkCmdDraw") || cmp_input(input, "vkCmdDrawIndexed"))
+    {
+        cmdbuffArray[cmdbuffcDrawCalls].value++;
+        cmdbuffArray[cmdbuffDrawCalls].value++;
+        /* vk_CmdDraw(x,y) */
+        std::string args;
+        if(cmp_input(input, "vkCmdDraw"))
+            args = input + strlen("vkCmdDraw(");
+        else
+            args = input + strlen("vkCmdDrawIndexed(");
+
+        args = args.substr(0, args.find(")"));
+        /* x,y */
+        /* x - Instance Count */
+        std::string x = GetNextArg(args);
+        cmdbuffArray[cmdbuffInstances].value += stoi(x);
+        cmdbuffArray[cmdbuffcInstances].value += stoi(x);
+
+        /* Consume argument */
+        args = args.substr(args.find(",") + 1, args.back());
+        /* y - Vertex Count */
+        std::string y = GetNextArg(args);
+        cmdbuffArray[cmdbuffVertices].value += stoi(y) * stoi(x);
+        cmdbuffArray[cmdbuffcVertices].value += stoi(y) * stoi(x);
+    }
 }
 void layer_event(const char* input)
 {
@@ -69,13 +121,30 @@ void layer_event(const char* input)
     else if (cmp_input(input, "vkDestroyDevice"))
         new_call(vkDestroyDevice);
     else if (cmp_input(input, "vkBeginCommandBuffer"))
+    {
         new_call(vkBeginCommandBuffer);
+        cmdbuffArray[cmdbuffcDrawCalls].value = 0;
+        cmdbuffArray[cmdbuffcInstances].value = 0;
+        cmdbuffArray[cmdbuffcVertices].value = 0;
+    }
     else if (cmp_input(input, "vkCmdDraw"))
+    {
         new_call(vkCmdDraw);
+        parse_arguments(input);
+    }
     else if (cmp_input(input, "vkCmdDrawIndexed"))
+    {
         new_call(vkCmdDrawIndexed);
+        parse_arguments(input);
+    }
     else if (cmp_input(input, "vkEndCommandBuffer"))
+    {
         new_call(vkEndCommandBuffer);
+
+        cmdbuffArray[cmdbuffcDrawCalls].value = 0;
+        cmdbuffArray[cmdbuffcInstances].value = 0;
+        cmdbuffArray[cmdbuffcVertices].value = 0;
+    }
     else if (cmp_input(input, "vkEnumerateInstanceLayerProperties"))
         new_call(vkEnumerateInstanceLayerProperties);
     else if (cmp_input(input, "vkEnumerateDeviceLayerProperties"))
@@ -99,7 +168,7 @@ std::string GetApiName(int index)
 }
 int GetApiCount(int index)
 {
-    return apiArray[index].count;
+    return apiArray[index].value;
 }
 std::string GetApiEventName(int ID)
 {
@@ -153,4 +222,8 @@ std::string GetApiEventName(int ID)
 std::list <int> GetApiCallHistory()
 {
     return api_call_history;
+}
+int GetCmdBuffVal(int ID)
+{
+    return cmdbuffArray[ID].value;
 }
