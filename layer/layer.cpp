@@ -70,7 +70,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanc
 
     VkLayerInstanceCreateInfo* layerCreateInfo = (VkLayerInstanceCreateInfo*)pCreateInfo->pNext;
 
-    // step through the chain of pNext until we get to the link info
+    /* step through the chain of pNext until we get to the link info */
     while (layerCreateInfo && (layerCreateInfo->sType != VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO ||
         layerCreateInfo->function != VK_LAYER_LINK_INFO))
     {
@@ -79,25 +79,25 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanc
 
     if (layerCreateInfo == NULL)
     {
-        // No loader instance create info
+        /* No loader instance create info */
         return VK_ERROR_INITIALIZATION_FAILED;
     }
 
     PFN_vkGetInstanceProcAddr gpa = layerCreateInfo->u.pLayerInfo->pfnNextGetInstanceProcAddr;
-    // move chain on for next layer
+    /* move chain on for next layer */
     layerCreateInfo->u.pLayerInfo = layerCreateInfo->u.pLayerInfo->pNext;
 
     PFN_vkCreateInstance createFunc = (PFN_vkCreateInstance)gpa(VK_NULL_HANDLE, "vkCreateInstance");
 
     VkResult ret = createFunc(pCreateInfo, pAllocator, pInstance);
 
-    // fetch our own dispatch table for the functions we need, into the next layer
+    /* fetch our own dispatch table for the functions we need, into the next layer */
     VkLayerInstanceDispatchTable dispatchTable;
     dispatchTable.GetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)gpa(*pInstance, "vkGetInstanceProcAddr");
     dispatchTable.DestroyInstance = (PFN_vkDestroyInstance)gpa(*pInstance, "vkDestroyInstance");
     dispatchTable.EnumerateDeviceExtensionProperties = (PFN_vkEnumerateDeviceExtensionProperties)gpa(*pInstance, "vkEnumerateDeviceExtensionProperties");
 
-    // store the table by key
+    /* store the table by key */
     {
         scoped_lock l(global_lock);
         instance_dispatch[GetKey(*pInstance)] = dispatchTable;
@@ -122,7 +122,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(VkPhysicalDevice 
     VkLayerDeviceCreateInfo* layerCreateInfo = (VkLayerDeviceCreateInfo*)pCreateInfo->pNext;
     winsockSendToUI(&ConnectSocket, "vkCreateDevice");
 
-    // step through the chain of pNext until we get to the link info
+    /* step through the chain of pNext until we get to the link info */
     while (layerCreateInfo && (layerCreateInfo->sType != VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO ||
         layerCreateInfo->function != VK_LAYER_LINK_INFO))
     {
@@ -131,20 +131,20 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(VkPhysicalDevice 
 
     if (layerCreateInfo == NULL)
     {
-        // No loader instance create info
+        /* No loader instance create info */
         return VK_ERROR_INITIALIZATION_FAILED;
     }
 
     PFN_vkGetInstanceProcAddr gipa = layerCreateInfo->u.pLayerInfo->pfnNextGetInstanceProcAddr;
     PFN_vkGetDeviceProcAddr gdpa = layerCreateInfo->u.pLayerInfo->pfnNextGetDeviceProcAddr;
-    // move chain on for next layer
+    /* move chain on for next layer */
     layerCreateInfo->u.pLayerInfo = layerCreateInfo->u.pLayerInfo->pNext;
 
     PFN_vkCreateDevice createFunc = (PFN_vkCreateDevice)gipa(VK_NULL_HANDLE, "vkCreateDevice");
 
     VkResult ret = createFunc(physicalDevice, pCreateInfo, pAllocator, pDevice);
 
-    // fetch our own dispatch table for the functions we need, into the next layer
+    /* fetch our own dispatch table for the functions we need, into the next layer */
     VkLayerDispatchTable dispatchTable;
     dispatchTable.GetDeviceProcAddr = (PFN_vkGetDeviceProcAddr)gdpa(*pDevice, "vkGetDeviceProcAddr");
     dispatchTable.DestroyDevice = (PFN_vkDestroyDevice)gdpa(*pDevice, "vkDestroyDevice");
@@ -153,7 +153,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(VkPhysicalDevice 
     dispatchTable.CmdDrawIndexed = (PFN_vkCmdDrawIndexed)gdpa(*pDevice, "vkCmdDrawIndexed");
     dispatchTable.EndCommandBuffer = (PFN_vkEndCommandBuffer)gdpa(*pDevice, "vkEndCommandBuffer");
 
-    // store the table by key
+    /* store the table by key */
     {
         scoped_lock l(global_lock);
         device_dispatch[GetKey(*pDevice)] = dispatchTable;
@@ -213,9 +213,8 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceLayerProperti
 
     if (pProperties)
     {
-        //MessageBox(NULL, L"Com Object Function Called", L"COMServer", MB_OK | MB_SETFOREGROUND);
-        strcpy(pProperties->layerName, "safgfghjfkhgfd");
-        strcpy(pProperties->description, "hgfdjk,- https://renderdoc.org/vulkan-layer-guide.html");
+        strcpy(pProperties->layerName, "vkdebuggerLayer");
+        strcpy(pProperties->description, "https://github.com/xbilko03/ADT_VAPI");
         pProperties->implementationVersion = 1;
         pProperties->specVersion = VK_API_VERSION_1_0;
     }
@@ -247,7 +246,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceExtensionProper
     uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
 {
     winsockSendToUI(&ConnectSocket, "vkEnumerateDeviceExtensionProperties");
-    // pass through any queries that aren't to us
+    /*  pass through any queries that aren't to us */
     if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DebuggerLayer"))
     {
         if (physicalDevice == VK_NULL_HANDLE)
@@ -257,7 +256,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceExtensionProper
         return instance_dispatch[GetKey(physicalDevice)].EnumerateDeviceExtensionProperties(physicalDevice, pLayerName, pPropertyCount, pProperties);
     }
 
-    // don't expose any extensions
+    /* don't expose any extensions */
     if (pPropertyCount) *pPropertyCount = 0;
     return VK_SUCCESS;
 }
