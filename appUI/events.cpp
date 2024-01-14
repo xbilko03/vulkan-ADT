@@ -1,14 +1,21 @@
+﻿/*
+* Name		: events.cpp
+* Project	: A Debugging Tool for Vulkan API
+* Director  : Ing. Ján Pečiva Ph.D.
+* Author	: Jozef Bilko (xbilko03)
+*/
 #include <stdio.h>
-
 #include "events.h"
 #define TRACKED_API_COUNT 14
 #define CMD_BUFFER_COUNT 6
 
+/* structure to map a name to an integer value */
 struct pair_val
 {
     std::string name;
     int value;
 };
+/* create a new array made of the vkApi calls, most likely a subject to change */
 std::array <pair_val, ARRAYLEN> apiArray =
 {
     pair_val{"vkCreateInstance",0},
@@ -26,6 +33,7 @@ std::array <pair_val, ARRAYLEN> apiArray =
     pair_val{"vkGetDeviceProcAddr",0},
     pair_val{"vkGetInstanceProcAddr",0}
 };
+/* enumerate vkApi calls, most likely a subject to change */
 enum api_call_enum {
     vkCreateInstance,
     vkDestroyInstance,
@@ -42,7 +50,7 @@ enum api_call_enum {
     vkGetDeviceProcAddr,
     vkGetInstanceProcAddr
 };
-
+/* create a new structure to hold command buffer contents, most likely a subject to change */
 std::array <pair_val, CMD_BUFFER_COUNT> cmdbuffArray =
 {
     pair_val{"DrawCalls",0},
@@ -52,6 +60,7 @@ std::array <pair_val, CMD_BUFFER_COUNT> cmdbuffArray =
     pair_val{"cInstances",0},
     pair_val{"cVertices",0}
 };
+/* enumerate command buffer contents, most likely a subject to change */
 enum cmd_buff_enum {
     cmdbuffDrawCalls,
     cmdbuffInstances,
@@ -61,115 +70,81 @@ enum cmd_buff_enum {
     cmdbuffcVertices
 };
 
+/* create a new list where the api calls history should be saved to */
 std::list <int> api_call_history;
 
-void new_call(int ID)
+void parseArguments(const char* input);
+void newCall(int ID);
+bool cmpInput(const char* str1, const char* str2);
+/* 
+* whenever something important happened at the layer, call this function
+* it also handles the information provided by the layer 'input'
+*/
+void newLayerEvent(const char* input)
 {
-    apiArray[ID].value++;
-    api_call_history.push_back(ID);
-}
-bool cmp_input(const char* str1, const char* str2)
-{
-    if (strncmp(str1, str2, strlen(str2)) == 0)
-        return true;
-
-    return false;
-}
-std::string GetNextArg(std::string args)
-{
-    if(args.find(",") == std::string::npos)
-        return args;
-    return args.substr(0, args.find(","));
-}
-void parse_arguments(const char* input)
-{
-    if (cmp_input(input, "vkCmdDraw") || cmp_input(input, "vkCmdDrawIndexed"))
+    /* if a call happened consider it an event, handle it accordingly */
+    if (cmpInput(input, "vkCreateInstance"))
+        newCall(vkCreateInstance);
+    else if (cmpInput(input, "vkDestroyInstance"))
+        newCall(vkDestroyInstance);
+    else if (cmpInput(input, "vkCreateDevice"))
+        newCall(vkCreateDevice);
+    else if (cmpInput(input, "vkDestroyDevice"))
+        newCall(vkDestroyDevice);
+    else if (cmpInput(input, "vkBeginCommandBuffer"))
     {
-        cmdbuffArray[cmdbuffcDrawCalls].value++;
-        cmdbuffArray[cmdbuffDrawCalls].value++;
-        /* vk_CmdDraw(x,y) */
-        std::string args;
-        if(cmp_input(input, "vkCmdDraw"))
-            args = input + strlen("vkCmdDraw(");
-        else
-            args = input + strlen("vkCmdDrawIndexed(");
-
-        args = args.substr(0, args.find(")"));
-        /* x,y */
-        /* x - Instance Count */
-        std::string x = GetNextArg(args);
-        cmdbuffArray[cmdbuffInstances].value += stoi(x);
-        cmdbuffArray[cmdbuffcInstances].value += stoi(x);
-
-        /* Consume argument */
-        args = args.substr(args.find(",") + 1, args.back());
-        /* y - Vertex Count */
-        std::string y = GetNextArg(args);
-        cmdbuffArray[cmdbuffVertices].value += stoi(y) * stoi(x);
-        cmdbuffArray[cmdbuffcVertices].value += stoi(y) * stoi(x);
-    }
-}
-void layer_event(const char* input)
-{
-    /* Trace api calls */
-    if (cmp_input(input, "vkCreateInstance"))
-        new_call(vkCreateInstance);
-    else if (cmp_input(input, "vkDestroyInstance"))
-        new_call(vkDestroyInstance);
-    else if (cmp_input(input, "vkCreateDevice"))
-        new_call(vkCreateDevice);
-    else if (cmp_input(input, "vkDestroyDevice"))
-        new_call(vkDestroyDevice);
-    else if (cmp_input(input, "vkBeginCommandBuffer"))
-    {
-        new_call(vkBeginCommandBuffer);
+        newCall(vkBeginCommandBuffer);
         cmdbuffArray[cmdbuffcDrawCalls].value = 0;
         cmdbuffArray[cmdbuffcInstances].value = 0;
         cmdbuffArray[cmdbuffcVertices].value = 0;
     }
-    else if (cmp_input(input, "vkCmdDraw"))
+    else if (cmpInput(input, "vkCmdDraw"))
     {
-        new_call(vkCmdDraw);
-        parse_arguments(input);
+        newCall(vkCmdDraw);
+        parseArguments(input);
     }
-    else if (cmp_input(input, "vkCmdDrawIndexed"))
+    else if (cmpInput(input, "vkCmdDrawIndexed"))
     {
-        new_call(vkCmdDrawIndexed);
-        parse_arguments(input);
+        newCall(vkCmdDrawIndexed);
+        parseArguments(input);
     }
-    else if (cmp_input(input, "vkEndCommandBuffer"))
+    else if (cmpInput(input, "vkEndCommandBuffer"))
     {
-        new_call(vkEndCommandBuffer);
+        newCall(vkEndCommandBuffer);
 
         cmdbuffArray[cmdbuffcDrawCalls].value = 0;
         cmdbuffArray[cmdbuffcInstances].value = 0;
         cmdbuffArray[cmdbuffcVertices].value = 0;
     }
-    else if (cmp_input(input, "vkEnumerateInstanceLayerProperties"))
-        new_call(vkEnumerateInstanceLayerProperties);
-    else if (cmp_input(input, "vkEnumerateDeviceLayerProperties"))
-        new_call(vkEnumerateDeviceLayerProperties);
-    else if (cmp_input(input, "vkEnumerateInstanceExtensionProperties"))
-        new_call(vkEnumerateInstanceExtensionProperties);
-    else if (cmp_input(input, "vkEnumerateDeviceExtensionProperties"))
-        new_call(vkEnumerateDeviceExtensionProperties);
-    else if (cmp_input(input, "vkGetDeviceProcAddr"))
-        new_call(vkGetDeviceProcAddr);
-    else if (cmp_input(input, "vkGetInstanceProcAddr"))
-        new_call(vkGetInstanceProcAddr);
+    else if (cmpInput(input, "vkEnumerateInstanceLayerProperties"))
+        newCall(vkEnumerateInstanceLayerProperties);
+    else if (cmpInput(input, "vkEnumerateDeviceLayerProperties"))
+        newCall(vkEnumerateDeviceLayerProperties);
+    else if (cmpInput(input, "vkEnumerateInstanceExtensionProperties"))
+        newCall(vkEnumerateInstanceExtensionProperties);
+    else if (cmpInput(input, "vkEnumerateDeviceExtensionProperties"))
+        newCall(vkEnumerateDeviceExtensionProperties);
+    else if (cmpInput(input, "vkGetDeviceProcAddr"))
+        newCall(vkGetDeviceProcAddr);
+    else if (cmpInput(input, "vkGetInstanceProcAddr"))
+        newCall(vkGetInstanceProcAddr);
 }
+/* returns the number of how many vk api calls we are currently tracking */
 int GetApiStatsLen()
 {
     return TRACKED_API_COUNT;
 }
+/* returns the name of the vk api call */
 std::string GetApiName(int index)
 {
     return apiArray[index].name;
 }
+/* returns the value associated with a given ID of an vk api call */
 int GetApiCount(int index)
 {
     return apiArray[index].value;
 }
+/* returns the string value of a given vk api call according to its ID, this is definitely a subject to change */
 std::string GetApiEventName(int ID)
 {
     switch (ID)
@@ -219,11 +194,63 @@ std::string GetApiEventName(int ID)
     }
     return "";
 }
+/* returns the list containing the traced vk api calls */
 std::list <int> GetApiCallHistory()
 {
     return api_call_history;
 }
-int GetCmdBuffVal(int ID)
+/* returns the nth value of the command buffer structure */
+int GetCmdBuffVal(int n)
 {
-    return cmdbuffArray[ID].value;
+    return cmdbuffArray[n].value;
+}
+/* stores the new vk api call to the list and increments the corresponding statistic */
+void newCall(int ID)
+{
+    apiArray[ID].value++;
+    api_call_history.push_back(ID);
+}
+/* compares two strings, likely a subject to change */
+bool cmpInput(const char* str1, const char* str2)
+{
+    if (strncmp(str1, str2, strlen(str2)) == 0)
+        return true;
+
+    return false;
+}
+/* parses the arguments from a given string of arguments*/
+std::string GetNextArg(std::string args)
+{
+    if (args.find(",") == std::string::npos)
+        return args;
+    return args.substr(0, args.find(","));
+}
+/* parse the arguments provided by the string which was send by the layer, likely a subject to change */
+void parseArguments(const char* input)
+{
+    if (cmpInput(input, "vkCmdDraw") || cmpInput(input, "vkCmdDrawIndexed"))
+    {
+        cmdbuffArray[cmdbuffcDrawCalls].value++;
+        cmdbuffArray[cmdbuffDrawCalls].value++;
+        /* vk_CmdDraw(x,y) */
+        std::string args;
+        if (cmpInput(input, "vkCmdDraw"))
+            args = input + strlen("vkCmdDraw(");
+        else
+            args = input + strlen("vkCmdDrawIndexed(");
+
+        args = args.substr(0, args.find(")"));
+        /* x,y */
+        /* x - Instance Count */
+        std::string x = GetNextArg(args);
+        cmdbuffArray[cmdbuffInstances].value += stoi(x);
+        cmdbuffArray[cmdbuffcInstances].value += stoi(x);
+
+        /* Consume argument */
+        args = args.substr(args.find(",") + 1, args.back());
+        /* y - Vertex Count */
+        std::string y = GetNextArg(args);
+        cmdbuffArray[cmdbuffVertices].value += stoi(y) * stoi(x);
+        cmdbuffArray[cmdbuffcVertices].value += stoi(y) * stoi(x);
+    }
 }

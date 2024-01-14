@@ -1,23 +1,31 @@
+﻿/*
+* Name		: appUI.cpp
+* Project	: A Debugging Tool for Vulkan API
+* Director  : Ing. Ján Pečiva Ph.D.
+* Author	: Jozef Bilko (xbilko03)
+*/
 #include <vulkan.h>
 #include <vk_layer.h>
-
 #include <assert.h>
 #include <mutex>
 #include <map>
-#include <string> 
-
+#include <string>
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <windows.h>
 #include "../appUI/winsock.h"
 
+/*
+* based on: Baldur Karlsson (baldurk) and Johannes Kuhlmann's (jkuhlmann) sample_layer
+* https://github.com/baldurk/sample_layer/blob/master
+*/
 std::mutex global_lock;
 typedef std::lock_guard<std::mutex> scoped_lock;
 
 #pragma comment(lib, "Ws2_32.lib")
-#define DEFAULT_BUFLEN 512
 #define VK_LAYER_EXPORT extern "C" __declspec(dllexport)
 #define WINDOW_NAME "VK_DEBUGGER"
+#define DEFAULT_BUFLEN 512
 
 SOCKET ConnectSocket = INVALID_SOCKET;
 
@@ -28,12 +36,11 @@ void* GetKey(DispatchableType inst)
     return *(void**)inst;
 }
 
-// layer book-keeping information, to store dispatch tables by key
+/* layer book-keeping information, to store dispatch tables by key */
 std::map<void*, VkLayerInstanceDispatchTable> instance_dispatch;
 std::map<void*, VkLayerDispatchTable> device_dispatch;
 
-
-// actual data we're recording in this layer
+/* actual data we're recording in this layer */
 struct CommandStats
 {
     uint32_t drawCount = 0, instanceCount = 0, vertCount = 0;
@@ -46,22 +53,20 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanc
 {
     /* Start UI */
     /* If there is a running window already, do nothing. */
-    if (FindWindow(0, WINDOW_NAME) == NULL)
-    {
-        STARTUPINFO info = { sizeof(info) };
-        PROCESS_INFORMATION processInfo;
-        CreateProcess("C:\\Users\\jozef\\Desktop\\projects\\dbgrv2\\out\\build\\x64-debug\\vkdebugger.exe", NULL, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo);
-        CloseHandle(processInfo.hProcess);
-        CloseHandle(processInfo.hThread);
-    }
+
+    STARTUPINFO info = { sizeof(info) };
+    PROCESS_INFORMATION processInfo;
+    CreateProcess("C:\\Users\\jozef\\Desktop\\projects\\dbgrv2\\out\\build\\x64-debug\\vkdebugger.exe", NULL, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo);
+    CloseHandle(processInfo.hProcess);
+    CloseHandle(processInfo.hThread);
     /* Send data */
     int iResult;
 
     /* Connect to UI */
-    INIT_LAYER_WINSOCK(&ConnectSocket);
+    layerWinsockInit(&ConnectSocket);
 
     /* Send data to UI */
-    SEND_TO_UI(&ConnectSocket, "vkCreateInstance");
+    winsockSendToUI(&ConnectSocket, "vkCreateInstance");
 
     VkLayerInstanceCreateInfo* layerCreateInfo = (VkLayerInstanceCreateInfo*)pCreateInfo->pNext;
 
@@ -104,10 +109,10 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanc
 VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyInstance(VkInstance instance, const VkAllocationCallbacks* pAllocator)
 {
     scoped_lock l(global_lock);
-    SEND_TO_UI(&ConnectSocket, "vkDestroyInstance");
+    winsockSendToUI(&ConnectSocket, "vkDestroyInstance");
 
     /* Stop communication */
-    EXIT_WINSOCK(&ConnectSocket);
+    layerWinsockExit(&ConnectSocket);
     instance_dispatch.erase(GetKey(instance));
 
 }
@@ -115,7 +120,7 @@ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyInstance(VkInstance instanc
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(VkPhysicalDevice physicalDevice, const VkDeviceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDevice* pDevice)
 {
     VkLayerDeviceCreateInfo* layerCreateInfo = (VkLayerDeviceCreateInfo*)pCreateInfo->pNext;
-    SEND_TO_UI(&ConnectSocket, "vkCreateDevice");
+    winsockSendToUI(&ConnectSocket, "vkCreateDevice");
 
     // step through the chain of pNext until we get to the link info
     while (layerCreateInfo && (layerCreateInfo->sType != VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO ||
@@ -160,17 +165,15 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(VkPhysicalDevice 
 VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDevice(VkDevice device, const VkAllocationCallbacks* pAllocator)
 {
     scoped_lock l(global_lock);
-    SEND_TO_UI(&ConnectSocket, "vkDestroyDevice");
+    winsockSendToUI(&ConnectSocket, "vkDestroyDevice");
     device_dispatch.erase(GetKey(device));
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////
-// Actual layer implementation
-
+/* Actual layer implementation */
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BeginCommandBuffer(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo* pBeginInfo)
 {
     scoped_lock l(global_lock);
-    SEND_TO_UI(&ConnectSocket, "vkBeginCommandBuffer");
+    winsockSendToUI(&ConnectSocket, "vkBeginCommandBuffer");
     return device_dispatch[GetKey(commandBuffer)].BeginCommandBuffer(commandBuffer, pBeginInfo);
 }
 
@@ -178,7 +181,7 @@ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDraw( VkCommandBuffer commandBu
 {
     scoped_lock l(global_lock);
     std::string callData = "vkCmdDraw(" + std::to_string(instanceCount) + "," + std::to_string(vertexCount) + ")";
-    SEND_TO_UI(&ConnectSocket, callData.c_str());
+    winsockSendToUI(&ConnectSocket, callData.c_str());
 
     device_dispatch[GetKey(commandBuffer)].CmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
 }
@@ -187,7 +190,7 @@ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndexed(VkCommandBuffer com
 {
     scoped_lock l(global_lock);
     std::string callData = "vkCmdDrawIndexed(" + std::to_string(instanceCount) + "," + std::to_string(indexCount) + ")";
-    SEND_TO_UI(&ConnectSocket, callData.c_str());
+    winsockSendToUI(&ConnectSocket, callData.c_str());
 
     device_dispatch[GetKey(commandBuffer)].CmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 }
@@ -195,19 +198,18 @@ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndexed(VkCommandBuffer com
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EndCommandBuffer(VkCommandBuffer commandBuffer)
 {
     scoped_lock l(global_lock);
-    SEND_TO_UI(&ConnectSocket, "vkEndCommandBuffer");
+    winsockSendToUI(&ConnectSocket, "vkEndCommandBuffer");
 
     return device_dispatch[GetKey(commandBuffer)].EndCommandBuffer(commandBuffer);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////
-// Enumeration function
+/* Enumeration function */
 
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceLayerProperties(uint32_t* pPropertyCount,
     VkLayerProperties* pProperties)
 {
     if (pPropertyCount) *pPropertyCount = 1;
-    SEND_TO_UI(&ConnectSocket, "vkEnumerateInstanceLayerProperties");
+    winsockSendToUI(&ConnectSocket, "vkEnumerateInstanceLayerProperties");
 
     if (pProperties)
     {
@@ -224,18 +226,18 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceLayerProperti
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceLayerProperties(
     VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkLayerProperties* pProperties)
 {
-    SEND_TO_UI(&ConnectSocket, "vkEnumerateDeviceLayerProperties");
+    winsockSendToUI(&ConnectSocket, "vkEnumerateDeviceLayerProperties");
     return DebuggerLayer_EnumerateInstanceLayerProperties(pPropertyCount, pProperties);
 }
 
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceExtensionProperties(
     const char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
 {
-    SEND_TO_UI(&ConnectSocket, "vkEnumerateInstanceExtensionProperties");
+    winsockSendToUI(&ConnectSocket, "vkEnumerateInstanceExtensionProperties");
     if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DebuggerLayer"))
         return VK_ERROR_LAYER_NOT_PRESENT;
 
-    // don't expose any extensions
+    /* don't expose any extensions */
     if (pPropertyCount) *pPropertyCount = 0;
     return VK_SUCCESS;
 }
@@ -244,7 +246,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceExtensionProper
     VkPhysicalDevice physicalDevice, const char* pLayerName,
     uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
 {
-    SEND_TO_UI(&ConnectSocket, "vkEnumerateDeviceExtensionProperties");
+    winsockSendToUI(&ConnectSocket, "vkEnumerateDeviceExtensionProperties");
     // pass through any queries that aren't to us
     if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DebuggerLayer"))
     {
@@ -260,14 +262,13 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceExtensionProper
     return VK_SUCCESS;
 }
 
-// GetProcAddr functions, entry points of the layer
-
+/* GetProcAddr functions, entry points of the layer */
 #define GETPROCADDR(func) if(!strcmp(pName, "vk" #func)) return (PFN_vkVoidFunction)&DebuggerLayer_##func;
 
 VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetDeviceProcAddr(VkDevice device, const char* pName)
 {
-    SEND_TO_UI(&ConnectSocket, "vkGetDeviceProcAddr");
-    // device chain functions we intercept
+    winsockSendToUI(&ConnectSocket, "vkGetDeviceProcAddr");
+    /* device chain functions we intercept */
     GETPROCADDR(GetDeviceProcAddr);
     GETPROCADDR(EnumerateDeviceLayerProperties);
     GETPROCADDR(EnumerateDeviceExtensionProperties);
@@ -286,15 +287,15 @@ VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetDeviceProcAddr(Vk
 
 VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetInstanceProcAddr(VkInstance instance, const char* pName)
 {
-    SEND_TO_UI(&ConnectSocket, "vkGetInstanceProcAddr");
-    // instance chain functions we intercept
+    winsockSendToUI(&ConnectSocket, "vkGetInstanceProcAddr");
+    /* instance chain functions we intercept */
     GETPROCADDR(GetInstanceProcAddr);
     GETPROCADDR(EnumerateInstanceLayerProperties);
     GETPROCADDR(EnumerateInstanceExtensionProperties);
     GETPROCADDR(CreateInstance);
     GETPROCADDR(DestroyInstance);
 
-    // device chain functions we intercept
+    /* device chain functions we intercept */
     GETPROCADDR(GetDeviceProcAddr);
     GETPROCADDR(EnumerateDeviceLayerProperties);
     GETPROCADDR(EnumerateDeviceExtensionProperties);

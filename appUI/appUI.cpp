@@ -1,19 +1,26 @@
-﻿#include <stdio.h>
-
+﻿/*
+* Name		: appUI.cpp
+* Project	: A Debugging Tool for Vulkan API
+* Director  : Ing. Ján Pečiva Ph.D.
+* Author	: Jozef Bilko (xbilko03)
+*/
+#include <stdio.h>
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl2.h"
-
 #include <GLFW/glfw3.h>
-
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include "winsock.h"
-
 #include "events.h"
 
 #define DEFAULT_BUFLEN 512
 
+/*
+* based on: ImGUI Omar Cornut's (ocornut) template
+* more examples can be found in libs/imgui/examples or at
+* https://github.com/ocornut/imgui/tree/master/examples
+*/
 #pragma comment(lib, "Ws2_32.lib")
 struct addrinfo* result = NULL, * ptr = NULL, hints;
 #define WINDOW_NAME "VK_DEBUGGER"
@@ -22,52 +29,165 @@ struct addrinfo* result = NULL, * ptr = NULL, hints;
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
 
-static void glfw_error_callback(int error, const char* description)
+void ShowTable(const char* dataType);
+
+/* 
+* based on: ImGUI Omar Cornut's template
+* continuously render window and the UI within
+*/
+int RunUI()
 {
-    fprintf(stderr, "GLFW Error %d: %s\n", error, description);
+    /* Create UI */
+    if (!glfwInit())
+        return 1;
+
+    /* Create window with graphics context */
+    GLFWwindow* window = glfwCreateWindow(1280, 720, WINDOW_NAME, nullptr, nullptr);
+    if (window == nullptr)
+        return 1;
+    glfwMakeContextCurrent(window);
+    /* vsync = 1 */
+    glfwSwapInterval(1);
+
+    /* Setup Dear ImGui context */
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGui::StyleColorsDark();
+
+    /* Setup Platform/Renderer backends */
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL2_Init();
+
+    /* UI state */
+    bool show_demo_window = false;
+    bool show_api_calls = false;
+    bool show_api_calls_statistics = true;
+    bool show_api_calls_history = false;
+
+    bool show_command_buffer = false;
+    bool show_command_buffer_statistics_total = true;
+    bool show_command_buffer_statistics_current = false;
+
+    bool show_another_window = false;
+    ImVec4 background_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+    /* Continuous UI updating */
+    while (!glfwWindowShouldClose(window))
+    {
+        /* Sleep */
+        glfwWaitEvents();
+        /* Start the Dear ImGui frame */
+        ImGui_ImplOpenGL2_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::Begin("Menu");
+
+        /*
+        * demo window (for inspiration)
+        if (show_demo_window)
+            ImGui::ShowDemoWindow(&show_demo_window);
+        ImGui::Checkbox("Demo Window", &show_demo_window);
+        */
+
+        ImGui::Checkbox("API Calls", &show_api_calls);
+
+        if (show_api_calls)
+        {
+            ImGui::Begin("API Calls");
+            ImGui::Checkbox("Statistics", &show_api_calls_statistics);
+            if (show_api_calls_statistics)
+                ShowTable("api_statistics");
+            ImGui::Checkbox("History", &show_api_calls_history);
+            if (show_api_calls_history)
+                ShowTable("api_history");
+            ImGui::End();
+        }
+        ImGui::Checkbox("Command Buffer", &show_command_buffer);
+        if (show_command_buffer)
+        {
+            ImGui::Begin("Command Buffer");
+            ImGui::Checkbox("Total", &show_command_buffer_statistics_total);
+            if (show_command_buffer_statistics_total)
+                ShowTable("show_command_buffer_statistics_total");
+            ImGui::Checkbox("Current", &show_command_buffer_statistics_current);
+            if (show_command_buffer_statistics_current)
+                ShowTable("show_command_buffer_statistics_current");
+            ImGui::End();
+        }
+
+        if (ImGui::Button("Exit"))
+            break;
+        ImGui::End();
+
+        ImGui::Render();
+        int display_w, display_h;
+        glfwGetFramebufferSize(window, &display_w, &display_h);
+        glViewport(0, 0, display_w, display_h);
+        glClearColor(background_color.x * background_color.w, background_color.y * background_color.w, background_color.z * background_color.w, background_color.w);
+        glClear(GL_COLOR_BUFFER_BIT);
+        ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+
+        glfwMakeContextCurrent(window);
+        glfwSwapBuffers(window);
+    }
+
+    /* Destroy UI */
+    ImGui_ImplOpenGL2_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
+    /* Destroy window */
+    glfwDestroyWindow(window);
+    glfwTerminate();
+
 }
-DWORD WINAPI mythread(__in LPVOID lpParameter)
+/* [THREAD] open connection, create socket, listen for data, then wake up the glfw window so it updates the received values */
+DWORD WINAPI layerReceiver(__in LPVOID lpParameter)
 {
     /* Create socket */
-    int iResult;
+    int ret;
     SOCKET ClientSocket = INVALID_SOCKET;
     char recvbuf[DEFAULT_BUFLEN];
-    int recvbuflen = DEFAULT_BUFLEN;
-    INIT_UI_WINSOCK(&ClientSocket);
+    uiWinsockInit(&ClientSocket);
 
     // Receive until the peer shuts down the connection
     do {
-        iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-        if (iResult > 0) {
+        ret = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0);
+        if (ret > 0)
+        {
             /* Parse data */
-            layer_event(recvbuf);
+            newLayerEvent(recvbuf);
             /* New data from layer received */
             glfwPostEmptyEvent();
         }
-        else if (iResult == 0)
-            printf("Connection closing...\n");
-        else {
-            printf("recv failed with error [server]: %d\n", WSAGetLastError());
+        else if (ret == 0)
+        {
+            /* closing connection */
+        }
+        else
+        {
+            /* recv failed */
             closesocket(ClientSocket);
             WSACleanup();
             return 1;
         }
-    } while (iResult > 0);
+    } while (ret > 0);
 
     /* Destroy socket */
-    EXIT_UI_WINSOCK(&ClientSocket);
-    printf("socket destroyed\n");
-
+    uiWinsockExit(&ClientSocket);
     return 0;
 }
-
-void AddTableItem(const char* text)
+/* create item in the table with 'value' value */
+void AddTableItem(const char* value)
 {
     char buf[64];
-    sprintf(buf, "%s", text);
+    sprintf(buf, "%s", value);
     ImGui::TableNextColumn();
     ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
 }
+/* create item in the table with 'value' value */
 void AddTableItem(const int value)
 {
     char buf[64];
@@ -75,6 +195,7 @@ void AddTableItem(const int value)
     ImGui::TableNextColumn();
     ImGui::Text(buf, ImVec2(-FLT_MIN, 0.0f));
 }
+/* creates a table based on the dataType */
 void ShowTable(const char* dataType)
 {
     ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
@@ -137,131 +258,16 @@ void ShowTable(const char* dataType)
     ImGui::EndChild();
     ImGui::PopStyleVar();
 }
+/* create a new thread to collect data continuously while running the UI at the same time */
 int main(int, char**)
 {
-    DWORD mythreadid;
+    DWORD mythreadId;
     /* Collect data from socket continuously */
-    CreateThread(0, 0, mythread, 0, 0, &mythreadid);
+    CreateThread(0, 0, layerReceiver, 0, 0, &mythreadId);
 
-    /* Create UI */
-    glfwSetErrorCallback(glfw_error_callback);
-    if (!glfwInit())
+    /* Open UI and show data continuosly until the user closes the window */
+    if (RunUI() != 0)
         return 1;
-
-    // Create window with graphics context
-    GLFWwindow* window = glfwCreateWindow(1280, 720, WINDOW_NAME, nullptr, nullptr);
-    if (window == nullptr)
-        return 1;
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); // Enable vsync
-
-    // Setup Dear ImGui context
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
-    // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
-
-    // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL2_Init();
-
-    // Our state
-    bool show_demo_window = false;
-    bool show_api_calls = false;
-    bool show_api_calls_statistics = true;
-    bool show_api_calls_history = false;
-
-    bool show_command_buffer = false;
-    bool show_command_buffer_statistics_total = true;
-    bool show_command_buffer_statistics_current = false;
-
-    bool show_another_window = false;
-    ImVec4 background_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
-    // Main loop
-    while (!glfwWindowShouldClose(window))
-    {
-        /* Create base UI */
-
-        /* Refresh UI */
-
-        glfwWaitEvents();
-
-        // Start the Dear ImGui frame
-        ImGui_ImplOpenGL2_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-        if (show_demo_window)
-            ImGui::ShowDemoWindow(&show_demo_window);
-
-        ImGui::Begin("Menu");
-        ImGui::Checkbox("Demo Window", &show_demo_window);
-
-        ImGui::Checkbox("API Calls", &show_api_calls);
-
-        if (show_api_calls)
-        {
-            ImGui::Begin("API Calls");
-            ImGui::Checkbox("Statistics", &show_api_calls_statistics);
-            if (show_api_calls_statistics)
-                ShowTable("api_statistics");
-            ImGui::Checkbox("History", &show_api_calls_history);
-            if (show_api_calls_history)
-                ShowTable("api_history");
-            ImGui::End();
-        }
-        ImGui::Checkbox("Command Buffer", &show_command_buffer);
-        if (show_command_buffer)
-        {
-            ImGui::Begin("Command Buffer");
-            ImGui::Checkbox("Total", &show_command_buffer_statistics_total);
-            if (show_command_buffer_statistics_total)
-                ShowTable("show_command_buffer_statistics_total");
-            ImGui::Checkbox("Current", &show_command_buffer_statistics_current);
-            if (show_command_buffer_statistics_current)
-                ShowTable("show_command_buffer_statistics_current");
-            ImGui::End();
-        }
-
-        if (ImGui::Button("Exit"))
-            break;
-        ImGui::End();
-
-        // Rendering
-        ImGui::Render();
-        int display_w, display_h;
-        glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
-        glClearColor(background_color.x * background_color.w, background_color.y * background_color.w, background_color.z * background_color.w, background_color.w);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        // If you are using this code with non-legacy OpenGL header/contexts (which you should not, prefer using imgui_impl_opengl3.cpp!!),
-        // you may need to backup/reset/restore other state, e.g. for current shader using the commented lines below.
-        //GLint last_program;
-        //glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
-        //glUseProgram(0);
-        ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
-        //glUseProgram(last_program);
-
-        glfwMakeContextCurrent(window);
-        glfwSwapBuffers(window);
-    }
-
-    /* Destroy UI */
-    ImGui_ImplOpenGL2_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-
-    /* Destroy window */
-    glfwDestroyWindow(window);
-    glfwTerminate();
 
     return 0;
 }
