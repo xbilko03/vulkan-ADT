@@ -1,9 +1,12 @@
 ﻿/*
 * Name		: appUI.cpp
 * Project	: A Debugging Tool for Vulkan API
-* Director  : Ing. Ján Pečiva Ph.D.
-* Author	: Jozef Bilko (xbilko03)
+* 
+* Based on  : Baldur Karlsson (baldurk) and Johannes Kuhlmann's (jkuhlmann) sample_layer
+* https://github.com/baldurk/sample_layer/blob/master
+* Minor changes : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
 */
+
 #include <vulkan.h>
 #include <vk_layer.h>
 #include <assert.h>
@@ -15,10 +18,6 @@
 #include <windows.h>
 #include "../appUI/winsock.h"
 
-/*
-* based on: Baldur Karlsson (baldurk) and Johannes Kuhlmann's (jkuhlmann) sample_layer
-* https://github.com/baldurk/sample_layer/blob/master
-*/
 std::mutex global_lock;
 typedef std::lock_guard<std::mutex> scoped_lock;
 
