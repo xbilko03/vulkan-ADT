@@ -4,9 +4,11 @@
 * Director  : Ing. Ján Pečiva Ph.D.
 * Author	: Jozef Bilko (xbilko03)
 */
+#pragma once
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdio.h>
+#include <string>
 
 /* initializes and establishes the CLIENT, continuously try to connect to the SERVER */
 int layerWinsockInit(SOCKET* ConnectSocket);
@@ -15,7 +17,7 @@ int layerWinsockInit(SOCKET* ConnectSocket);
 int uiWinsockInit(SOCKET* ConnectSocket);
 
 /* sends the 'sendbuf' array of chars from the CLIENT to the SERVER */
-int winsockSendToUI(SOCKET* ConnectSocket, const char* sendbuf);
+int winsockSendToUI(SOCKET* ConnectSocket, std::string sendbuf);
 
 /* shuts down connection from the CLIENT side */
 int layerWinsockExit(SOCKET* ConnectSocket);

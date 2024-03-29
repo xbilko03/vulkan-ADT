@@ -1,0 +1,88 @@
+/* generated part */
+
+VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BeginCommandBuffer(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo* pBeginInfo)
+{
+    scoped_lock l(global_lock);
+    //winsockSendToUI(&ConnectSocket, "vkBeginCommandBuffer");
+    device_dispatch[GetKey(commandBuffer)].BeginCommandBuffer(commandBuffer, pBeginInfo);
+    return VK_SUCCESS;
+}
+
+VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
+{
+    scoped_lock l(global_lock);
+    std::string callData = "vkCmdDraw(" + std::to_string(instanceCount) + "," + std::to_string(vertexCount) + ")";
+    //winsockSendToUI(&ConnectSocket, callData.c_str());
+
+    device_dispatch[GetKey(commandBuffer)].CmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
+}
+
+VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndexed(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance)
+{
+    scoped_lock l(global_lock);
+    std::string callData = "vkCmdDrawIndexed(" + std::to_string(instanceCount) + "," + std::to_string(indexCount) + ")";
+    //winsockSendToUI(&ConnectSocket, callData.c_str());
+
+    device_dispatch[GetKey(commandBuffer)].CmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
+}
+
+VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EndCommandBuffer(VkCommandBuffer commandBuffer)
+{
+    scoped_lock l(global_lock);
+    //winsockSendToUI(&ConnectSocket, "vkEndCommandBuffer");
+
+    device_dispatch[GetKey(commandBuffer)].EndCommandBuffer(commandBuffer);
+    return VK_SUCCESS;
+}
+
+
+
+/* GetProcAddr functions, entry points of the layer */
+#define GETPROCADDR(func) if(!strcmp(pName, "vk" #func)) return (PFN_vkVoidFunction)&DetailsLayer_##func;
+
+VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DetailsLayer_GetDeviceProcAddr(VkDevice device, const char* pName)
+{
+    //winsockSendToUI(&ConnectSocket, "vkGetDeviceProcAddr");
+    /* device chain functions we intercept */
+    GETPROCADDR(GetDeviceProcAddr);
+    GETPROCADDR(EnumerateDeviceLayerProperties);
+    GETPROCADDR(EnumerateDeviceExtensionProperties);
+    GETPROCADDR(CreateDevice);
+    GETPROCADDR(DestroyDevice);
+    GETPROCADDR(BeginCommandBuffer);
+    GETPROCADDR(CmdDraw);
+    GETPROCADDR(CmdDrawIndexed);
+    GETPROCADDR(EndCommandBuffer);
+
+    {
+        scoped_lock l(global_lock);
+        return device_dispatch[GetKey(device)].GetDeviceProcAddr(device, pName);
+    }
+}
+
+VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DetailsLayer_GetInstanceProcAddr(VkInstance instance, const char* pName)
+{
+    //winsockSendToUI(&ConnectSocket, "vkGetInstanceProcAddr");
+    /* instance chain functions we intercept */
+    GETPROCADDR(GetInstanceProcAddr);
+    GETPROCADDR(EnumerateInstanceLayerProperties);
+    GETPROCADDR(EnumerateInstanceExtensionProperties);
+    GETPROCADDR(CreateInstance);
+    GETPROCADDR(DestroyInstance);
+
+    /* device chain functions we intercept */
+    GETPROCADDR(GetDeviceProcAddr);
+    GETPROCADDR(EnumerateDeviceLayerProperties);
+    GETPROCADDR(EnumerateDeviceExtensionProperties);
+    GETPROCADDR(CreateDevice);
+    GETPROCADDR(DestroyDevice);
+    GETPROCADDR(BeginCommandBuffer);
+    GETPROCADDR(CmdDraw);
+    GETPROCADDR(CmdDrawIndexed);
+    GETPROCADDR(EndCommandBuffer);
+
+    {
+        scoped_lock l(global_lock);
+        return instance_dispatch[GetKey(instance)].GetInstanceProcAddr(instance, pName);
+    }
+}

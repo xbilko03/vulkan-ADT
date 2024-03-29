@@ -1,312 +1,235 @@
 ﻿/*
 * Name		: appUI.cpp
 * Project	: A Debugging Tool for Vulkan API
-* 
+*
 * Based on  : Baldur Karlsson (baldurk) and Johannes Kuhlmann's (jkuhlmann) sample_layer
 * https://github.com/baldurk/sample_layer/blob/master
 * Minor changes : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
 */
 
-#include <vulkan.h>
-#include <vk_layer.h>
-#include <assert.h>
-#include <mutex>
-#include <map>
-#include <string>
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#include <windows.h>
+#include "layer.hpp"
 #include "../appUI/winsock.h"
 
-std::mutex global_lock;
-typedef std::lock_guard<std::mutex> scoped_lock;
+#include <windows.h>
+#include <iostream>
 
-#pragma comment(lib, "Ws2_32.lib")
-#define VK_LAYER_EXPORT extern "C" __declspec(dllexport)
-#define WINDOW_NAME "VK_DEBUGGER"
-#define DEFAULT_BUFLEN 512
+#include <assert.h>
+#include <filesystem>
+#include <array>
+
+#include <stdlib.h> //atexit
+#include <mutex> //scoped lock
+#include <chrono> //sleep
+#include <thread>
 
 SOCKET ConnectSocket = INVALID_SOCKET;
+bool connected = false;
 
-/* use the loader's dispatch table pointer as a key for dispatch map lookups */
-template<typename DispatchableType>
-void* GetKey(DispatchableType inst)
+void layer_MapMemory(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData)
 {
-    return *(void**)inst;
+    if (connected)
+    {
+        //std::cout << "mapping ID -> [memory]: " << memory << std::endl;
+        //winsockSendToUI(&ConnectSocket, "VkDeviceSize:" + std::to_string(size) + s);
+    }
 }
 
-/* layer book-keeping information, to store dispatch tables by key */
-std::map<void*, VkLayerInstanceDispatchTable> instance_dispatch;
-std::map<void*, VkLayerDispatchTable> device_dispatch;
-
-/* actual data we're recording in this layer */
-struct CommandStats
+void layer_CmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
 {
-    uint32_t drawCount = 0, instanceCount = 0, vertCount = 0;
-};
+    if (connected) 
+    {
+        //std::cout << std::endl;
+        //winsockSendToUI(&ConnectSocket, "CmdDraw");
+    }
+}
 
-std::map<VkCommandBuffer, CommandStats> commandbuffer_stats;
+void layer_UnmapMemory(VkDevice device, VkDeviceMemory memory) 
+{
+    if (connected)
+    {
+        //std::cout << "unmapping ID -> [memory]: " << memory << std::endl;
+    }
+}
 
-/* Layer init and shutdown */
-VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
+
+std::mutex test_lock;
+typedef std::lock_guard<std::mutex> scoped_lock;
+
+/* VkImage */
+void layer_CreateImage(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage)
+{
+    if (connected)
+    {
+        /* VkImageCreateInfo
+        std::cout << pCreateInfo->arrayLayers << std::endl;
+        std::cout << pCreateInfo->extent.width << std::endl;
+        std::cout << pCreateInfo->extent.height << std::endl;
+        std::cout << pCreateInfo->extent.depth << std::endl;
+        std::cout << pCreateInfo->flags << std::endl;
+        std::cout << pCreateInfo->format << std::endl;
+        std::cout << pCreateInfo->imageType << std::endl;
+        std::cout << pCreateInfo->initialLayout << std::endl;
+        std::cout << pCreateInfo->mipLevels << std::endl;
+        std::cout << pCreateInfo->pNext << std::endl;
+        std::cout << pCreateInfo->pQueueFamilyIndices << std::endl;
+        std::cout << pCreateInfo->queueFamilyIndexCount << std::endl;
+        std::cout << pCreateInfo->samples << std::endl;
+        std::cout << pCreateInfo->sharingMode << std::endl;
+        std::cout << pCreateInfo->sType << std::endl;
+        std::cout << pCreateInfo->tiling << std::endl;
+        std::cout << pCreateInfo->usage << std::endl;
+        */
+        //std::cout << "create image -> [VkImage*] " << pImage << std::endl;
+    }
+}
+void layer_BindImageMemory(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset)
+{
+    if (connected)
+    {
+        //std::cout << "bind image -> [VkImage] " << image << std::endl;
+        //std::cout << "bind image -> [VkDeviceMemory] " << memory << std::endl;
+    }
+}
+void layer_DestroyImage(VkDevice device, VkImage image, VkAllocationCallbacks* pAllocator)
+{
+    if (connected)
+    {
+        //std::cout << "destroy image -> [VkImage] " << image << std::endl;
+    }
+}
+/* VkImage */
+
+/* VkCommandBuffer */
+void layer_QueueSubmit(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence)
+{
+    if (connected)
+    {
+        //std::cout << "submit cmdBuff -> [pCommandBuffers*]" << std::hex << *(pSubmits->pCommandBuffers) << std::endl;
+    }
+}
+void layer_AllocateCommandBuffers(VkDevice device, VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers)
+{
+    if (connected)
+    {
+        //std::cout << pAllocateInfo->commandBufferCount << std::endl;
+        /*
+        std::cout << pAllocateInfo->commandPool << std::endl;
+        std::cout << pAllocateInfo->level << std::endl;
+        std::cout << pAllocateInfo->pNext << std::endl;
+        std::cout << pAllocateInfo->sType << std::endl;
+        */
+        //std::cout << "allocate before cmdBuff -> [VkCommandBuffer*]" << *pCommandBuffers << std::endl;
+    }
+}
+void layer_BeginCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferBeginInfo* pBeginInfo)
+{
+    if (connected)
+    {
+        //std::cout << "begin cmdBuff -> [VkCommandBuffer]" << commandBuffer << std::endl;
+    }
+}
+void layer_ResetCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags)
+{
+    if (connected)
+    {
+        //std::cout << "reset cmdBuff -> [VkCommandBuffer]" << commandBuffer << std::endl;
+    }
+}
+void layer_EndCommandBuffer(VkCommandBuffer commandBuffer)
+{
+    if (connected)
+    {
+        //std::cout << "end cmdBuff -> [VkCommandBuffer]" << commandBuffer << std::endl;
+    }
+}
+void layer_FreeCommandBuffers(VkDevice device, VkCommandPool commandPool, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers)
+{
+    if (connected)
+    {
+        //std::cout << "free cmdBuff -> [VkCommandBuffer*]" << *pCommandBuffers << std::endl;
+        //std::cout << "free cmdBuff -> [VkCommandPool]" << commandPool << std::endl;
+    }
+}
+/* VkCommandBuffer */
+
+
+
+
+
+/* VkBuffer */
+void layer_BindBufferMemory(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset)
+{
+    if (connected)
+    {
+        //std::cout << "binding ID -> [buffer]:" << buffer << std::endl;
+        //std::cout << "binding ID -> [memory]:" << memory << std::endl;
+    }
+}
+void layer_CreateBuffer(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer)
+{
+    if (connected)
+    {
+        //std::cout << "createBuffer ID -> [buffer]: " << pBuffer << std::endl;
+
+        /* create info
+        std::cout << pCreateInfo->sType << std::endl;
+        std::cout << pCreateInfo->pNext << std::endl;
+        std::cout << pCreateInfo->flags << std::endl;
+        std::cout << pCreateInfo->size << std::endl;
+        std::cout << pCreateInfo->usage << std::endl;
+        std::cout << pCreateInfo->sharingMode << std::endl;
+        std::cout << pCreateInfo->queueFamilyIndexCount << std::endl;
+        std::cout << pCreateInfo->pQueueFamilyIndices << std::endl;
+        */
+
+        //winsockSendToUI(&ConnectSocket, "created buffer");
+    }
+}
+void layer_DestroyBuffer(VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pAllocator)
+{
+    if (connected)
+    {
+        //std::cout << "DestroyBuffer -> buffer ID -> [buffer]: " << buffer << std::endl << std::endl;
+    }
+}
+/* VkBuffer */
+
+
+
+
+void layer_CreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
 {
     /* Start UI */
     /* If there is a running window already, do nothing. */
 
     STARTUPINFO info = { sizeof(info) };
     PROCESS_INFORMATION processInfo;
-    CreateProcess("C:\\Users\\jozef\\Desktop\\projects\\dbgrv2\\out\\build\\x64-debug\\vkdebugger.exe", NULL, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo);
-    CloseHandle(processInfo.hProcess);
-    CloseHandle(processInfo.hThread);
-    /* Send data */
-    int iResult;
 
-    /* Connect to UI */
-    layerWinsockInit(&ConnectSocket);
+    /* windows only: */
+    char buf[MAX_PATH];
+    GetModuleFileNameA(nullptr, buf, MAX_PATH);
+    std::filesystem::path progPath(buf);
+    std::string filename = progPath.filename().string();
 
-    /* Send data to UI */
-    winsockSendToUI(&ConnectSocket, "vkCreateInstance");
-
-    VkLayerInstanceCreateInfo* layerCreateInfo = (VkLayerInstanceCreateInfo*)pCreateInfo->pNext;
-
-    /* step through the chain of pNext until we get to the link info */
-    while (layerCreateInfo && (layerCreateInfo->sType != VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO ||
-        layerCreateInfo->function != VK_LAYER_LINK_INFO))
+    if (strcmp(filename.c_str(), "vkDetails.exe") != 0)
     {
-        layerCreateInfo = (VkLayerInstanceCreateInfo*)layerCreateInfo->pNext;
+        /* prevent opening vkDetails on appUI startup */
+        CreateProcess("C:\\Users\\jozef\\Desktop\\vk details\\out\\build\\x64-debug\\vkDetails.exe", NULL, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo);
+        CloseHandle(processInfo.hProcess);
+        CloseHandle(processInfo.hThread);
+
+        /* Connect to UI */
+        if (layerWinsockInit(&ConnectSocket) == 0)
+        {
+            connected = true;
+        }
+        else
+            connected = false;
+
+        if (connected)
+        {
+            //winsockSendToUI(&ConnectSocket, "vkCreateInstance");
+        }
     }
-
-    if (layerCreateInfo == NULL)
-    {
-        /* No loader instance create info */
-        return VK_ERROR_INITIALIZATION_FAILED;
-    }
-
-    PFN_vkGetInstanceProcAddr gpa = layerCreateInfo->u.pLayerInfo->pfnNextGetInstanceProcAddr;
-    /* move chain on for next layer */
-    layerCreateInfo->u.pLayerInfo = layerCreateInfo->u.pLayerInfo->pNext;
-
-    PFN_vkCreateInstance createFunc = (PFN_vkCreateInstance)gpa(VK_NULL_HANDLE, "vkCreateInstance");
-
-    VkResult ret = createFunc(pCreateInfo, pAllocator, pInstance);
-
-    /* fetch our own dispatch table for the functions we need, into the next layer */
-    VkLayerInstanceDispatchTable dispatchTable;
-    dispatchTable.GetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)gpa(*pInstance, "vkGetInstanceProcAddr");
-    dispatchTable.DestroyInstance = (PFN_vkDestroyInstance)gpa(*pInstance, "vkDestroyInstance");
-    dispatchTable.EnumerateDeviceExtensionProperties = (PFN_vkEnumerateDeviceExtensionProperties)gpa(*pInstance, "vkEnumerateDeviceExtensionProperties");
-
-    /* store the table by key */
-    {
-        scoped_lock l(global_lock);
-        instance_dispatch[GetKey(*pInstance)] = dispatchTable;
-    }
-
-    return VK_SUCCESS;
+    /* windows only */
 }
-
-VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyInstance(VkInstance instance, const VkAllocationCallbacks* pAllocator)
-{
-    scoped_lock l(global_lock);
-    winsockSendToUI(&ConnectSocket, "vkDestroyInstance");
-
-    /* Stop communication */
-    layerWinsockExit(&ConnectSocket);
-    instance_dispatch.erase(GetKey(instance));
-
-}
-
-VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(VkPhysicalDevice physicalDevice, const VkDeviceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDevice* pDevice)
-{
-    VkLayerDeviceCreateInfo* layerCreateInfo = (VkLayerDeviceCreateInfo*)pCreateInfo->pNext;
-    winsockSendToUI(&ConnectSocket, "vkCreateDevice");
-
-    /* step through the chain of pNext until we get to the link info */
-    while (layerCreateInfo && (layerCreateInfo->sType != VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO ||
-        layerCreateInfo->function != VK_LAYER_LINK_INFO))
-    {
-        layerCreateInfo = (VkLayerDeviceCreateInfo*)layerCreateInfo->pNext;
-    }
-
-    if (layerCreateInfo == NULL)
-    {
-        /* No loader instance create info */
-        return VK_ERROR_INITIALIZATION_FAILED;
-    }
-
-    PFN_vkGetInstanceProcAddr gipa = layerCreateInfo->u.pLayerInfo->pfnNextGetInstanceProcAddr;
-    PFN_vkGetDeviceProcAddr gdpa = layerCreateInfo->u.pLayerInfo->pfnNextGetDeviceProcAddr;
-    /* move chain on for next layer */
-    layerCreateInfo->u.pLayerInfo = layerCreateInfo->u.pLayerInfo->pNext;
-
-    PFN_vkCreateDevice createFunc = (PFN_vkCreateDevice)gipa(VK_NULL_HANDLE, "vkCreateDevice");
-
-    VkResult ret = createFunc(physicalDevice, pCreateInfo, pAllocator, pDevice);
-
-    /* fetch our own dispatch table for the functions we need, into the next layer */
-    VkLayerDispatchTable dispatchTable;
-    dispatchTable.GetDeviceProcAddr = (PFN_vkGetDeviceProcAddr)gdpa(*pDevice, "vkGetDeviceProcAddr");
-    dispatchTable.DestroyDevice = (PFN_vkDestroyDevice)gdpa(*pDevice, "vkDestroyDevice");
-    dispatchTable.BeginCommandBuffer = (PFN_vkBeginCommandBuffer)gdpa(*pDevice, "vkBeginCommandBuffer");
-    dispatchTable.CmdDraw = (PFN_vkCmdDraw)gdpa(*pDevice, "vkCmdDraw");
-    dispatchTable.CmdDrawIndexed = (PFN_vkCmdDrawIndexed)gdpa(*pDevice, "vkCmdDrawIndexed");
-    dispatchTable.EndCommandBuffer = (PFN_vkEndCommandBuffer)gdpa(*pDevice, "vkEndCommandBuffer");
-
-    /* store the table by key */
-    {
-        scoped_lock l(global_lock);
-        device_dispatch[GetKey(*pDevice)] = dispatchTable;
-    }
-
-    return VK_SUCCESS;
-}
-
-VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDevice(VkDevice device, const VkAllocationCallbacks* pAllocator)
-{
-    scoped_lock l(global_lock);
-    winsockSendToUI(&ConnectSocket, "vkDestroyDevice");
-    device_dispatch.erase(GetKey(device));
-}
-
-/* Actual layer implementation */
-VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BeginCommandBuffer(VkCommandBuffer commandBuffer, const VkCommandBufferBeginInfo* pBeginInfo)
-{
-    scoped_lock l(global_lock);
-    winsockSendToUI(&ConnectSocket, "vkBeginCommandBuffer");
-    return device_dispatch[GetKey(commandBuffer)].BeginCommandBuffer(commandBuffer, pBeginInfo);
-}
-
-VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDraw( VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
-{
-    scoped_lock l(global_lock);
-    std::string callData = "vkCmdDraw(" + std::to_string(instanceCount) + "," + std::to_string(vertexCount) + ")";
-    winsockSendToUI(&ConnectSocket, callData.c_str());
-
-    device_dispatch[GetKey(commandBuffer)].CmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
-}
-
-VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndexed(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance)
-{
-    scoped_lock l(global_lock);
-    std::string callData = "vkCmdDrawIndexed(" + std::to_string(instanceCount) + "," + std::to_string(indexCount) + ")";
-    winsockSendToUI(&ConnectSocket, callData.c_str());
-
-    device_dispatch[GetKey(commandBuffer)].CmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
-}
-
-VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EndCommandBuffer(VkCommandBuffer commandBuffer)
-{
-    scoped_lock l(global_lock);
-    winsockSendToUI(&ConnectSocket, "vkEndCommandBuffer");
-
-    return device_dispatch[GetKey(commandBuffer)].EndCommandBuffer(commandBuffer);
-}
-
-/* Enumeration function */
-
-VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceLayerProperties(uint32_t* pPropertyCount,
-    VkLayerProperties* pProperties)
-{
-    if (pPropertyCount) *pPropertyCount = 1;
-    winsockSendToUI(&ConnectSocket, "vkEnumerateInstanceLayerProperties");
-
-    if (pProperties)
-    {
-        strcpy(pProperties->layerName, "vkdebuggerLayer");
-        strcpy(pProperties->description, "https://github.com/xbilko03/ADT_VAPI");
-        pProperties->implementationVersion = 1;
-        pProperties->specVersion = VK_API_VERSION_1_0;
-    }
-
-    return VK_SUCCESS;
-}
-
-VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceLayerProperties(
-    VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkLayerProperties* pProperties)
-{
-    winsockSendToUI(&ConnectSocket, "vkEnumerateDeviceLayerProperties");
-    return DebuggerLayer_EnumerateInstanceLayerProperties(pPropertyCount, pProperties);
-}
-
-VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceExtensionProperties(
-    const char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
-{
-    winsockSendToUI(&ConnectSocket, "vkEnumerateInstanceExtensionProperties");
-    if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DebuggerLayer"))
-        return VK_ERROR_LAYER_NOT_PRESENT;
-
-    /* don't expose any extensions */
-    if (pPropertyCount) *pPropertyCount = 0;
-    return VK_SUCCESS;
-}
-
-VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceExtensionProperties(
-    VkPhysicalDevice physicalDevice, const char* pLayerName,
-    uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
-{
-    winsockSendToUI(&ConnectSocket, "vkEnumerateDeviceExtensionProperties");
-    /*  pass through any queries that aren't to us */
-    if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DebuggerLayer"))
-    {
-        if (physicalDevice == VK_NULL_HANDLE)
-            return VK_SUCCESS;
-
-        scoped_lock l(global_lock);
-        return instance_dispatch[GetKey(physicalDevice)].EnumerateDeviceExtensionProperties(physicalDevice, pLayerName, pPropertyCount, pProperties);
-    }
-
-    /* don't expose any extensions */
-    if (pPropertyCount) *pPropertyCount = 0;
-    return VK_SUCCESS;
-}
-
-/* GetProcAddr functions, entry points of the layer */
-#define GETPROCADDR(func) if(!strcmp(pName, "vk" #func)) return (PFN_vkVoidFunction)&DebuggerLayer_##func;
-
-VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetDeviceProcAddr(VkDevice device, const char* pName)
-{
-    winsockSendToUI(&ConnectSocket, "vkGetDeviceProcAddr");
-    /* device chain functions we intercept */
-    GETPROCADDR(GetDeviceProcAddr);
-    GETPROCADDR(EnumerateDeviceLayerProperties);
-    GETPROCADDR(EnumerateDeviceExtensionProperties);
-    GETPROCADDR(CreateDevice);
-    GETPROCADDR(DestroyDevice);
-    GETPROCADDR(BeginCommandBuffer);
-    GETPROCADDR(CmdDraw);
-    GETPROCADDR(CmdDrawIndexed);
-    GETPROCADDR(EndCommandBuffer);
-
-    {
-        scoped_lock l(global_lock);
-        return device_dispatch[GetKey(device)].GetDeviceProcAddr(device, pName);
-    }
-}
-
-VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetInstanceProcAddr(VkInstance instance, const char* pName)
-{
-    winsockSendToUI(&ConnectSocket, "vkGetInstanceProcAddr");
-    /* instance chain functions we intercept */
-    GETPROCADDR(GetInstanceProcAddr);
-    GETPROCADDR(EnumerateInstanceLayerProperties);
-    GETPROCADDR(EnumerateInstanceExtensionProperties);
-    GETPROCADDR(CreateInstance);
-    GETPROCADDR(DestroyInstance);
-
-    /* device chain functions we intercept */
-    GETPROCADDR(GetDeviceProcAddr);
-    GETPROCADDR(EnumerateDeviceLayerProperties);
-    GETPROCADDR(EnumerateDeviceExtensionProperties);
-    GETPROCADDR(CreateDevice);
-    GETPROCADDR(DestroyDevice);
-    GETPROCADDR(BeginCommandBuffer);
-    GETPROCADDR(CmdDraw);
-    GETPROCADDR(CmdDrawIndexed);
-    GETPROCADDR(EndCommandBuffer);
-
-    {
-        scoped_lock l(global_lock);
-        return instance_dispatch[GetKey(instance)].GetInstanceProcAddr(instance, pName);
-    }
-}
-

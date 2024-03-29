@@ -4,6 +4,8 @@
 * Director  : Ing. Ján Pečiva Ph.D.
 * Author	: Jozef Bilko (xbilko03)
 */
+#pragma once
+
 #include <array>
 #include <string>
 #include <list>

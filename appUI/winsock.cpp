@@ -77,6 +77,7 @@ int uiWinsockInit(SOCKET* ConnectSocket)
     if (ret != 0)
         return 1;
 
+
     ZeroMemory(&hints, sizeof(hints));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
@@ -127,10 +128,11 @@ int uiWinsockInit(SOCKET* ConnectSocket)
 }
 
 /* sends the 'sendbuf' array of chars from the CLIENT to the SERVER */
-int winsockSendToUI(SOCKET* ConnectSocket, const char* sendbuf)
+int winsockSendToUI(SOCKET* ConnectSocket, std::string sendbuf)
 {
+    sendbuf += '!';
     /* Send 'sendbuf' data */
-    int ret = send(*ConnectSocket, sendbuf, (int)strlen(sendbuf), 0);
+    int ret = send(*ConnectSocket, sendbuf.c_str(), strlen(sendbuf.c_str()), 0);
     if (ret == SOCKET_ERROR) {
         closesocket(*ConnectSocket);
         WSACleanup();

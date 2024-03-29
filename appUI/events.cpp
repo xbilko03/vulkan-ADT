@@ -6,6 +6,7 @@
 */
 #include <stdio.h>
 #include "events.h"
+#include <iostream>
 #define TRACKED_API_COUNT 14
 #define CMD_BUFFER_COUNT 6
 
@@ -82,52 +83,9 @@ bool cmpInput(const char* str1, const char* str2);
 */
 void newLayerEvent(const char* input)
 {
-    /* if a call happened consider it an event, handle it accordingly */
-    if (cmpInput(input, "vkCreateInstance"))
-        newCall(vkCreateInstance);
-    else if (cmpInput(input, "vkDestroyInstance"))
-        newCall(vkDestroyInstance);
-    else if (cmpInput(input, "vkCreateDevice"))
-        newCall(vkCreateDevice);
-    else if (cmpInput(input, "vkDestroyDevice"))
-        newCall(vkDestroyDevice);
-    else if (cmpInput(input, "vkBeginCommandBuffer"))
-    {
-        newCall(vkBeginCommandBuffer);
-        cmdbuffArray[cmdbuffcDrawCalls].value = 0;
-        cmdbuffArray[cmdbuffcInstances].value = 0;
-        cmdbuffArray[cmdbuffcVertices].value = 0;
-    }
-    else if (cmpInput(input, "vkCmdDraw"))
-    {
-        newCall(vkCmdDraw);
-        parseArguments(input);
-    }
-    else if (cmpInput(input, "vkCmdDrawIndexed"))
-    {
-        newCall(vkCmdDrawIndexed);
-        parseArguments(input);
-    }
-    else if (cmpInput(input, "vkEndCommandBuffer"))
-    {
-        newCall(vkEndCommandBuffer);
-
-        cmdbuffArray[cmdbuffcDrawCalls].value = 0;
-        cmdbuffArray[cmdbuffcInstances].value = 0;
-        cmdbuffArray[cmdbuffcVertices].value = 0;
-    }
-    else if (cmpInput(input, "vkEnumerateInstanceLayerProperties"))
-        newCall(vkEnumerateInstanceLayerProperties);
-    else if (cmpInput(input, "vkEnumerateDeviceLayerProperties"))
-        newCall(vkEnumerateDeviceLayerProperties);
-    else if (cmpInput(input, "vkEnumerateInstanceExtensionProperties"))
-        newCall(vkEnumerateInstanceExtensionProperties);
-    else if (cmpInput(input, "vkEnumerateDeviceExtensionProperties"))
-        newCall(vkEnumerateDeviceExtensionProperties);
-    else if (cmpInput(input, "vkGetDeviceProcAddr"))
-        newCall(vkGetDeviceProcAddr);
-    else if (cmpInput(input, "vkGetInstanceProcAddr"))
-        newCall(vkGetInstanceProcAddr);
+    std::string inp = input;
+    std::cout << "[events.cpp] new input = " << inp << std::endl;
+    //testBuffer.push_back(inp);
 }
 /* returns the number of how many vk api calls we are currently tracking */
 int GetApiStatsLen()
