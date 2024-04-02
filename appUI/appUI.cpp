@@ -9,7 +9,28 @@
 #include <iostream>
 
 namespace details {
-    /* App thread */
+    void appUI::ShowBuffers(details::appWindow* window, details::events* dataObject)
+    {
+        ImGui::Begin("Vk_Buffers");
+        auto bufferList = (*dataObject).getBuffers();
+        size_t bufferCount = bufferList.size();
+
+        for (size_t i = 0; i < bufferCount; i++)
+        {
+            std::string headerName = "vkBuffer #" + std::to_string(i) + '\0';
+            if (ImGui::CollapsingHeader(headerName.c_str()))
+            {
+                std::list<events::vkBufferStr>::iterator iterator = bufferList.begin();
+                std::advance(iterator, i);
+                for (auto param : iterator->parameters)
+                {
+                    ImGui::Text(param.c_str());
+                }
+            }
+        }
+
+        ImGui::End();
+    }
     void appUI::ShowApiCalls(details::appWindow *window, details::events *dataObject)
     {
         static float f = 0.0f;
@@ -79,6 +100,7 @@ namespace details {
 
             /* imGui */
             ShowApiCalls(&window, &eventManager);
+            ShowBuffers(&window, &eventManager);
             window.ShowTexture();
 
             window.renderNewFrame();

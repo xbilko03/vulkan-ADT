@@ -12,56 +12,40 @@
 #include <assert.h>
 #include <array>
 #include <mutex> //scoped lock
+#include <sstream> //scoped lock
 
 SOCKET ConnectSocket = INVALID_SOCKET;
-bool connected = false;
 void* map;
 uint64_t image_size;
 void layer_MapMemory(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData)
 {
-    if (connected)
-    {
         std::cout << "mapping ID -> [memory]: " << memory << std::endl;
         map = *ppData;
         image_size = size;
         // data is 0 after the command is called
         
         //winsockSendToUI(&ConnectSocket, "VkDeviceSize:" + std::to_string(size) + s);
-    }
 }
 
 void layer_CmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
 {
-    if (connected) 
-    {
         //std::cout << std::endl;
         //winsockSendToUI(&ConnectSocket, "CmdDraw");
-    }
 }
 
 void layer_UnmapMemory(VkDevice device, VkDeviceMemory memory) 
 {
-    if (connected)
-    {
-
         int i = 0;
         unsigned char* c = (unsigned char*)map;
 
         while (i != image_size)
             printf("%02x ", c[i++]);
         //std::cout << "unmapping ID -> [memory]: " << memory << std::endl;
-    }
 }
-
-
-std::mutex test_lock;
-typedef std::lock_guard<std::mutex> scoped_lock;
 
 /* VkImage */
 void layer_CreateImage(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage)
 {
-    if (connected)
-    {
         /* VkImageCreateInfo
         std::cout << pCreateInfo->arrayLayers << std::endl;
         std::cout << pCreateInfo->extent.width << std::endl;
@@ -82,37 +66,25 @@ void layer_CreateImage(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAlloca
         std::cout << pCreateInfo->usage << std::endl;
         */
         //std::cout << "create image -> [VkImage*] " << pImage << std::endl;
-    }
 }
 void layer_BindImageMemory(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset)
 {
-    if (connected)
-    {
         //std::cout << "bind image -> [VkImage] " << image << std::endl;
         //std::cout << "bind image -> [VkDeviceMemory] " << memory << std::endl;
-    }
 }
 void layer_DestroyImage(VkDevice device, VkImage image, VkAllocationCallbacks* pAllocator)
 {
-    if (connected)
-    {
         //std::cout << "destroy image -> [VkImage] " << image << std::endl;
-    }
 }
 /* VkImage */
 
 /* VkCommandBuffer */
 void layer_QueueSubmit(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence)
 {
-    if (connected)
-    {
         //std::cout << "submit cmdBuff -> [pCommandBuffers*]" << std::hex << *(pSubmits->pCommandBuffers) << std::endl;
-    }
 }
 void layer_AllocateCommandBuffers(VkDevice device, VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers)
 {
-    if (connected)
-    {
         //std::cout << pAllocateInfo->commandBufferCount << std::endl;
         /*
         std::cout << pAllocateInfo->commandPool << std::endl;
@@ -121,78 +93,73 @@ void layer_AllocateCommandBuffers(VkDevice device, VkCommandBufferAllocateInfo* 
         std::cout << pAllocateInfo->sType << std::endl;
         */
         //std::cout << "allocate before cmdBuff -> [VkCommandBuffer*]" << *pCommandBuffers << std::endl;
-    }
 }
 void layer_BeginCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferBeginInfo* pBeginInfo)
 {
-    if (connected)
-    {
         //std::cout << "begin cmdBuff -> [VkCommandBuffer]" << commandBuffer << std::endl;
-    }
 }
 void layer_ResetCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags)
 {
-    if (connected)
-    {
         //std::cout << "reset cmdBuff -> [VkCommandBuffer]" << commandBuffer << std::endl;
-    }
 }
 void layer_EndCommandBuffer(VkCommandBuffer commandBuffer)
 {
-    if (connected)
-    {
         //std::cout << "end cmdBuff -> [VkCommandBuffer]" << commandBuffer << std::endl;
-    }
 }
 void layer_FreeCommandBuffers(VkDevice device, VkCommandPool commandPool, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers)
 {
-    if (connected)
-    {
         //std::cout << "free cmdBuff -> [VkCommandBuffer*]" << *pCommandBuffers << std::endl;
         //std::cout << "free cmdBuff -> [VkCommandPool]" << commandPool << std::endl;
-    }
 }
 /* VkCommandBuffer */
 
 
 
-
+std::string ptrToString(auto* input)
+{
+    std::stringstream s;
+    s << *input;
+    return s.str();
+}
 
 /* VkBuffer */
 void layer_BindBufferMemory(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset)
 {
-    if (connected)
-    {
         //std::cout << "binding ID -> [buffer]:" << buffer << std::endl;
         //std::cout << "binding ID -> [memory]:" << memory << std::endl;
-    }
 }
-void layer_CreateBuffer(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer)
+void layer_CreateBuffer_before(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer)
 {
-    if (connected)
-    {
-        //std::cout << "createBuffer ID -> [buffer]: " << pBuffer << std::endl;
+    std::string output = "bufferID=" + ptrToString(&pBuffer) + '!';
+    winsockSendToUI(&ConnectSocket, output);
 
-        /* create info
-        std::cout << pCreateInfo->sType << std::endl;
-        std::cout << pCreateInfo->pNext << std::endl;
-        std::cout << pCreateInfo->flags << std::endl;
-        std::cout << pCreateInfo->size << std::endl;
-        std::cout << pCreateInfo->usage << std::endl;
-        std::cout << pCreateInfo->sharingMode << std::endl;
-        std::cout << pCreateInfo->queueFamilyIndexCount << std::endl;
-        std::cout << pCreateInfo->pQueueFamilyIndices << std::endl;
-        */
+    output = "sType=" + std::to_string(pCreateInfo->sType) + '!';
+    winsockSendToUI(&ConnectSocket, output);
+    
+    output = "pNext=" + ptrToString(&(pCreateInfo->pNext)) + '!';
+    winsockSendToUI(&ConnectSocket, output);
 
-        //winsockSendToUI(&ConnectSocket, "created buffer");
-    }
+    output = "flags=" + std::to_string(pCreateInfo->flags) + '!';
+    winsockSendToUI(&ConnectSocket, output);
+
+    output = "size=" + std::to_string(pCreateInfo->size) + '!';
+    winsockSendToUI(&ConnectSocket, output);
+
+    output = "usage=" + std::to_string(pCreateInfo->usage) + '!';
+    winsockSendToUI(&ConnectSocket, output);
+
+    output = "sharingMode=" + std::to_string(pCreateInfo->sharingMode) + '!';
+    winsockSendToUI(&ConnectSocket, output);
+
+    output = "queueFamilyIndexCount=" + std::to_string(pCreateInfo->queueFamilyIndexCount) + '!';
+    winsockSendToUI(&ConnectSocket, output);
+
+    output = "pQueueFamilyIndices=" + ptrToString(&(pCreateInfo->pQueueFamilyIndices)) + '!';
+    winsockSendToUI(&ConnectSocket, output);
 }
 void layer_DestroyBuffer(VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pAllocator)
 {
-    if (connected)
-    {
         //std::cout << "DestroyBuffer -> buffer ID -> [buffer]: " << buffer << std::endl << std::endl;
-    }
 }
 /* VkBuffer */
 

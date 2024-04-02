@@ -10,6 +10,7 @@ namespace details {
 	private:
 
 		void ShowApiCalls(details::appWindow* window, details::events *dataObject);
+		void ShowBuffers(details::appWindow* window, details::events* dataObject);
 
 	};
 }

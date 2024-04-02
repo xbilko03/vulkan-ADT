@@ -6,9 +6,12 @@
 */
 #include "events.hpp"
 #include <GLFW/glfw3.h>
+#include <iostream>
+#include <mutex>
 
 namespace details {
 
+    std::string receptionState = "";
 
     void events::parseMessage(std::string *input)
     {
@@ -21,21 +24,43 @@ namespace details {
             apiCalls.push_back((*input).substr(6, (*input).size()));
             /* refresh window */
             //glfwPostEmptyEvent();
+            if ((*input) == "begin_vkCreateBuffer")
+            {   
+                receptionState = "begin_vkCreateBuffer";
+            }
         }
         else if ((*input).substr(0, 4) == "end_")
         {
+            if ((*input) == "end_vkCreateBuffer")
+            {
+                receptionState = "";
+                Buffers.push_back(Buffer);
+                /* reset buffer struct */
+                Buffer = {};
+            }
             /* api command end message */
         }
         else if ((*input).substr(0, 5) == "data_")
         {
             /* api command data message */
         }
+        else
+        {
+            if (receptionState == "begin_vkCreateBuffer")
+            {
+                Buffer.parameters.push_back(*input);
+            }
+            else
+            {
+                std::cout << "different message = " << *input << std::endl;
+            }
+        }
     }
 
     std::string remainder = "";
+
     void events::newInfo(const char* input, size_t index)
     {
-
         /*
         * received data example
         * apicall1()!apicall2()!\0XXXXXXXXXXXX
@@ -56,6 +81,8 @@ namespace details {
         }
         if (s.size() > 0)
             remainder = s;
+        else
+            remainder = "";
     }
 
     /* Receiver thread */

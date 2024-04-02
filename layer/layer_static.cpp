@@ -6,6 +6,8 @@ struct CommandStats
 };
 std::map<VkCommandBuffer, CommandStats> commandbuffer_stats;
 
+bool connected = false;
+
 /* Layer init and shutdown */
 VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
 {

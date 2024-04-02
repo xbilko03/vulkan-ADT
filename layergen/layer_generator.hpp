@@ -74,7 +74,7 @@ namespace laygen {
 
 		void PrintCallDefinition(std::ofstream* output, std::string* functType, std::string* functName, auto* parameterList);
 		void PrintLock(std::ofstream* output);
-		void PrintCustomCall(std::ofstream* output, std::string* functName, auto* parameterList, std::string suffix);
+		void PrintCustomCall(std::ofstream* output, std::string* functName, auto* parameterList, std::string functSuffix, std::string suffix);
 		void PrintExecuteCall(std::ofstream* output, std::string* functType, std::string* functName, auto* parameterList, std::string cmdListType);
 		void PrintSendToUI(std::ofstream* output, std::string input);
 

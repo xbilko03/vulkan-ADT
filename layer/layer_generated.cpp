@@ -866,6 +866,8 @@ struct CommandStats
 };
 std::map<VkCommandBuffer, CommandStats> commandbuffer_stats;
 
+bool connected = false;
+
 /* Layer init and shutdown */
 VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
 {
@@ -1057,13 +1059,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkEnumeratePhysicalDevices!");
 }
 if(connected) {
 #ifdef ENUMERATEPHYSICALDEVICES_BEFORE_EXEC_EXISTS
-layer_EnumeratePhysicalDevices(instance, pPhysicalDeviceCount, pPhysicalDevices);
+layer_EnumeratePhysicalDevices_before(instance, pPhysicalDeviceCount, pPhysicalDevices);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].EnumeratePhysicalDevices(instance, pPhysicalDeviceCount, pPhysicalDevices);
 if(connected) {
 #ifdef ENUMERATEPHYSICALDEVICES_AFTER_EXEC_EXISTS
-layer_EnumeratePhysicalDevices(instance, pPhysicalDeviceCount, pPhysicalDevices);
+layer_EnumeratePhysicalDevices_after(instance, pPhysicalDeviceCount, pPhysicalDevices);
 #endif 
 }
 if(connected) {
@@ -1079,13 +1081,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceProperties!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEPROPERTIES_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceProperties(physicalDevice, pProperties);
+layer_GetPhysicalDeviceProperties_before(physicalDevice, pProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties(physicalDevice, pProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEPROPERTIES_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceProperties(physicalDevice, pProperties);
+layer_GetPhysicalDeviceProperties_after(physicalDevice, pProperties);
 #endif 
 }
 if(connected) {
@@ -1100,13 +1102,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceQueueFamilyProperties!
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPROPERTIES_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceQueueFamilyProperties(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
+layer_GetPhysicalDeviceQueueFamilyProperties_before(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPROPERTIES_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceQueueFamilyProperties(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
+layer_GetPhysicalDeviceQueueFamilyProperties_after(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
 #endif 
 }
 if(connected) {
@@ -1121,13 +1123,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceMemoryProperties!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEMEMORYPROPERTIES_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceMemoryProperties(physicalDevice, pMemoryProperties);
+layer_GetPhysicalDeviceMemoryProperties_before(physicalDevice, pMemoryProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties(physicalDevice, pMemoryProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEMEMORYPROPERTIES_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceMemoryProperties(physicalDevice, pMemoryProperties);
+layer_GetPhysicalDeviceMemoryProperties_after(physicalDevice, pMemoryProperties);
 #endif 
 }
 if(connected) {
@@ -1142,13 +1144,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceFeatures!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEFEATURES_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceFeatures(physicalDevice, pFeatures);
+layer_GetPhysicalDeviceFeatures_before(physicalDevice, pFeatures);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures(physicalDevice, pFeatures);
 if(connected) {
 #ifdef GETPHYSICALDEVICEFEATURES_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceFeatures(physicalDevice, pFeatures);
+layer_GetPhysicalDeviceFeatures_after(physicalDevice, pFeatures);
 #endif 
 }
 if(connected) {
@@ -1163,13 +1165,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceFormatProperties!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEFORMATPROPERTIES_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceFormatProperties(physicalDevice, format, pFormatProperties);
+layer_GetPhysicalDeviceFormatProperties_before(physicalDevice, format, pFormatProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties(physicalDevice, format, pFormatProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEFORMATPROPERTIES_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceFormatProperties(physicalDevice, format, pFormatProperties);
+layer_GetPhysicalDeviceFormatProperties_after(physicalDevice, format, pFormatProperties);
 #endif 
 }
 if(connected) {
@@ -1184,13 +1186,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceImageFormatProperties!
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEIMAGEFORMATPROPERTIES_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceImageFormatProperties(physicalDevice, format, type, tiling, usage, flags, pImageFormatProperties);
+layer_GetPhysicalDeviceImageFormatProperties_before(physicalDevice, format, type, tiling, usage, flags, pImageFormatProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceImageFormatProperties(physicalDevice, format, type, tiling, usage, flags, pImageFormatProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEIMAGEFORMATPROPERTIES_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceImageFormatProperties(physicalDevice, format, type, tiling, usage, flags, pImageFormatProperties);
+layer_GetPhysicalDeviceImageFormatProperties_after(physicalDevice, format, type, tiling, usage, flags, pImageFormatProperties);
 #endif 
 }
 if(connected) {
@@ -1206,13 +1208,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSparseImageFormatPrope
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESPARSEIMAGEFORMATPROPERTIES_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceSparseImageFormatProperties(physicalDevice, format, type, samples, usage, tiling, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceSparseImageFormatProperties_before(physicalDevice, format, type, samples, usage, tiling, pPropertyCount, pProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProperties(physicalDevice, format, type, samples, usage, tiling, pPropertyCount, pProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICESPARSEIMAGEFORMATPROPERTIES_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceSparseImageFormatProperties(physicalDevice, format, type, samples, usage, tiling, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceSparseImageFormatProperties_after(physicalDevice, format, type, samples, usage, tiling, pPropertyCount, pProperties);
 #endif 
 }
 if(connected) {
@@ -1228,13 +1230,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateAndroidSurfaceKHR!");
 }
 if(connected) {
 #ifdef CREATEANDROIDSURFACEKHR_BEFORE_EXEC_EXISTS
-layer_CreateAndroidSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateAndroidSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateAndroidSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATEANDROIDSURFACEKHR_AFTER_EXEC_EXISTS
-layer_CreateAndroidSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateAndroidSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -1251,13 +1253,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceDisplayPropertiesKHR!"
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEDISPLAYPROPERTIESKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceDisplayPropertiesKHR(physicalDevice, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceDisplayPropertiesKHR_before(physicalDevice, pPropertyCount, pProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDisplayPropertiesKHR(physicalDevice, pPropertyCount, pProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEDISPLAYPROPERTIESKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceDisplayPropertiesKHR(physicalDevice, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceDisplayPropertiesKHR_after(physicalDevice, pPropertyCount, pProperties);
 #endif 
 }
 if(connected) {
@@ -1273,13 +1275,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceDisplayPlaneProperties
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEDISPLAYPLANEPROPERTIESKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceDisplayPlanePropertiesKHR(physicalDevice, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceDisplayPlanePropertiesKHR_before(physicalDevice, pPropertyCount, pProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDisplayPlanePropertiesKHR(physicalDevice, pPropertyCount, pProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEDISPLAYPLANEPROPERTIESKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceDisplayPlanePropertiesKHR(physicalDevice, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceDisplayPlanePropertiesKHR_after(physicalDevice, pPropertyCount, pProperties);
 #endif 
 }
 if(connected) {
@@ -1295,13 +1297,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDisplayPlaneSupportedDisplaysKHR!");
 }
 if(connected) {
 #ifdef GETDISPLAYPLANESUPPORTEDDISPLAYSKHR_BEFORE_EXEC_EXISTS
-layer_GetDisplayPlaneSupportedDisplaysKHR(physicalDevice, planeIndex, pDisplayCount, pDisplays);
+layer_GetDisplayPlaneSupportedDisplaysKHR_before(physicalDevice, planeIndex, pDisplayCount, pDisplays);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayPlaneSupportedDisplaysKHR(physicalDevice, planeIndex, pDisplayCount, pDisplays);
 if(connected) {
 #ifdef GETDISPLAYPLANESUPPORTEDDISPLAYSKHR_AFTER_EXEC_EXISTS
-layer_GetDisplayPlaneSupportedDisplaysKHR(physicalDevice, planeIndex, pDisplayCount, pDisplays);
+layer_GetDisplayPlaneSupportedDisplaysKHR_after(physicalDevice, planeIndex, pDisplayCount, pDisplays);
 #endif 
 }
 if(connected) {
@@ -1317,13 +1319,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDisplayModePropertiesKHR!");
 }
 if(connected) {
 #ifdef GETDISPLAYMODEPROPERTIESKHR_BEFORE_EXEC_EXISTS
-layer_GetDisplayModePropertiesKHR(physicalDevice, display, pPropertyCount, pProperties);
+layer_GetDisplayModePropertiesKHR_before(physicalDevice, display, pPropertyCount, pProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayModePropertiesKHR(physicalDevice, display, pPropertyCount, pProperties);
 if(connected) {
 #ifdef GETDISPLAYMODEPROPERTIESKHR_AFTER_EXEC_EXISTS
-layer_GetDisplayModePropertiesKHR(physicalDevice, display, pPropertyCount, pProperties);
+layer_GetDisplayModePropertiesKHR_after(physicalDevice, display, pPropertyCount, pProperties);
 #endif 
 }
 if(connected) {
@@ -1339,13 +1341,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateDisplayModeKHR!");
 }
 if(connected) {
 #ifdef CREATEDISPLAYMODEKHR_BEFORE_EXEC_EXISTS
-layer_CreateDisplayModeKHR(physicalDevice, display, pCreateInfo, pAllocator, pMode);
+layer_CreateDisplayModeKHR_before(physicalDevice, display, pCreateInfo, pAllocator, pMode);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].CreateDisplayModeKHR(physicalDevice, display, pCreateInfo, pAllocator, pMode);
 if(connected) {
 #ifdef CREATEDISPLAYMODEKHR_AFTER_EXEC_EXISTS
-layer_CreateDisplayModeKHR(physicalDevice, display, pCreateInfo, pAllocator, pMode);
+layer_CreateDisplayModeKHR_after(physicalDevice, display, pCreateInfo, pAllocator, pMode);
 #endif 
 }
 if(connected) {
@@ -1361,13 +1363,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDisplayPlaneCapabilitiesKHR!");
 }
 if(connected) {
 #ifdef GETDISPLAYPLANECAPABILITIESKHR_BEFORE_EXEC_EXISTS
-layer_GetDisplayPlaneCapabilitiesKHR(physicalDevice, mode, planeIndex, pCapabilities);
+layer_GetDisplayPlaneCapabilitiesKHR_before(physicalDevice, mode, planeIndex, pCapabilities);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayPlaneCapabilitiesKHR(physicalDevice, mode, planeIndex, pCapabilities);
 if(connected) {
 #ifdef GETDISPLAYPLANECAPABILITIESKHR_AFTER_EXEC_EXISTS
-layer_GetDisplayPlaneCapabilitiesKHR(physicalDevice, mode, planeIndex, pCapabilities);
+layer_GetDisplayPlaneCapabilitiesKHR_after(physicalDevice, mode, planeIndex, pCapabilities);
 #endif 
 }
 if(connected) {
@@ -1383,13 +1385,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateDisplayPlaneSurfaceKHR!");
 }
 if(connected) {
 #ifdef CREATEDISPLAYPLANESURFACEKHR_BEFORE_EXEC_EXISTS
-layer_CreateDisplayPlaneSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateDisplayPlaneSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateDisplayPlaneSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATEDISPLAYPLANESURFACEKHR_AFTER_EXEC_EXISTS
-layer_CreateDisplayPlaneSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateDisplayPlaneSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -1405,13 +1407,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroySurfaceKHR!");
 }
 if(connected) {
 #ifdef DESTROYSURFACEKHR_BEFORE_EXEC_EXISTS
-layer_DestroySurfaceKHR(instance, surface, pAllocator);
+layer_DestroySurfaceKHR_before(instance, surface, pAllocator);
 #endif 
 }
 instance_dispatch[GetKey(instance)].DestroySurfaceKHR(instance, surface, pAllocator);
 if(connected) {
 #ifdef DESTROYSURFACEKHR_AFTER_EXEC_EXISTS
-layer_DestroySurfaceKHR(instance, surface, pAllocator);
+layer_DestroySurfaceKHR_after(instance, surface, pAllocator);
 #endif 
 }
 if(connected) {
@@ -1426,13 +1428,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfaceSupportKHR!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACESUPPORTKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfaceSupportKHR(physicalDevice, queueFamilyIndex, surface, pSupported);
+layer_GetPhysicalDeviceSurfaceSupportKHR_before(physicalDevice, queueFamilyIndex, surface, pSupported);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceSupportKHR(physicalDevice, queueFamilyIndex, surface, pSupported);
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACESUPPORTKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfaceSupportKHR(physicalDevice, queueFamilyIndex, surface, pSupported);
+layer_GetPhysicalDeviceSurfaceSupportKHR_after(physicalDevice, queueFamilyIndex, surface, pSupported);
 #endif 
 }
 if(connected) {
@@ -1448,13 +1450,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfaceCapabilitiesKHR
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACECAPABILITIESKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, pSurfaceCapabilities);
+layer_GetPhysicalDeviceSurfaceCapabilitiesKHR_before(physicalDevice, surface, pSurfaceCapabilities);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, pSurfaceCapabilities);
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACECAPABILITIESKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, pSurfaceCapabilities);
+layer_GetPhysicalDeviceSurfaceCapabilitiesKHR_after(physicalDevice, surface, pSurfaceCapabilities);
 #endif 
 }
 if(connected) {
@@ -1470,13 +1472,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfaceFormatsKHR!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACEFORMATSKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats);
+layer_GetPhysicalDeviceSurfaceFormatsKHR_before(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats);
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACEFORMATSKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats);
+layer_GetPhysicalDeviceSurfaceFormatsKHR_after(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats);
 #endif 
 }
 if(connected) {
@@ -1492,13 +1494,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfacePresentModesKHR
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACEPRESENTMODESKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, pPresentModeCount, pPresentModes);
+layer_GetPhysicalDeviceSurfacePresentModesKHR_before(physicalDevice, surface, pPresentModeCount, pPresentModes);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, pPresentModeCount, pPresentModes);
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACEPRESENTMODESKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, pPresentModeCount, pPresentModes);
+layer_GetPhysicalDeviceSurfacePresentModesKHR_after(physicalDevice, surface, pPresentModeCount, pPresentModes);
 #endif 
 }
 if(connected) {
@@ -1515,13 +1517,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateViSurfaceNN!");
 }
 if(connected) {
 #ifdef CREATEVISURFACENN_BEFORE_EXEC_EXISTS
-layer_CreateViSurfaceNN(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateViSurfaceNN_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateViSurfaceNN(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATEVISURFACENN_AFTER_EXEC_EXISTS
-layer_CreateViSurfaceNN(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateViSurfaceNN_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -1539,13 +1541,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateWaylandSurfaceKHR!");
 }
 if(connected) {
 #ifdef CREATEWAYLANDSURFACEKHR_BEFORE_EXEC_EXISTS
-layer_CreateWaylandSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateWaylandSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateWaylandSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATEWAYLANDSURFACEKHR_AFTER_EXEC_EXISTS
-layer_CreateWaylandSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateWaylandSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -1563,13 +1565,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceWaylandPresentationSup
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEWAYLANDPRESENTATIONSUPPORTKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceWaylandPresentationSupportKHR(physicalDevice, queueFamilyIndex, display);
+layer_GetPhysicalDeviceWaylandPresentationSupportKHR_before(physicalDevice, queueFamilyIndex, display);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceWaylandPresentationSupportKHR(physicalDevice, queueFamilyIndex, display);
 if(connected) {
 #ifdef GETPHYSICALDEVICEWAYLANDPRESENTATIONSUPPORTKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceWaylandPresentationSupportKHR(physicalDevice, queueFamilyIndex, display);
+layer_GetPhysicalDeviceWaylandPresentationSupportKHR_after(physicalDevice, queueFamilyIndex, display);
 #endif 
 }
 if(connected) {
@@ -1587,13 +1589,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateWin32SurfaceKHR!");
 }
 if(connected) {
 #ifdef CREATEWIN32SURFACEKHR_BEFORE_EXEC_EXISTS
-layer_CreateWin32SurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateWin32SurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateWin32SurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATEWIN32SURFACEKHR_AFTER_EXEC_EXISTS
-layer_CreateWin32SurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateWin32SurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -1611,13 +1613,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceWin32PresentationSuppo
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEWIN32PRESENTATIONSUPPORTKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceWin32PresentationSupportKHR(physicalDevice, queueFamilyIndex);
+layer_GetPhysicalDeviceWin32PresentationSupportKHR_before(physicalDevice, queueFamilyIndex);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceWin32PresentationSupportKHR(physicalDevice, queueFamilyIndex);
 if(connected) {
 #ifdef GETPHYSICALDEVICEWIN32PRESENTATIONSUPPORTKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceWin32PresentationSupportKHR(physicalDevice, queueFamilyIndex);
+layer_GetPhysicalDeviceWin32PresentationSupportKHR_after(physicalDevice, queueFamilyIndex);
 #endif 
 }
 if(connected) {
@@ -1635,13 +1637,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateXlibSurfaceKHR!");
 }
 if(connected) {
 #ifdef CREATEXLIBSURFACEKHR_BEFORE_EXEC_EXISTS
-layer_CreateXlibSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateXlibSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateXlibSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATEXLIBSURFACEKHR_AFTER_EXEC_EXISTS
-layer_CreateXlibSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateXlibSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -1659,13 +1661,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceXlibPresentationSuppor
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEXLIBPRESENTATIONSUPPORTKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceXlibPresentationSupportKHR(physicalDevice, queueFamilyIndex, dpy, visualID);
+layer_GetPhysicalDeviceXlibPresentationSupportKHR_before(physicalDevice, queueFamilyIndex, dpy, visualID);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceXlibPresentationSupportKHR(physicalDevice, queueFamilyIndex, dpy, visualID);
 if(connected) {
 #ifdef GETPHYSICALDEVICEXLIBPRESENTATIONSUPPORTKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceXlibPresentationSupportKHR(physicalDevice, queueFamilyIndex, dpy, visualID);
+layer_GetPhysicalDeviceXlibPresentationSupportKHR_after(physicalDevice, queueFamilyIndex, dpy, visualID);
 #endif 
 }
 if(connected) {
@@ -1683,13 +1685,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateXcbSurfaceKHR!");
 }
 if(connected) {
 #ifdef CREATEXCBSURFACEKHR_BEFORE_EXEC_EXISTS
-layer_CreateXcbSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateXcbSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateXcbSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATEXCBSURFACEKHR_AFTER_EXEC_EXISTS
-layer_CreateXcbSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateXcbSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -1707,13 +1709,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceXcbPresentationSupport
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEXCBPRESENTATIONSUPPORTKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceXcbPresentationSupportKHR(physicalDevice, queueFamilyIndex, connection, visual_id);
+layer_GetPhysicalDeviceXcbPresentationSupportKHR_before(physicalDevice, queueFamilyIndex, connection, visual_id);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceXcbPresentationSupportKHR(physicalDevice, queueFamilyIndex, connection, visual_id);
 if(connected) {
 #ifdef GETPHYSICALDEVICEXCBPRESENTATIONSUPPORTKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceXcbPresentationSupportKHR(physicalDevice, queueFamilyIndex, connection, visual_id);
+layer_GetPhysicalDeviceXcbPresentationSupportKHR_after(physicalDevice, queueFamilyIndex, connection, visual_id);
 #endif 
 }
 if(connected) {
@@ -1731,13 +1733,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateDirectFBSurfaceEXT!");
 }
 if(connected) {
 #ifdef CREATEDIRECTFBSURFACEEXT_BEFORE_EXEC_EXISTS
-layer_CreateDirectFBSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateDirectFBSurfaceEXT_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateDirectFBSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATEDIRECTFBSURFACEEXT_AFTER_EXEC_EXISTS
-layer_CreateDirectFBSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateDirectFBSurfaceEXT_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -1755,13 +1757,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceDirectFBPresentationSu
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEDIRECTFBPRESENTATIONSUPPORTEXT_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceDirectFBPresentationSupportEXT(physicalDevice, queueFamilyIndex, dfb);
+layer_GetPhysicalDeviceDirectFBPresentationSupportEXT_before(physicalDevice, queueFamilyIndex, dfb);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDirectFBPresentationSupportEXT(physicalDevice, queueFamilyIndex, dfb);
 if(connected) {
 #ifdef GETPHYSICALDEVICEDIRECTFBPRESENTATIONSUPPORTEXT_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceDirectFBPresentationSupportEXT(physicalDevice, queueFamilyIndex, dfb);
+layer_GetPhysicalDeviceDirectFBPresentationSupportEXT_after(physicalDevice, queueFamilyIndex, dfb);
 #endif 
 }
 if(connected) {
@@ -1779,13 +1781,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateImagePipeSurfaceFUCHSIA!");
 }
 if(connected) {
 #ifdef CREATEIMAGEPIPESURFACEFUCHSIA_BEFORE_EXEC_EXISTS
-layer_CreateImagePipeSurfaceFUCHSIA(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateImagePipeSurfaceFUCHSIA_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateImagePipeSurfaceFUCHSIA(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATEIMAGEPIPESURFACEFUCHSIA_AFTER_EXEC_EXISTS
-layer_CreateImagePipeSurfaceFUCHSIA(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateImagePipeSurfaceFUCHSIA_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -1803,13 +1805,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateStreamDescriptorSurfaceGGP!");
 }
 if(connected) {
 #ifdef CREATESTREAMDESCRIPTORSURFACEGGP_BEFORE_EXEC_EXISTS
-layer_CreateStreamDescriptorSurfaceGGP(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateStreamDescriptorSurfaceGGP_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateStreamDescriptorSurfaceGGP(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATESTREAMDESCRIPTORSURFACEGGP_AFTER_EXEC_EXISTS
-layer_CreateStreamDescriptorSurfaceGGP(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateStreamDescriptorSurfaceGGP_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -1827,13 +1829,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateScreenSurfaceQNX!");
 }
 if(connected) {
 #ifdef CREATESCREENSURFACEQNX_BEFORE_EXEC_EXISTS
-layer_CreateScreenSurfaceQNX(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateScreenSurfaceQNX_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateScreenSurfaceQNX(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATESCREENSURFACEQNX_AFTER_EXEC_EXISTS
-layer_CreateScreenSurfaceQNX(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateScreenSurfaceQNX_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -1851,13 +1853,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceScreenPresentationSupp
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESCREENPRESENTATIONSUPPORTQNX_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceScreenPresentationSupportQNX(physicalDevice, queueFamilyIndex, window);
+layer_GetPhysicalDeviceScreenPresentationSupportQNX_before(physicalDevice, queueFamilyIndex, window);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceScreenPresentationSupportQNX(physicalDevice, queueFamilyIndex, window);
 if(connected) {
 #ifdef GETPHYSICALDEVICESCREENPRESENTATIONSUPPORTQNX_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceScreenPresentationSupportQNX(physicalDevice, queueFamilyIndex, window);
+layer_GetPhysicalDeviceScreenPresentationSupportQNX_after(physicalDevice, queueFamilyIndex, window);
 #endif 
 }
 if(connected) {
@@ -1874,13 +1876,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateDebugReportCallbackEXT!");
 }
 if(connected) {
 #ifdef CREATEDEBUGREPORTCALLBACKEXT_BEFORE_EXEC_EXISTS
-layer_CreateDebugReportCallbackEXT(instance, pCreateInfo, pAllocator, pCallback);
+layer_CreateDebugReportCallbackEXT_before(instance, pCreateInfo, pAllocator, pCallback);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateDebugReportCallbackEXT(instance, pCreateInfo, pAllocator, pCallback);
 if(connected) {
 #ifdef CREATEDEBUGREPORTCALLBACKEXT_AFTER_EXEC_EXISTS
-layer_CreateDebugReportCallbackEXT(instance, pCreateInfo, pAllocator, pCallback);
+layer_CreateDebugReportCallbackEXT_after(instance, pCreateInfo, pAllocator, pCallback);
 #endif 
 }
 if(connected) {
@@ -1896,13 +1898,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyDebugReportCallbackEXT!");
 }
 if(connected) {
 #ifdef DESTROYDEBUGREPORTCALLBACKEXT_BEFORE_EXEC_EXISTS
-layer_DestroyDebugReportCallbackEXT(instance, callback, pAllocator);
+layer_DestroyDebugReportCallbackEXT_before(instance, callback, pAllocator);
 #endif 
 }
 instance_dispatch[GetKey(instance)].DestroyDebugReportCallbackEXT(instance, callback, pAllocator);
 if(connected) {
 #ifdef DESTROYDEBUGREPORTCALLBACKEXT_AFTER_EXEC_EXISTS
-layer_DestroyDebugReportCallbackEXT(instance, callback, pAllocator);
+layer_DestroyDebugReportCallbackEXT_after(instance, callback, pAllocator);
 #endif 
 }
 if(connected) {
@@ -1917,13 +1919,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDebugReportMessageEXT!");
 }
 if(connected) {
 #ifdef DEBUGREPORTMESSAGEEXT_BEFORE_EXEC_EXISTS
-layer_DebugReportMessageEXT(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage);
+layer_DebugReportMessageEXT_before(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage);
 #endif 
 }
 instance_dispatch[GetKey(instance)].DebugReportMessageEXT(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage);
 if(connected) {
 #ifdef DEBUGREPORTMESSAGEEXT_AFTER_EXEC_EXISTS
-layer_DebugReportMessageEXT(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage);
+layer_DebugReportMessageEXT_after(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage);
 #endif 
 }
 if(connected) {
@@ -1938,13 +1940,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalImageFormatPro
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALIMAGEFORMATPROPERTIESNV_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalImageFormatPropertiesNV(physicalDevice, format, type, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties);
+layer_GetPhysicalDeviceExternalImageFormatPropertiesNV_before(physicalDevice, format, type, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalImageFormatPropertiesNV(physicalDevice, format, type, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALIMAGEFORMATPROPERTIESNV_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalImageFormatPropertiesNV(physicalDevice, format, type, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties);
+layer_GetPhysicalDeviceExternalImageFormatPropertiesNV_after(physicalDevice, format, type, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties);
 #endif 
 }
 if(connected) {
@@ -1960,13 +1962,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceFeatures2!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEFEATURES2_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceFeatures2(physicalDevice, pFeatures);
+layer_GetPhysicalDeviceFeatures2_before(physicalDevice, pFeatures);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures2(physicalDevice, pFeatures);
 if(connected) {
 #ifdef GETPHYSICALDEVICEFEATURES2_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceFeatures2(physicalDevice, pFeatures);
+layer_GetPhysicalDeviceFeatures2_after(physicalDevice, pFeatures);
 #endif 
 }
 if(connected) {
@@ -1981,13 +1983,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceProperties2!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEPROPERTIES2_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceProperties2(physicalDevice, pProperties);
+layer_GetPhysicalDeviceProperties2_before(physicalDevice, pProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties2(physicalDevice, pProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEPROPERTIES2_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceProperties2(physicalDevice, pProperties);
+layer_GetPhysicalDeviceProperties2_after(physicalDevice, pProperties);
 #endif 
 }
 if(connected) {
@@ -2002,13 +2004,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceFormatProperties2!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEFORMATPROPERTIES2_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceFormatProperties2(physicalDevice, format, pFormatProperties);
+layer_GetPhysicalDeviceFormatProperties2_before(physicalDevice, format, pFormatProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties2(physicalDevice, format, pFormatProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEFORMATPROPERTIES2_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceFormatProperties2(physicalDevice, format, pFormatProperties);
+layer_GetPhysicalDeviceFormatProperties2_after(physicalDevice, format, pFormatProperties);
 #endif 
 }
 if(connected) {
@@ -2023,13 +2025,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceImageFormatProperties2
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEIMAGEFORMATPROPERTIES2_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceImageFormatProperties2(physicalDevice, pImageFormatInfo, pImageFormatProperties);
+layer_GetPhysicalDeviceImageFormatProperties2_before(physicalDevice, pImageFormatInfo, pImageFormatProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceImageFormatProperties2(physicalDevice, pImageFormatInfo, pImageFormatProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEIMAGEFORMATPROPERTIES2_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceImageFormatProperties2(physicalDevice, pImageFormatInfo, pImageFormatProperties);
+layer_GetPhysicalDeviceImageFormatProperties2_after(physicalDevice, pImageFormatInfo, pImageFormatProperties);
 #endif 
 }
 if(connected) {
@@ -2045,13 +2047,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceQueueFamilyProperties2
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPROPERTIES2_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceQueueFamilyProperties2(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
+layer_GetPhysicalDeviceQueueFamilyProperties2_before(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties2(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPROPERTIES2_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceQueueFamilyProperties2(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
+layer_GetPhysicalDeviceQueueFamilyProperties2_after(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
 #endif 
 }
 if(connected) {
@@ -2066,13 +2068,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceMemoryProperties2!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEMEMORYPROPERTIES2_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceMemoryProperties2(physicalDevice, pMemoryProperties);
+layer_GetPhysicalDeviceMemoryProperties2_before(physicalDevice, pMemoryProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties2(physicalDevice, pMemoryProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEMEMORYPROPERTIES2_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceMemoryProperties2(physicalDevice, pMemoryProperties);
+layer_GetPhysicalDeviceMemoryProperties2_after(physicalDevice, pMemoryProperties);
 #endif 
 }
 if(connected) {
@@ -2087,13 +2089,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSparseImageFormatPrope
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESPARSEIMAGEFORMATPROPERTIES2_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceSparseImageFormatProperties2_before(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICESPARSEIMAGEFORMATPROPERTIES2_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceSparseImageFormatProperties2_after(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
 #endif 
 }
 if(connected) {
@@ -2108,13 +2110,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalBufferProperti
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALBUFFERPROPERTIES_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalBufferProperties(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
+layer_GetPhysicalDeviceExternalBufferProperties_before(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalBufferProperties(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALBUFFERPROPERTIES_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalBufferProperties(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
+layer_GetPhysicalDeviceExternalBufferProperties_after(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
 #endif 
 }
 if(connected) {
@@ -2130,13 +2132,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalMemorySciBufPr
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALMEMORYSCIBUFPROPERTIESNV_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalMemorySciBufPropertiesNV(physicalDevice, handleType, handle, pMemorySciBufProperties);
+layer_GetPhysicalDeviceExternalMemorySciBufPropertiesNV_before(physicalDevice, handleType, handle, pMemorySciBufProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalMemorySciBufPropertiesNV(physicalDevice, handleType, handle, pMemorySciBufProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALMEMORYSCIBUFPROPERTIESNV_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalMemorySciBufPropertiesNV(physicalDevice, handleType, handle, pMemorySciBufProperties);
+layer_GetPhysicalDeviceExternalMemorySciBufPropertiesNV_after(physicalDevice, handleType, handle, pMemorySciBufProperties);
 #endif 
 }
 if(connected) {
@@ -2154,13 +2156,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSciBufAttributesNV!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESCIBUFATTRIBUTESNV_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceSciBufAttributesNV(physicalDevice, pAttributes);
+layer_GetPhysicalDeviceSciBufAttributesNV_before(physicalDevice, pAttributes);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSciBufAttributesNV(physicalDevice, pAttributes);
 if(connected) {
 #ifdef GETPHYSICALDEVICESCIBUFATTRIBUTESNV_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceSciBufAttributesNV(physicalDevice, pAttributes);
+layer_GetPhysicalDeviceSciBufAttributesNV_after(physicalDevice, pAttributes);
 #endif 
 }
 if(connected) {
@@ -2177,13 +2179,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalSemaphorePrope
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALSEMAPHOREPROPERTIES_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
+layer_GetPhysicalDeviceExternalSemaphoreProperties_before(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALSEMAPHOREPROPERTIES_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
+layer_GetPhysicalDeviceExternalSemaphoreProperties_after(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
 #endif 
 }
 if(connected) {
@@ -2198,13 +2200,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalFencePropertie
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALFENCEPROPERTIES_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalFenceProperties(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
+layer_GetPhysicalDeviceExternalFenceProperties_before(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalFenceProperties(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALFENCEPROPERTIES_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalFenceProperties(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
+layer_GetPhysicalDeviceExternalFenceProperties_after(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
 #endif 
 }
 if(connected) {
@@ -2220,13 +2222,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSciSyncAttributesNV!")
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESCISYNCATTRIBUTESNV_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceSciSyncAttributesNV(physicalDevice, pSciSyncAttributesInfo, pAttributes);
+layer_GetPhysicalDeviceSciSyncAttributesNV_before(physicalDevice, pSciSyncAttributesInfo, pAttributes);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSciSyncAttributesNV(physicalDevice, pSciSyncAttributesInfo, pAttributes);
 if(connected) {
 #ifdef GETPHYSICALDEVICESCISYNCATTRIBUTESNV_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceSciSyncAttributesNV(physicalDevice, pSciSyncAttributesInfo, pAttributes);
+layer_GetPhysicalDeviceSciSyncAttributesNV_after(physicalDevice, pSciSyncAttributesInfo, pAttributes);
 #endif 
 }
 if(connected) {
@@ -2243,13 +2245,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkReleaseDisplayEXT!");
 }
 if(connected) {
 #ifdef RELEASEDISPLAYEXT_BEFORE_EXEC_EXISTS
-layer_ReleaseDisplayEXT(physicalDevice, display);
+layer_ReleaseDisplayEXT_before(physicalDevice, display);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].ReleaseDisplayEXT(physicalDevice, display);
 if(connected) {
 #ifdef RELEASEDISPLAYEXT_AFTER_EXEC_EXISTS
-layer_ReleaseDisplayEXT(physicalDevice, display);
+layer_ReleaseDisplayEXT_after(physicalDevice, display);
 #endif 
 }
 if(connected) {
@@ -2266,13 +2268,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkAcquireXlibDisplayEXT!");
 }
 if(connected) {
 #ifdef ACQUIREXLIBDISPLAYEXT_BEFORE_EXEC_EXISTS
-layer_AcquireXlibDisplayEXT(physicalDevice, dpy, display);
+layer_AcquireXlibDisplayEXT_before(physicalDevice, dpy, display);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].AcquireXlibDisplayEXT(physicalDevice, dpy, display);
 if(connected) {
 #ifdef ACQUIREXLIBDISPLAYEXT_AFTER_EXEC_EXISTS
-layer_AcquireXlibDisplayEXT(physicalDevice, dpy, display);
+layer_AcquireXlibDisplayEXT_after(physicalDevice, dpy, display);
 #endif 
 }
 if(connected) {
@@ -2290,13 +2292,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetRandROutputDisplayEXT!");
 }
 if(connected) {
 #ifdef GETRANDROUTPUTDISPLAYEXT_BEFORE_EXEC_EXISTS
-layer_GetRandROutputDisplayEXT(physicalDevice, dpy, rrOutput, pDisplay);
+layer_GetRandROutputDisplayEXT_before(physicalDevice, dpy, rrOutput, pDisplay);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetRandROutputDisplayEXT(physicalDevice, dpy, rrOutput, pDisplay);
 if(connected) {
 #ifdef GETRANDROUTPUTDISPLAYEXT_AFTER_EXEC_EXISTS
-layer_GetRandROutputDisplayEXT(physicalDevice, dpy, rrOutput, pDisplay);
+layer_GetRandROutputDisplayEXT_after(physicalDevice, dpy, rrOutput, pDisplay);
 #endif 
 }
 if(connected) {
@@ -2314,13 +2316,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkAcquireWinrtDisplayNV!");
 }
 if(connected) {
 #ifdef ACQUIREWINRTDISPLAYNV_BEFORE_EXEC_EXISTS
-layer_AcquireWinrtDisplayNV(physicalDevice, display);
+layer_AcquireWinrtDisplayNV_before(physicalDevice, display);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].AcquireWinrtDisplayNV(physicalDevice, display);
 if(connected) {
 #ifdef ACQUIREWINRTDISPLAYNV_AFTER_EXEC_EXISTS
-layer_AcquireWinrtDisplayNV(physicalDevice, display);
+layer_AcquireWinrtDisplayNV_after(physicalDevice, display);
 #endif 
 }
 if(connected) {
@@ -2338,13 +2340,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetWinrtDisplayNV!");
 }
 if(connected) {
 #ifdef GETWINRTDISPLAYNV_BEFORE_EXEC_EXISTS
-layer_GetWinrtDisplayNV(physicalDevice, deviceRelativeId, pDisplay);
+layer_GetWinrtDisplayNV_before(physicalDevice, deviceRelativeId, pDisplay);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetWinrtDisplayNV(physicalDevice, deviceRelativeId, pDisplay);
 if(connected) {
 #ifdef GETWINRTDISPLAYNV_AFTER_EXEC_EXISTS
-layer_GetWinrtDisplayNV(physicalDevice, deviceRelativeId, pDisplay);
+layer_GetWinrtDisplayNV_after(physicalDevice, deviceRelativeId, pDisplay);
 #endif 
 }
 if(connected) {
@@ -2361,13 +2363,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfaceCapabilities2EX
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACECAPABILITIES2EXT_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfaceCapabilities2EXT(physicalDevice, surface, pSurfaceCapabilities);
+layer_GetPhysicalDeviceSurfaceCapabilities2EXT_before(physicalDevice, surface, pSurfaceCapabilities);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceCapabilities2EXT(physicalDevice, surface, pSurfaceCapabilities);
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACECAPABILITIES2EXT_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfaceCapabilities2EXT(physicalDevice, surface, pSurfaceCapabilities);
+layer_GetPhysicalDeviceSurfaceCapabilities2EXT_after(physicalDevice, surface, pSurfaceCapabilities);
 #endif 
 }
 if(connected) {
@@ -2383,13 +2385,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkEnumeratePhysicalDeviceGroups!");
 }
 if(connected) {
 #ifdef ENUMERATEPHYSICALDEVICEGROUPS_BEFORE_EXEC_EXISTS
-layer_EnumeratePhysicalDeviceGroups(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
+layer_EnumeratePhysicalDeviceGroups_before(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].EnumeratePhysicalDeviceGroups(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
 if(connected) {
 #ifdef ENUMERATEPHYSICALDEVICEGROUPS_AFTER_EXEC_EXISTS
-layer_EnumeratePhysicalDeviceGroups(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
+layer_EnumeratePhysicalDeviceGroups_after(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
 #endif 
 }
 if(connected) {
@@ -2405,13 +2407,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDevicePresentRectanglesKHR!"
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEPRESENTRECTANGLESKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDevicePresentRectanglesKHR(physicalDevice, surface, pRectCount, pRects);
+layer_GetPhysicalDevicePresentRectanglesKHR_before(physicalDevice, surface, pRectCount, pRects);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDevicePresentRectanglesKHR(physicalDevice, surface, pRectCount, pRects);
 if(connected) {
 #ifdef GETPHYSICALDEVICEPRESENTRECTANGLESKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDevicePresentRectanglesKHR(physicalDevice, surface, pRectCount, pRects);
+layer_GetPhysicalDevicePresentRectanglesKHR_after(physicalDevice, surface, pRectCount, pRects);
 #endif 
 }
 if(connected) {
@@ -2428,13 +2430,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateIOSSurfaceMVK!");
 }
 if(connected) {
 #ifdef CREATEIOSSURFACEMVK_BEFORE_EXEC_EXISTS
-layer_CreateIOSSurfaceMVK(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateIOSSurfaceMVK_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateIOSSurfaceMVK(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATEIOSSURFACEMVK_AFTER_EXEC_EXISTS
-layer_CreateIOSSurfaceMVK(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateIOSSurfaceMVK_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -2452,13 +2454,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateMacOSSurfaceMVK!");
 }
 if(connected) {
 #ifdef CREATEMACOSSURFACEMVK_BEFORE_EXEC_EXISTS
-layer_CreateMacOSSurfaceMVK(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateMacOSSurfaceMVK_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateMacOSSurfaceMVK(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATEMACOSSURFACEMVK_AFTER_EXEC_EXISTS
-layer_CreateMacOSSurfaceMVK(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateMacOSSurfaceMVK_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -2476,13 +2478,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateMetalSurfaceEXT!");
 }
 if(connected) {
 #ifdef CREATEMETALSURFACEEXT_BEFORE_EXEC_EXISTS
-layer_CreateMetalSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateMetalSurfaceEXT_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateMetalSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATEMETALSURFACEEXT_AFTER_EXEC_EXISTS
-layer_CreateMetalSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateMetalSurfaceEXT_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -2499,13 +2501,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceMultisamplePropertiesE
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEMULTISAMPLEPROPERTIESEXT_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceMultisamplePropertiesEXT(physicalDevice, samples, pMultisampleProperties);
+layer_GetPhysicalDeviceMultisamplePropertiesEXT_before(physicalDevice, samples, pMultisampleProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMultisamplePropertiesEXT(physicalDevice, samples, pMultisampleProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEMULTISAMPLEPROPERTIESEXT_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceMultisamplePropertiesEXT(physicalDevice, samples, pMultisampleProperties);
+layer_GetPhysicalDeviceMultisamplePropertiesEXT_after(physicalDevice, samples, pMultisampleProperties);
 #endif 
 }
 if(connected) {
@@ -2520,13 +2522,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfaceCapabilities2KH
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACECAPABILITIES2KHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfaceCapabilities2KHR(physicalDevice, pSurfaceInfo, pSurfaceCapabilities);
+layer_GetPhysicalDeviceSurfaceCapabilities2KHR_before(physicalDevice, pSurfaceInfo, pSurfaceCapabilities);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceCapabilities2KHR(physicalDevice, pSurfaceInfo, pSurfaceCapabilities);
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACECAPABILITIES2KHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfaceCapabilities2KHR(physicalDevice, pSurfaceInfo, pSurfaceCapabilities);
+layer_GetPhysicalDeviceSurfaceCapabilities2KHR_after(physicalDevice, pSurfaceInfo, pSurfaceCapabilities);
 #endif 
 }
 if(connected) {
@@ -2542,13 +2544,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfaceFormats2KHR!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACEFORMATS2KHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfaceFormats2KHR(physicalDevice, pSurfaceInfo, pSurfaceFormatCount, pSurfaceFormats);
+layer_GetPhysicalDeviceSurfaceFormats2KHR_before(physicalDevice, pSurfaceInfo, pSurfaceFormatCount, pSurfaceFormats);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceFormats2KHR(physicalDevice, pSurfaceInfo, pSurfaceFormatCount, pSurfaceFormats);
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACEFORMATS2KHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfaceFormats2KHR(physicalDevice, pSurfaceInfo, pSurfaceFormatCount, pSurfaceFormats);
+layer_GetPhysicalDeviceSurfaceFormats2KHR_after(physicalDevice, pSurfaceInfo, pSurfaceFormatCount, pSurfaceFormats);
 #endif 
 }
 if(connected) {
@@ -2564,13 +2566,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceDisplayProperties2KHR!
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEDISPLAYPROPERTIES2KHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceDisplayProperties2KHR(physicalDevice, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceDisplayProperties2KHR_before(physicalDevice, pPropertyCount, pProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDisplayProperties2KHR(physicalDevice, pPropertyCount, pProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEDISPLAYPROPERTIES2KHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceDisplayProperties2KHR(physicalDevice, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceDisplayProperties2KHR_after(physicalDevice, pPropertyCount, pProperties);
 #endif 
 }
 if(connected) {
@@ -2586,13 +2588,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceDisplayPlaneProperties
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEDISPLAYPLANEPROPERTIES2KHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceDisplayPlaneProperties2KHR(physicalDevice, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceDisplayPlaneProperties2KHR_before(physicalDevice, pPropertyCount, pProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDisplayPlaneProperties2KHR(physicalDevice, pPropertyCount, pProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEDISPLAYPLANEPROPERTIES2KHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceDisplayPlaneProperties2KHR(physicalDevice, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceDisplayPlaneProperties2KHR_after(physicalDevice, pPropertyCount, pProperties);
 #endif 
 }
 if(connected) {
@@ -2608,13 +2610,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDisplayModeProperties2KHR!");
 }
 if(connected) {
 #ifdef GETDISPLAYMODEPROPERTIES2KHR_BEFORE_EXEC_EXISTS
-layer_GetDisplayModeProperties2KHR(physicalDevice, display, pPropertyCount, pProperties);
+layer_GetDisplayModeProperties2KHR_before(physicalDevice, display, pPropertyCount, pProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayModeProperties2KHR(physicalDevice, display, pPropertyCount, pProperties);
 if(connected) {
 #ifdef GETDISPLAYMODEPROPERTIES2KHR_AFTER_EXEC_EXISTS
-layer_GetDisplayModeProperties2KHR(physicalDevice, display, pPropertyCount, pProperties);
+layer_GetDisplayModeProperties2KHR_after(physicalDevice, display, pPropertyCount, pProperties);
 #endif 
 }
 if(connected) {
@@ -2630,13 +2632,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDisplayPlaneCapabilities2KHR!");
 }
 if(connected) {
 #ifdef GETDISPLAYPLANECAPABILITIES2KHR_BEFORE_EXEC_EXISTS
-layer_GetDisplayPlaneCapabilities2KHR(physicalDevice, pDisplayPlaneInfo, pCapabilities);
+layer_GetDisplayPlaneCapabilities2KHR_before(physicalDevice, pDisplayPlaneInfo, pCapabilities);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayPlaneCapabilities2KHR(physicalDevice, pDisplayPlaneInfo, pCapabilities);
 if(connected) {
 #ifdef GETDISPLAYPLANECAPABILITIES2KHR_AFTER_EXEC_EXISTS
-layer_GetDisplayPlaneCapabilities2KHR(physicalDevice, pDisplayPlaneInfo, pCapabilities);
+layer_GetDisplayPlaneCapabilities2KHR_after(physicalDevice, pDisplayPlaneInfo, pCapabilities);
 #endif 
 }
 if(connected) {
@@ -2652,13 +2654,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceCalibrateableTimeDomai
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICECALIBRATEABLETIMEDOMAINSKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceCalibrateableTimeDomainsKHR(physicalDevice, pTimeDomainCount, pTimeDomains);
+layer_GetPhysicalDeviceCalibrateableTimeDomainsKHR_before(physicalDevice, pTimeDomainCount, pTimeDomains);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceCalibrateableTimeDomainsKHR(physicalDevice, pTimeDomainCount, pTimeDomains);
 if(connected) {
 #ifdef GETPHYSICALDEVICECALIBRATEABLETIMEDOMAINSKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceCalibrateableTimeDomainsKHR(physicalDevice, pTimeDomainCount, pTimeDomains);
+layer_GetPhysicalDeviceCalibrateableTimeDomainsKHR_after(physicalDevice, pTimeDomainCount, pTimeDomains);
 #endif 
 }
 if(connected) {
@@ -2674,13 +2676,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateDebugUtilsMessengerEXT!");
 }
 if(connected) {
 #ifdef CREATEDEBUGUTILSMESSENGEREXT_BEFORE_EXEC_EXISTS
-layer_CreateDebugUtilsMessengerEXT(instance, pCreateInfo, pAllocator, pMessenger);
+layer_CreateDebugUtilsMessengerEXT_before(instance, pCreateInfo, pAllocator, pMessenger);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateDebugUtilsMessengerEXT(instance, pCreateInfo, pAllocator, pMessenger);
 if(connected) {
 #ifdef CREATEDEBUGUTILSMESSENGEREXT_AFTER_EXEC_EXISTS
-layer_CreateDebugUtilsMessengerEXT(instance, pCreateInfo, pAllocator, pMessenger);
+layer_CreateDebugUtilsMessengerEXT_after(instance, pCreateInfo, pAllocator, pMessenger);
 #endif 
 }
 if(connected) {
@@ -2696,13 +2698,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyDebugUtilsMessengerEXT!");
 }
 if(connected) {
 #ifdef DESTROYDEBUGUTILSMESSENGEREXT_BEFORE_EXEC_EXISTS
-layer_DestroyDebugUtilsMessengerEXT(instance, messenger, pAllocator);
+layer_DestroyDebugUtilsMessengerEXT_before(instance, messenger, pAllocator);
 #endif 
 }
 instance_dispatch[GetKey(instance)].DestroyDebugUtilsMessengerEXT(instance, messenger, pAllocator);
 if(connected) {
 #ifdef DESTROYDEBUGUTILSMESSENGEREXT_AFTER_EXEC_EXISTS
-layer_DestroyDebugUtilsMessengerEXT(instance, messenger, pAllocator);
+layer_DestroyDebugUtilsMessengerEXT_after(instance, messenger, pAllocator);
 #endif 
 }
 if(connected) {
@@ -2717,13 +2719,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSubmitDebugUtilsMessageEXT!");
 }
 if(connected) {
 #ifdef SUBMITDEBUGUTILSMESSAGEEXT_BEFORE_EXEC_EXISTS
-layer_SubmitDebugUtilsMessageEXT(instance, messageSeverity, messageTypes, pCallbackData);
+layer_SubmitDebugUtilsMessageEXT_before(instance, messageSeverity, messageTypes, pCallbackData);
 #endif 
 }
 instance_dispatch[GetKey(instance)].SubmitDebugUtilsMessageEXT(instance, messageSeverity, messageTypes, pCallbackData);
 if(connected) {
 #ifdef SUBMITDEBUGUTILSMESSAGEEXT_AFTER_EXEC_EXISTS
-layer_SubmitDebugUtilsMessageEXT(instance, messageSeverity, messageTypes, pCallbackData);
+layer_SubmitDebugUtilsMessageEXT_after(instance, messageSeverity, messageTypes, pCallbackData);
 #endif 
 }
 if(connected) {
@@ -2738,13 +2740,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceCooperativeMatrixPrope
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICECOOPERATIVEMATRIXPROPERTIESNV_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceCooperativeMatrixPropertiesNV(physicalDevice, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceCooperativeMatrixPropertiesNV_before(physicalDevice, pPropertyCount, pProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceCooperativeMatrixPropertiesNV(physicalDevice, pPropertyCount, pProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICECOOPERATIVEMATRIXPROPERTIESNV_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceCooperativeMatrixPropertiesNV(physicalDevice, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceCooperativeMatrixPropertiesNV_after(physicalDevice, pPropertyCount, pProperties);
 #endif 
 }
 if(connected) {
@@ -2761,13 +2763,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfacePresentModes2EX
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACEPRESENTMODES2EXT_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfacePresentModes2EXT(physicalDevice, pSurfaceInfo, pPresentModeCount, pPresentModes);
+layer_GetPhysicalDeviceSurfacePresentModes2EXT_before(physicalDevice, pSurfaceInfo, pPresentModeCount, pPresentModes);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfacePresentModes2EXT(physicalDevice, pSurfaceInfo, pPresentModeCount, pPresentModes);
 if(connected) {
 #ifdef GETPHYSICALDEVICESURFACEPRESENTMODES2EXT_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceSurfacePresentModes2EXT(physicalDevice, pSurfaceInfo, pPresentModeCount, pPresentModes);
+layer_GetPhysicalDeviceSurfacePresentModes2EXT_after(physicalDevice, pSurfaceInfo, pPresentModeCount, pPresentModes);
 #endif 
 }
 if(connected) {
@@ -2784,13 +2786,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkEnumeratePhysicalDeviceQueueFamilyPerfo
 }
 if(connected) {
 #ifdef ENUMERATEPHYSICALDEVICEQUEUEFAMILYPERFORMANCEQUERYCOUNTERSKHR_BEFORE_EXEC_EXISTS
-layer_EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions);
+layer_EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR_before(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions);
 if(connected) {
 #ifdef ENUMERATEPHYSICALDEVICEQUEUEFAMILYPERFORMANCEQUERYCOUNTERSKHR_AFTER_EXEC_EXISTS
-layer_EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions);
+layer_EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR_after(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions);
 #endif 
 }
 if(connected) {
@@ -2806,13 +2808,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceQueueFamilyPerformance
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPERFORMANCEQUERYPASSESKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR(physicalDevice, pPerformanceQueryCreateInfo, pNumPasses);
+layer_GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR_before(physicalDevice, pPerformanceQueryCreateInfo, pNumPasses);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR(physicalDevice, pPerformanceQueryCreateInfo, pNumPasses);
 if(connected) {
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPERFORMANCEQUERYPASSESKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR(physicalDevice, pPerformanceQueryCreateInfo, pNumPasses);
+layer_GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR_after(physicalDevice, pPerformanceQueryCreateInfo, pNumPasses);
 #endif 
 }
 if(connected) {
@@ -2827,13 +2829,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateHeadlessSurfaceEXT!");
 }
 if(connected) {
 #ifdef CREATEHEADLESSSURFACEEXT_BEFORE_EXEC_EXISTS
-layer_CreateHeadlessSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateHeadlessSurfaceEXT_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].CreateHeadlessSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
 if(connected) {
 #ifdef CREATEHEADLESSSURFACEEXT_AFTER_EXEC_EXISTS
-layer_CreateHeadlessSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
+layer_CreateHeadlessSurfaceEXT_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 }
 if(connected) {
@@ -2849,13 +2851,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSupportedFramebufferMi
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESUPPORTEDFRAMEBUFFERMIXEDSAMPLESCOMBINATIONSNV_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(physicalDevice, pCombinationCount, pCombinations);
+layer_GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV_before(physicalDevice, pCombinationCount, pCombinations);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(physicalDevice, pCombinationCount, pCombinations);
 if(connected) {
 #ifdef GETPHYSICALDEVICESUPPORTEDFRAMEBUFFERMIXEDSAMPLESCOMBINATIONSNV_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(physicalDevice, pCombinationCount, pCombinations);
+layer_GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV_after(physicalDevice, pCombinationCount, pCombinations);
 #endif 
 }
 if(connected) {
@@ -2871,13 +2873,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceToolProperties!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICETOOLPROPERTIES_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceToolProperties(physicalDevice, pToolCount, pToolProperties);
+layer_GetPhysicalDeviceToolProperties_before(physicalDevice, pToolCount, pToolProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceToolProperties(physicalDevice, pToolCount, pToolProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICETOOLPROPERTIES_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceToolProperties(physicalDevice, pToolCount, pToolProperties);
+layer_GetPhysicalDeviceToolProperties_after(physicalDevice, pToolCount, pToolProperties);
 #endif 
 }
 if(connected) {
@@ -2893,13 +2895,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceFragmentShadingRatesKH
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEFRAGMENTSHADINGRATESKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceFragmentShadingRatesKHR(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates);
+layer_GetPhysicalDeviceFragmentShadingRatesKHR_before(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFragmentShadingRatesKHR(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates);
 if(connected) {
 #ifdef GETPHYSICALDEVICEFRAGMENTSHADINGRATESKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceFragmentShadingRatesKHR(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates);
+layer_GetPhysicalDeviceFragmentShadingRatesKHR_after(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates);
 #endif 
 }
 if(connected) {
@@ -2915,13 +2917,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceVideoCapabilitiesKHR!"
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEVIDEOCAPABILITIESKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceVideoCapabilitiesKHR(physicalDevice, pVideoProfile, pCapabilities);
+layer_GetPhysicalDeviceVideoCapabilitiesKHR_before(physicalDevice, pVideoProfile, pCapabilities);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceVideoCapabilitiesKHR(physicalDevice, pVideoProfile, pCapabilities);
 if(connected) {
 #ifdef GETPHYSICALDEVICEVIDEOCAPABILITIESKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceVideoCapabilitiesKHR(physicalDevice, pVideoProfile, pCapabilities);
+layer_GetPhysicalDeviceVideoCapabilitiesKHR_after(physicalDevice, pVideoProfile, pCapabilities);
 #endif 
 }
 if(connected) {
@@ -2937,13 +2939,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceVideoFormatPropertiesK
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEVIDEOFORMATPROPERTIESKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceVideoFormatPropertiesKHR(physicalDevice, pVideoFormatInfo, pVideoFormatPropertyCount, pVideoFormatProperties);
+layer_GetPhysicalDeviceVideoFormatPropertiesKHR_before(physicalDevice, pVideoFormatInfo, pVideoFormatPropertyCount, pVideoFormatProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceVideoFormatPropertiesKHR(physicalDevice, pVideoFormatInfo, pVideoFormatPropertyCount, pVideoFormatProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEVIDEOFORMATPROPERTIESKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceVideoFormatPropertiesKHR(physicalDevice, pVideoFormatInfo, pVideoFormatPropertyCount, pVideoFormatProperties);
+layer_GetPhysicalDeviceVideoFormatPropertiesKHR_after(physicalDevice, pVideoFormatInfo, pVideoFormatPropertyCount, pVideoFormatProperties);
 #endif 
 }
 if(connected) {
@@ -2959,13 +2961,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceVideoEncodeQualityLeve
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEVIDEOENCODEQUALITYLEVELPROPERTIESKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(physicalDevice, pQualityLevelInfo, pQualityLevelProperties);
+layer_GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR_before(physicalDevice, pQualityLevelInfo, pQualityLevelProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(physicalDevice, pQualityLevelInfo, pQualityLevelProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEVIDEOENCODEQUALITYLEVELPROPERTIESKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(physicalDevice, pQualityLevelInfo, pQualityLevelProperties);
+layer_GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR_after(physicalDevice, pQualityLevelInfo, pQualityLevelProperties);
 #endif 
 }
 if(connected) {
@@ -2981,13 +2983,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkAcquireDrmDisplayEXT!");
 }
 if(connected) {
 #ifdef ACQUIREDRMDISPLAYEXT_BEFORE_EXEC_EXISTS
-layer_AcquireDrmDisplayEXT(physicalDevice, drmFd, display);
+layer_AcquireDrmDisplayEXT_before(physicalDevice, drmFd, display);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].AcquireDrmDisplayEXT(physicalDevice, drmFd, display);
 if(connected) {
 #ifdef ACQUIREDRMDISPLAYEXT_AFTER_EXEC_EXISTS
-layer_AcquireDrmDisplayEXT(physicalDevice, drmFd, display);
+layer_AcquireDrmDisplayEXT_after(physicalDevice, drmFd, display);
 #endif 
 }
 if(connected) {
@@ -3003,13 +3005,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDrmDisplayEXT!");
 }
 if(connected) {
 #ifdef GETDRMDISPLAYEXT_BEFORE_EXEC_EXISTS
-layer_GetDrmDisplayEXT(physicalDevice, drmFd, connectorId, display);
+layer_GetDrmDisplayEXT_before(physicalDevice, drmFd, connectorId, display);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDrmDisplayEXT(physicalDevice, drmFd, connectorId, display);
 if(connected) {
 #ifdef GETDRMDISPLAYEXT_AFTER_EXEC_EXISTS
-layer_GetDrmDisplayEXT(physicalDevice, drmFd, connectorId, display);
+layer_GetDrmDisplayEXT_after(physicalDevice, drmFd, connectorId, display);
 #endif 
 }
 if(connected) {
@@ -3025,13 +3027,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceOpticalFlowImageFormat
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEOPTICALFLOWIMAGEFORMATSNV_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceOpticalFlowImageFormatsNV(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties);
+layer_GetPhysicalDeviceOpticalFlowImageFormatsNV_before(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceOpticalFlowImageFormatsNV(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEOPTICALFLOWIMAGEFORMATSNV_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceOpticalFlowImageFormatsNV(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties);
+layer_GetPhysicalDeviceOpticalFlowImageFormatsNV_after(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties);
 #endif 
 }
 if(connected) {
@@ -3047,13 +3049,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceCooperativeMatrixPrope
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICECOOPERATIVEMATRIXPROPERTIESKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceCooperativeMatrixPropertiesKHR(physicalDevice, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceCooperativeMatrixPropertiesKHR_before(physicalDevice, pPropertyCount, pProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceCooperativeMatrixPropertiesKHR(physicalDevice, pPropertyCount, pProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICECOOPERATIVEMATRIXPROPERTIESKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceCooperativeMatrixPropertiesKHR(physicalDevice, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceCooperativeMatrixPropertiesKHR_after(physicalDevice, pPropertyCount, pProperties);
 #endif 
 }
 if(connected) {
@@ -3069,13 +3071,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceFeatures2KHR!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEFEATURES2KHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceFeatures2KHR(physicalDevice, pFeatures);
+layer_GetPhysicalDeviceFeatures2KHR_before(physicalDevice, pFeatures);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures2KHR(physicalDevice, pFeatures);
 if(connected) {
 #ifdef GETPHYSICALDEVICEFEATURES2KHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceFeatures2KHR(physicalDevice, pFeatures);
+layer_GetPhysicalDeviceFeatures2KHR_after(physicalDevice, pFeatures);
 #endif 
 }
 if(connected) {
@@ -3090,13 +3092,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceProperties2KHR!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEPROPERTIES2KHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceProperties2KHR(physicalDevice, pProperties);
+layer_GetPhysicalDeviceProperties2KHR_before(physicalDevice, pProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties2KHR(physicalDevice, pProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEPROPERTIES2KHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceProperties2KHR(physicalDevice, pProperties);
+layer_GetPhysicalDeviceProperties2KHR_after(physicalDevice, pProperties);
 #endif 
 }
 if(connected) {
@@ -3111,13 +3113,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceFormatProperties2KHR!"
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEFORMATPROPERTIES2KHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceFormatProperties2KHR(physicalDevice, format, pFormatProperties);
+layer_GetPhysicalDeviceFormatProperties2KHR_before(physicalDevice, format, pFormatProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties2KHR(physicalDevice, format, pFormatProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEFORMATPROPERTIES2KHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceFormatProperties2KHR(physicalDevice, format, pFormatProperties);
+layer_GetPhysicalDeviceFormatProperties2KHR_after(physicalDevice, format, pFormatProperties);
 #endif 
 }
 if(connected) {
@@ -3132,13 +3134,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceImageFormatProperties2
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEIMAGEFORMATPROPERTIES2KHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceImageFormatProperties2KHR(physicalDevice, pImageFormatInfo, pImageFormatProperties);
+layer_GetPhysicalDeviceImageFormatProperties2KHR_before(physicalDevice, pImageFormatInfo, pImageFormatProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceImageFormatProperties2KHR(physicalDevice, pImageFormatInfo, pImageFormatProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEIMAGEFORMATPROPERTIES2KHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceImageFormatProperties2KHR(physicalDevice, pImageFormatInfo, pImageFormatProperties);
+layer_GetPhysicalDeviceImageFormatProperties2KHR_after(physicalDevice, pImageFormatInfo, pImageFormatProperties);
 #endif 
 }
 if(connected) {
@@ -3154,13 +3156,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceQueueFamilyProperties2
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPROPERTIES2KHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceQueueFamilyProperties2KHR(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
+layer_GetPhysicalDeviceQueueFamilyProperties2KHR_before(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties2KHR(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPROPERTIES2KHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceQueueFamilyProperties2KHR(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
+layer_GetPhysicalDeviceQueueFamilyProperties2KHR_after(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
 #endif 
 }
 if(connected) {
@@ -3175,13 +3177,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceMemoryProperties2KHR!"
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEMEMORYPROPERTIES2KHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceMemoryProperties2KHR(physicalDevice, pMemoryProperties);
+layer_GetPhysicalDeviceMemoryProperties2KHR_before(physicalDevice, pMemoryProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties2KHR(physicalDevice, pMemoryProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEMEMORYPROPERTIES2KHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceMemoryProperties2KHR(physicalDevice, pMemoryProperties);
+layer_GetPhysicalDeviceMemoryProperties2KHR_after(physicalDevice, pMemoryProperties);
 #endif 
 }
 if(connected) {
@@ -3196,13 +3198,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSparseImageFormatPrope
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICESPARSEIMAGEFORMATPROPERTIES2KHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceSparseImageFormatProperties2KHR(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceSparseImageFormatProperties2KHR_before(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProperties2KHR(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICESPARSEIMAGEFORMATPROPERTIES2KHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceSparseImageFormatProperties2KHR(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
+layer_GetPhysicalDeviceSparseImageFormatProperties2KHR_after(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
 #endif 
 }
 if(connected) {
@@ -3217,13 +3219,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalBufferProperti
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALBUFFERPROPERTIESKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalBufferPropertiesKHR(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
+layer_GetPhysicalDeviceExternalBufferPropertiesKHR_before(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalBufferPropertiesKHR(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALBUFFERPROPERTIESKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalBufferPropertiesKHR(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
+layer_GetPhysicalDeviceExternalBufferPropertiesKHR_after(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
 #endif 
 }
 if(connected) {
@@ -3238,13 +3240,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalSemaphorePrope
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALSEMAPHOREPROPERTIESKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalSemaphorePropertiesKHR(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
+layer_GetPhysicalDeviceExternalSemaphorePropertiesKHR_before(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalSemaphorePropertiesKHR(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALSEMAPHOREPROPERTIESKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalSemaphorePropertiesKHR(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
+layer_GetPhysicalDeviceExternalSemaphorePropertiesKHR_after(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
 #endif 
 }
 if(connected) {
@@ -3259,13 +3261,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalFencePropertie
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALFENCEPROPERTIESKHR_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalFencePropertiesKHR(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
+layer_GetPhysicalDeviceExternalFencePropertiesKHR_before(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
 #endif 
 }
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalFencePropertiesKHR(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICEEXTERNALFENCEPROPERTIESKHR_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceExternalFencePropertiesKHR(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
+layer_GetPhysicalDeviceExternalFencePropertiesKHR_after(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
 #endif 
 }
 if(connected) {
@@ -3280,13 +3282,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkEnumeratePhysicalDeviceGroupsKHR!");
 }
 if(connected) {
 #ifdef ENUMERATEPHYSICALDEVICEGROUPSKHR_BEFORE_EXEC_EXISTS
-layer_EnumeratePhysicalDeviceGroupsKHR(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
+layer_EnumeratePhysicalDeviceGroupsKHR_before(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(instance)].EnumeratePhysicalDeviceGroupsKHR(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
 if(connected) {
 #ifdef ENUMERATEPHYSICALDEVICEGROUPSKHR_AFTER_EXEC_EXISTS
-layer_EnumeratePhysicalDeviceGroupsKHR(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
+layer_EnumeratePhysicalDeviceGroupsKHR_after(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
 #endif 
 }
 if(connected) {
@@ -3302,13 +3304,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceCalibrateableTimeDomai
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICECALIBRATEABLETIMEDOMAINSEXT_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceCalibrateableTimeDomainsEXT(physicalDevice, pTimeDomainCount, pTimeDomains);
+layer_GetPhysicalDeviceCalibrateableTimeDomainsEXT_before(physicalDevice, pTimeDomainCount, pTimeDomains);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceCalibrateableTimeDomainsEXT(physicalDevice, pTimeDomainCount, pTimeDomains);
 if(connected) {
 #ifdef GETPHYSICALDEVICECALIBRATEABLETIMEDOMAINSEXT_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceCalibrateableTimeDomainsEXT(physicalDevice, pTimeDomainCount, pTimeDomains);
+layer_GetPhysicalDeviceCalibrateableTimeDomainsEXT_after(physicalDevice, pTimeDomainCount, pTimeDomains);
 #endif 
 }
 if(connected) {
@@ -3324,13 +3326,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceToolPropertiesEXT!");
 }
 if(connected) {
 #ifdef GETPHYSICALDEVICETOOLPROPERTIESEXT_BEFORE_EXEC_EXISTS
-layer_GetPhysicalDeviceToolPropertiesEXT(physicalDevice, pToolCount, pToolProperties);
+layer_GetPhysicalDeviceToolPropertiesEXT_before(physicalDevice, pToolCount, pToolProperties);
 #endif 
 }
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceToolPropertiesEXT(physicalDevice, pToolCount, pToolProperties);
 if(connected) {
 #ifdef GETPHYSICALDEVICETOOLPROPERTIESEXT_AFTER_EXEC_EXISTS
-layer_GetPhysicalDeviceToolPropertiesEXT(physicalDevice, pToolCount, pToolProperties);
+layer_GetPhysicalDeviceToolPropertiesEXT_after(physicalDevice, pToolCount, pToolProperties);
 #endif 
 }
 if(connected) {
@@ -3346,13 +3348,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceQueue!");
 }
 if(connected) {
 #ifdef GETDEVICEQUEUE_BEFORE_EXEC_EXISTS
-layer_GetDeviceQueue(device, queueFamilyIndex, queueIndex, pQueue);
+layer_GetDeviceQueue_before(device, queueFamilyIndex, queueIndex, pQueue);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDeviceQueue(device, queueFamilyIndex, queueIndex, pQueue);
 if(connected) {
 #ifdef GETDEVICEQUEUE_AFTER_EXEC_EXISTS
-layer_GetDeviceQueue(device, queueFamilyIndex, queueIndex, pQueue);
+layer_GetDeviceQueue_after(device, queueFamilyIndex, queueIndex, pQueue);
 #endif 
 }
 if(connected) {
@@ -3367,13 +3369,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkQueueSubmit!");
 }
 if(connected) {
 #ifdef QUEUESUBMIT_BEFORE_EXEC_EXISTS
-layer_QueueSubmit(queue, submitCount, pSubmits, fence);
+layer_QueueSubmit_before(queue, submitCount, pSubmits, fence);
 #endif 
 }
 auto ret = device_dispatch[GetKey(queue)].QueueSubmit(queue, submitCount, pSubmits, fence);
 if(connected) {
 #ifdef QUEUESUBMIT_AFTER_EXEC_EXISTS
-layer_QueueSubmit(queue, submitCount, pSubmits, fence);
+layer_QueueSubmit_after(queue, submitCount, pSubmits, fence);
 #endif 
 }
 if(connected) {
@@ -3389,13 +3391,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkQueueWaitIdle!");
 }
 if(connected) {
 #ifdef QUEUEWAITIDLE_BEFORE_EXEC_EXISTS
-layer_QueueWaitIdle(queue);
+layer_QueueWaitIdle_before(queue);
 #endif 
 }
 auto ret = device_dispatch[GetKey(queue)].QueueWaitIdle(queue);
 if(connected) {
 #ifdef QUEUEWAITIDLE_AFTER_EXEC_EXISTS
-layer_QueueWaitIdle(queue);
+layer_QueueWaitIdle_after(queue);
 #endif 
 }
 if(connected) {
@@ -3411,13 +3413,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDeviceWaitIdle!");
 }
 if(connected) {
 #ifdef DEVICEWAITIDLE_BEFORE_EXEC_EXISTS
-layer_DeviceWaitIdle(device);
+layer_DeviceWaitIdle_before(device);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].DeviceWaitIdle(device);
 if(connected) {
 #ifdef DEVICEWAITIDLE_AFTER_EXEC_EXISTS
-layer_DeviceWaitIdle(device);
+layer_DeviceWaitIdle_after(device);
 #endif 
 }
 if(connected) {
@@ -3433,13 +3435,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkAllocateMemory!");
 }
 if(connected) {
 #ifdef ALLOCATEMEMORY_BEFORE_EXEC_EXISTS
-layer_AllocateMemory(device, pAllocateInfo, pAllocator, pMemory);
+layer_AllocateMemory_before(device, pAllocateInfo, pAllocator, pMemory);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].AllocateMemory(device, pAllocateInfo, pAllocator, pMemory);
 if(connected) {
 #ifdef ALLOCATEMEMORY_AFTER_EXEC_EXISTS
-layer_AllocateMemory(device, pAllocateInfo, pAllocator, pMemory);
+layer_AllocateMemory_after(device, pAllocateInfo, pAllocator, pMemory);
 #endif 
 }
 if(connected) {
@@ -3455,13 +3457,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkFreeMemory!");
 }
 if(connected) {
 #ifdef FREEMEMORY_BEFORE_EXEC_EXISTS
-layer_FreeMemory(device, memory, pAllocator);
+layer_FreeMemory_before(device, memory, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].FreeMemory(device, memory, pAllocator);
 if(connected) {
 #ifdef FREEMEMORY_AFTER_EXEC_EXISTS
-layer_FreeMemory(device, memory, pAllocator);
+layer_FreeMemory_after(device, memory, pAllocator);
 #endif 
 }
 if(connected) {
@@ -3476,13 +3478,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkMapMemory!");
 }
 if(connected) {
 #ifdef MAPMEMORY_BEFORE_EXEC_EXISTS
-layer_MapMemory(device, memory, offset, size, flags, ppData);
+layer_MapMemory_before(device, memory, offset, size, flags, ppData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].MapMemory(device, memory, offset, size, flags, ppData);
 if(connected) {
 #ifdef MAPMEMORY_AFTER_EXEC_EXISTS
-layer_MapMemory(device, memory, offset, size, flags, ppData);
+layer_MapMemory_after(device, memory, offset, size, flags, ppData);
 #endif 
 }
 if(connected) {
@@ -3498,13 +3500,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkUnmapMemory!");
 }
 if(connected) {
 #ifdef UNMAPMEMORY_BEFORE_EXEC_EXISTS
-layer_UnmapMemory(device, memory);
+layer_UnmapMemory_before(device, memory);
 #endif 
 }
 device_dispatch[GetKey(device)].UnmapMemory(device, memory);
 if(connected) {
 #ifdef UNMAPMEMORY_AFTER_EXEC_EXISTS
-layer_UnmapMemory(device, memory);
+layer_UnmapMemory_after(device, memory);
 #endif 
 }
 if(connected) {
@@ -3519,13 +3521,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkFlushMappedMemoryRanges!");
 }
 if(connected) {
 #ifdef FLUSHMAPPEDMEMORYRANGES_BEFORE_EXEC_EXISTS
-layer_FlushMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
+layer_FlushMappedMemoryRanges_before(device, memoryRangeCount, pMemoryRanges);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].FlushMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
 if(connected) {
 #ifdef FLUSHMAPPEDMEMORYRANGES_AFTER_EXEC_EXISTS
-layer_FlushMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
+layer_FlushMappedMemoryRanges_after(device, memoryRangeCount, pMemoryRanges);
 #endif 
 }
 if(connected) {
@@ -3541,13 +3543,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkInvalidateMappedMemoryRanges!");
 }
 if(connected) {
 #ifdef INVALIDATEMAPPEDMEMORYRANGES_BEFORE_EXEC_EXISTS
-layer_InvalidateMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
+layer_InvalidateMappedMemoryRanges_before(device, memoryRangeCount, pMemoryRanges);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].InvalidateMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
 if(connected) {
 #ifdef INVALIDATEMAPPEDMEMORYRANGES_AFTER_EXEC_EXISTS
-layer_InvalidateMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
+layer_InvalidateMappedMemoryRanges_after(device, memoryRangeCount, pMemoryRanges);
 #endif 
 }
 if(connected) {
@@ -3563,13 +3565,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceMemoryCommitment!");
 }
 if(connected) {
 #ifdef GETDEVICEMEMORYCOMMITMENT_BEFORE_EXEC_EXISTS
-layer_GetDeviceMemoryCommitment(device, memory, pCommittedMemoryInBytes);
+layer_GetDeviceMemoryCommitment_before(device, memory, pCommittedMemoryInBytes);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDeviceMemoryCommitment(device, memory, pCommittedMemoryInBytes);
 if(connected) {
 #ifdef GETDEVICEMEMORYCOMMITMENT_AFTER_EXEC_EXISTS
-layer_GetDeviceMemoryCommitment(device, memory, pCommittedMemoryInBytes);
+layer_GetDeviceMemoryCommitment_after(device, memory, pCommittedMemoryInBytes);
 #endif 
 }
 if(connected) {
@@ -3584,13 +3586,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetBufferMemoryRequirements!");
 }
 if(connected) {
 #ifdef GETBUFFERMEMORYREQUIREMENTS_BEFORE_EXEC_EXISTS
-layer_GetBufferMemoryRequirements(device, buffer, pMemoryRequirements);
+layer_GetBufferMemoryRequirements_before(device, buffer, pMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetBufferMemoryRequirements(device, buffer, pMemoryRequirements);
 if(connected) {
 #ifdef GETBUFFERMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
-layer_GetBufferMemoryRequirements(device, buffer, pMemoryRequirements);
+layer_GetBufferMemoryRequirements_after(device, buffer, pMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -3605,13 +3607,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkBindBufferMemory!");
 }
 if(connected) {
 #ifdef BINDBUFFERMEMORY_BEFORE_EXEC_EXISTS
-layer_BindBufferMemory(device, buffer, memory, memoryOffset);
+layer_BindBufferMemory_before(device, buffer, memory, memoryOffset);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].BindBufferMemory(device, buffer, memory, memoryOffset);
 if(connected) {
 #ifdef BINDBUFFERMEMORY_AFTER_EXEC_EXISTS
-layer_BindBufferMemory(device, buffer, memory, memoryOffset);
+layer_BindBufferMemory_after(device, buffer, memory, memoryOffset);
 #endif 
 }
 if(connected) {
@@ -3627,13 +3629,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetImageMemoryRequirements!");
 }
 if(connected) {
 #ifdef GETIMAGEMEMORYREQUIREMENTS_BEFORE_EXEC_EXISTS
-layer_GetImageMemoryRequirements(device, image, pMemoryRequirements);
+layer_GetImageMemoryRequirements_before(device, image, pMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetImageMemoryRequirements(device, image, pMemoryRequirements);
 if(connected) {
 #ifdef GETIMAGEMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
-layer_GetImageMemoryRequirements(device, image, pMemoryRequirements);
+layer_GetImageMemoryRequirements_after(device, image, pMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -3648,13 +3650,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkBindImageMemory!");
 }
 if(connected) {
 #ifdef BINDIMAGEMEMORY_BEFORE_EXEC_EXISTS
-layer_BindImageMemory(device, image, memory, memoryOffset);
+layer_BindImageMemory_before(device, image, memory, memoryOffset);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].BindImageMemory(device, image, memory, memoryOffset);
 if(connected) {
 #ifdef BINDIMAGEMEMORY_AFTER_EXEC_EXISTS
-layer_BindImageMemory(device, image, memory, memoryOffset);
+layer_BindImageMemory_after(device, image, memory, memoryOffset);
 #endif 
 }
 if(connected) {
@@ -3670,13 +3672,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetImageSparseMemoryRequirements!");
 }
 if(connected) {
 #ifdef GETIMAGESPARSEMEMORYREQUIREMENTS_BEFORE_EXEC_EXISTS
-layer_GetImageSparseMemoryRequirements(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+layer_GetImageSparseMemoryRequirements_before(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 if(connected) {
 #ifdef GETIMAGESPARSEMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
-layer_GetImageSparseMemoryRequirements(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+layer_GetImageSparseMemoryRequirements_after(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -3691,13 +3693,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkQueueBindSparse!");
 }
 if(connected) {
 #ifdef QUEUEBINDSPARSE_BEFORE_EXEC_EXISTS
-layer_QueueBindSparse(queue, bindInfoCount, pBindInfo, fence);
+layer_QueueBindSparse_before(queue, bindInfoCount, pBindInfo, fence);
 #endif 
 }
 auto ret = device_dispatch[GetKey(queue)].QueueBindSparse(queue, bindInfoCount, pBindInfo, fence);
 if(connected) {
 #ifdef QUEUEBINDSPARSE_AFTER_EXEC_EXISTS
-layer_QueueBindSparse(queue, bindInfoCount, pBindInfo, fence);
+layer_QueueBindSparse_after(queue, bindInfoCount, pBindInfo, fence);
 #endif 
 }
 if(connected) {
@@ -3713,13 +3715,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateFence!");
 }
 if(connected) {
 #ifdef CREATEFENCE_BEFORE_EXEC_EXISTS
-layer_CreateFence(device, pCreateInfo, pAllocator, pFence);
+layer_CreateFence_before(device, pCreateInfo, pAllocator, pFence);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateFence(device, pCreateInfo, pAllocator, pFence);
 if(connected) {
 #ifdef CREATEFENCE_AFTER_EXEC_EXISTS
-layer_CreateFence(device, pCreateInfo, pAllocator, pFence);
+layer_CreateFence_after(device, pCreateInfo, pAllocator, pFence);
 #endif 
 }
 if(connected) {
@@ -3735,13 +3737,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyFence!");
 }
 if(connected) {
 #ifdef DESTROYFENCE_BEFORE_EXEC_EXISTS
-layer_DestroyFence(device, fence, pAllocator);
+layer_DestroyFence_before(device, fence, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyFence(device, fence, pAllocator);
 if(connected) {
 #ifdef DESTROYFENCE_AFTER_EXEC_EXISTS
-layer_DestroyFence(device, fence, pAllocator);
+layer_DestroyFence_after(device, fence, pAllocator);
 #endif 
 }
 if(connected) {
@@ -3756,13 +3758,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkResetFences!");
 }
 if(connected) {
 #ifdef RESETFENCES_BEFORE_EXEC_EXISTS
-layer_ResetFences(device, fenceCount, pFences);
+layer_ResetFences_before(device, fenceCount, pFences);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ResetFences(device, fenceCount, pFences);
 if(connected) {
 #ifdef RESETFENCES_AFTER_EXEC_EXISTS
-layer_ResetFences(device, fenceCount, pFences);
+layer_ResetFences_after(device, fenceCount, pFences);
 #endif 
 }
 if(connected) {
@@ -3778,13 +3780,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetFenceStatus!");
 }
 if(connected) {
 #ifdef GETFENCESTATUS_BEFORE_EXEC_EXISTS
-layer_GetFenceStatus(device, fence);
+layer_GetFenceStatus_before(device, fence);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetFenceStatus(device, fence);
 if(connected) {
 #ifdef GETFENCESTATUS_AFTER_EXEC_EXISTS
-layer_GetFenceStatus(device, fence);
+layer_GetFenceStatus_after(device, fence);
 #endif 
 }
 if(connected) {
@@ -3800,13 +3802,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkWaitForFences!");
 }
 if(connected) {
 #ifdef WAITFORFENCES_BEFORE_EXEC_EXISTS
-layer_WaitForFences(device, fenceCount, pFences, waitAll, timeout);
+layer_WaitForFences_before(device, fenceCount, pFences, waitAll, timeout);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].WaitForFences(device, fenceCount, pFences, waitAll, timeout);
 if(connected) {
 #ifdef WAITFORFENCES_AFTER_EXEC_EXISTS
-layer_WaitForFences(device, fenceCount, pFences, waitAll, timeout);
+layer_WaitForFences_after(device, fenceCount, pFences, waitAll, timeout);
 #endif 
 }
 if(connected) {
@@ -3822,13 +3824,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateSemaphore!");
 }
 if(connected) {
 #ifdef CREATESEMAPHORE_BEFORE_EXEC_EXISTS
-layer_CreateSemaphore(device, pCreateInfo, pAllocator, pSemaphore);
+layer_CreateSemaphore_before(device, pCreateInfo, pAllocator, pSemaphore);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateSemaphore(device, pCreateInfo, pAllocator, pSemaphore);
 if(connected) {
 #ifdef CREATESEMAPHORE_AFTER_EXEC_EXISTS
-layer_CreateSemaphore(device, pCreateInfo, pAllocator, pSemaphore);
+layer_CreateSemaphore_after(device, pCreateInfo, pAllocator, pSemaphore);
 #endif 
 }
 if(connected) {
@@ -3844,13 +3846,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroySemaphore!");
 }
 if(connected) {
 #ifdef DESTROYSEMAPHORE_BEFORE_EXEC_EXISTS
-layer_DestroySemaphore(device, semaphore, pAllocator);
+layer_DestroySemaphore_before(device, semaphore, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroySemaphore(device, semaphore, pAllocator);
 if(connected) {
 #ifdef DESTROYSEMAPHORE_AFTER_EXEC_EXISTS
-layer_DestroySemaphore(device, semaphore, pAllocator);
+layer_DestroySemaphore_after(device, semaphore, pAllocator);
 #endif 
 }
 if(connected) {
@@ -3865,13 +3867,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateEvent!");
 }
 if(connected) {
 #ifdef CREATEEVENT_BEFORE_EXEC_EXISTS
-layer_CreateEvent(device, pCreateInfo, pAllocator, pEvent);
+layer_CreateEvent_before(device, pCreateInfo, pAllocator, pEvent);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateEvent(device, pCreateInfo, pAllocator, pEvent);
 if(connected) {
 #ifdef CREATEEVENT_AFTER_EXEC_EXISTS
-layer_CreateEvent(device, pCreateInfo, pAllocator, pEvent);
+layer_CreateEvent_after(device, pCreateInfo, pAllocator, pEvent);
 #endif 
 }
 if(connected) {
@@ -3887,13 +3889,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyEvent!");
 }
 if(connected) {
 #ifdef DESTROYEVENT_BEFORE_EXEC_EXISTS
-layer_DestroyEvent(device, event, pAllocator);
+layer_DestroyEvent_before(device, event, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyEvent(device, event, pAllocator);
 if(connected) {
 #ifdef DESTROYEVENT_AFTER_EXEC_EXISTS
-layer_DestroyEvent(device, event, pAllocator);
+layer_DestroyEvent_after(device, event, pAllocator);
 #endif 
 }
 if(connected) {
@@ -3908,13 +3910,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetEventStatus!");
 }
 if(connected) {
 #ifdef GETEVENTSTATUS_BEFORE_EXEC_EXISTS
-layer_GetEventStatus(device, event);
+layer_GetEventStatus_before(device, event);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetEventStatus(device, event);
 if(connected) {
 #ifdef GETEVENTSTATUS_AFTER_EXEC_EXISTS
-layer_GetEventStatus(device, event);
+layer_GetEventStatus_after(device, event);
 #endif 
 }
 if(connected) {
@@ -3930,13 +3932,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSetEvent!");
 }
 if(connected) {
 #ifdef SETEVENT_BEFORE_EXEC_EXISTS
-layer_SetEvent(device, event);
+layer_SetEvent_before(device, event);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].SetEvent(device, event);
 if(connected) {
 #ifdef SETEVENT_AFTER_EXEC_EXISTS
-layer_SetEvent(device, event);
+layer_SetEvent_after(device, event);
 #endif 
 }
 if(connected) {
@@ -3952,13 +3954,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkResetEvent!");
 }
 if(connected) {
 #ifdef RESETEVENT_BEFORE_EXEC_EXISTS
-layer_ResetEvent(device, event);
+layer_ResetEvent_before(device, event);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ResetEvent(device, event);
 if(connected) {
 #ifdef RESETEVENT_AFTER_EXEC_EXISTS
-layer_ResetEvent(device, event);
+layer_ResetEvent_after(device, event);
 #endif 
 }
 if(connected) {
@@ -3974,13 +3976,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateQueryPool!");
 }
 if(connected) {
 #ifdef CREATEQUERYPOOL_BEFORE_EXEC_EXISTS
-layer_CreateQueryPool(device, pCreateInfo, pAllocator, pQueryPool);
+layer_CreateQueryPool_before(device, pCreateInfo, pAllocator, pQueryPool);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateQueryPool(device, pCreateInfo, pAllocator, pQueryPool);
 if(connected) {
 #ifdef CREATEQUERYPOOL_AFTER_EXEC_EXISTS
-layer_CreateQueryPool(device, pCreateInfo, pAllocator, pQueryPool);
+layer_CreateQueryPool_after(device, pCreateInfo, pAllocator, pQueryPool);
 #endif 
 }
 if(connected) {
@@ -3996,13 +3998,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyQueryPool!");
 }
 if(connected) {
 #ifdef DESTROYQUERYPOOL_BEFORE_EXEC_EXISTS
-layer_DestroyQueryPool(device, queryPool, pAllocator);
+layer_DestroyQueryPool_before(device, queryPool, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyQueryPool(device, queryPool, pAllocator);
 if(connected) {
 #ifdef DESTROYQUERYPOOL_AFTER_EXEC_EXISTS
-layer_DestroyQueryPool(device, queryPool, pAllocator);
+layer_DestroyQueryPool_after(device, queryPool, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4017,13 +4019,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetQueryPoolResults!");
 }
 if(connected) {
 #ifdef GETQUERYPOOLRESULTS_BEFORE_EXEC_EXISTS
-layer_GetQueryPoolResults(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
+layer_GetQueryPoolResults_before(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetQueryPoolResults(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
 if(connected) {
 #ifdef GETQUERYPOOLRESULTS_AFTER_EXEC_EXISTS
-layer_GetQueryPoolResults(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
+layer_GetQueryPoolResults_after(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
 #endif 
 }
 if(connected) {
@@ -4039,13 +4041,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkResetQueryPool!");
 }
 if(connected) {
 #ifdef RESETQUERYPOOL_BEFORE_EXEC_EXISTS
-layer_ResetQueryPool(device, queryPool, firstQuery, queryCount);
+layer_ResetQueryPool_before(device, queryPool, firstQuery, queryCount);
 #endif 
 }
 device_dispatch[GetKey(device)].ResetQueryPool(device, queryPool, firstQuery, queryCount);
 if(connected) {
 #ifdef RESETQUERYPOOL_AFTER_EXEC_EXISTS
-layer_ResetQueryPool(device, queryPool, firstQuery, queryCount);
+layer_ResetQueryPool_after(device, queryPool, firstQuery, queryCount);
 #endif 
 }
 if(connected) {
@@ -4060,13 +4062,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateBuffer!");
 }
 if(connected) {
 #ifdef CREATEBUFFER_BEFORE_EXEC_EXISTS
-layer_CreateBuffer(device, pCreateInfo, pAllocator, pBuffer);
+layer_CreateBuffer_before(device, pCreateInfo, pAllocator, pBuffer);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateBuffer(device, pCreateInfo, pAllocator, pBuffer);
 if(connected) {
 #ifdef CREATEBUFFER_AFTER_EXEC_EXISTS
-layer_CreateBuffer(device, pCreateInfo, pAllocator, pBuffer);
+layer_CreateBuffer_after(device, pCreateInfo, pAllocator, pBuffer);
 #endif 
 }
 if(connected) {
@@ -4082,13 +4084,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyBuffer!");
 }
 if(connected) {
 #ifdef DESTROYBUFFER_BEFORE_EXEC_EXISTS
-layer_DestroyBuffer(device, buffer, pAllocator);
+layer_DestroyBuffer_before(device, buffer, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyBuffer(device, buffer, pAllocator);
 if(connected) {
 #ifdef DESTROYBUFFER_AFTER_EXEC_EXISTS
-layer_DestroyBuffer(device, buffer, pAllocator);
+layer_DestroyBuffer_after(device, buffer, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4103,13 +4105,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateBufferView!");
 }
 if(connected) {
 #ifdef CREATEBUFFERVIEW_BEFORE_EXEC_EXISTS
-layer_CreateBufferView(device, pCreateInfo, pAllocator, pView);
+layer_CreateBufferView_before(device, pCreateInfo, pAllocator, pView);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateBufferView(device, pCreateInfo, pAllocator, pView);
 if(connected) {
 #ifdef CREATEBUFFERVIEW_AFTER_EXEC_EXISTS
-layer_CreateBufferView(device, pCreateInfo, pAllocator, pView);
+layer_CreateBufferView_after(device, pCreateInfo, pAllocator, pView);
 #endif 
 }
 if(connected) {
@@ -4125,13 +4127,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyBufferView!");
 }
 if(connected) {
 #ifdef DESTROYBUFFERVIEW_BEFORE_EXEC_EXISTS
-layer_DestroyBufferView(device, bufferView, pAllocator);
+layer_DestroyBufferView_before(device, bufferView, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyBufferView(device, bufferView, pAllocator);
 if(connected) {
 #ifdef DESTROYBUFFERVIEW_AFTER_EXEC_EXISTS
-layer_DestroyBufferView(device, bufferView, pAllocator);
+layer_DestroyBufferView_after(device, bufferView, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4146,13 +4148,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateImage!");
 }
 if(connected) {
 #ifdef CREATEIMAGE_BEFORE_EXEC_EXISTS
-layer_CreateImage(device, pCreateInfo, pAllocator, pImage);
+layer_CreateImage_before(device, pCreateInfo, pAllocator, pImage);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateImage(device, pCreateInfo, pAllocator, pImage);
 if(connected) {
 #ifdef CREATEIMAGE_AFTER_EXEC_EXISTS
-layer_CreateImage(device, pCreateInfo, pAllocator, pImage);
+layer_CreateImage_after(device, pCreateInfo, pAllocator, pImage);
 #endif 
 }
 if(connected) {
@@ -4168,13 +4170,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyImage!");
 }
 if(connected) {
 #ifdef DESTROYIMAGE_BEFORE_EXEC_EXISTS
-layer_DestroyImage(device, image, pAllocator);
+layer_DestroyImage_before(device, image, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyImage(device, image, pAllocator);
 if(connected) {
 #ifdef DESTROYIMAGE_AFTER_EXEC_EXISTS
-layer_DestroyImage(device, image, pAllocator);
+layer_DestroyImage_after(device, image, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4189,13 +4191,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetImageSubresourceLayout!");
 }
 if(connected) {
 #ifdef GETIMAGESUBRESOURCELAYOUT_BEFORE_EXEC_EXISTS
-layer_GetImageSubresourceLayout(device, image, pSubresource, pLayout);
+layer_GetImageSubresourceLayout_before(device, image, pSubresource, pLayout);
 #endif 
 }
 device_dispatch[GetKey(device)].GetImageSubresourceLayout(device, image, pSubresource, pLayout);
 if(connected) {
 #ifdef GETIMAGESUBRESOURCELAYOUT_AFTER_EXEC_EXISTS
-layer_GetImageSubresourceLayout(device, image, pSubresource, pLayout);
+layer_GetImageSubresourceLayout_after(device, image, pSubresource, pLayout);
 #endif 
 }
 if(connected) {
@@ -4210,13 +4212,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateImageView!");
 }
 if(connected) {
 #ifdef CREATEIMAGEVIEW_BEFORE_EXEC_EXISTS
-layer_CreateImageView(device, pCreateInfo, pAllocator, pView);
+layer_CreateImageView_before(device, pCreateInfo, pAllocator, pView);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateImageView(device, pCreateInfo, pAllocator, pView);
 if(connected) {
 #ifdef CREATEIMAGEVIEW_AFTER_EXEC_EXISTS
-layer_CreateImageView(device, pCreateInfo, pAllocator, pView);
+layer_CreateImageView_after(device, pCreateInfo, pAllocator, pView);
 #endif 
 }
 if(connected) {
@@ -4232,13 +4234,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyImageView!");
 }
 if(connected) {
 #ifdef DESTROYIMAGEVIEW_BEFORE_EXEC_EXISTS
-layer_DestroyImageView(device, imageView, pAllocator);
+layer_DestroyImageView_before(device, imageView, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyImageView(device, imageView, pAllocator);
 if(connected) {
 #ifdef DESTROYIMAGEVIEW_AFTER_EXEC_EXISTS
-layer_DestroyImageView(device, imageView, pAllocator);
+layer_DestroyImageView_after(device, imageView, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4253,13 +4255,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateShaderModule!");
 }
 if(connected) {
 #ifdef CREATESHADERMODULE_BEFORE_EXEC_EXISTS
-layer_CreateShaderModule(device, pCreateInfo, pAllocator, pShaderModule);
+layer_CreateShaderModule_before(device, pCreateInfo, pAllocator, pShaderModule);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateShaderModule(device, pCreateInfo, pAllocator, pShaderModule);
 if(connected) {
 #ifdef CREATESHADERMODULE_AFTER_EXEC_EXISTS
-layer_CreateShaderModule(device, pCreateInfo, pAllocator, pShaderModule);
+layer_CreateShaderModule_after(device, pCreateInfo, pAllocator, pShaderModule);
 #endif 
 }
 if(connected) {
@@ -4275,13 +4277,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyShaderModule!");
 }
 if(connected) {
 #ifdef DESTROYSHADERMODULE_BEFORE_EXEC_EXISTS
-layer_DestroyShaderModule(device, shaderModule, pAllocator);
+layer_DestroyShaderModule_before(device, shaderModule, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyShaderModule(device, shaderModule, pAllocator);
 if(connected) {
 #ifdef DESTROYSHADERMODULE_AFTER_EXEC_EXISTS
-layer_DestroyShaderModule(device, shaderModule, pAllocator);
+layer_DestroyShaderModule_after(device, shaderModule, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4296,13 +4298,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreatePipelineCache!");
 }
 if(connected) {
 #ifdef CREATEPIPELINECACHE_BEFORE_EXEC_EXISTS
-layer_CreatePipelineCache(device, pCreateInfo, pAllocator, pPipelineCache);
+layer_CreatePipelineCache_before(device, pCreateInfo, pAllocator, pPipelineCache);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreatePipelineCache(device, pCreateInfo, pAllocator, pPipelineCache);
 if(connected) {
 #ifdef CREATEPIPELINECACHE_AFTER_EXEC_EXISTS
-layer_CreatePipelineCache(device, pCreateInfo, pAllocator, pPipelineCache);
+layer_CreatePipelineCache_after(device, pCreateInfo, pAllocator, pPipelineCache);
 #endif 
 }
 if(connected) {
@@ -4318,13 +4320,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyPipelineCache!");
 }
 if(connected) {
 #ifdef DESTROYPIPELINECACHE_BEFORE_EXEC_EXISTS
-layer_DestroyPipelineCache(device, pipelineCache, pAllocator);
+layer_DestroyPipelineCache_before(device, pipelineCache, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyPipelineCache(device, pipelineCache, pAllocator);
 if(connected) {
 #ifdef DESTROYPIPELINECACHE_AFTER_EXEC_EXISTS
-layer_DestroyPipelineCache(device, pipelineCache, pAllocator);
+layer_DestroyPipelineCache_after(device, pipelineCache, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4339,13 +4341,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPipelineCacheData!");
 }
 if(connected) {
 #ifdef GETPIPELINECACHEDATA_BEFORE_EXEC_EXISTS
-layer_GetPipelineCacheData(device, pipelineCache, pDataSize, pData);
+layer_GetPipelineCacheData_before(device, pipelineCache, pDataSize, pData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetPipelineCacheData(device, pipelineCache, pDataSize, pData);
 if(connected) {
 #ifdef GETPIPELINECACHEDATA_AFTER_EXEC_EXISTS
-layer_GetPipelineCacheData(device, pipelineCache, pDataSize, pData);
+layer_GetPipelineCacheData_after(device, pipelineCache, pDataSize, pData);
 #endif 
 }
 if(connected) {
@@ -4361,13 +4363,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkMergePipelineCaches!");
 }
 if(connected) {
 #ifdef MERGEPIPELINECACHES_BEFORE_EXEC_EXISTS
-layer_MergePipelineCaches(device, dstCache, srcCacheCount, pSrcCaches);
+layer_MergePipelineCaches_before(device, dstCache, srcCacheCount, pSrcCaches);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].MergePipelineCaches(device, dstCache, srcCacheCount, pSrcCaches);
 if(connected) {
 #ifdef MERGEPIPELINECACHES_AFTER_EXEC_EXISTS
-layer_MergePipelineCaches(device, dstCache, srcCacheCount, pSrcCaches);
+layer_MergePipelineCaches_after(device, dstCache, srcCacheCount, pSrcCaches);
 #endif 
 }
 if(connected) {
@@ -4383,13 +4385,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateGraphicsPipelines!");
 }
 if(connected) {
 #ifdef CREATEGRAPHICSPIPELINES_BEFORE_EXEC_EXISTS
-layer_CreateGraphicsPipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+layer_CreateGraphicsPipelines_before(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateGraphicsPipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 if(connected) {
 #ifdef CREATEGRAPHICSPIPELINES_AFTER_EXEC_EXISTS
-layer_CreateGraphicsPipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+layer_CreateGraphicsPipelines_after(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 #endif 
 }
 if(connected) {
@@ -4405,13 +4407,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateComputePipelines!");
 }
 if(connected) {
 #ifdef CREATECOMPUTEPIPELINES_BEFORE_EXEC_EXISTS
-layer_CreateComputePipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+layer_CreateComputePipelines_before(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateComputePipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 if(connected) {
 #ifdef CREATECOMPUTEPIPELINES_AFTER_EXEC_EXISTS
-layer_CreateComputePipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+layer_CreateComputePipelines_after(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 #endif 
 }
 if(connected) {
@@ -4427,13 +4429,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceSubpassShadingMaxWorkgroupSize
 }
 if(connected) {
 #ifdef GETDEVICESUBPASSSHADINGMAXWORKGROUPSIZEHUAWEI_BEFORE_EXEC_EXISTS
-layer_GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(device, renderpass, pMaxWorkgroupSize);
+layer_GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI_before(device, renderpass, pMaxWorkgroupSize);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(device, renderpass, pMaxWorkgroupSize);
 if(connected) {
 #ifdef GETDEVICESUBPASSSHADINGMAXWORKGROUPSIZEHUAWEI_AFTER_EXEC_EXISTS
-layer_GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(device, renderpass, pMaxWorkgroupSize);
+layer_GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI_after(device, renderpass, pMaxWorkgroupSize);
 #endif 
 }
 if(connected) {
@@ -4449,13 +4451,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyPipeline!");
 }
 if(connected) {
 #ifdef DESTROYPIPELINE_BEFORE_EXEC_EXISTS
-layer_DestroyPipeline(device, pipeline, pAllocator);
+layer_DestroyPipeline_before(device, pipeline, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyPipeline(device, pipeline, pAllocator);
 if(connected) {
 #ifdef DESTROYPIPELINE_AFTER_EXEC_EXISTS
-layer_DestroyPipeline(device, pipeline, pAllocator);
+layer_DestroyPipeline_after(device, pipeline, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4470,13 +4472,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreatePipelineLayout!");
 }
 if(connected) {
 #ifdef CREATEPIPELINELAYOUT_BEFORE_EXEC_EXISTS
-layer_CreatePipelineLayout(device, pCreateInfo, pAllocator, pPipelineLayout);
+layer_CreatePipelineLayout_before(device, pCreateInfo, pAllocator, pPipelineLayout);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreatePipelineLayout(device, pCreateInfo, pAllocator, pPipelineLayout);
 if(connected) {
 #ifdef CREATEPIPELINELAYOUT_AFTER_EXEC_EXISTS
-layer_CreatePipelineLayout(device, pCreateInfo, pAllocator, pPipelineLayout);
+layer_CreatePipelineLayout_after(device, pCreateInfo, pAllocator, pPipelineLayout);
 #endif 
 }
 if(connected) {
@@ -4492,13 +4494,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyPipelineLayout!");
 }
 if(connected) {
 #ifdef DESTROYPIPELINELAYOUT_BEFORE_EXEC_EXISTS
-layer_DestroyPipelineLayout(device, pipelineLayout, pAllocator);
+layer_DestroyPipelineLayout_before(device, pipelineLayout, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyPipelineLayout(device, pipelineLayout, pAllocator);
 if(connected) {
 #ifdef DESTROYPIPELINELAYOUT_AFTER_EXEC_EXISTS
-layer_DestroyPipelineLayout(device, pipelineLayout, pAllocator);
+layer_DestroyPipelineLayout_after(device, pipelineLayout, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4513,13 +4515,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateSampler!");
 }
 if(connected) {
 #ifdef CREATESAMPLER_BEFORE_EXEC_EXISTS
-layer_CreateSampler(device, pCreateInfo, pAllocator, pSampler);
+layer_CreateSampler_before(device, pCreateInfo, pAllocator, pSampler);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateSampler(device, pCreateInfo, pAllocator, pSampler);
 if(connected) {
 #ifdef CREATESAMPLER_AFTER_EXEC_EXISTS
-layer_CreateSampler(device, pCreateInfo, pAllocator, pSampler);
+layer_CreateSampler_after(device, pCreateInfo, pAllocator, pSampler);
 #endif 
 }
 if(connected) {
@@ -4535,13 +4537,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroySampler!");
 }
 if(connected) {
 #ifdef DESTROYSAMPLER_BEFORE_EXEC_EXISTS
-layer_DestroySampler(device, sampler, pAllocator);
+layer_DestroySampler_before(device, sampler, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroySampler(device, sampler, pAllocator);
 if(connected) {
 #ifdef DESTROYSAMPLER_AFTER_EXEC_EXISTS
-layer_DestroySampler(device, sampler, pAllocator);
+layer_DestroySampler_after(device, sampler, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4556,13 +4558,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateDescriptorSetLayout!");
 }
 if(connected) {
 #ifdef CREATEDESCRIPTORSETLAYOUT_BEFORE_EXEC_EXISTS
-layer_CreateDescriptorSetLayout(device, pCreateInfo, pAllocator, pSetLayout);
+layer_CreateDescriptorSetLayout_before(device, pCreateInfo, pAllocator, pSetLayout);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateDescriptorSetLayout(device, pCreateInfo, pAllocator, pSetLayout);
 if(connected) {
 #ifdef CREATEDESCRIPTORSETLAYOUT_AFTER_EXEC_EXISTS
-layer_CreateDescriptorSetLayout(device, pCreateInfo, pAllocator, pSetLayout);
+layer_CreateDescriptorSetLayout_after(device, pCreateInfo, pAllocator, pSetLayout);
 #endif 
 }
 if(connected) {
@@ -4578,13 +4580,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyDescriptorSetLayout!");
 }
 if(connected) {
 #ifdef DESTROYDESCRIPTORSETLAYOUT_BEFORE_EXEC_EXISTS
-layer_DestroyDescriptorSetLayout(device, descriptorSetLayout, pAllocator);
+layer_DestroyDescriptorSetLayout_before(device, descriptorSetLayout, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyDescriptorSetLayout(device, descriptorSetLayout, pAllocator);
 if(connected) {
 #ifdef DESTROYDESCRIPTORSETLAYOUT_AFTER_EXEC_EXISTS
-layer_DestroyDescriptorSetLayout(device, descriptorSetLayout, pAllocator);
+layer_DestroyDescriptorSetLayout_after(device, descriptorSetLayout, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4599,13 +4601,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateDescriptorPool!");
 }
 if(connected) {
 #ifdef CREATEDESCRIPTORPOOL_BEFORE_EXEC_EXISTS
-layer_CreateDescriptorPool(device, pCreateInfo, pAllocator, pDescriptorPool);
+layer_CreateDescriptorPool_before(device, pCreateInfo, pAllocator, pDescriptorPool);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateDescriptorPool(device, pCreateInfo, pAllocator, pDescriptorPool);
 if(connected) {
 #ifdef CREATEDESCRIPTORPOOL_AFTER_EXEC_EXISTS
-layer_CreateDescriptorPool(device, pCreateInfo, pAllocator, pDescriptorPool);
+layer_CreateDescriptorPool_after(device, pCreateInfo, pAllocator, pDescriptorPool);
 #endif 
 }
 if(connected) {
@@ -4621,13 +4623,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyDescriptorPool!");
 }
 if(connected) {
 #ifdef DESTROYDESCRIPTORPOOL_BEFORE_EXEC_EXISTS
-layer_DestroyDescriptorPool(device, descriptorPool, pAllocator);
+layer_DestroyDescriptorPool_before(device, descriptorPool, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyDescriptorPool(device, descriptorPool, pAllocator);
 if(connected) {
 #ifdef DESTROYDESCRIPTORPOOL_AFTER_EXEC_EXISTS
-layer_DestroyDescriptorPool(device, descriptorPool, pAllocator);
+layer_DestroyDescriptorPool_after(device, descriptorPool, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4642,13 +4644,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkResetDescriptorPool!");
 }
 if(connected) {
 #ifdef RESETDESCRIPTORPOOL_BEFORE_EXEC_EXISTS
-layer_ResetDescriptorPool(device, descriptorPool, flags);
+layer_ResetDescriptorPool_before(device, descriptorPool, flags);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ResetDescriptorPool(device, descriptorPool, flags);
 if(connected) {
 #ifdef RESETDESCRIPTORPOOL_AFTER_EXEC_EXISTS
-layer_ResetDescriptorPool(device, descriptorPool, flags);
+layer_ResetDescriptorPool_after(device, descriptorPool, flags);
 #endif 
 }
 if(connected) {
@@ -4664,13 +4666,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkAllocateDescriptorSets!");
 }
 if(connected) {
 #ifdef ALLOCATEDESCRIPTORSETS_BEFORE_EXEC_EXISTS
-layer_AllocateDescriptorSets(device, pAllocateInfo, pDescriptorSets);
+layer_AllocateDescriptorSets_before(device, pAllocateInfo, pDescriptorSets);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].AllocateDescriptorSets(device, pAllocateInfo, pDescriptorSets);
 if(connected) {
 #ifdef ALLOCATEDESCRIPTORSETS_AFTER_EXEC_EXISTS
-layer_AllocateDescriptorSets(device, pAllocateInfo, pDescriptorSets);
+layer_AllocateDescriptorSets_after(device, pAllocateInfo, pDescriptorSets);
 #endif 
 }
 if(connected) {
@@ -4686,13 +4688,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkFreeDescriptorSets!");
 }
 if(connected) {
 #ifdef FREEDESCRIPTORSETS_BEFORE_EXEC_EXISTS
-layer_FreeDescriptorSets(device, descriptorPool, descriptorSetCount, pDescriptorSets);
+layer_FreeDescriptorSets_before(device, descriptorPool, descriptorSetCount, pDescriptorSets);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].FreeDescriptorSets(device, descriptorPool, descriptorSetCount, pDescriptorSets);
 if(connected) {
 #ifdef FREEDESCRIPTORSETS_AFTER_EXEC_EXISTS
-layer_FreeDescriptorSets(device, descriptorPool, descriptorSetCount, pDescriptorSets);
+layer_FreeDescriptorSets_after(device, descriptorPool, descriptorSetCount, pDescriptorSets);
 #endif 
 }
 if(connected) {
@@ -4708,13 +4710,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkUpdateDescriptorSets!");
 }
 if(connected) {
 #ifdef UPDATEDESCRIPTORSETS_BEFORE_EXEC_EXISTS
-layer_UpdateDescriptorSets(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies);
+layer_UpdateDescriptorSets_before(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies);
 #endif 
 }
 device_dispatch[GetKey(device)].UpdateDescriptorSets(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies);
 if(connected) {
 #ifdef UPDATEDESCRIPTORSETS_AFTER_EXEC_EXISTS
-layer_UpdateDescriptorSets(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies);
+layer_UpdateDescriptorSets_after(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies);
 #endif 
 }
 if(connected) {
@@ -4729,13 +4731,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateFramebuffer!");
 }
 if(connected) {
 #ifdef CREATEFRAMEBUFFER_BEFORE_EXEC_EXISTS
-layer_CreateFramebuffer(device, pCreateInfo, pAllocator, pFramebuffer);
+layer_CreateFramebuffer_before(device, pCreateInfo, pAllocator, pFramebuffer);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateFramebuffer(device, pCreateInfo, pAllocator, pFramebuffer);
 if(connected) {
 #ifdef CREATEFRAMEBUFFER_AFTER_EXEC_EXISTS
-layer_CreateFramebuffer(device, pCreateInfo, pAllocator, pFramebuffer);
+layer_CreateFramebuffer_after(device, pCreateInfo, pAllocator, pFramebuffer);
 #endif 
 }
 if(connected) {
@@ -4751,13 +4753,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyFramebuffer!");
 }
 if(connected) {
 #ifdef DESTROYFRAMEBUFFER_BEFORE_EXEC_EXISTS
-layer_DestroyFramebuffer(device, framebuffer, pAllocator);
+layer_DestroyFramebuffer_before(device, framebuffer, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyFramebuffer(device, framebuffer, pAllocator);
 if(connected) {
 #ifdef DESTROYFRAMEBUFFER_AFTER_EXEC_EXISTS
-layer_DestroyFramebuffer(device, framebuffer, pAllocator);
+layer_DestroyFramebuffer_after(device, framebuffer, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4772,13 +4774,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateRenderPass!");
 }
 if(connected) {
 #ifdef CREATERENDERPASS_BEFORE_EXEC_EXISTS
-layer_CreateRenderPass(device, pCreateInfo, pAllocator, pRenderPass);
+layer_CreateRenderPass_before(device, pCreateInfo, pAllocator, pRenderPass);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateRenderPass(device, pCreateInfo, pAllocator, pRenderPass);
 if(connected) {
 #ifdef CREATERENDERPASS_AFTER_EXEC_EXISTS
-layer_CreateRenderPass(device, pCreateInfo, pAllocator, pRenderPass);
+layer_CreateRenderPass_after(device, pCreateInfo, pAllocator, pRenderPass);
 #endif 
 }
 if(connected) {
@@ -4794,13 +4796,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyRenderPass!");
 }
 if(connected) {
 #ifdef DESTROYRENDERPASS_BEFORE_EXEC_EXISTS
-layer_DestroyRenderPass(device, renderPass, pAllocator);
+layer_DestroyRenderPass_before(device, renderPass, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyRenderPass(device, renderPass, pAllocator);
 if(connected) {
 #ifdef DESTROYRENDERPASS_AFTER_EXEC_EXISTS
-layer_DestroyRenderPass(device, renderPass, pAllocator);
+layer_DestroyRenderPass_after(device, renderPass, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4815,13 +4817,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetRenderAreaGranularity!");
 }
 if(connected) {
 #ifdef GETRENDERAREAGRANULARITY_BEFORE_EXEC_EXISTS
-layer_GetRenderAreaGranularity(device, renderPass, pGranularity);
+layer_GetRenderAreaGranularity_before(device, renderPass, pGranularity);
 #endif 
 }
 device_dispatch[GetKey(device)].GetRenderAreaGranularity(device, renderPass, pGranularity);
 if(connected) {
 #ifdef GETRENDERAREAGRANULARITY_AFTER_EXEC_EXISTS
-layer_GetRenderAreaGranularity(device, renderPass, pGranularity);
+layer_GetRenderAreaGranularity_after(device, renderPass, pGranularity);
 #endif 
 }
 if(connected) {
@@ -4836,13 +4838,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetRenderingAreaGranularityKHR!");
 }
 if(connected) {
 #ifdef GETRENDERINGAREAGRANULARITYKHR_BEFORE_EXEC_EXISTS
-layer_GetRenderingAreaGranularityKHR(device, pRenderingAreaInfo, pGranularity);
+layer_GetRenderingAreaGranularityKHR_before(device, pRenderingAreaInfo, pGranularity);
 #endif 
 }
 device_dispatch[GetKey(device)].GetRenderingAreaGranularityKHR(device, pRenderingAreaInfo, pGranularity);
 if(connected) {
 #ifdef GETRENDERINGAREAGRANULARITYKHR_AFTER_EXEC_EXISTS
-layer_GetRenderingAreaGranularityKHR(device, pRenderingAreaInfo, pGranularity);
+layer_GetRenderingAreaGranularityKHR_after(device, pRenderingAreaInfo, pGranularity);
 #endif 
 }
 if(connected) {
@@ -4857,13 +4859,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateCommandPool!");
 }
 if(connected) {
 #ifdef CREATECOMMANDPOOL_BEFORE_EXEC_EXISTS
-layer_CreateCommandPool(device, pCreateInfo, pAllocator, pCommandPool);
+layer_CreateCommandPool_before(device, pCreateInfo, pAllocator, pCommandPool);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateCommandPool(device, pCreateInfo, pAllocator, pCommandPool);
 if(connected) {
 #ifdef CREATECOMMANDPOOL_AFTER_EXEC_EXISTS
-layer_CreateCommandPool(device, pCreateInfo, pAllocator, pCommandPool);
+layer_CreateCommandPool_after(device, pCreateInfo, pAllocator, pCommandPool);
 #endif 
 }
 if(connected) {
@@ -4879,13 +4881,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyCommandPool!");
 }
 if(connected) {
 #ifdef DESTROYCOMMANDPOOL_BEFORE_EXEC_EXISTS
-layer_DestroyCommandPool(device, commandPool, pAllocator);
+layer_DestroyCommandPool_before(device, commandPool, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyCommandPool(device, commandPool, pAllocator);
 if(connected) {
 #ifdef DESTROYCOMMANDPOOL_AFTER_EXEC_EXISTS
-layer_DestroyCommandPool(device, commandPool, pAllocator);
+layer_DestroyCommandPool_after(device, commandPool, pAllocator);
 #endif 
 }
 if(connected) {
@@ -4900,13 +4902,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkResetCommandPool!");
 }
 if(connected) {
 #ifdef RESETCOMMANDPOOL_BEFORE_EXEC_EXISTS
-layer_ResetCommandPool(device, commandPool, flags);
+layer_ResetCommandPool_before(device, commandPool, flags);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ResetCommandPool(device, commandPool, flags);
 if(connected) {
 #ifdef RESETCOMMANDPOOL_AFTER_EXEC_EXISTS
-layer_ResetCommandPool(device, commandPool, flags);
+layer_ResetCommandPool_after(device, commandPool, flags);
 #endif 
 }
 if(connected) {
@@ -4922,13 +4924,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkAllocateCommandBuffers!");
 }
 if(connected) {
 #ifdef ALLOCATECOMMANDBUFFERS_BEFORE_EXEC_EXISTS
-layer_AllocateCommandBuffers(device, pAllocateInfo, pCommandBuffers);
+layer_AllocateCommandBuffers_before(device, pAllocateInfo, pCommandBuffers);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].AllocateCommandBuffers(device, pAllocateInfo, pCommandBuffers);
 if(connected) {
 #ifdef ALLOCATECOMMANDBUFFERS_AFTER_EXEC_EXISTS
-layer_AllocateCommandBuffers(device, pAllocateInfo, pCommandBuffers);
+layer_AllocateCommandBuffers_after(device, pAllocateInfo, pCommandBuffers);
 #endif 
 }
 if(connected) {
@@ -4944,13 +4946,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkFreeCommandBuffers!");
 }
 if(connected) {
 #ifdef FREECOMMANDBUFFERS_BEFORE_EXEC_EXISTS
-layer_FreeCommandBuffers(device, commandPool, commandBufferCount, pCommandBuffers);
+layer_FreeCommandBuffers_before(device, commandPool, commandBufferCount, pCommandBuffers);
 #endif 
 }
 device_dispatch[GetKey(device)].FreeCommandBuffers(device, commandPool, commandBufferCount, pCommandBuffers);
 if(connected) {
 #ifdef FREECOMMANDBUFFERS_AFTER_EXEC_EXISTS
-layer_FreeCommandBuffers(device, commandPool, commandBufferCount, pCommandBuffers);
+layer_FreeCommandBuffers_after(device, commandPool, commandBufferCount, pCommandBuffers);
 #endif 
 }
 if(connected) {
@@ -4965,13 +4967,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkBeginCommandBuffer!");
 }
 if(connected) {
 #ifdef BEGINCOMMANDBUFFER_BEFORE_EXEC_EXISTS
-layer_BeginCommandBuffer(commandBuffer, pBeginInfo);
+layer_BeginCommandBuffer_before(commandBuffer, pBeginInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(commandBuffer)].BeginCommandBuffer(commandBuffer, pBeginInfo);
 if(connected) {
 #ifdef BEGINCOMMANDBUFFER_AFTER_EXEC_EXISTS
-layer_BeginCommandBuffer(commandBuffer, pBeginInfo);
+layer_BeginCommandBuffer_after(commandBuffer, pBeginInfo);
 #endif 
 }
 if(connected) {
@@ -4987,13 +4989,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkEndCommandBuffer!");
 }
 if(connected) {
 #ifdef ENDCOMMANDBUFFER_BEFORE_EXEC_EXISTS
-layer_EndCommandBuffer(commandBuffer);
+layer_EndCommandBuffer_before(commandBuffer);
 #endif 
 }
 auto ret = device_dispatch[GetKey(commandBuffer)].EndCommandBuffer(commandBuffer);
 if(connected) {
 #ifdef ENDCOMMANDBUFFER_AFTER_EXEC_EXISTS
-layer_EndCommandBuffer(commandBuffer);
+layer_EndCommandBuffer_after(commandBuffer);
 #endif 
 }
 if(connected) {
@@ -5009,13 +5011,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkResetCommandBuffer!");
 }
 if(connected) {
 #ifdef RESETCOMMANDBUFFER_BEFORE_EXEC_EXISTS
-layer_ResetCommandBuffer(commandBuffer, flags);
+layer_ResetCommandBuffer_before(commandBuffer, flags);
 #endif 
 }
 auto ret = device_dispatch[GetKey(commandBuffer)].ResetCommandBuffer(commandBuffer, flags);
 if(connected) {
 #ifdef RESETCOMMANDBUFFER_AFTER_EXEC_EXISTS
-layer_ResetCommandBuffer(commandBuffer, flags);
+layer_ResetCommandBuffer_after(commandBuffer, flags);
 #endif 
 }
 if(connected) {
@@ -5031,13 +5033,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindPipeline!");
 }
 if(connected) {
 #ifdef CMDBINDPIPELINE_BEFORE_EXEC_EXISTS
-layer_CmdBindPipeline(commandBuffer, pipelineBindPoint, pipeline);
+layer_CmdBindPipeline_before(commandBuffer, pipelineBindPoint, pipeline);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindPipeline(commandBuffer, pipelineBindPoint, pipeline);
 if(connected) {
 #ifdef CMDBINDPIPELINE_AFTER_EXEC_EXISTS
-layer_CmdBindPipeline(commandBuffer, pipelineBindPoint, pipeline);
+layer_CmdBindPipeline_after(commandBuffer, pipelineBindPoint, pipeline);
 #endif 
 }
 if(connected) {
@@ -5052,13 +5054,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetAttachmentFeedbackLoopEnableEXT!"
 }
 if(connected) {
 #ifdef CMDSETATTACHMENTFEEDBACKLOOPENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetAttachmentFeedbackLoopEnableEXT(commandBuffer, aspectMask);
+layer_CmdSetAttachmentFeedbackLoopEnableEXT_before(commandBuffer, aspectMask);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetAttachmentFeedbackLoopEnableEXT(commandBuffer, aspectMask);
 if(connected) {
 #ifdef CMDSETATTACHMENTFEEDBACKLOOPENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetAttachmentFeedbackLoopEnableEXT(commandBuffer, aspectMask);
+layer_CmdSetAttachmentFeedbackLoopEnableEXT_after(commandBuffer, aspectMask);
 #endif 
 }
 if(connected) {
@@ -5073,13 +5075,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetViewport!");
 }
 if(connected) {
 #ifdef CMDSETVIEWPORT_BEFORE_EXEC_EXISTS
-layer_CmdSetViewport(commandBuffer, firstViewport, viewportCount, pViewports);
+layer_CmdSetViewport_before(commandBuffer, firstViewport, viewportCount, pViewports);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetViewport(commandBuffer, firstViewport, viewportCount, pViewports);
 if(connected) {
 #ifdef CMDSETVIEWPORT_AFTER_EXEC_EXISTS
-layer_CmdSetViewport(commandBuffer, firstViewport, viewportCount, pViewports);
+layer_CmdSetViewport_after(commandBuffer, firstViewport, viewportCount, pViewports);
 #endif 
 }
 if(connected) {
@@ -5094,13 +5096,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetScissor!");
 }
 if(connected) {
 #ifdef CMDSETSCISSOR_BEFORE_EXEC_EXISTS
-layer_CmdSetScissor(commandBuffer, firstScissor, scissorCount, pScissors);
+layer_CmdSetScissor_before(commandBuffer, firstScissor, scissorCount, pScissors);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetScissor(commandBuffer, firstScissor, scissorCount, pScissors);
 if(connected) {
 #ifdef CMDSETSCISSOR_AFTER_EXEC_EXISTS
-layer_CmdSetScissor(commandBuffer, firstScissor, scissorCount, pScissors);
+layer_CmdSetScissor_after(commandBuffer, firstScissor, scissorCount, pScissors);
 #endif 
 }
 if(connected) {
@@ -5115,13 +5117,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetLineWidth!");
 }
 if(connected) {
 #ifdef CMDSETLINEWIDTH_BEFORE_EXEC_EXISTS
-layer_CmdSetLineWidth(commandBuffer, lineWidth);
+layer_CmdSetLineWidth_before(commandBuffer, lineWidth);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetLineWidth(commandBuffer, lineWidth);
 if(connected) {
 #ifdef CMDSETLINEWIDTH_AFTER_EXEC_EXISTS
-layer_CmdSetLineWidth(commandBuffer, lineWidth);
+layer_CmdSetLineWidth_after(commandBuffer, lineWidth);
 #endif 
 }
 if(connected) {
@@ -5136,13 +5138,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthBias!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHBIAS_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthBias(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
+layer_CmdSetDepthBias_before(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBias(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
 if(connected) {
 #ifdef CMDSETDEPTHBIAS_AFTER_EXEC_EXISTS
-layer_CmdSetDepthBias(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
+layer_CmdSetDepthBias_after(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
 #endif 
 }
 if(connected) {
@@ -5157,13 +5159,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetBlendConstants!");
 }
 if(connected) {
 #ifdef CMDSETBLENDCONSTANTS_BEFORE_EXEC_EXISTS
-layer_CmdSetBlendConstants(commandBuffer, blendConstants);
+layer_CmdSetBlendConstants_before(commandBuffer, blendConstants);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetBlendConstants(commandBuffer, blendConstants);
 if(connected) {
 #ifdef CMDSETBLENDCONSTANTS_AFTER_EXEC_EXISTS
-layer_CmdSetBlendConstants(commandBuffer, blendConstants);
+layer_CmdSetBlendConstants_after(commandBuffer, blendConstants);
 #endif 
 }
 if(connected) {
@@ -5178,13 +5180,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthBounds!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHBOUNDS_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthBounds(commandBuffer, minDepthBounds, maxDepthBounds);
+layer_CmdSetDepthBounds_before(commandBuffer, minDepthBounds, maxDepthBounds);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBounds(commandBuffer, minDepthBounds, maxDepthBounds);
 if(connected) {
 #ifdef CMDSETDEPTHBOUNDS_AFTER_EXEC_EXISTS
-layer_CmdSetDepthBounds(commandBuffer, minDepthBounds, maxDepthBounds);
+layer_CmdSetDepthBounds_after(commandBuffer, minDepthBounds, maxDepthBounds);
 #endif 
 }
 if(connected) {
@@ -5199,13 +5201,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetStencilCompareMask!");
 }
 if(connected) {
 #ifdef CMDSETSTENCILCOMPAREMASK_BEFORE_EXEC_EXISTS
-layer_CmdSetStencilCompareMask(commandBuffer, faceMask, compareMask);
+layer_CmdSetStencilCompareMask_before(commandBuffer, faceMask, compareMask);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilCompareMask(commandBuffer, faceMask, compareMask);
 if(connected) {
 #ifdef CMDSETSTENCILCOMPAREMASK_AFTER_EXEC_EXISTS
-layer_CmdSetStencilCompareMask(commandBuffer, faceMask, compareMask);
+layer_CmdSetStencilCompareMask_after(commandBuffer, faceMask, compareMask);
 #endif 
 }
 if(connected) {
@@ -5220,13 +5222,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetStencilWriteMask!");
 }
 if(connected) {
 #ifdef CMDSETSTENCILWRITEMASK_BEFORE_EXEC_EXISTS
-layer_CmdSetStencilWriteMask(commandBuffer, faceMask, writeMask);
+layer_CmdSetStencilWriteMask_before(commandBuffer, faceMask, writeMask);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilWriteMask(commandBuffer, faceMask, writeMask);
 if(connected) {
 #ifdef CMDSETSTENCILWRITEMASK_AFTER_EXEC_EXISTS
-layer_CmdSetStencilWriteMask(commandBuffer, faceMask, writeMask);
+layer_CmdSetStencilWriteMask_after(commandBuffer, faceMask, writeMask);
 #endif 
 }
 if(connected) {
@@ -5241,13 +5243,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetStencilReference!");
 }
 if(connected) {
 #ifdef CMDSETSTENCILREFERENCE_BEFORE_EXEC_EXISTS
-layer_CmdSetStencilReference(commandBuffer, faceMask, reference);
+layer_CmdSetStencilReference_before(commandBuffer, faceMask, reference);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilReference(commandBuffer, faceMask, reference);
 if(connected) {
 #ifdef CMDSETSTENCILREFERENCE_AFTER_EXEC_EXISTS
-layer_CmdSetStencilReference(commandBuffer, faceMask, reference);
+layer_CmdSetStencilReference_after(commandBuffer, faceMask, reference);
 #endif 
 }
 if(connected) {
@@ -5262,13 +5264,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindDescriptorSets!");
 }
 if(connected) {
 #ifdef CMDBINDDESCRIPTORSETS_BEFORE_EXEC_EXISTS
-layer_CmdBindDescriptorSets(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
+layer_CmdBindDescriptorSets_before(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorSets(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
 if(connected) {
 #ifdef CMDBINDDESCRIPTORSETS_AFTER_EXEC_EXISTS
-layer_CmdBindDescriptorSets(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
+layer_CmdBindDescriptorSets_after(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
 #endif 
 }
 if(connected) {
@@ -5283,13 +5285,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindIndexBuffer!");
 }
 if(connected) {
 #ifdef CMDBINDINDEXBUFFER_BEFORE_EXEC_EXISTS
-layer_CmdBindIndexBuffer(commandBuffer, buffer, offset, indexType);
+layer_CmdBindIndexBuffer_before(commandBuffer, buffer, offset, indexType);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindIndexBuffer(commandBuffer, buffer, offset, indexType);
 if(connected) {
 #ifdef CMDBINDINDEXBUFFER_AFTER_EXEC_EXISTS
-layer_CmdBindIndexBuffer(commandBuffer, buffer, offset, indexType);
+layer_CmdBindIndexBuffer_after(commandBuffer, buffer, offset, indexType);
 #endif 
 }
 if(connected) {
@@ -5304,13 +5306,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindVertexBuffers!");
 }
 if(connected) {
 #ifdef CMDBINDVERTEXBUFFERS_BEFORE_EXEC_EXISTS
-layer_CmdBindVertexBuffers(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets);
+layer_CmdBindVertexBuffers_before(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets);
 if(connected) {
 #ifdef CMDBINDVERTEXBUFFERS_AFTER_EXEC_EXISTS
-layer_CmdBindVertexBuffers(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets);
+layer_CmdBindVertexBuffers_after(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets);
 #endif 
 }
 if(connected) {
@@ -5325,13 +5327,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDraw!");
 }
 if(connected) {
 #ifdef CMDDRAW_BEFORE_EXEC_EXISTS
-layer_CmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
+layer_CmdDraw_before(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
 if(connected) {
 #ifdef CMDDRAW_AFTER_EXEC_EXISTS
-layer_CmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
+layer_CmdDraw_after(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
 #endif 
 }
 if(connected) {
@@ -5346,13 +5348,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndexed!");
 }
 if(connected) {
 #ifdef CMDDRAWINDEXED_BEFORE_EXEC_EXISTS
-layer_CmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
+layer_CmdDrawIndexed_before(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 if(connected) {
 #ifdef CMDDRAWINDEXED_AFTER_EXEC_EXISTS
-layer_CmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
+layer_CmdDrawIndexed_after(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 #endif 
 }
 if(connected) {
@@ -5367,13 +5369,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMultiEXT!");
 }
 if(connected) {
 #ifdef CMDDRAWMULTIEXT_BEFORE_EXEC_EXISTS
-layer_CmdDrawMultiEXT(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride);
+layer_CmdDrawMultiEXT_before(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawMultiEXT(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride);
 if(connected) {
 #ifdef CMDDRAWMULTIEXT_AFTER_EXEC_EXISTS
-layer_CmdDrawMultiEXT(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride);
+layer_CmdDrawMultiEXT_after(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride);
 #endif 
 }
 if(connected) {
@@ -5388,13 +5390,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMultiIndexedEXT!");
 }
 if(connected) {
 #ifdef CMDDRAWMULTIINDEXEDEXT_BEFORE_EXEC_EXISTS
-layer_CmdDrawMultiIndexedEXT(commandBuffer, drawCount, pIndexInfo, instanceCount, firstInstance, stride, pVertexOffset);
+layer_CmdDrawMultiIndexedEXT_before(commandBuffer, drawCount, pIndexInfo, instanceCount, firstInstance, stride, pVertexOffset);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawMultiIndexedEXT(commandBuffer, drawCount, pIndexInfo, instanceCount, firstInstance, stride, pVertexOffset);
 if(connected) {
 #ifdef CMDDRAWMULTIINDEXEDEXT_AFTER_EXEC_EXISTS
-layer_CmdDrawMultiIndexedEXT(commandBuffer, drawCount, pIndexInfo, instanceCount, firstInstance, stride, pVertexOffset);
+layer_CmdDrawMultiIndexedEXT_after(commandBuffer, drawCount, pIndexInfo, instanceCount, firstInstance, stride, pVertexOffset);
 #endif 
 }
 if(connected) {
@@ -5409,13 +5411,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndirect!");
 }
 if(connected) {
 #ifdef CMDDRAWINDIRECT_BEFORE_EXEC_EXISTS
-layer_CmdDrawIndirect(commandBuffer, buffer, offset, drawCount, stride);
+layer_CmdDrawIndirect_before(commandBuffer, buffer, offset, drawCount, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirect(commandBuffer, buffer, offset, drawCount, stride);
 if(connected) {
 #ifdef CMDDRAWINDIRECT_AFTER_EXEC_EXISTS
-layer_CmdDrawIndirect(commandBuffer, buffer, offset, drawCount, stride);
+layer_CmdDrawIndirect_after(commandBuffer, buffer, offset, drawCount, stride);
 #endif 
 }
 if(connected) {
@@ -5430,13 +5432,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndexedIndirect!");
 }
 if(connected) {
 #ifdef CMDDRAWINDEXEDINDIRECT_BEFORE_EXEC_EXISTS
-layer_CmdDrawIndexedIndirect(commandBuffer, buffer, offset, drawCount, stride);
+layer_CmdDrawIndexedIndirect_before(commandBuffer, buffer, offset, drawCount, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirect(commandBuffer, buffer, offset, drawCount, stride);
 if(connected) {
 #ifdef CMDDRAWINDEXEDINDIRECT_AFTER_EXEC_EXISTS
-layer_CmdDrawIndexedIndirect(commandBuffer, buffer, offset, drawCount, stride);
+layer_CmdDrawIndexedIndirect_after(commandBuffer, buffer, offset, drawCount, stride);
 #endif 
 }
 if(connected) {
@@ -5451,13 +5453,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDispatch!");
 }
 if(connected) {
 #ifdef CMDDISPATCH_BEFORE_EXEC_EXISTS
-layer_CmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ);
+layer_CmdDispatch_before(commandBuffer, groupCountX, groupCountY, groupCountZ);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ);
 if(connected) {
 #ifdef CMDDISPATCH_AFTER_EXEC_EXISTS
-layer_CmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ);
+layer_CmdDispatch_after(commandBuffer, groupCountX, groupCountY, groupCountZ);
 #endif 
 }
 if(connected) {
@@ -5472,13 +5474,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDispatchIndirect!");
 }
 if(connected) {
 #ifdef CMDDISPATCHINDIRECT_BEFORE_EXEC_EXISTS
-layer_CmdDispatchIndirect(commandBuffer, buffer, offset);
+layer_CmdDispatchIndirect_before(commandBuffer, buffer, offset);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDispatchIndirect(commandBuffer, buffer, offset);
 if(connected) {
 #ifdef CMDDISPATCHINDIRECT_AFTER_EXEC_EXISTS
-layer_CmdDispatchIndirect(commandBuffer, buffer, offset);
+layer_CmdDispatchIndirect_after(commandBuffer, buffer, offset);
 #endif 
 }
 if(connected) {
@@ -5493,13 +5495,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSubpassShadingHUAWEI!");
 }
 if(connected) {
 #ifdef CMDSUBPASSSHADINGHUAWEI_BEFORE_EXEC_EXISTS
-layer_CmdSubpassShadingHUAWEI(commandBuffer);
+layer_CmdSubpassShadingHUAWEI_before(commandBuffer);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSubpassShadingHUAWEI(commandBuffer);
 if(connected) {
 #ifdef CMDSUBPASSSHADINGHUAWEI_AFTER_EXEC_EXISTS
-layer_CmdSubpassShadingHUAWEI(commandBuffer);
+layer_CmdSubpassShadingHUAWEI_after(commandBuffer);
 #endif 
 }
 if(connected) {
@@ -5514,13 +5516,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawClusterHUAWEI!");
 }
 if(connected) {
 #ifdef CMDDRAWCLUSTERHUAWEI_BEFORE_EXEC_EXISTS
-layer_CmdDrawClusterHUAWEI(commandBuffer, groupCountX, groupCountY, groupCountZ);
+layer_CmdDrawClusterHUAWEI_before(commandBuffer, groupCountX, groupCountY, groupCountZ);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawClusterHUAWEI(commandBuffer, groupCountX, groupCountY, groupCountZ);
 if(connected) {
 #ifdef CMDDRAWCLUSTERHUAWEI_AFTER_EXEC_EXISTS
-layer_CmdDrawClusterHUAWEI(commandBuffer, groupCountX, groupCountY, groupCountZ);
+layer_CmdDrawClusterHUAWEI_after(commandBuffer, groupCountX, groupCountY, groupCountZ);
 #endif 
 }
 if(connected) {
@@ -5535,13 +5537,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawClusterIndirectHUAWEI!");
 }
 if(connected) {
 #ifdef CMDDRAWCLUSTERINDIRECTHUAWEI_BEFORE_EXEC_EXISTS
-layer_CmdDrawClusterIndirectHUAWEI(commandBuffer, buffer, offset);
+layer_CmdDrawClusterIndirectHUAWEI_before(commandBuffer, buffer, offset);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawClusterIndirectHUAWEI(commandBuffer, buffer, offset);
 if(connected) {
 #ifdef CMDDRAWCLUSTERINDIRECTHUAWEI_AFTER_EXEC_EXISTS
-layer_CmdDrawClusterIndirectHUAWEI(commandBuffer, buffer, offset);
+layer_CmdDrawClusterIndirectHUAWEI_after(commandBuffer, buffer, offset);
 #endif 
 }
 if(connected) {
@@ -5556,13 +5558,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdUpdatePipelineIndirectBufferNV!");
 }
 if(connected) {
 #ifdef CMDUPDATEPIPELINEINDIRECTBUFFERNV_BEFORE_EXEC_EXISTS
-layer_CmdUpdatePipelineIndirectBufferNV(commandBuffer, pipelineBindPoint, pipeline);
+layer_CmdUpdatePipelineIndirectBufferNV_before(commandBuffer, pipelineBindPoint, pipeline);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdUpdatePipelineIndirectBufferNV(commandBuffer, pipelineBindPoint, pipeline);
 if(connected) {
 #ifdef CMDUPDATEPIPELINEINDIRECTBUFFERNV_AFTER_EXEC_EXISTS
-layer_CmdUpdatePipelineIndirectBufferNV(commandBuffer, pipelineBindPoint, pipeline);
+layer_CmdUpdatePipelineIndirectBufferNV_after(commandBuffer, pipelineBindPoint, pipeline);
 #endif 
 }
 if(connected) {
@@ -5577,13 +5579,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyBuffer!");
 }
 if(connected) {
 #ifdef CMDCOPYBUFFER_BEFORE_EXEC_EXISTS
-layer_CmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
+layer_CmdCopyBuffer_before(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
 if(connected) {
 #ifdef CMDCOPYBUFFER_AFTER_EXEC_EXISTS
-layer_CmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
+layer_CmdCopyBuffer_after(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
 #endif 
 }
 if(connected) {
@@ -5598,13 +5600,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyImage!");
 }
 if(connected) {
 #ifdef CMDCOPYIMAGE_BEFORE_EXEC_EXISTS
-layer_CmdCopyImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
+layer_CmdCopyImage_before(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
 if(connected) {
 #ifdef CMDCOPYIMAGE_AFTER_EXEC_EXISTS
-layer_CmdCopyImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
+layer_CmdCopyImage_after(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
 #endif 
 }
 if(connected) {
@@ -5619,13 +5621,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBlitImage!");
 }
 if(connected) {
 #ifdef CMDBLITIMAGE_BEFORE_EXEC_EXISTS
-layer_CmdBlitImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter);
+layer_CmdBlitImage_before(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBlitImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter);
 if(connected) {
 #ifdef CMDBLITIMAGE_AFTER_EXEC_EXISTS
-layer_CmdBlitImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter);
+layer_CmdBlitImage_after(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter);
 #endif 
 }
 if(connected) {
@@ -5640,13 +5642,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyBufferToImage!");
 }
 if(connected) {
 #ifdef CMDCOPYBUFFERTOIMAGE_BEFORE_EXEC_EXISTS
-layer_CmdCopyBufferToImage(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
+layer_CmdCopyBufferToImage_before(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
 if(connected) {
 #ifdef CMDCOPYBUFFERTOIMAGE_AFTER_EXEC_EXISTS
-layer_CmdCopyBufferToImage(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
+layer_CmdCopyBufferToImage_after(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
 #endif 
 }
 if(connected) {
@@ -5661,13 +5663,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyImageToBuffer!");
 }
 if(connected) {
 #ifdef CMDCOPYIMAGETOBUFFER_BEFORE_EXEC_EXISTS
-layer_CmdCopyImageToBuffer(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
+layer_CmdCopyImageToBuffer_before(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
 if(connected) {
 #ifdef CMDCOPYIMAGETOBUFFER_AFTER_EXEC_EXISTS
-layer_CmdCopyImageToBuffer(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
+layer_CmdCopyImageToBuffer_after(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
 #endif 
 }
 if(connected) {
@@ -5682,13 +5684,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyMemoryIndirectNV!");
 }
 if(connected) {
 #ifdef CMDCOPYMEMORYINDIRECTNV_BEFORE_EXEC_EXISTS
-layer_CmdCopyMemoryIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride);
+layer_CmdCopyMemoryIndirectNV_before(commandBuffer, copyBufferAddress, copyCount, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride);
 if(connected) {
 #ifdef CMDCOPYMEMORYINDIRECTNV_AFTER_EXEC_EXISTS
-layer_CmdCopyMemoryIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride);
+layer_CmdCopyMemoryIndirectNV_after(commandBuffer, copyBufferAddress, copyCount, stride);
 #endif 
 }
 if(connected) {
@@ -5703,13 +5705,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyMemoryToImageIndirectNV!");
 }
 if(connected) {
 #ifdef CMDCOPYMEMORYTOIMAGEINDIRECTNV_BEFORE_EXEC_EXISTS
-layer_CmdCopyMemoryToImageIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources);
+layer_CmdCopyMemoryToImageIndirectNV_before(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToImageIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources);
 if(connected) {
 #ifdef CMDCOPYMEMORYTOIMAGEINDIRECTNV_AFTER_EXEC_EXISTS
-layer_CmdCopyMemoryToImageIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources);
+layer_CmdCopyMemoryToImageIndirectNV_after(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources);
 #endif 
 }
 if(connected) {
@@ -5724,13 +5726,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdUpdateBuffer!");
 }
 if(connected) {
 #ifdef CMDUPDATEBUFFER_BEFORE_EXEC_EXISTS
-layer_CmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, dataSize, pData);
+layer_CmdUpdateBuffer_before(commandBuffer, dstBuffer, dstOffset, dataSize, pData);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, dataSize, pData);
 if(connected) {
 #ifdef CMDUPDATEBUFFER_AFTER_EXEC_EXISTS
-layer_CmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, dataSize, pData);
+layer_CmdUpdateBuffer_after(commandBuffer, dstBuffer, dstOffset, dataSize, pData);
 #endif 
 }
 if(connected) {
@@ -5745,13 +5747,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdFillBuffer!");
 }
 if(connected) {
 #ifdef CMDFILLBUFFER_BEFORE_EXEC_EXISTS
-layer_CmdFillBuffer(commandBuffer, dstBuffer, dstOffset, size, data);
+layer_CmdFillBuffer_before(commandBuffer, dstBuffer, dstOffset, size, data);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdFillBuffer(commandBuffer, dstBuffer, dstOffset, size, data);
 if(connected) {
 #ifdef CMDFILLBUFFER_AFTER_EXEC_EXISTS
-layer_CmdFillBuffer(commandBuffer, dstBuffer, dstOffset, size, data);
+layer_CmdFillBuffer_after(commandBuffer, dstBuffer, dstOffset, size, data);
 #endif 
 }
 if(connected) {
@@ -5766,13 +5768,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdClearColorImage!");
 }
 if(connected) {
 #ifdef CMDCLEARCOLORIMAGE_BEFORE_EXEC_EXISTS
-layer_CmdClearColorImage(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges);
+layer_CmdClearColorImage_before(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdClearColorImage(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges);
 if(connected) {
 #ifdef CMDCLEARCOLORIMAGE_AFTER_EXEC_EXISTS
-layer_CmdClearColorImage(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges);
+layer_CmdClearColorImage_after(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges);
 #endif 
 }
 if(connected) {
@@ -5787,13 +5789,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdClearDepthStencilImage!");
 }
 if(connected) {
 #ifdef CMDCLEARDEPTHSTENCILIMAGE_BEFORE_EXEC_EXISTS
-layer_CmdClearDepthStencilImage(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges);
+layer_CmdClearDepthStencilImage_before(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdClearDepthStencilImage(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges);
 if(connected) {
 #ifdef CMDCLEARDEPTHSTENCILIMAGE_AFTER_EXEC_EXISTS
-layer_CmdClearDepthStencilImage(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges);
+layer_CmdClearDepthStencilImage_after(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges);
 #endif 
 }
 if(connected) {
@@ -5808,13 +5810,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdClearAttachments!");
 }
 if(connected) {
 #ifdef CMDCLEARATTACHMENTS_BEFORE_EXEC_EXISTS
-layer_CmdClearAttachments(commandBuffer, attachmentCount, pAttachments, rectCount, pRects);
+layer_CmdClearAttachments_before(commandBuffer, attachmentCount, pAttachments, rectCount, pRects);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdClearAttachments(commandBuffer, attachmentCount, pAttachments, rectCount, pRects);
 if(connected) {
 #ifdef CMDCLEARATTACHMENTS_AFTER_EXEC_EXISTS
-layer_CmdClearAttachments(commandBuffer, attachmentCount, pAttachments, rectCount, pRects);
+layer_CmdClearAttachments_after(commandBuffer, attachmentCount, pAttachments, rectCount, pRects);
 #endif 
 }
 if(connected) {
@@ -5829,13 +5831,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdResolveImage!");
 }
 if(connected) {
 #ifdef CMDRESOLVEIMAGE_BEFORE_EXEC_EXISTS
-layer_CmdResolveImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
+layer_CmdResolveImage_before(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdResolveImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
 if(connected) {
 #ifdef CMDRESOLVEIMAGE_AFTER_EXEC_EXISTS
-layer_CmdResolveImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
+layer_CmdResolveImage_after(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
 #endif 
 }
 if(connected) {
@@ -5850,13 +5852,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetEvent!");
 }
 if(connected) {
 #ifdef CMDSETEVENT_BEFORE_EXEC_EXISTS
-layer_CmdSetEvent(commandBuffer, event, stageMask);
+layer_CmdSetEvent_before(commandBuffer, event, stageMask);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetEvent(commandBuffer, event, stageMask);
 if(connected) {
 #ifdef CMDSETEVENT_AFTER_EXEC_EXISTS
-layer_CmdSetEvent(commandBuffer, event, stageMask);
+layer_CmdSetEvent_after(commandBuffer, event, stageMask);
 #endif 
 }
 if(connected) {
@@ -5871,13 +5873,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdResetEvent!");
 }
 if(connected) {
 #ifdef CMDRESETEVENT_BEFORE_EXEC_EXISTS
-layer_CmdResetEvent(commandBuffer, event, stageMask);
+layer_CmdResetEvent_before(commandBuffer, event, stageMask);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdResetEvent(commandBuffer, event, stageMask);
 if(connected) {
 #ifdef CMDRESETEVENT_AFTER_EXEC_EXISTS
-layer_CmdResetEvent(commandBuffer, event, stageMask);
+layer_CmdResetEvent_after(commandBuffer, event, stageMask);
 #endif 
 }
 if(connected) {
@@ -5892,13 +5894,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdWaitEvents!");
 }
 if(connected) {
 #ifdef CMDWAITEVENTS_BEFORE_EXEC_EXISTS
-layer_CmdWaitEvents(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
+layer_CmdWaitEvents_before(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdWaitEvents(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
 if(connected) {
 #ifdef CMDWAITEVENTS_AFTER_EXEC_EXISTS
-layer_CmdWaitEvents(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
+layer_CmdWaitEvents_after(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
 #endif 
 }
 if(connected) {
@@ -5913,13 +5915,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdPipelineBarrier!");
 }
 if(connected) {
 #ifdef CMDPIPELINEBARRIER_BEFORE_EXEC_EXISTS
-layer_CmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
+layer_CmdPipelineBarrier_before(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
 if(connected) {
 #ifdef CMDPIPELINEBARRIER_AFTER_EXEC_EXISTS
-layer_CmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
+layer_CmdPipelineBarrier_after(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
 #endif 
 }
 if(connected) {
@@ -5934,13 +5936,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginQuery!");
 }
 if(connected) {
 #ifdef CMDBEGINQUERY_BEFORE_EXEC_EXISTS
-layer_CmdBeginQuery(commandBuffer, queryPool, query, flags);
+layer_CmdBeginQuery_before(commandBuffer, queryPool, query, flags);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBeginQuery(commandBuffer, queryPool, query, flags);
 if(connected) {
 #ifdef CMDBEGINQUERY_AFTER_EXEC_EXISTS
-layer_CmdBeginQuery(commandBuffer, queryPool, query, flags);
+layer_CmdBeginQuery_after(commandBuffer, queryPool, query, flags);
 #endif 
 }
 if(connected) {
@@ -5955,13 +5957,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdEndQuery!");
 }
 if(connected) {
 #ifdef CMDENDQUERY_BEFORE_EXEC_EXISTS
-layer_CmdEndQuery(commandBuffer, queryPool, query);
+layer_CmdEndQuery_before(commandBuffer, queryPool, query);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdEndQuery(commandBuffer, queryPool, query);
 if(connected) {
 #ifdef CMDENDQUERY_AFTER_EXEC_EXISTS
-layer_CmdEndQuery(commandBuffer, queryPool, query);
+layer_CmdEndQuery_after(commandBuffer, queryPool, query);
 #endif 
 }
 if(connected) {
@@ -5976,13 +5978,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginConditionalRenderingEXT!");
 }
 if(connected) {
 #ifdef CMDBEGINCONDITIONALRENDERINGEXT_BEFORE_EXEC_EXISTS
-layer_CmdBeginConditionalRenderingEXT(commandBuffer, pConditionalRenderingBegin);
+layer_CmdBeginConditionalRenderingEXT_before(commandBuffer, pConditionalRenderingBegin);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBeginConditionalRenderingEXT(commandBuffer, pConditionalRenderingBegin);
 if(connected) {
 #ifdef CMDBEGINCONDITIONALRENDERINGEXT_AFTER_EXEC_EXISTS
-layer_CmdBeginConditionalRenderingEXT(commandBuffer, pConditionalRenderingBegin);
+layer_CmdBeginConditionalRenderingEXT_after(commandBuffer, pConditionalRenderingBegin);
 #endif 
 }
 if(connected) {
@@ -5997,13 +5999,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdEndConditionalRenderingEXT!");
 }
 if(connected) {
 #ifdef CMDENDCONDITIONALRENDERINGEXT_BEFORE_EXEC_EXISTS
-layer_CmdEndConditionalRenderingEXT(commandBuffer);
+layer_CmdEndConditionalRenderingEXT_before(commandBuffer);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdEndConditionalRenderingEXT(commandBuffer);
 if(connected) {
 #ifdef CMDENDCONDITIONALRENDERINGEXT_AFTER_EXEC_EXISTS
-layer_CmdEndConditionalRenderingEXT(commandBuffer);
+layer_CmdEndConditionalRenderingEXT_after(commandBuffer);
 #endif 
 }
 if(connected) {
@@ -6018,13 +6020,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdResetQueryPool!");
 }
 if(connected) {
 #ifdef CMDRESETQUERYPOOL_BEFORE_EXEC_EXISTS
-layer_CmdResetQueryPool(commandBuffer, queryPool, firstQuery, queryCount);
+layer_CmdResetQueryPool_before(commandBuffer, queryPool, firstQuery, queryCount);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdResetQueryPool(commandBuffer, queryPool, firstQuery, queryCount);
 if(connected) {
 #ifdef CMDRESETQUERYPOOL_AFTER_EXEC_EXISTS
-layer_CmdResetQueryPool(commandBuffer, queryPool, firstQuery, queryCount);
+layer_CmdResetQueryPool_after(commandBuffer, queryPool, firstQuery, queryCount);
 #endif 
 }
 if(connected) {
@@ -6039,13 +6041,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteTimestamp!");
 }
 if(connected) {
 #ifdef CMDWRITETIMESTAMP_BEFORE_EXEC_EXISTS
-layer_CmdWriteTimestamp(commandBuffer, pipelineStage, queryPool, query);
+layer_CmdWriteTimestamp_before(commandBuffer, pipelineStage, queryPool, query);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp(commandBuffer, pipelineStage, queryPool, query);
 if(connected) {
 #ifdef CMDWRITETIMESTAMP_AFTER_EXEC_EXISTS
-layer_CmdWriteTimestamp(commandBuffer, pipelineStage, queryPool, query);
+layer_CmdWriteTimestamp_after(commandBuffer, pipelineStage, queryPool, query);
 #endif 
 }
 if(connected) {
@@ -6060,13 +6062,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyQueryPoolResults!");
 }
 if(connected) {
 #ifdef CMDCOPYQUERYPOOLRESULTS_BEFORE_EXEC_EXISTS
-layer_CmdCopyQueryPoolResults(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags);
+layer_CmdCopyQueryPoolResults_before(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyQueryPoolResults(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags);
 if(connected) {
 #ifdef CMDCOPYQUERYPOOLRESULTS_AFTER_EXEC_EXISTS
-layer_CmdCopyQueryPoolResults(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags);
+layer_CmdCopyQueryPoolResults_after(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags);
 #endif 
 }
 if(connected) {
@@ -6081,13 +6083,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdPushConstants!");
 }
 if(connected) {
 #ifdef CMDPUSHCONSTANTS_BEFORE_EXEC_EXISTS
-layer_CmdPushConstants(commandBuffer, layout, stageFlags, offset, size, pValues);
+layer_CmdPushConstants_before(commandBuffer, layout, stageFlags, offset, size, pValues);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdPushConstants(commandBuffer, layout, stageFlags, offset, size, pValues);
 if(connected) {
 #ifdef CMDPUSHCONSTANTS_AFTER_EXEC_EXISTS
-layer_CmdPushConstants(commandBuffer, layout, stageFlags, offset, size, pValues);
+layer_CmdPushConstants_after(commandBuffer, layout, stageFlags, offset, size, pValues);
 #endif 
 }
 if(connected) {
@@ -6102,13 +6104,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginRenderPass!");
 }
 if(connected) {
 #ifdef CMDBEGINRENDERPASS_BEFORE_EXEC_EXISTS
-layer_CmdBeginRenderPass(commandBuffer, pRenderPassBegin, contents);
+layer_CmdBeginRenderPass_before(commandBuffer, pRenderPassBegin, contents);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass(commandBuffer, pRenderPassBegin, contents);
 if(connected) {
 #ifdef CMDBEGINRENDERPASS_AFTER_EXEC_EXISTS
-layer_CmdBeginRenderPass(commandBuffer, pRenderPassBegin, contents);
+layer_CmdBeginRenderPass_after(commandBuffer, pRenderPassBegin, contents);
 #endif 
 }
 if(connected) {
@@ -6123,13 +6125,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdNextSubpass!");
 }
 if(connected) {
 #ifdef CMDNEXTSUBPASS_BEFORE_EXEC_EXISTS
-layer_CmdNextSubpass(commandBuffer, contents);
+layer_CmdNextSubpass_before(commandBuffer, contents);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdNextSubpass(commandBuffer, contents);
 if(connected) {
 #ifdef CMDNEXTSUBPASS_AFTER_EXEC_EXISTS
-layer_CmdNextSubpass(commandBuffer, contents);
+layer_CmdNextSubpass_after(commandBuffer, contents);
 #endif 
 }
 if(connected) {
@@ -6144,13 +6146,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdEndRenderPass!");
 }
 if(connected) {
 #ifdef CMDENDRENDERPASS_BEFORE_EXEC_EXISTS
-layer_CmdEndRenderPass(commandBuffer);
+layer_CmdEndRenderPass_before(commandBuffer);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass(commandBuffer);
 if(connected) {
 #ifdef CMDENDRENDERPASS_AFTER_EXEC_EXISTS
-layer_CmdEndRenderPass(commandBuffer);
+layer_CmdEndRenderPass_after(commandBuffer);
 #endif 
 }
 if(connected) {
@@ -6165,13 +6167,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdExecuteCommands!");
 }
 if(connected) {
 #ifdef CMDEXECUTECOMMANDS_BEFORE_EXEC_EXISTS
-layer_CmdExecuteCommands(commandBuffer, commandBufferCount, pCommandBuffers);
+layer_CmdExecuteCommands_before(commandBuffer, commandBufferCount, pCommandBuffers);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdExecuteCommands(commandBuffer, commandBufferCount, pCommandBuffers);
 if(connected) {
 #ifdef CMDEXECUTECOMMANDS_AFTER_EXEC_EXISTS
-layer_CmdExecuteCommands(commandBuffer, commandBufferCount, pCommandBuffers);
+layer_CmdExecuteCommands_after(commandBuffer, commandBufferCount, pCommandBuffers);
 #endif 
 }
 if(connected) {
@@ -6186,13 +6188,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateSharedSwapchainsKHR!");
 }
 if(connected) {
 #ifdef CREATESHAREDSWAPCHAINSKHR_BEFORE_EXEC_EXISTS
-layer_CreateSharedSwapchainsKHR(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains);
+layer_CreateSharedSwapchainsKHR_before(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateSharedSwapchainsKHR(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains);
 if(connected) {
 #ifdef CREATESHAREDSWAPCHAINSKHR_AFTER_EXEC_EXISTS
-layer_CreateSharedSwapchainsKHR(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains);
+layer_CreateSharedSwapchainsKHR_after(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains);
 #endif 
 }
 if(connected) {
@@ -6208,13 +6210,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateSwapchainKHR!");
 }
 if(connected) {
 #ifdef CREATESWAPCHAINKHR_BEFORE_EXEC_EXISTS
-layer_CreateSwapchainKHR(device, pCreateInfo, pAllocator, pSwapchain);
+layer_CreateSwapchainKHR_before(device, pCreateInfo, pAllocator, pSwapchain);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateSwapchainKHR(device, pCreateInfo, pAllocator, pSwapchain);
 if(connected) {
 #ifdef CREATESWAPCHAINKHR_AFTER_EXEC_EXISTS
-layer_CreateSwapchainKHR(device, pCreateInfo, pAllocator, pSwapchain);
+layer_CreateSwapchainKHR_after(device, pCreateInfo, pAllocator, pSwapchain);
 #endif 
 }
 if(connected) {
@@ -6230,13 +6232,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroySwapchainKHR!");
 }
 if(connected) {
 #ifdef DESTROYSWAPCHAINKHR_BEFORE_EXEC_EXISTS
-layer_DestroySwapchainKHR(device, swapchain, pAllocator);
+layer_DestroySwapchainKHR_before(device, swapchain, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroySwapchainKHR(device, swapchain, pAllocator);
 if(connected) {
 #ifdef DESTROYSWAPCHAINKHR_AFTER_EXEC_EXISTS
-layer_DestroySwapchainKHR(device, swapchain, pAllocator);
+layer_DestroySwapchainKHR_after(device, swapchain, pAllocator);
 #endif 
 }
 if(connected) {
@@ -6251,13 +6253,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetSwapchainImagesKHR!");
 }
 if(connected) {
 #ifdef GETSWAPCHAINIMAGESKHR_BEFORE_EXEC_EXISTS
-layer_GetSwapchainImagesKHR(device, swapchain, pSwapchainImageCount, pSwapchainImages);
+layer_GetSwapchainImagesKHR_before(device, swapchain, pSwapchainImageCount, pSwapchainImages);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetSwapchainImagesKHR(device, swapchain, pSwapchainImageCount, pSwapchainImages);
 if(connected) {
 #ifdef GETSWAPCHAINIMAGESKHR_AFTER_EXEC_EXISTS
-layer_GetSwapchainImagesKHR(device, swapchain, pSwapchainImageCount, pSwapchainImages);
+layer_GetSwapchainImagesKHR_after(device, swapchain, pSwapchainImageCount, pSwapchainImages);
 #endif 
 }
 if(connected) {
@@ -6273,13 +6275,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkAcquireNextImageKHR!");
 }
 if(connected) {
 #ifdef ACQUIRENEXTIMAGEKHR_BEFORE_EXEC_EXISTS
-layer_AcquireNextImageKHR(device, swapchain, timeout, semaphore, fence, pImageIndex);
+layer_AcquireNextImageKHR_before(device, swapchain, timeout, semaphore, fence, pImageIndex);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].AcquireNextImageKHR(device, swapchain, timeout, semaphore, fence, pImageIndex);
 if(connected) {
 #ifdef ACQUIRENEXTIMAGEKHR_AFTER_EXEC_EXISTS
-layer_AcquireNextImageKHR(device, swapchain, timeout, semaphore, fence, pImageIndex);
+layer_AcquireNextImageKHR_after(device, swapchain, timeout, semaphore, fence, pImageIndex);
 #endif 
 }
 if(connected) {
@@ -6295,13 +6297,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkQueuePresentKHR!");
 }
 if(connected) {
 #ifdef QUEUEPRESENTKHR_BEFORE_EXEC_EXISTS
-layer_QueuePresentKHR(queue, pPresentInfo);
+layer_QueuePresentKHR_before(queue, pPresentInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(queue)].QueuePresentKHR(queue, pPresentInfo);
 if(connected) {
 #ifdef QUEUEPRESENTKHR_AFTER_EXEC_EXISTS
-layer_QueuePresentKHR(queue, pPresentInfo);
+layer_QueuePresentKHR_after(queue, pPresentInfo);
 #endif 
 }
 if(connected) {
@@ -6317,13 +6319,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDebugMarkerSetObjectNameEXT!");
 }
 if(connected) {
 #ifdef DEBUGMARKERSETOBJECTNAMEEXT_BEFORE_EXEC_EXISTS
-layer_DebugMarkerSetObjectNameEXT(device, pNameInfo);
+layer_DebugMarkerSetObjectNameEXT_before(device, pNameInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].DebugMarkerSetObjectNameEXT(device, pNameInfo);
 if(connected) {
 #ifdef DEBUGMARKERSETOBJECTNAMEEXT_AFTER_EXEC_EXISTS
-layer_DebugMarkerSetObjectNameEXT(device, pNameInfo);
+layer_DebugMarkerSetObjectNameEXT_after(device, pNameInfo);
 #endif 
 }
 if(connected) {
@@ -6339,13 +6341,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDebugMarkerSetObjectTagEXT!");
 }
 if(connected) {
 #ifdef DEBUGMARKERSETOBJECTTAGEXT_BEFORE_EXEC_EXISTS
-layer_DebugMarkerSetObjectTagEXT(device, pTagInfo);
+layer_DebugMarkerSetObjectTagEXT_before(device, pTagInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].DebugMarkerSetObjectTagEXT(device, pTagInfo);
 if(connected) {
 #ifdef DEBUGMARKERSETOBJECTTAGEXT_AFTER_EXEC_EXISTS
-layer_DebugMarkerSetObjectTagEXT(device, pTagInfo);
+layer_DebugMarkerSetObjectTagEXT_after(device, pTagInfo);
 #endif 
 }
 if(connected) {
@@ -6361,13 +6363,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDebugMarkerBeginEXT!");
 }
 if(connected) {
 #ifdef CMDDEBUGMARKERBEGINEXT_BEFORE_EXEC_EXISTS
-layer_CmdDebugMarkerBeginEXT(commandBuffer, pMarkerInfo);
+layer_CmdDebugMarkerBeginEXT_before(commandBuffer, pMarkerInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerBeginEXT(commandBuffer, pMarkerInfo);
 if(connected) {
 #ifdef CMDDEBUGMARKERBEGINEXT_AFTER_EXEC_EXISTS
-layer_CmdDebugMarkerBeginEXT(commandBuffer, pMarkerInfo);
+layer_CmdDebugMarkerBeginEXT_after(commandBuffer, pMarkerInfo);
 #endif 
 }
 if(connected) {
@@ -6382,13 +6384,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDebugMarkerEndEXT!");
 }
 if(connected) {
 #ifdef CMDDEBUGMARKERENDEXT_BEFORE_EXEC_EXISTS
-layer_CmdDebugMarkerEndEXT(commandBuffer);
+layer_CmdDebugMarkerEndEXT_before(commandBuffer);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerEndEXT(commandBuffer);
 if(connected) {
 #ifdef CMDDEBUGMARKERENDEXT_AFTER_EXEC_EXISTS
-layer_CmdDebugMarkerEndEXT(commandBuffer);
+layer_CmdDebugMarkerEndEXT_after(commandBuffer);
 #endif 
 }
 if(connected) {
@@ -6403,13 +6405,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDebugMarkerInsertEXT!");
 }
 if(connected) {
 #ifdef CMDDEBUGMARKERINSERTEXT_BEFORE_EXEC_EXISTS
-layer_CmdDebugMarkerInsertEXT(commandBuffer, pMarkerInfo);
+layer_CmdDebugMarkerInsertEXT_before(commandBuffer, pMarkerInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerInsertEXT(commandBuffer, pMarkerInfo);
 if(connected) {
 #ifdef CMDDEBUGMARKERINSERTEXT_AFTER_EXEC_EXISTS
-layer_CmdDebugMarkerInsertEXT(commandBuffer, pMarkerInfo);
+layer_CmdDebugMarkerInsertEXT_after(commandBuffer, pMarkerInfo);
 #endif 
 }
 if(connected) {
@@ -6425,13 +6427,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryWin32HandleNV!");
 }
 if(connected) {
 #ifdef GETMEMORYWIN32HANDLENV_BEFORE_EXEC_EXISTS
-layer_GetMemoryWin32HandleNV(device, memory, handleType, pHandle);
+layer_GetMemoryWin32HandleNV_before(device, memory, handleType, pHandle);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetMemoryWin32HandleNV(device, memory, handleType, pHandle);
 if(connected) {
 #ifdef GETMEMORYWIN32HANDLENV_AFTER_EXEC_EXISTS
-layer_GetMemoryWin32HandleNV(device, memory, handleType, pHandle);
+layer_GetMemoryWin32HandleNV_after(device, memory, handleType, pHandle);
 #endif 
 }
 if(connected) {
@@ -6448,13 +6450,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdExecuteGeneratedCommandsNV!");
 }
 if(connected) {
 #ifdef CMDEXECUTEGENERATEDCOMMANDSNV_BEFORE_EXEC_EXISTS
-layer_CmdExecuteGeneratedCommandsNV(commandBuffer, isPreprocessed, pGeneratedCommandsInfo);
+layer_CmdExecuteGeneratedCommandsNV_before(commandBuffer, isPreprocessed, pGeneratedCommandsInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdExecuteGeneratedCommandsNV(commandBuffer, isPreprocessed, pGeneratedCommandsInfo);
 if(connected) {
 #ifdef CMDEXECUTEGENERATEDCOMMANDSNV_AFTER_EXEC_EXISTS
-layer_CmdExecuteGeneratedCommandsNV(commandBuffer, isPreprocessed, pGeneratedCommandsInfo);
+layer_CmdExecuteGeneratedCommandsNV_after(commandBuffer, isPreprocessed, pGeneratedCommandsInfo);
 #endif 
 }
 if(connected) {
@@ -6469,13 +6471,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdPreprocessGeneratedCommandsNV!");
 }
 if(connected) {
 #ifdef CMDPREPROCESSGENERATEDCOMMANDSNV_BEFORE_EXEC_EXISTS
-layer_CmdPreprocessGeneratedCommandsNV(commandBuffer, pGeneratedCommandsInfo);
+layer_CmdPreprocessGeneratedCommandsNV_before(commandBuffer, pGeneratedCommandsInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdPreprocessGeneratedCommandsNV(commandBuffer, pGeneratedCommandsInfo);
 if(connected) {
 #ifdef CMDPREPROCESSGENERATEDCOMMANDSNV_AFTER_EXEC_EXISTS
-layer_CmdPreprocessGeneratedCommandsNV(commandBuffer, pGeneratedCommandsInfo);
+layer_CmdPreprocessGeneratedCommandsNV_after(commandBuffer, pGeneratedCommandsInfo);
 #endif 
 }
 if(connected) {
@@ -6490,13 +6492,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindPipelineShaderGroupNV!");
 }
 if(connected) {
 #ifdef CMDBINDPIPELINESHADERGROUPNV_BEFORE_EXEC_EXISTS
-layer_CmdBindPipelineShaderGroupNV(commandBuffer, pipelineBindPoint, pipeline, groupIndex);
+layer_CmdBindPipelineShaderGroupNV_before(commandBuffer, pipelineBindPoint, pipeline, groupIndex);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindPipelineShaderGroupNV(commandBuffer, pipelineBindPoint, pipeline, groupIndex);
 if(connected) {
 #ifdef CMDBINDPIPELINESHADERGROUPNV_AFTER_EXEC_EXISTS
-layer_CmdBindPipelineShaderGroupNV(commandBuffer, pipelineBindPoint, pipeline, groupIndex);
+layer_CmdBindPipelineShaderGroupNV_after(commandBuffer, pipelineBindPoint, pipeline, groupIndex);
 #endif 
 }
 if(connected) {
@@ -6511,13 +6513,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetGeneratedCommandsMemoryRequirementsN
 }
 if(connected) {
 #ifdef GETGENERATEDCOMMANDSMEMORYREQUIREMENTSNV_BEFORE_EXEC_EXISTS
-layer_GetGeneratedCommandsMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
+layer_GetGeneratedCommandsMemoryRequirementsNV_before(device, pInfo, pMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetGeneratedCommandsMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
 if(connected) {
 #ifdef GETGENERATEDCOMMANDSMEMORYREQUIREMENTSNV_AFTER_EXEC_EXISTS
-layer_GetGeneratedCommandsMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
+layer_GetGeneratedCommandsMemoryRequirementsNV_after(device, pInfo, pMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -6532,13 +6534,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateIndirectCommandsLayoutNV!");
 }
 if(connected) {
 #ifdef CREATEINDIRECTCOMMANDSLAYOUTNV_BEFORE_EXEC_EXISTS
-layer_CreateIndirectCommandsLayoutNV(device, pCreateInfo, pAllocator, pIndirectCommandsLayout);
+layer_CreateIndirectCommandsLayoutNV_before(device, pCreateInfo, pAllocator, pIndirectCommandsLayout);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateIndirectCommandsLayoutNV(device, pCreateInfo, pAllocator, pIndirectCommandsLayout);
 if(connected) {
 #ifdef CREATEINDIRECTCOMMANDSLAYOUTNV_AFTER_EXEC_EXISTS
-layer_CreateIndirectCommandsLayoutNV(device, pCreateInfo, pAllocator, pIndirectCommandsLayout);
+layer_CreateIndirectCommandsLayoutNV_after(device, pCreateInfo, pAllocator, pIndirectCommandsLayout);
 #endif 
 }
 if(connected) {
@@ -6554,13 +6556,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyIndirectCommandsLayoutNV!");
 }
 if(connected) {
 #ifdef DESTROYINDIRECTCOMMANDSLAYOUTNV_BEFORE_EXEC_EXISTS
-layer_DestroyIndirectCommandsLayoutNV(device, indirectCommandsLayout, pAllocator);
+layer_DestroyIndirectCommandsLayoutNV_before(device, indirectCommandsLayout, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyIndirectCommandsLayoutNV(device, indirectCommandsLayout, pAllocator);
 if(connected) {
 #ifdef DESTROYINDIRECTCOMMANDSLAYOUTNV_AFTER_EXEC_EXISTS
-layer_DestroyIndirectCommandsLayoutNV(device, indirectCommandsLayout, pAllocator);
+layer_DestroyIndirectCommandsLayoutNV_after(device, indirectCommandsLayout, pAllocator);
 #endif 
 }
 if(connected) {
@@ -6575,13 +6577,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdPushDescriptorSetKHR!");
 }
 if(connected) {
 #ifdef CMDPUSHDESCRIPTORSETKHR_BEFORE_EXEC_EXISTS
-layer_CmdPushDescriptorSetKHR(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
+layer_CmdPushDescriptorSetKHR_before(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetKHR(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
 if(connected) {
 #ifdef CMDPUSHDESCRIPTORSETKHR_AFTER_EXEC_EXISTS
-layer_CmdPushDescriptorSetKHR(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
+layer_CmdPushDescriptorSetKHR_after(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
 #endif 
 }
 if(connected) {
@@ -6596,13 +6598,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkTrimCommandPool!");
 }
 if(connected) {
 #ifdef TRIMCOMMANDPOOL_BEFORE_EXEC_EXISTS
-layer_TrimCommandPool(device, commandPool, flags);
+layer_TrimCommandPool_before(device, commandPool, flags);
 #endif 
 }
 device_dispatch[GetKey(device)].TrimCommandPool(device, commandPool, flags);
 if(connected) {
 #ifdef TRIMCOMMANDPOOL_AFTER_EXEC_EXISTS
-layer_TrimCommandPool(device, commandPool, flags);
+layer_TrimCommandPool_after(device, commandPool, flags);
 #endif 
 }
 if(connected) {
@@ -6618,13 +6620,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryWin32HandleKHR!");
 }
 if(connected) {
 #ifdef GETMEMORYWIN32HANDLEKHR_BEFORE_EXEC_EXISTS
-layer_GetMemoryWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
+layer_GetMemoryWin32HandleKHR_before(device, pGetWin32HandleInfo, pHandle);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetMemoryWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
 if(connected) {
 #ifdef GETMEMORYWIN32HANDLEKHR_AFTER_EXEC_EXISTS
-layer_GetMemoryWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
+layer_GetMemoryWin32HandleKHR_after(device, pGetWin32HandleInfo, pHandle);
 #endif 
 }
 if(connected) {
@@ -6642,13 +6644,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryWin32HandlePropertiesKHR!");
 }
 if(connected) {
 #ifdef GETMEMORYWIN32HANDLEPROPERTIESKHR_BEFORE_EXEC_EXISTS
-layer_GetMemoryWin32HandlePropertiesKHR(device, handleType, handle, pMemoryWin32HandleProperties);
+layer_GetMemoryWin32HandlePropertiesKHR_before(device, handleType, handle, pMemoryWin32HandleProperties);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetMemoryWin32HandlePropertiesKHR(device, handleType, handle, pMemoryWin32HandleProperties);
 if(connected) {
 #ifdef GETMEMORYWIN32HANDLEPROPERTIESKHR_AFTER_EXEC_EXISTS
-layer_GetMemoryWin32HandlePropertiesKHR(device, handleType, handle, pMemoryWin32HandleProperties);
+layer_GetMemoryWin32HandlePropertiesKHR_after(device, handleType, handle, pMemoryWin32HandleProperties);
 #endif 
 }
 if(connected) {
@@ -6665,13 +6667,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryFdKHR!");
 }
 if(connected) {
 #ifdef GETMEMORYFDKHR_BEFORE_EXEC_EXISTS
-layer_GetMemoryFdKHR(device, pGetFdInfo, pFd);
+layer_GetMemoryFdKHR_before(device, pGetFdInfo, pFd);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetMemoryFdKHR(device, pGetFdInfo, pFd);
 if(connected) {
 #ifdef GETMEMORYFDKHR_AFTER_EXEC_EXISTS
-layer_GetMemoryFdKHR(device, pGetFdInfo, pFd);
+layer_GetMemoryFdKHR_after(device, pGetFdInfo, pFd);
 #endif 
 }
 if(connected) {
@@ -6687,13 +6689,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryFdPropertiesKHR!");
 }
 if(connected) {
 #ifdef GETMEMORYFDPROPERTIESKHR_BEFORE_EXEC_EXISTS
-layer_GetMemoryFdPropertiesKHR(device, handleType, fd, pMemoryFdProperties);
+layer_GetMemoryFdPropertiesKHR_before(device, handleType, fd, pMemoryFdProperties);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetMemoryFdPropertiesKHR(device, handleType, fd, pMemoryFdProperties);
 if(connected) {
 #ifdef GETMEMORYFDPROPERTIESKHR_AFTER_EXEC_EXISTS
-layer_GetMemoryFdPropertiesKHR(device, handleType, fd, pMemoryFdProperties);
+layer_GetMemoryFdPropertiesKHR_after(device, handleType, fd, pMemoryFdProperties);
 #endif 
 }
 if(connected) {
@@ -6710,13 +6712,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryZirconHandleFUCHSIA!");
 }
 if(connected) {
 #ifdef GETMEMORYZIRCONHANDLEFUCHSIA_BEFORE_EXEC_EXISTS
-layer_GetMemoryZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
+layer_GetMemoryZirconHandleFUCHSIA_before(device, pGetZirconHandleInfo, pZirconHandle);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetMemoryZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
 if(connected) {
 #ifdef GETMEMORYZIRCONHANDLEFUCHSIA_AFTER_EXEC_EXISTS
-layer_GetMemoryZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
+layer_GetMemoryZirconHandleFUCHSIA_after(device, pGetZirconHandleInfo, pZirconHandle);
 #endif 
 }
 if(connected) {
@@ -6734,13 +6736,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryZirconHandlePropertiesFUCHSIA!
 }
 if(connected) {
 #ifdef GETMEMORYZIRCONHANDLEPROPERTIESFUCHSIA_BEFORE_EXEC_EXISTS
-layer_GetMemoryZirconHandlePropertiesFUCHSIA(device, handleType, zirconHandle, pMemoryZirconHandleProperties);
+layer_GetMemoryZirconHandlePropertiesFUCHSIA_before(device, handleType, zirconHandle, pMemoryZirconHandleProperties);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetMemoryZirconHandlePropertiesFUCHSIA(device, handleType, zirconHandle, pMemoryZirconHandleProperties);
 if(connected) {
 #ifdef GETMEMORYZIRCONHANDLEPROPERTIESFUCHSIA_AFTER_EXEC_EXISTS
-layer_GetMemoryZirconHandlePropertiesFUCHSIA(device, handleType, zirconHandle, pMemoryZirconHandleProperties);
+layer_GetMemoryZirconHandlePropertiesFUCHSIA_after(device, handleType, zirconHandle, pMemoryZirconHandleProperties);
 #endif 
 }
 if(connected) {
@@ -6757,13 +6759,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryRemoteAddressNV!");
 }
 if(connected) {
 #ifdef GETMEMORYREMOTEADDRESSNV_BEFORE_EXEC_EXISTS
-layer_GetMemoryRemoteAddressNV(device, pMemoryGetRemoteAddressInfo, pAddress);
+layer_GetMemoryRemoteAddressNV_before(device, pMemoryGetRemoteAddressInfo, pAddress);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetMemoryRemoteAddressNV(device, pMemoryGetRemoteAddressInfo, pAddress);
 if(connected) {
 #ifdef GETMEMORYREMOTEADDRESSNV_AFTER_EXEC_EXISTS
-layer_GetMemoryRemoteAddressNV(device, pMemoryGetRemoteAddressInfo, pAddress);
+layer_GetMemoryRemoteAddressNV_after(device, pMemoryGetRemoteAddressInfo, pAddress);
 #endif 
 }
 if(connected) {
@@ -6780,13 +6782,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetMemorySciBufNV!");
 }
 if(connected) {
 #ifdef GETMEMORYSCIBUFNV_BEFORE_EXEC_EXISTS
-layer_GetMemorySciBufNV(device, pGetSciBufInfo, pHandle);
+layer_GetMemorySciBufNV_before(device, pGetSciBufInfo, pHandle);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetMemorySciBufNV(device, pGetSciBufInfo, pHandle);
 if(connected) {
 #ifdef GETMEMORYSCIBUFNV_AFTER_EXEC_EXISTS
-layer_GetMemorySciBufNV(device, pGetSciBufInfo, pHandle);
+layer_GetMemorySciBufNV_after(device, pGetSciBufInfo, pHandle);
 #endif 
 }
 if(connected) {
@@ -6804,13 +6806,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetSemaphoreWin32HandleKHR!");
 }
 if(connected) {
 #ifdef GETSEMAPHOREWIN32HANDLEKHR_BEFORE_EXEC_EXISTS
-layer_GetSemaphoreWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
+layer_GetSemaphoreWin32HandleKHR_before(device, pGetWin32HandleInfo, pHandle);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
 if(connected) {
 #ifdef GETSEMAPHOREWIN32HANDLEKHR_AFTER_EXEC_EXISTS
-layer_GetSemaphoreWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
+layer_GetSemaphoreWin32HandleKHR_after(device, pGetWin32HandleInfo, pHandle);
 #endif 
 }
 if(connected) {
@@ -6828,13 +6830,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkImportSemaphoreWin32HandleKHR!");
 }
 if(connected) {
 #ifdef IMPORTSEMAPHOREWIN32HANDLEKHR_BEFORE_EXEC_EXISTS
-layer_ImportSemaphoreWin32HandleKHR(device, pImportSemaphoreWin32HandleInfo);
+layer_ImportSemaphoreWin32HandleKHR_before(device, pImportSemaphoreWin32HandleInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ImportSemaphoreWin32HandleKHR(device, pImportSemaphoreWin32HandleInfo);
 if(connected) {
 #ifdef IMPORTSEMAPHOREWIN32HANDLEKHR_AFTER_EXEC_EXISTS
-layer_ImportSemaphoreWin32HandleKHR(device, pImportSemaphoreWin32HandleInfo);
+layer_ImportSemaphoreWin32HandleKHR_after(device, pImportSemaphoreWin32HandleInfo);
 #endif 
 }
 if(connected) {
@@ -6851,13 +6853,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetSemaphoreFdKHR!");
 }
 if(connected) {
 #ifdef GETSEMAPHOREFDKHR_BEFORE_EXEC_EXISTS
-layer_GetSemaphoreFdKHR(device, pGetFdInfo, pFd);
+layer_GetSemaphoreFdKHR_before(device, pGetFdInfo, pFd);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreFdKHR(device, pGetFdInfo, pFd);
 if(connected) {
 #ifdef GETSEMAPHOREFDKHR_AFTER_EXEC_EXISTS
-layer_GetSemaphoreFdKHR(device, pGetFdInfo, pFd);
+layer_GetSemaphoreFdKHR_after(device, pGetFdInfo, pFd);
 #endif 
 }
 if(connected) {
@@ -6873,13 +6875,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkImportSemaphoreFdKHR!");
 }
 if(connected) {
 #ifdef IMPORTSEMAPHOREFDKHR_BEFORE_EXEC_EXISTS
-layer_ImportSemaphoreFdKHR(device, pImportSemaphoreFdInfo);
+layer_ImportSemaphoreFdKHR_before(device, pImportSemaphoreFdInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ImportSemaphoreFdKHR(device, pImportSemaphoreFdInfo);
 if(connected) {
 #ifdef IMPORTSEMAPHOREFDKHR_AFTER_EXEC_EXISTS
-layer_ImportSemaphoreFdKHR(device, pImportSemaphoreFdInfo);
+layer_ImportSemaphoreFdKHR_after(device, pImportSemaphoreFdInfo);
 #endif 
 }
 if(connected) {
@@ -6896,13 +6898,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetSemaphoreZirconHandleFUCHSIA!");
 }
 if(connected) {
 #ifdef GETSEMAPHOREZIRCONHANDLEFUCHSIA_BEFORE_EXEC_EXISTS
-layer_GetSemaphoreZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
+layer_GetSemaphoreZirconHandleFUCHSIA_before(device, pGetZirconHandleInfo, pZirconHandle);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
 if(connected) {
 #ifdef GETSEMAPHOREZIRCONHANDLEFUCHSIA_AFTER_EXEC_EXISTS
-layer_GetSemaphoreZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
+layer_GetSemaphoreZirconHandleFUCHSIA_after(device, pGetZirconHandleInfo, pZirconHandle);
 #endif 
 }
 if(connected) {
@@ -6920,13 +6922,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkImportSemaphoreZirconHandleFUCHSIA!");
 }
 if(connected) {
 #ifdef IMPORTSEMAPHOREZIRCONHANDLEFUCHSIA_BEFORE_EXEC_EXISTS
-layer_ImportSemaphoreZirconHandleFUCHSIA(device, pImportSemaphoreZirconHandleInfo);
+layer_ImportSemaphoreZirconHandleFUCHSIA_before(device, pImportSemaphoreZirconHandleInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ImportSemaphoreZirconHandleFUCHSIA(device, pImportSemaphoreZirconHandleInfo);
 if(connected) {
 #ifdef IMPORTSEMAPHOREZIRCONHANDLEFUCHSIA_AFTER_EXEC_EXISTS
-layer_ImportSemaphoreZirconHandleFUCHSIA(device, pImportSemaphoreZirconHandleInfo);
+layer_ImportSemaphoreZirconHandleFUCHSIA_after(device, pImportSemaphoreZirconHandleInfo);
 #endif 
 }
 if(connected) {
@@ -6944,13 +6946,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetFenceWin32HandleKHR!");
 }
 if(connected) {
 #ifdef GETFENCEWIN32HANDLEKHR_BEFORE_EXEC_EXISTS
-layer_GetFenceWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
+layer_GetFenceWin32HandleKHR_before(device, pGetWin32HandleInfo, pHandle);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetFenceWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
 if(connected) {
 #ifdef GETFENCEWIN32HANDLEKHR_AFTER_EXEC_EXISTS
-layer_GetFenceWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
+layer_GetFenceWin32HandleKHR_after(device, pGetWin32HandleInfo, pHandle);
 #endif 
 }
 if(connected) {
@@ -6968,13 +6970,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkImportFenceWin32HandleKHR!");
 }
 if(connected) {
 #ifdef IMPORTFENCEWIN32HANDLEKHR_BEFORE_EXEC_EXISTS
-layer_ImportFenceWin32HandleKHR(device, pImportFenceWin32HandleInfo);
+layer_ImportFenceWin32HandleKHR_before(device, pImportFenceWin32HandleInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ImportFenceWin32HandleKHR(device, pImportFenceWin32HandleInfo);
 if(connected) {
 #ifdef IMPORTFENCEWIN32HANDLEKHR_AFTER_EXEC_EXISTS
-layer_ImportFenceWin32HandleKHR(device, pImportFenceWin32HandleInfo);
+layer_ImportFenceWin32HandleKHR_after(device, pImportFenceWin32HandleInfo);
 #endif 
 }
 if(connected) {
@@ -6991,13 +6993,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetFenceFdKHR!");
 }
 if(connected) {
 #ifdef GETFENCEFDKHR_BEFORE_EXEC_EXISTS
-layer_GetFenceFdKHR(device, pGetFdInfo, pFd);
+layer_GetFenceFdKHR_before(device, pGetFdInfo, pFd);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetFenceFdKHR(device, pGetFdInfo, pFd);
 if(connected) {
 #ifdef GETFENCEFDKHR_AFTER_EXEC_EXISTS
-layer_GetFenceFdKHR(device, pGetFdInfo, pFd);
+layer_GetFenceFdKHR_after(device, pGetFdInfo, pFd);
 #endif 
 }
 if(connected) {
@@ -7013,13 +7015,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkImportFenceFdKHR!");
 }
 if(connected) {
 #ifdef IMPORTFENCEFDKHR_BEFORE_EXEC_EXISTS
-layer_ImportFenceFdKHR(device, pImportFenceFdInfo);
+layer_ImportFenceFdKHR_before(device, pImportFenceFdInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ImportFenceFdKHR(device, pImportFenceFdInfo);
 if(connected) {
 #ifdef IMPORTFENCEFDKHR_AFTER_EXEC_EXISTS
-layer_ImportFenceFdKHR(device, pImportFenceFdInfo);
+layer_ImportFenceFdKHR_after(device, pImportFenceFdInfo);
 #endif 
 }
 if(connected) {
@@ -7036,13 +7038,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetFenceSciSyncFenceNV!");
 }
 if(connected) {
 #ifdef GETFENCESCISYNCFENCENV_BEFORE_EXEC_EXISTS
-layer_GetFenceSciSyncFenceNV(device, pGetSciSyncHandleInfo, pHandle);
+layer_GetFenceSciSyncFenceNV_before(device, pGetSciSyncHandleInfo, pHandle);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetFenceSciSyncFenceNV(device, pGetSciSyncHandleInfo, pHandle);
 if(connected) {
 #ifdef GETFENCESCISYNCFENCENV_AFTER_EXEC_EXISTS
-layer_GetFenceSciSyncFenceNV(device, pGetSciSyncHandleInfo, pHandle);
+layer_GetFenceSciSyncFenceNV_after(device, pGetSciSyncHandleInfo, pHandle);
 #endif 
 }
 if(connected) {
@@ -7060,13 +7062,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetFenceSciSyncObjNV!");
 }
 if(connected) {
 #ifdef GETFENCESCISYNCOBJNV_BEFORE_EXEC_EXISTS
-layer_GetFenceSciSyncObjNV(device, pGetSciSyncHandleInfo, pHandle);
+layer_GetFenceSciSyncObjNV_before(device, pGetSciSyncHandleInfo, pHandle);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetFenceSciSyncObjNV(device, pGetSciSyncHandleInfo, pHandle);
 if(connected) {
 #ifdef GETFENCESCISYNCOBJNV_AFTER_EXEC_EXISTS
-layer_GetFenceSciSyncObjNV(device, pGetSciSyncHandleInfo, pHandle);
+layer_GetFenceSciSyncObjNV_after(device, pGetSciSyncHandleInfo, pHandle);
 #endif 
 }
 if(connected) {
@@ -7084,13 +7086,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkImportFenceSciSyncFenceNV!");
 }
 if(connected) {
 #ifdef IMPORTFENCESCISYNCFENCENV_BEFORE_EXEC_EXISTS
-layer_ImportFenceSciSyncFenceNV(device, pImportFenceSciSyncInfo);
+layer_ImportFenceSciSyncFenceNV_before(device, pImportFenceSciSyncInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ImportFenceSciSyncFenceNV(device, pImportFenceSciSyncInfo);
 if(connected) {
 #ifdef IMPORTFENCESCISYNCFENCENV_AFTER_EXEC_EXISTS
-layer_ImportFenceSciSyncFenceNV(device, pImportFenceSciSyncInfo);
+layer_ImportFenceSciSyncFenceNV_after(device, pImportFenceSciSyncInfo);
 #endif 
 }
 if(connected) {
@@ -7108,13 +7110,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkImportFenceSciSyncObjNV!");
 }
 if(connected) {
 #ifdef IMPORTFENCESCISYNCOBJNV_BEFORE_EXEC_EXISTS
-layer_ImportFenceSciSyncObjNV(device, pImportFenceSciSyncInfo);
+layer_ImportFenceSciSyncObjNV_before(device, pImportFenceSciSyncInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ImportFenceSciSyncObjNV(device, pImportFenceSciSyncInfo);
 if(connected) {
 #ifdef IMPORTFENCESCISYNCOBJNV_AFTER_EXEC_EXISTS
-layer_ImportFenceSciSyncObjNV(device, pImportFenceSciSyncInfo);
+layer_ImportFenceSciSyncObjNV_after(device, pImportFenceSciSyncInfo);
 #endif 
 }
 if(connected) {
@@ -7132,13 +7134,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetSemaphoreSciSyncObjNV!");
 }
 if(connected) {
 #ifdef GETSEMAPHORESCISYNCOBJNV_BEFORE_EXEC_EXISTS
-layer_GetSemaphoreSciSyncObjNV(device, pGetSciSyncInfo, pHandle);
+layer_GetSemaphoreSciSyncObjNV_before(device, pGetSciSyncInfo, pHandle);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreSciSyncObjNV(device, pGetSciSyncInfo, pHandle);
 if(connected) {
 #ifdef GETSEMAPHORESCISYNCOBJNV_AFTER_EXEC_EXISTS
-layer_GetSemaphoreSciSyncObjNV(device, pGetSciSyncInfo, pHandle);
+layer_GetSemaphoreSciSyncObjNV_after(device, pGetSciSyncInfo, pHandle);
 #endif 
 }
 if(connected) {
@@ -7156,13 +7158,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkImportSemaphoreSciSyncObjNV!");
 }
 if(connected) {
 #ifdef IMPORTSEMAPHORESCISYNCOBJNV_BEFORE_EXEC_EXISTS
-layer_ImportSemaphoreSciSyncObjNV(device, pImportSemaphoreSciSyncInfo);
+layer_ImportSemaphoreSciSyncObjNV_before(device, pImportSemaphoreSciSyncInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ImportSemaphoreSciSyncObjNV(device, pImportSemaphoreSciSyncInfo);
 if(connected) {
 #ifdef IMPORTSEMAPHORESCISYNCOBJNV_AFTER_EXEC_EXISTS
-layer_ImportSemaphoreSciSyncObjNV(device, pImportSemaphoreSciSyncInfo);
+layer_ImportSemaphoreSciSyncObjNV_after(device, pImportSemaphoreSciSyncInfo);
 #endif 
 }
 if(connected) {
@@ -7180,13 +7182,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateSemaphoreSciSyncPoolNV!");
 }
 if(connected) {
 #ifdef CREATESEMAPHORESCISYNCPOOLNV_BEFORE_EXEC_EXISTS
-layer_CreateSemaphoreSciSyncPoolNV(device, pCreateInfo, pAllocator, pSemaphorePool);
+layer_CreateSemaphoreSciSyncPoolNV_before(device, pCreateInfo, pAllocator, pSemaphorePool);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateSemaphoreSciSyncPoolNV(device, pCreateInfo, pAllocator, pSemaphorePool);
 if(connected) {
 #ifdef CREATESEMAPHORESCISYNCPOOLNV_AFTER_EXEC_EXISTS
-layer_CreateSemaphoreSciSyncPoolNV(device, pCreateInfo, pAllocator, pSemaphorePool);
+layer_CreateSemaphoreSciSyncPoolNV_after(device, pCreateInfo, pAllocator, pSemaphorePool);
 #endif 
 }
 if(connected) {
@@ -7204,13 +7206,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroySemaphoreSciSyncPoolNV!");
 }
 if(connected) {
 #ifdef DESTROYSEMAPHORESCISYNCPOOLNV_BEFORE_EXEC_EXISTS
-layer_DestroySemaphoreSciSyncPoolNV(device, semaphorePool, pAllocator);
+layer_DestroySemaphoreSciSyncPoolNV_before(device, semaphorePool, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroySemaphoreSciSyncPoolNV(device, semaphorePool, pAllocator);
 if(connected) {
 #ifdef DESTROYSEMAPHORESCISYNCPOOLNV_AFTER_EXEC_EXISTS
-layer_DestroySemaphoreSciSyncPoolNV(device, semaphorePool, pAllocator);
+layer_DestroySemaphoreSciSyncPoolNV_after(device, semaphorePool, pAllocator);
 #endif 
 }
 if(connected) {
@@ -7226,13 +7228,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDisplayPowerControlEXT!");
 }
 if(connected) {
 #ifdef DISPLAYPOWERCONTROLEXT_BEFORE_EXEC_EXISTS
-layer_DisplayPowerControlEXT(device, display, pDisplayPowerInfo);
+layer_DisplayPowerControlEXT_before(device, display, pDisplayPowerInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].DisplayPowerControlEXT(device, display, pDisplayPowerInfo);
 if(connected) {
 #ifdef DISPLAYPOWERCONTROLEXT_AFTER_EXEC_EXISTS
-layer_DisplayPowerControlEXT(device, display, pDisplayPowerInfo);
+layer_DisplayPowerControlEXT_after(device, display, pDisplayPowerInfo);
 #endif 
 }
 if(connected) {
@@ -7248,13 +7250,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkRegisterDeviceEventEXT!");
 }
 if(connected) {
 #ifdef REGISTERDEVICEEVENTEXT_BEFORE_EXEC_EXISTS
-layer_RegisterDeviceEventEXT(device, pDeviceEventInfo, pAllocator, pFence);
+layer_RegisterDeviceEventEXT_before(device, pDeviceEventInfo, pAllocator, pFence);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].RegisterDeviceEventEXT(device, pDeviceEventInfo, pAllocator, pFence);
 if(connected) {
 #ifdef REGISTERDEVICEEVENTEXT_AFTER_EXEC_EXISTS
-layer_RegisterDeviceEventEXT(device, pDeviceEventInfo, pAllocator, pFence);
+layer_RegisterDeviceEventEXT_after(device, pDeviceEventInfo, pAllocator, pFence);
 #endif 
 }
 if(connected) {
@@ -7270,13 +7272,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkRegisterDisplayEventEXT!");
 }
 if(connected) {
 #ifdef REGISTERDISPLAYEVENTEXT_BEFORE_EXEC_EXISTS
-layer_RegisterDisplayEventEXT(device, display, pDisplayEventInfo, pAllocator, pFence);
+layer_RegisterDisplayEventEXT_before(device, display, pDisplayEventInfo, pAllocator, pFence);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].RegisterDisplayEventEXT(device, display, pDisplayEventInfo, pAllocator, pFence);
 if(connected) {
 #ifdef REGISTERDISPLAYEVENTEXT_AFTER_EXEC_EXISTS
-layer_RegisterDisplayEventEXT(device, display, pDisplayEventInfo, pAllocator, pFence);
+layer_RegisterDisplayEventEXT_after(device, display, pDisplayEventInfo, pAllocator, pFence);
 #endif 
 }
 if(connected) {
@@ -7292,13 +7294,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetSwapchainCounterEXT!");
 }
 if(connected) {
 #ifdef GETSWAPCHAINCOUNTEREXT_BEFORE_EXEC_EXISTS
-layer_GetSwapchainCounterEXT(device, swapchain, counter, pCounterValue);
+layer_GetSwapchainCounterEXT_before(device, swapchain, counter, pCounterValue);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetSwapchainCounterEXT(device, swapchain, counter, pCounterValue);
 if(connected) {
 #ifdef GETSWAPCHAINCOUNTEREXT_AFTER_EXEC_EXISTS
-layer_GetSwapchainCounterEXT(device, swapchain, counter, pCounterValue);
+layer_GetSwapchainCounterEXT_after(device, swapchain, counter, pCounterValue);
 #endif 
 }
 if(connected) {
@@ -7314,13 +7316,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceGroupPeerMemoryFeatures!");
 }
 if(connected) {
 #ifdef GETDEVICEGROUPPEERMEMORYFEATURES_BEFORE_EXEC_EXISTS
-layer_GetDeviceGroupPeerMemoryFeatures(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
+layer_GetDeviceGroupPeerMemoryFeatures_before(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDeviceGroupPeerMemoryFeatures(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
 if(connected) {
 #ifdef GETDEVICEGROUPPEERMEMORYFEATURES_AFTER_EXEC_EXISTS
-layer_GetDeviceGroupPeerMemoryFeatures(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
+layer_GetDeviceGroupPeerMemoryFeatures_after(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
 #endif 
 }
 if(connected) {
@@ -7335,13 +7337,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkBindBufferMemory2!");
 }
 if(connected) {
 #ifdef BINDBUFFERMEMORY2_BEFORE_EXEC_EXISTS
-layer_BindBufferMemory2(device, bindInfoCount, pBindInfos);
+layer_BindBufferMemory2_before(device, bindInfoCount, pBindInfos);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].BindBufferMemory2(device, bindInfoCount, pBindInfos);
 if(connected) {
 #ifdef BINDBUFFERMEMORY2_AFTER_EXEC_EXISTS
-layer_BindBufferMemory2(device, bindInfoCount, pBindInfos);
+layer_BindBufferMemory2_after(device, bindInfoCount, pBindInfos);
 #endif 
 }
 if(connected) {
@@ -7357,13 +7359,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkBindImageMemory2!");
 }
 if(connected) {
 #ifdef BINDIMAGEMEMORY2_BEFORE_EXEC_EXISTS
-layer_BindImageMemory2(device, bindInfoCount, pBindInfos);
+layer_BindImageMemory2_before(device, bindInfoCount, pBindInfos);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].BindImageMemory2(device, bindInfoCount, pBindInfos);
 if(connected) {
 #ifdef BINDIMAGEMEMORY2_AFTER_EXEC_EXISTS
-layer_BindImageMemory2(device, bindInfoCount, pBindInfos);
+layer_BindImageMemory2_after(device, bindInfoCount, pBindInfos);
 #endif 
 }
 if(connected) {
@@ -7379,13 +7381,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDeviceMask!");
 }
 if(connected) {
 #ifdef CMDSETDEVICEMASK_BEFORE_EXEC_EXISTS
-layer_CmdSetDeviceMask(commandBuffer, deviceMask);
+layer_CmdSetDeviceMask_before(commandBuffer, deviceMask);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDeviceMask(commandBuffer, deviceMask);
 if(connected) {
 #ifdef CMDSETDEVICEMASK_AFTER_EXEC_EXISTS
-layer_CmdSetDeviceMask(commandBuffer, deviceMask);
+layer_CmdSetDeviceMask_after(commandBuffer, deviceMask);
 #endif 
 }
 if(connected) {
@@ -7400,13 +7402,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceGroupPresentCapabilitiesKHR!")
 }
 if(connected) {
 #ifdef GETDEVICEGROUPPRESENTCAPABILITIESKHR_BEFORE_EXEC_EXISTS
-layer_GetDeviceGroupPresentCapabilitiesKHR(device, pDeviceGroupPresentCapabilities);
+layer_GetDeviceGroupPresentCapabilitiesKHR_before(device, pDeviceGroupPresentCapabilities);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetDeviceGroupPresentCapabilitiesKHR(device, pDeviceGroupPresentCapabilities);
 if(connected) {
 #ifdef GETDEVICEGROUPPRESENTCAPABILITIESKHR_AFTER_EXEC_EXISTS
-layer_GetDeviceGroupPresentCapabilitiesKHR(device, pDeviceGroupPresentCapabilities);
+layer_GetDeviceGroupPresentCapabilitiesKHR_after(device, pDeviceGroupPresentCapabilities);
 #endif 
 }
 if(connected) {
@@ -7422,13 +7424,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceGroupSurfacePresentModesKHR!")
 }
 if(connected) {
 #ifdef GETDEVICEGROUPSURFACEPRESENTMODESKHR_BEFORE_EXEC_EXISTS
-layer_GetDeviceGroupSurfacePresentModesKHR(device, surface, pModes);
+layer_GetDeviceGroupSurfacePresentModesKHR_before(device, surface, pModes);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetDeviceGroupSurfacePresentModesKHR(device, surface, pModes);
 if(connected) {
 #ifdef GETDEVICEGROUPSURFACEPRESENTMODESKHR_AFTER_EXEC_EXISTS
-layer_GetDeviceGroupSurfacePresentModesKHR(device, surface, pModes);
+layer_GetDeviceGroupSurfacePresentModesKHR_after(device, surface, pModes);
 #endif 
 }
 if(connected) {
@@ -7444,13 +7446,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkAcquireNextImage2KHR!");
 }
 if(connected) {
 #ifdef ACQUIRENEXTIMAGE2KHR_BEFORE_EXEC_EXISTS
-layer_AcquireNextImage2KHR(device, pAcquireInfo, pImageIndex);
+layer_AcquireNextImage2KHR_before(device, pAcquireInfo, pImageIndex);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].AcquireNextImage2KHR(device, pAcquireInfo, pImageIndex);
 if(connected) {
 #ifdef ACQUIRENEXTIMAGE2KHR_AFTER_EXEC_EXISTS
-layer_AcquireNextImage2KHR(device, pAcquireInfo, pImageIndex);
+layer_AcquireNextImage2KHR_after(device, pAcquireInfo, pImageIndex);
 #endif 
 }
 if(connected) {
@@ -7466,13 +7468,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDispatchBase!");
 }
 if(connected) {
 #ifdef CMDDISPATCHBASE_BEFORE_EXEC_EXISTS
-layer_CmdDispatchBase(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
+layer_CmdDispatchBase_before(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDispatchBase(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
 if(connected) {
 #ifdef CMDDISPATCHBASE_AFTER_EXEC_EXISTS
-layer_CmdDispatchBase(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
+layer_CmdDispatchBase_after(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
 #endif 
 }
 if(connected) {
@@ -7487,13 +7489,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateDescriptorUpdateTemplate!");
 }
 if(connected) {
 #ifdef CREATEDESCRIPTORUPDATETEMPLATE_BEFORE_EXEC_EXISTS
-layer_CreateDescriptorUpdateTemplate(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
+layer_CreateDescriptorUpdateTemplate_before(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateDescriptorUpdateTemplate(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
 if(connected) {
 #ifdef CREATEDESCRIPTORUPDATETEMPLATE_AFTER_EXEC_EXISTS
-layer_CreateDescriptorUpdateTemplate(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
+layer_CreateDescriptorUpdateTemplate_after(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
 #endif 
 }
 if(connected) {
@@ -7509,13 +7511,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyDescriptorUpdateTemplate!");
 }
 if(connected) {
 #ifdef DESTROYDESCRIPTORUPDATETEMPLATE_BEFORE_EXEC_EXISTS
-layer_DestroyDescriptorUpdateTemplate(device, descriptorUpdateTemplate, pAllocator);
+layer_DestroyDescriptorUpdateTemplate_before(device, descriptorUpdateTemplate, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyDescriptorUpdateTemplate(device, descriptorUpdateTemplate, pAllocator);
 if(connected) {
 #ifdef DESTROYDESCRIPTORUPDATETEMPLATE_AFTER_EXEC_EXISTS
-layer_DestroyDescriptorUpdateTemplate(device, descriptorUpdateTemplate, pAllocator);
+layer_DestroyDescriptorUpdateTemplate_after(device, descriptorUpdateTemplate, pAllocator);
 #endif 
 }
 if(connected) {
@@ -7530,13 +7532,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkUpdateDescriptorSetWithTemplate!");
 }
 if(connected) {
 #ifdef UPDATEDESCRIPTORSETWITHTEMPLATE_BEFORE_EXEC_EXISTS
-layer_UpdateDescriptorSetWithTemplate(device, descriptorSet, descriptorUpdateTemplate, pData);
+layer_UpdateDescriptorSetWithTemplate_before(device, descriptorSet, descriptorUpdateTemplate, pData);
 #endif 
 }
 device_dispatch[GetKey(device)].UpdateDescriptorSetWithTemplate(device, descriptorSet, descriptorUpdateTemplate, pData);
 if(connected) {
 #ifdef UPDATEDESCRIPTORSETWITHTEMPLATE_AFTER_EXEC_EXISTS
-layer_UpdateDescriptorSetWithTemplate(device, descriptorSet, descriptorUpdateTemplate, pData);
+layer_UpdateDescriptorSetWithTemplate_after(device, descriptorSet, descriptorUpdateTemplate, pData);
 #endif 
 }
 if(connected) {
@@ -7551,13 +7553,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdPushDescriptorSetWithTemplateKHR!");
 }
 if(connected) {
 #ifdef CMDPUSHDESCRIPTORSETWITHTEMPLATEKHR_BEFORE_EXEC_EXISTS
-layer_CmdPushDescriptorSetWithTemplateKHR(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
+layer_CmdPushDescriptorSetWithTemplateKHR_before(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetWithTemplateKHR(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
 if(connected) {
 #ifdef CMDPUSHDESCRIPTORSETWITHTEMPLATEKHR_AFTER_EXEC_EXISTS
-layer_CmdPushDescriptorSetWithTemplateKHR(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
+layer_CmdPushDescriptorSetWithTemplateKHR_after(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
 #endif 
 }
 if(connected) {
@@ -7572,13 +7574,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSetHdrMetadataEXT!");
 }
 if(connected) {
 #ifdef SETHDRMETADATAEXT_BEFORE_EXEC_EXISTS
-layer_SetHdrMetadataEXT(device, swapchainCount, pSwapchains, pMetadata);
+layer_SetHdrMetadataEXT_before(device, swapchainCount, pSwapchains, pMetadata);
 #endif 
 }
 device_dispatch[GetKey(device)].SetHdrMetadataEXT(device, swapchainCount, pSwapchains, pMetadata);
 if(connected) {
 #ifdef SETHDRMETADATAEXT_AFTER_EXEC_EXISTS
-layer_SetHdrMetadataEXT(device, swapchainCount, pSwapchains, pMetadata);
+layer_SetHdrMetadataEXT_after(device, swapchainCount, pSwapchains, pMetadata);
 #endif 
 }
 if(connected) {
@@ -7593,13 +7595,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetSwapchainStatusKHR!");
 }
 if(connected) {
 #ifdef GETSWAPCHAINSTATUSKHR_BEFORE_EXEC_EXISTS
-layer_GetSwapchainStatusKHR(device, swapchain);
+layer_GetSwapchainStatusKHR_before(device, swapchain);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetSwapchainStatusKHR(device, swapchain);
 if(connected) {
 #ifdef GETSWAPCHAINSTATUSKHR_AFTER_EXEC_EXISTS
-layer_GetSwapchainStatusKHR(device, swapchain);
+layer_GetSwapchainStatusKHR_after(device, swapchain);
 #endif 
 }
 if(connected) {
@@ -7615,13 +7617,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetRefreshCycleDurationGOOGLE!");
 }
 if(connected) {
 #ifdef GETREFRESHCYCLEDURATIONGOOGLE_BEFORE_EXEC_EXISTS
-layer_GetRefreshCycleDurationGOOGLE(device, swapchain, pDisplayTimingProperties);
+layer_GetRefreshCycleDurationGOOGLE_before(device, swapchain, pDisplayTimingProperties);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetRefreshCycleDurationGOOGLE(device, swapchain, pDisplayTimingProperties);
 if(connected) {
 #ifdef GETREFRESHCYCLEDURATIONGOOGLE_AFTER_EXEC_EXISTS
-layer_GetRefreshCycleDurationGOOGLE(device, swapchain, pDisplayTimingProperties);
+layer_GetRefreshCycleDurationGOOGLE_after(device, swapchain, pDisplayTimingProperties);
 #endif 
 }
 if(connected) {
@@ -7637,13 +7639,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPastPresentationTimingGOOGLE!");
 }
 if(connected) {
 #ifdef GETPASTPRESENTATIONTIMINGGOOGLE_BEFORE_EXEC_EXISTS
-layer_GetPastPresentationTimingGOOGLE(device, swapchain, pPresentationTimingCount, pPresentationTimings);
+layer_GetPastPresentationTimingGOOGLE_before(device, swapchain, pPresentationTimingCount, pPresentationTimings);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetPastPresentationTimingGOOGLE(device, swapchain, pPresentationTimingCount, pPresentationTimings);
 if(connected) {
 #ifdef GETPASTPRESENTATIONTIMINGGOOGLE_AFTER_EXEC_EXISTS
-layer_GetPastPresentationTimingGOOGLE(device, swapchain, pPresentationTimingCount, pPresentationTimings);
+layer_GetPastPresentationTimingGOOGLE_after(device, swapchain, pPresentationTimingCount, pPresentationTimings);
 #endif 
 }
 if(connected) {
@@ -7659,13 +7661,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetViewportWScalingNV!");
 }
 if(connected) {
 #ifdef CMDSETVIEWPORTWSCALINGNV_BEFORE_EXEC_EXISTS
-layer_CmdSetViewportWScalingNV(commandBuffer, firstViewport, viewportCount, pViewportWScalings);
+layer_CmdSetViewportWScalingNV_before(commandBuffer, firstViewport, viewportCount, pViewportWScalings);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWScalingNV(commandBuffer, firstViewport, viewportCount, pViewportWScalings);
 if(connected) {
 #ifdef CMDSETVIEWPORTWSCALINGNV_AFTER_EXEC_EXISTS
-layer_CmdSetViewportWScalingNV(commandBuffer, firstViewport, viewportCount, pViewportWScalings);
+layer_CmdSetViewportWScalingNV_after(commandBuffer, firstViewport, viewportCount, pViewportWScalings);
 #endif 
 }
 if(connected) {
@@ -7680,13 +7682,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDiscardRectangleEXT!");
 }
 if(connected) {
 #ifdef CMDSETDISCARDRECTANGLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetDiscardRectangleEXT(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles);
+layer_CmdSetDiscardRectangleEXT_before(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleEXT(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles);
 if(connected) {
 #ifdef CMDSETDISCARDRECTANGLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetDiscardRectangleEXT(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles);
+layer_CmdSetDiscardRectangleEXT_after(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles);
 #endif 
 }
 if(connected) {
@@ -7701,13 +7703,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDiscardRectangleEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETDISCARDRECTANGLEENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetDiscardRectangleEnableEXT(commandBuffer, discardRectangleEnable);
+layer_CmdSetDiscardRectangleEnableEXT_before(commandBuffer, discardRectangleEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleEnableEXT(commandBuffer, discardRectangleEnable);
 if(connected) {
 #ifdef CMDSETDISCARDRECTANGLEENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetDiscardRectangleEnableEXT(commandBuffer, discardRectangleEnable);
+layer_CmdSetDiscardRectangleEnableEXT_after(commandBuffer, discardRectangleEnable);
 #endif 
 }
 if(connected) {
@@ -7722,13 +7724,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDiscardRectangleModeEXT!");
 }
 if(connected) {
 #ifdef CMDSETDISCARDRECTANGLEMODEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetDiscardRectangleModeEXT(commandBuffer, discardRectangleMode);
+layer_CmdSetDiscardRectangleModeEXT_before(commandBuffer, discardRectangleMode);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleModeEXT(commandBuffer, discardRectangleMode);
 if(connected) {
 #ifdef CMDSETDISCARDRECTANGLEMODEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetDiscardRectangleModeEXT(commandBuffer, discardRectangleMode);
+layer_CmdSetDiscardRectangleModeEXT_after(commandBuffer, discardRectangleMode);
 #endif 
 }
 if(connected) {
@@ -7743,13 +7745,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetSampleLocationsEXT!");
 }
 if(connected) {
 #ifdef CMDSETSAMPLELOCATIONSEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetSampleLocationsEXT(commandBuffer, pSampleLocationsInfo);
+layer_CmdSetSampleLocationsEXT_before(commandBuffer, pSampleLocationsInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetSampleLocationsEXT(commandBuffer, pSampleLocationsInfo);
 if(connected) {
 #ifdef CMDSETSAMPLELOCATIONSEXT_AFTER_EXEC_EXISTS
-layer_CmdSetSampleLocationsEXT(commandBuffer, pSampleLocationsInfo);
+layer_CmdSetSampleLocationsEXT_after(commandBuffer, pSampleLocationsInfo);
 #endif 
 }
 if(connected) {
@@ -7764,13 +7766,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetBufferMemoryRequirements2!");
 }
 if(connected) {
 #ifdef GETBUFFERMEMORYREQUIREMENTS2_BEFORE_EXEC_EXISTS
-layer_GetBufferMemoryRequirements2(device, pInfo, pMemoryRequirements);
+layer_GetBufferMemoryRequirements2_before(device, pInfo, pMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetBufferMemoryRequirements2(device, pInfo, pMemoryRequirements);
 if(connected) {
 #ifdef GETBUFFERMEMORYREQUIREMENTS2_AFTER_EXEC_EXISTS
-layer_GetBufferMemoryRequirements2(device, pInfo, pMemoryRequirements);
+layer_GetBufferMemoryRequirements2_after(device, pInfo, pMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -7785,13 +7787,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetImageMemoryRequirements2!");
 }
 if(connected) {
 #ifdef GETIMAGEMEMORYREQUIREMENTS2_BEFORE_EXEC_EXISTS
-layer_GetImageMemoryRequirements2(device, pInfo, pMemoryRequirements);
+layer_GetImageMemoryRequirements2_before(device, pInfo, pMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetImageMemoryRequirements2(device, pInfo, pMemoryRequirements);
 if(connected) {
 #ifdef GETIMAGEMEMORYREQUIREMENTS2_AFTER_EXEC_EXISTS
-layer_GetImageMemoryRequirements2(device, pInfo, pMemoryRequirements);
+layer_GetImageMemoryRequirements2_after(device, pInfo, pMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -7806,13 +7808,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetImageSparseMemoryRequirements2!");
 }
 if(connected) {
 #ifdef GETIMAGESPARSEMEMORYREQUIREMENTS2_BEFORE_EXEC_EXISTS
-layer_GetImageSparseMemoryRequirements2(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+layer_GetImageSparseMemoryRequirements2_before(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements2(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 if(connected) {
 #ifdef GETIMAGESPARSEMEMORYREQUIREMENTS2_AFTER_EXEC_EXISTS
-layer_GetImageSparseMemoryRequirements2(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+layer_GetImageSparseMemoryRequirements2_after(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -7827,13 +7829,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceBufferMemoryRequirements!");
 }
 if(connected) {
 #ifdef GETDEVICEBUFFERMEMORYREQUIREMENTS_BEFORE_EXEC_EXISTS
-layer_GetDeviceBufferMemoryRequirements(device, pInfo, pMemoryRequirements);
+layer_GetDeviceBufferMemoryRequirements_before(device, pInfo, pMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDeviceBufferMemoryRequirements(device, pInfo, pMemoryRequirements);
 if(connected) {
 #ifdef GETDEVICEBUFFERMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
-layer_GetDeviceBufferMemoryRequirements(device, pInfo, pMemoryRequirements);
+layer_GetDeviceBufferMemoryRequirements_after(device, pInfo, pMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -7848,13 +7850,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceImageMemoryRequirements!");
 }
 if(connected) {
 #ifdef GETDEVICEIMAGEMEMORYREQUIREMENTS_BEFORE_EXEC_EXISTS
-layer_GetDeviceImageMemoryRequirements(device, pInfo, pMemoryRequirements);
+layer_GetDeviceImageMemoryRequirements_before(device, pInfo, pMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDeviceImageMemoryRequirements(device, pInfo, pMemoryRequirements);
 if(connected) {
 #ifdef GETDEVICEIMAGEMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
-layer_GetDeviceImageMemoryRequirements(device, pInfo, pMemoryRequirements);
+layer_GetDeviceImageMemoryRequirements_after(device, pInfo, pMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -7869,13 +7871,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceImageSparseMemoryRequirements!
 }
 if(connected) {
 #ifdef GETDEVICEIMAGESPARSEMEMORYREQUIREMENTS_BEFORE_EXEC_EXISTS
-layer_GetDeviceImageSparseMemoryRequirements(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+layer_GetDeviceImageSparseMemoryRequirements_before(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDeviceImageSparseMemoryRequirements(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 if(connected) {
 #ifdef GETDEVICEIMAGESPARSEMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
-layer_GetDeviceImageSparseMemoryRequirements(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+layer_GetDeviceImageSparseMemoryRequirements_after(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -7890,13 +7892,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateSamplerYcbcrConversion!");
 }
 if(connected) {
 #ifdef CREATESAMPLERYCBCRCONVERSION_BEFORE_EXEC_EXISTS
-layer_CreateSamplerYcbcrConversion(device, pCreateInfo, pAllocator, pYcbcrConversion);
+layer_CreateSamplerYcbcrConversion_before(device, pCreateInfo, pAllocator, pYcbcrConversion);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateSamplerYcbcrConversion(device, pCreateInfo, pAllocator, pYcbcrConversion);
 if(connected) {
 #ifdef CREATESAMPLERYCBCRCONVERSION_AFTER_EXEC_EXISTS
-layer_CreateSamplerYcbcrConversion(device, pCreateInfo, pAllocator, pYcbcrConversion);
+layer_CreateSamplerYcbcrConversion_after(device, pCreateInfo, pAllocator, pYcbcrConversion);
 #endif 
 }
 if(connected) {
@@ -7912,13 +7914,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroySamplerYcbcrConversion!");
 }
 if(connected) {
 #ifdef DESTROYSAMPLERYCBCRCONVERSION_BEFORE_EXEC_EXISTS
-layer_DestroySamplerYcbcrConversion(device, ycbcrConversion, pAllocator);
+layer_DestroySamplerYcbcrConversion_before(device, ycbcrConversion, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroySamplerYcbcrConversion(device, ycbcrConversion, pAllocator);
 if(connected) {
 #ifdef DESTROYSAMPLERYCBCRCONVERSION_AFTER_EXEC_EXISTS
-layer_DestroySamplerYcbcrConversion(device, ycbcrConversion, pAllocator);
+layer_DestroySamplerYcbcrConversion_after(device, ycbcrConversion, pAllocator);
 #endif 
 }
 if(connected) {
@@ -7933,13 +7935,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceQueue2!");
 }
 if(connected) {
 #ifdef GETDEVICEQUEUE2_BEFORE_EXEC_EXISTS
-layer_GetDeviceQueue2(device, pQueueInfo, pQueue);
+layer_GetDeviceQueue2_before(device, pQueueInfo, pQueue);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDeviceQueue2(device, pQueueInfo, pQueue);
 if(connected) {
 #ifdef GETDEVICEQUEUE2_AFTER_EXEC_EXISTS
-layer_GetDeviceQueue2(device, pQueueInfo, pQueue);
+layer_GetDeviceQueue2_after(device, pQueueInfo, pQueue);
 #endif 
 }
 if(connected) {
@@ -7954,13 +7956,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateValidationCacheEXT!");
 }
 if(connected) {
 #ifdef CREATEVALIDATIONCACHEEXT_BEFORE_EXEC_EXISTS
-layer_CreateValidationCacheEXT(device, pCreateInfo, pAllocator, pValidationCache);
+layer_CreateValidationCacheEXT_before(device, pCreateInfo, pAllocator, pValidationCache);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateValidationCacheEXT(device, pCreateInfo, pAllocator, pValidationCache);
 if(connected) {
 #ifdef CREATEVALIDATIONCACHEEXT_AFTER_EXEC_EXISTS
-layer_CreateValidationCacheEXT(device, pCreateInfo, pAllocator, pValidationCache);
+layer_CreateValidationCacheEXT_after(device, pCreateInfo, pAllocator, pValidationCache);
 #endif 
 }
 if(connected) {
@@ -7976,13 +7978,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyValidationCacheEXT!");
 }
 if(connected) {
 #ifdef DESTROYVALIDATIONCACHEEXT_BEFORE_EXEC_EXISTS
-layer_DestroyValidationCacheEXT(device, validationCache, pAllocator);
+layer_DestroyValidationCacheEXT_before(device, validationCache, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyValidationCacheEXT(device, validationCache, pAllocator);
 if(connected) {
 #ifdef DESTROYVALIDATIONCACHEEXT_AFTER_EXEC_EXISTS
-layer_DestroyValidationCacheEXT(device, validationCache, pAllocator);
+layer_DestroyValidationCacheEXT_after(device, validationCache, pAllocator);
 #endif 
 }
 if(connected) {
@@ -7997,13 +7999,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetValidationCacheDataEXT!");
 }
 if(connected) {
 #ifdef GETVALIDATIONCACHEDATAEXT_BEFORE_EXEC_EXISTS
-layer_GetValidationCacheDataEXT(device, validationCache, pDataSize, pData);
+layer_GetValidationCacheDataEXT_before(device, validationCache, pDataSize, pData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetValidationCacheDataEXT(device, validationCache, pDataSize, pData);
 if(connected) {
 #ifdef GETVALIDATIONCACHEDATAEXT_AFTER_EXEC_EXISTS
-layer_GetValidationCacheDataEXT(device, validationCache, pDataSize, pData);
+layer_GetValidationCacheDataEXT_after(device, validationCache, pDataSize, pData);
 #endif 
 }
 if(connected) {
@@ -8019,13 +8021,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkMergeValidationCachesEXT!");
 }
 if(connected) {
 #ifdef MERGEVALIDATIONCACHESEXT_BEFORE_EXEC_EXISTS
-layer_MergeValidationCachesEXT(device, dstCache, srcCacheCount, pSrcCaches);
+layer_MergeValidationCachesEXT_before(device, dstCache, srcCacheCount, pSrcCaches);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].MergeValidationCachesEXT(device, dstCache, srcCacheCount, pSrcCaches);
 if(connected) {
 #ifdef MERGEVALIDATIONCACHESEXT_AFTER_EXEC_EXISTS
-layer_MergeValidationCachesEXT(device, dstCache, srcCacheCount, pSrcCaches);
+layer_MergeValidationCachesEXT_after(device, dstCache, srcCacheCount, pSrcCaches);
 #endif 
 }
 if(connected) {
@@ -8041,13 +8043,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDescriptorSetLayoutSupport!");
 }
 if(connected) {
 #ifdef GETDESCRIPTORSETLAYOUTSUPPORT_BEFORE_EXEC_EXISTS
-layer_GetDescriptorSetLayoutSupport(device, pCreateInfo, pSupport);
+layer_GetDescriptorSetLayoutSupport_before(device, pCreateInfo, pSupport);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutSupport(device, pCreateInfo, pSupport);
 if(connected) {
 #ifdef GETDESCRIPTORSETLAYOUTSUPPORT_AFTER_EXEC_EXISTS
-layer_GetDescriptorSetLayoutSupport(device, pCreateInfo, pSupport);
+layer_GetDescriptorSetLayoutSupport_after(device, pCreateInfo, pSupport);
 #endif 
 }
 if(connected) {
@@ -8063,13 +8065,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetSwapchainGrallocUsageANDROID!");
 }
 if(connected) {
 #ifdef GETSWAPCHAINGRALLOCUSAGEANDROID_BEFORE_EXEC_EXISTS
-layer_GetSwapchainGrallocUsageANDROID(device, format, imageUsage, grallocUsage);
+layer_GetSwapchainGrallocUsageANDROID_before(device, format, imageUsage, grallocUsage);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetSwapchainGrallocUsageANDROID(device, format, imageUsage, grallocUsage);
 if(connected) {
 #ifdef GETSWAPCHAINGRALLOCUSAGEANDROID_AFTER_EXEC_EXISTS
-layer_GetSwapchainGrallocUsageANDROID(device, format, imageUsage, grallocUsage);
+layer_GetSwapchainGrallocUsageANDROID_after(device, format, imageUsage, grallocUsage);
 #endif 
 }
 if(connected) {
@@ -8087,13 +8089,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetSwapchainGrallocUsage2ANDROID!");
 }
 if(connected) {
 #ifdef GETSWAPCHAINGRALLOCUSAGE2ANDROID_BEFORE_EXEC_EXISTS
-layer_GetSwapchainGrallocUsage2ANDROID(device, format, imageUsage, swapchainImageUsage, grallocConsumerUsage, grallocProducerUsage);
+layer_GetSwapchainGrallocUsage2ANDROID_before(device, format, imageUsage, swapchainImageUsage, grallocConsumerUsage, grallocProducerUsage);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetSwapchainGrallocUsage2ANDROID(device, format, imageUsage, swapchainImageUsage, grallocConsumerUsage, grallocProducerUsage);
 if(connected) {
 #ifdef GETSWAPCHAINGRALLOCUSAGE2ANDROID_AFTER_EXEC_EXISTS
-layer_GetSwapchainGrallocUsage2ANDROID(device, format, imageUsage, swapchainImageUsage, grallocConsumerUsage, grallocProducerUsage);
+layer_GetSwapchainGrallocUsage2ANDROID_after(device, format, imageUsage, swapchainImageUsage, grallocConsumerUsage, grallocProducerUsage);
 #endif 
 }
 if(connected) {
@@ -8111,13 +8113,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkAcquireImageANDROID!");
 }
 if(connected) {
 #ifdef ACQUIREIMAGEANDROID_BEFORE_EXEC_EXISTS
-layer_AcquireImageANDROID(device, image, nativeFenceFd, semaphore, fence);
+layer_AcquireImageANDROID_before(device, image, nativeFenceFd, semaphore, fence);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].AcquireImageANDROID(device, image, nativeFenceFd, semaphore, fence);
 if(connected) {
 #ifdef ACQUIREIMAGEANDROID_AFTER_EXEC_EXISTS
-layer_AcquireImageANDROID(device, image, nativeFenceFd, semaphore, fence);
+layer_AcquireImageANDROID_after(device, image, nativeFenceFd, semaphore, fence);
 #endif 
 }
 if(connected) {
@@ -8135,13 +8137,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkQueueSignalReleaseImageANDROID!");
 }
 if(connected) {
 #ifdef QUEUESIGNALRELEASEIMAGEANDROID_BEFORE_EXEC_EXISTS
-layer_QueueSignalReleaseImageANDROID(queue, waitSemaphoreCount, pWaitSemaphores, image, pNativeFenceFd);
+layer_QueueSignalReleaseImageANDROID_before(queue, waitSemaphoreCount, pWaitSemaphores, image, pNativeFenceFd);
 #endif 
 }
 auto ret = device_dispatch[GetKey(queue)].QueueSignalReleaseImageANDROID(queue, waitSemaphoreCount, pWaitSemaphores, image, pNativeFenceFd);
 if(connected) {
 #ifdef QUEUESIGNALRELEASEIMAGEANDROID_AFTER_EXEC_EXISTS
-layer_QueueSignalReleaseImageANDROID(queue, waitSemaphoreCount, pWaitSemaphores, image, pNativeFenceFd);
+layer_QueueSignalReleaseImageANDROID_after(queue, waitSemaphoreCount, pWaitSemaphores, image, pNativeFenceFd);
 #endif 
 }
 if(connected) {
@@ -8158,13 +8160,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetShaderInfoAMD!");
 }
 if(connected) {
 #ifdef GETSHADERINFOAMD_BEFORE_EXEC_EXISTS
-layer_GetShaderInfoAMD(device, pipeline, shaderStage, infoType, pInfoSize, pInfo);
+layer_GetShaderInfoAMD_before(device, pipeline, shaderStage, infoType, pInfoSize, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetShaderInfoAMD(device, pipeline, shaderStage, infoType, pInfoSize, pInfo);
 if(connected) {
 #ifdef GETSHADERINFOAMD_AFTER_EXEC_EXISTS
-layer_GetShaderInfoAMD(device, pipeline, shaderStage, infoType, pInfoSize, pInfo);
+layer_GetShaderInfoAMD_after(device, pipeline, shaderStage, infoType, pInfoSize, pInfo);
 #endif 
 }
 if(connected) {
@@ -8180,13 +8182,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSetLocalDimmingAMD!");
 }
 if(connected) {
 #ifdef SETLOCALDIMMINGAMD_BEFORE_EXEC_EXISTS
-layer_SetLocalDimmingAMD(device, swapChain, localDimmingEnable);
+layer_SetLocalDimmingAMD_before(device, swapChain, localDimmingEnable);
 #endif 
 }
 device_dispatch[GetKey(device)].SetLocalDimmingAMD(device, swapChain, localDimmingEnable);
 if(connected) {
 #ifdef SETLOCALDIMMINGAMD_AFTER_EXEC_EXISTS
-layer_SetLocalDimmingAMD(device, swapChain, localDimmingEnable);
+layer_SetLocalDimmingAMD_after(device, swapChain, localDimmingEnable);
 #endif 
 }
 if(connected) {
@@ -8201,13 +8203,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetCalibratedTimestampsKHR!");
 }
 if(connected) {
 #ifdef GETCALIBRATEDTIMESTAMPSKHR_BEFORE_EXEC_EXISTS
-layer_GetCalibratedTimestampsKHR(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
+layer_GetCalibratedTimestampsKHR_before(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetCalibratedTimestampsKHR(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
 if(connected) {
 #ifdef GETCALIBRATEDTIMESTAMPSKHR_AFTER_EXEC_EXISTS
-layer_GetCalibratedTimestampsKHR(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
+layer_GetCalibratedTimestampsKHR_after(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
 #endif 
 }
 if(connected) {
@@ -8223,13 +8225,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSetDebugUtilsObjectNameEXT!");
 }
 if(connected) {
 #ifdef SETDEBUGUTILSOBJECTNAMEEXT_BEFORE_EXEC_EXISTS
-layer_SetDebugUtilsObjectNameEXT(device, pNameInfo);
+layer_SetDebugUtilsObjectNameEXT_before(device, pNameInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].SetDebugUtilsObjectNameEXT(device, pNameInfo);
 if(connected) {
 #ifdef SETDEBUGUTILSOBJECTNAMEEXT_AFTER_EXEC_EXISTS
-layer_SetDebugUtilsObjectNameEXT(device, pNameInfo);
+layer_SetDebugUtilsObjectNameEXT_after(device, pNameInfo);
 #endif 
 }
 if(connected) {
@@ -8245,13 +8247,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSetDebugUtilsObjectTagEXT!");
 }
 if(connected) {
 #ifdef SETDEBUGUTILSOBJECTTAGEXT_BEFORE_EXEC_EXISTS
-layer_SetDebugUtilsObjectTagEXT(device, pTagInfo);
+layer_SetDebugUtilsObjectTagEXT_before(device, pTagInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].SetDebugUtilsObjectTagEXT(device, pTagInfo);
 if(connected) {
 #ifdef SETDEBUGUTILSOBJECTTAGEXT_AFTER_EXEC_EXISTS
-layer_SetDebugUtilsObjectTagEXT(device, pTagInfo);
+layer_SetDebugUtilsObjectTagEXT_after(device, pTagInfo);
 #endif 
 }
 if(connected) {
@@ -8267,13 +8269,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkQueueBeginDebugUtilsLabelEXT!");
 }
 if(connected) {
 #ifdef QUEUEBEGINDEBUGUTILSLABELEXT_BEFORE_EXEC_EXISTS
-layer_QueueBeginDebugUtilsLabelEXT(queue, pLabelInfo);
+layer_QueueBeginDebugUtilsLabelEXT_before(queue, pLabelInfo);
 #endif 
 }
 device_dispatch[GetKey(queue)].QueueBeginDebugUtilsLabelEXT(queue, pLabelInfo);
 if(connected) {
 #ifdef QUEUEBEGINDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
-layer_QueueBeginDebugUtilsLabelEXT(queue, pLabelInfo);
+layer_QueueBeginDebugUtilsLabelEXT_after(queue, pLabelInfo);
 #endif 
 }
 if(connected) {
@@ -8288,13 +8290,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkQueueEndDebugUtilsLabelEXT!");
 }
 if(connected) {
 #ifdef QUEUEENDDEBUGUTILSLABELEXT_BEFORE_EXEC_EXISTS
-layer_QueueEndDebugUtilsLabelEXT(queue);
+layer_QueueEndDebugUtilsLabelEXT_before(queue);
 #endif 
 }
 device_dispatch[GetKey(queue)].QueueEndDebugUtilsLabelEXT(queue);
 if(connected) {
 #ifdef QUEUEENDDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
-layer_QueueEndDebugUtilsLabelEXT(queue);
+layer_QueueEndDebugUtilsLabelEXT_after(queue);
 #endif 
 }
 if(connected) {
@@ -8309,13 +8311,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkQueueInsertDebugUtilsLabelEXT!");
 }
 if(connected) {
 #ifdef QUEUEINSERTDEBUGUTILSLABELEXT_BEFORE_EXEC_EXISTS
-layer_QueueInsertDebugUtilsLabelEXT(queue, pLabelInfo);
+layer_QueueInsertDebugUtilsLabelEXT_before(queue, pLabelInfo);
 #endif 
 }
 device_dispatch[GetKey(queue)].QueueInsertDebugUtilsLabelEXT(queue, pLabelInfo);
 if(connected) {
 #ifdef QUEUEINSERTDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
-layer_QueueInsertDebugUtilsLabelEXT(queue, pLabelInfo);
+layer_QueueInsertDebugUtilsLabelEXT_after(queue, pLabelInfo);
 #endif 
 }
 if(connected) {
@@ -8330,13 +8332,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginDebugUtilsLabelEXT!");
 }
 if(connected) {
 #ifdef CMDBEGINDEBUGUTILSLABELEXT_BEFORE_EXEC_EXISTS
-layer_CmdBeginDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
+layer_CmdBeginDebugUtilsLabelEXT_before(commandBuffer, pLabelInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBeginDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
 if(connected) {
 #ifdef CMDBEGINDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
-layer_CmdBeginDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
+layer_CmdBeginDebugUtilsLabelEXT_after(commandBuffer, pLabelInfo);
 #endif 
 }
 if(connected) {
@@ -8351,13 +8353,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdEndDebugUtilsLabelEXT!");
 }
 if(connected) {
 #ifdef CMDENDDEBUGUTILSLABELEXT_BEFORE_EXEC_EXISTS
-layer_CmdEndDebugUtilsLabelEXT(commandBuffer);
+layer_CmdEndDebugUtilsLabelEXT_before(commandBuffer);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdEndDebugUtilsLabelEXT(commandBuffer);
 if(connected) {
 #ifdef CMDENDDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
-layer_CmdEndDebugUtilsLabelEXT(commandBuffer);
+layer_CmdEndDebugUtilsLabelEXT_after(commandBuffer);
 #endif 
 }
 if(connected) {
@@ -8372,13 +8374,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdInsertDebugUtilsLabelEXT!");
 }
 if(connected) {
 #ifdef CMDINSERTDEBUGUTILSLABELEXT_BEFORE_EXEC_EXISTS
-layer_CmdInsertDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
+layer_CmdInsertDebugUtilsLabelEXT_before(commandBuffer, pLabelInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdInsertDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
 if(connected) {
 #ifdef CMDINSERTDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
-layer_CmdInsertDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
+layer_CmdInsertDebugUtilsLabelEXT_after(commandBuffer, pLabelInfo);
 #endif 
 }
 if(connected) {
@@ -8393,13 +8395,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryHostPointerPropertiesEXT!");
 }
 if(connected) {
 #ifdef GETMEMORYHOSTPOINTERPROPERTIESEXT_BEFORE_EXEC_EXISTS
-layer_GetMemoryHostPointerPropertiesEXT(device, handleType, pHostPointer, pMemoryHostPointerProperties);
+layer_GetMemoryHostPointerPropertiesEXT_before(device, handleType, pHostPointer, pMemoryHostPointerProperties);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetMemoryHostPointerPropertiesEXT(device, handleType, pHostPointer, pMemoryHostPointerProperties);
 if(connected) {
 #ifdef GETMEMORYHOSTPOINTERPROPERTIESEXT_AFTER_EXEC_EXISTS
-layer_GetMemoryHostPointerPropertiesEXT(device, handleType, pHostPointer, pMemoryHostPointerProperties);
+layer_GetMemoryHostPointerPropertiesEXT_after(device, handleType, pHostPointer, pMemoryHostPointerProperties);
 #endif 
 }
 if(connected) {
@@ -8415,13 +8417,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteBufferMarkerAMD!");
 }
 if(connected) {
 #ifdef CMDWRITEBUFFERMARKERAMD_BEFORE_EXEC_EXISTS
-layer_CmdWriteBufferMarkerAMD(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker);
+layer_CmdWriteBufferMarkerAMD_before(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdWriteBufferMarkerAMD(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker);
 if(connected) {
 #ifdef CMDWRITEBUFFERMARKERAMD_AFTER_EXEC_EXISTS
-layer_CmdWriteBufferMarkerAMD(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker);
+layer_CmdWriteBufferMarkerAMD_after(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker);
 #endif 
 }
 if(connected) {
@@ -8436,13 +8438,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateRenderPass2!");
 }
 if(connected) {
 #ifdef CREATERENDERPASS2_BEFORE_EXEC_EXISTS
-layer_CreateRenderPass2(device, pCreateInfo, pAllocator, pRenderPass);
+layer_CreateRenderPass2_before(device, pCreateInfo, pAllocator, pRenderPass);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateRenderPass2(device, pCreateInfo, pAllocator, pRenderPass);
 if(connected) {
 #ifdef CREATERENDERPASS2_AFTER_EXEC_EXISTS
-layer_CreateRenderPass2(device, pCreateInfo, pAllocator, pRenderPass);
+layer_CreateRenderPass2_after(device, pCreateInfo, pAllocator, pRenderPass);
 #endif 
 }
 if(connected) {
@@ -8458,13 +8460,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginRenderPass2!");
 }
 if(connected) {
 #ifdef CMDBEGINRENDERPASS2_BEFORE_EXEC_EXISTS
-layer_CmdBeginRenderPass2(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
+layer_CmdBeginRenderPass2_before(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass2(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
 if(connected) {
 #ifdef CMDBEGINRENDERPASS2_AFTER_EXEC_EXISTS
-layer_CmdBeginRenderPass2(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
+layer_CmdBeginRenderPass2_after(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
 #endif 
 }
 if(connected) {
@@ -8479,13 +8481,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdNextSubpass2!");
 }
 if(connected) {
 #ifdef CMDNEXTSUBPASS2_BEFORE_EXEC_EXISTS
-layer_CmdNextSubpass2(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
+layer_CmdNextSubpass2_before(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdNextSubpass2(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 if(connected) {
 #ifdef CMDNEXTSUBPASS2_AFTER_EXEC_EXISTS
-layer_CmdNextSubpass2(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
+layer_CmdNextSubpass2_after(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 #endif 
 }
 if(connected) {
@@ -8500,13 +8502,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdEndRenderPass2!");
 }
 if(connected) {
 #ifdef CMDENDRENDERPASS2_BEFORE_EXEC_EXISTS
-layer_CmdEndRenderPass2(commandBuffer, pSubpassEndInfo);
+layer_CmdEndRenderPass2_before(commandBuffer, pSubpassEndInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass2(commandBuffer, pSubpassEndInfo);
 if(connected) {
 #ifdef CMDENDRENDERPASS2_AFTER_EXEC_EXISTS
-layer_CmdEndRenderPass2(commandBuffer, pSubpassEndInfo);
+layer_CmdEndRenderPass2_after(commandBuffer, pSubpassEndInfo);
 #endif 
 }
 if(connected) {
@@ -8521,13 +8523,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetSemaphoreCounterValue!");
 }
 if(connected) {
 #ifdef GETSEMAPHORECOUNTERVALUE_BEFORE_EXEC_EXISTS
-layer_GetSemaphoreCounterValue(device, semaphore, pValue);
+layer_GetSemaphoreCounterValue_before(device, semaphore, pValue);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreCounterValue(device, semaphore, pValue);
 if(connected) {
 #ifdef GETSEMAPHORECOUNTERVALUE_AFTER_EXEC_EXISTS
-layer_GetSemaphoreCounterValue(device, semaphore, pValue);
+layer_GetSemaphoreCounterValue_after(device, semaphore, pValue);
 #endif 
 }
 if(connected) {
@@ -8543,13 +8545,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkWaitSemaphores!");
 }
 if(connected) {
 #ifdef WAITSEMAPHORES_BEFORE_EXEC_EXISTS
-layer_WaitSemaphores(device, pWaitInfo, timeout);
+layer_WaitSemaphores_before(device, pWaitInfo, timeout);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].WaitSemaphores(device, pWaitInfo, timeout);
 if(connected) {
 #ifdef WAITSEMAPHORES_AFTER_EXEC_EXISTS
-layer_WaitSemaphores(device, pWaitInfo, timeout);
+layer_WaitSemaphores_after(device, pWaitInfo, timeout);
 #endif 
 }
 if(connected) {
@@ -8565,13 +8567,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSignalSemaphore!");
 }
 if(connected) {
 #ifdef SIGNALSEMAPHORE_BEFORE_EXEC_EXISTS
-layer_SignalSemaphore(device, pSignalInfo);
+layer_SignalSemaphore_before(device, pSignalInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].SignalSemaphore(device, pSignalInfo);
 if(connected) {
 #ifdef SIGNALSEMAPHORE_AFTER_EXEC_EXISTS
-layer_SignalSemaphore(device, pSignalInfo);
+layer_SignalSemaphore_after(device, pSignalInfo);
 #endif 
 }
 if(connected) {
@@ -8588,13 +8590,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetAndroidHardwareBufferPropertiesANDRO
 }
 if(connected) {
 #ifdef GETANDROIDHARDWAREBUFFERPROPERTIESANDROID_BEFORE_EXEC_EXISTS
-layer_GetAndroidHardwareBufferPropertiesANDROID(device, buffer, pProperties);
+layer_GetAndroidHardwareBufferPropertiesANDROID_before(device, buffer, pProperties);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetAndroidHardwareBufferPropertiesANDROID(device, buffer, pProperties);
 if(connected) {
 #ifdef GETANDROIDHARDWAREBUFFERPROPERTIESANDROID_AFTER_EXEC_EXISTS
-layer_GetAndroidHardwareBufferPropertiesANDROID(device, buffer, pProperties);
+layer_GetAndroidHardwareBufferPropertiesANDROID_after(device, buffer, pProperties);
 #endif 
 }
 if(connected) {
@@ -8612,13 +8614,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryAndroidHardwareBufferANDROID!"
 }
 if(connected) {
 #ifdef GETMEMORYANDROIDHARDWAREBUFFERANDROID_BEFORE_EXEC_EXISTS
-layer_GetMemoryAndroidHardwareBufferANDROID(device, pInfo, pBuffer);
+layer_GetMemoryAndroidHardwareBufferANDROID_before(device, pInfo, pBuffer);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetMemoryAndroidHardwareBufferANDROID(device, pInfo, pBuffer);
 if(connected) {
 #ifdef GETMEMORYANDROIDHARDWAREBUFFERANDROID_AFTER_EXEC_EXISTS
-layer_GetMemoryAndroidHardwareBufferANDROID(device, pInfo, pBuffer);
+layer_GetMemoryAndroidHardwareBufferANDROID_after(device, pInfo, pBuffer);
 #endif 
 }
 if(connected) {
@@ -8635,13 +8637,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndirectCount!");
 }
 if(connected) {
 #ifdef CMDDRAWINDIRECTCOUNT_BEFORE_EXEC_EXISTS
-layer_CmdDrawIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawIndirectCount_before(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 if(connected) {
 #ifdef CMDDRAWINDIRECTCOUNT_AFTER_EXEC_EXISTS
-layer_CmdDrawIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawIndirectCount_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 if(connected) {
@@ -8656,13 +8658,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndexedIndirectCount!");
 }
 if(connected) {
 #ifdef CMDDRAWINDEXEDINDIRECTCOUNT_BEFORE_EXEC_EXISTS
-layer_CmdDrawIndexedIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawIndexedIndirectCount_before(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 if(connected) {
 #ifdef CMDDRAWINDEXEDINDIRECTCOUNT_AFTER_EXEC_EXISTS
-layer_CmdDrawIndexedIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawIndexedIndirectCount_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 if(connected) {
@@ -8677,13 +8679,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCheckpointNV!");
 }
 if(connected) {
 #ifdef CMDSETCHECKPOINTNV_BEFORE_EXEC_EXISTS
-layer_CmdSetCheckpointNV(commandBuffer, pCheckpointMarker);
+layer_CmdSetCheckpointNV_before(commandBuffer, pCheckpointMarker);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetCheckpointNV(commandBuffer, pCheckpointMarker);
 if(connected) {
 #ifdef CMDSETCHECKPOINTNV_AFTER_EXEC_EXISTS
-layer_CmdSetCheckpointNV(commandBuffer, pCheckpointMarker);
+layer_CmdSetCheckpointNV_after(commandBuffer, pCheckpointMarker);
 #endif 
 }
 if(connected) {
@@ -8698,13 +8700,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetQueueCheckpointDataNV!");
 }
 if(connected) {
 #ifdef GETQUEUECHECKPOINTDATANV_BEFORE_EXEC_EXISTS
-layer_GetQueueCheckpointDataNV(queue, pCheckpointDataCount, pCheckpointData);
+layer_GetQueueCheckpointDataNV_before(queue, pCheckpointDataCount, pCheckpointData);
 #endif 
 }
 device_dispatch[GetKey(queue)].GetQueueCheckpointDataNV(queue, pCheckpointDataCount, pCheckpointData);
 if(connected) {
 #ifdef GETQUEUECHECKPOINTDATANV_AFTER_EXEC_EXISTS
-layer_GetQueueCheckpointDataNV(queue, pCheckpointDataCount, pCheckpointData);
+layer_GetQueueCheckpointDataNV_after(queue, pCheckpointDataCount, pCheckpointData);
 #endif 
 }
 if(connected) {
@@ -8719,13 +8721,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindTransformFeedbackBuffersEXT!");
 }
 if(connected) {
 #ifdef CMDBINDTRANSFORMFEEDBACKBUFFERSEXT_BEFORE_EXEC_EXISTS
-layer_CmdBindTransformFeedbackBuffersEXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes);
+layer_CmdBindTransformFeedbackBuffersEXT_before(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindTransformFeedbackBuffersEXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes);
 if(connected) {
 #ifdef CMDBINDTRANSFORMFEEDBACKBUFFERSEXT_AFTER_EXEC_EXISTS
-layer_CmdBindTransformFeedbackBuffersEXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes);
+layer_CmdBindTransformFeedbackBuffersEXT_after(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes);
 #endif 
 }
 if(connected) {
@@ -8740,13 +8742,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginTransformFeedbackEXT!");
 }
 if(connected) {
 #ifdef CMDBEGINTRANSFORMFEEDBACKEXT_BEFORE_EXEC_EXISTS
-layer_CmdBeginTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
+layer_CmdBeginTransformFeedbackEXT_before(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBeginTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
 if(connected) {
 #ifdef CMDBEGINTRANSFORMFEEDBACKEXT_AFTER_EXEC_EXISTS
-layer_CmdBeginTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
+layer_CmdBeginTransformFeedbackEXT_after(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
 #endif 
 }
 if(connected) {
@@ -8761,13 +8763,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdEndTransformFeedbackEXT!");
 }
 if(connected) {
 #ifdef CMDENDTRANSFORMFEEDBACKEXT_BEFORE_EXEC_EXISTS
-layer_CmdEndTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
+layer_CmdEndTransformFeedbackEXT_before(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdEndTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
 if(connected) {
 #ifdef CMDENDTRANSFORMFEEDBACKEXT_AFTER_EXEC_EXISTS
-layer_CmdEndTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
+layer_CmdEndTransformFeedbackEXT_after(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
 #endif 
 }
 if(connected) {
@@ -8782,13 +8784,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginQueryIndexedEXT!");
 }
 if(connected) {
 #ifdef CMDBEGINQUERYINDEXEDEXT_BEFORE_EXEC_EXISTS
-layer_CmdBeginQueryIndexedEXT(commandBuffer, queryPool, query, flags, index);
+layer_CmdBeginQueryIndexedEXT_before(commandBuffer, queryPool, query, flags, index);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBeginQueryIndexedEXT(commandBuffer, queryPool, query, flags, index);
 if(connected) {
 #ifdef CMDBEGINQUERYINDEXEDEXT_AFTER_EXEC_EXISTS
-layer_CmdBeginQueryIndexedEXT(commandBuffer, queryPool, query, flags, index);
+layer_CmdBeginQueryIndexedEXT_after(commandBuffer, queryPool, query, flags, index);
 #endif 
 }
 if(connected) {
@@ -8803,13 +8805,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdEndQueryIndexedEXT!");
 }
 if(connected) {
 #ifdef CMDENDQUERYINDEXEDEXT_BEFORE_EXEC_EXISTS
-layer_CmdEndQueryIndexedEXT(commandBuffer, queryPool, query, index);
+layer_CmdEndQueryIndexedEXT_before(commandBuffer, queryPool, query, index);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdEndQueryIndexedEXT(commandBuffer, queryPool, query, index);
 if(connected) {
 #ifdef CMDENDQUERYINDEXEDEXT_AFTER_EXEC_EXISTS
-layer_CmdEndQueryIndexedEXT(commandBuffer, queryPool, query, index);
+layer_CmdEndQueryIndexedEXT_after(commandBuffer, queryPool, query, index);
 #endif 
 }
 if(connected) {
@@ -8824,13 +8826,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndirectByteCountEXT!");
 }
 if(connected) {
 #ifdef CMDDRAWINDIRECTBYTECOUNTEXT_BEFORE_EXEC_EXISTS
-layer_CmdDrawIndirectByteCountEXT(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride);
+layer_CmdDrawIndirectByteCountEXT_before(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectByteCountEXT(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride);
 if(connected) {
 #ifdef CMDDRAWINDIRECTBYTECOUNTEXT_AFTER_EXEC_EXISTS
-layer_CmdDrawIndirectByteCountEXT(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride);
+layer_CmdDrawIndirectByteCountEXT_after(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride);
 #endif 
 }
 if(connected) {
@@ -8845,13 +8847,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetExclusiveScissorNV!");
 }
 if(connected) {
 #ifdef CMDSETEXCLUSIVESCISSORNV_BEFORE_EXEC_EXISTS
-layer_CmdSetExclusiveScissorNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors);
+layer_CmdSetExclusiveScissorNV_before(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetExclusiveScissorNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors);
 if(connected) {
 #ifdef CMDSETEXCLUSIVESCISSORNV_AFTER_EXEC_EXISTS
-layer_CmdSetExclusiveScissorNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors);
+layer_CmdSetExclusiveScissorNV_after(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors);
 #endif 
 }
 if(connected) {
@@ -8866,13 +8868,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetExclusiveScissorEnableNV!");
 }
 if(connected) {
 #ifdef CMDSETEXCLUSIVESCISSORENABLENV_BEFORE_EXEC_EXISTS
-layer_CmdSetExclusiveScissorEnableNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables);
+layer_CmdSetExclusiveScissorEnableNV_before(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetExclusiveScissorEnableNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables);
 if(connected) {
 #ifdef CMDSETEXCLUSIVESCISSORENABLENV_AFTER_EXEC_EXISTS
-layer_CmdSetExclusiveScissorEnableNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables);
+layer_CmdSetExclusiveScissorEnableNV_after(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables);
 #endif 
 }
 if(connected) {
@@ -8887,13 +8889,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindShadingRateImageNV!");
 }
 if(connected) {
 #ifdef CMDBINDSHADINGRATEIMAGENV_BEFORE_EXEC_EXISTS
-layer_CmdBindShadingRateImageNV(commandBuffer, imageView, imageLayout);
+layer_CmdBindShadingRateImageNV_before(commandBuffer, imageView, imageLayout);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindShadingRateImageNV(commandBuffer, imageView, imageLayout);
 if(connected) {
 #ifdef CMDBINDSHADINGRATEIMAGENV_AFTER_EXEC_EXISTS
-layer_CmdBindShadingRateImageNV(commandBuffer, imageView, imageLayout);
+layer_CmdBindShadingRateImageNV_after(commandBuffer, imageView, imageLayout);
 #endif 
 }
 if(connected) {
@@ -8908,13 +8910,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetViewportShadingRatePaletteNV!");
 }
 if(connected) {
 #ifdef CMDSETVIEWPORTSHADINGRATEPALETTENV_BEFORE_EXEC_EXISTS
-layer_CmdSetViewportShadingRatePaletteNV(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes);
+layer_CmdSetViewportShadingRatePaletteNV_before(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportShadingRatePaletteNV(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes);
 if(connected) {
 #ifdef CMDSETVIEWPORTSHADINGRATEPALETTENV_AFTER_EXEC_EXISTS
-layer_CmdSetViewportShadingRatePaletteNV(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes);
+layer_CmdSetViewportShadingRatePaletteNV_after(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes);
 #endif 
 }
 if(connected) {
@@ -8929,13 +8931,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCoarseSampleOrderNV!");
 }
 if(connected) {
 #ifdef CMDSETCOARSESAMPLEORDERNV_BEFORE_EXEC_EXISTS
-layer_CmdSetCoarseSampleOrderNV(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders);
+layer_CmdSetCoarseSampleOrderNV_before(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetCoarseSampleOrderNV(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders);
 if(connected) {
 #ifdef CMDSETCOARSESAMPLEORDERNV_AFTER_EXEC_EXISTS
-layer_CmdSetCoarseSampleOrderNV(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders);
+layer_CmdSetCoarseSampleOrderNV_after(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders);
 #endif 
 }
 if(connected) {
@@ -8950,13 +8952,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMeshTasksNV!");
 }
 if(connected) {
 #ifdef CMDDRAWMESHTASKSNV_BEFORE_EXEC_EXISTS
-layer_CmdDrawMeshTasksNV(commandBuffer, taskCount, firstTask);
+layer_CmdDrawMeshTasksNV_before(commandBuffer, taskCount, firstTask);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksNV(commandBuffer, taskCount, firstTask);
 if(connected) {
 #ifdef CMDDRAWMESHTASKSNV_AFTER_EXEC_EXISTS
-layer_CmdDrawMeshTasksNV(commandBuffer, taskCount, firstTask);
+layer_CmdDrawMeshTasksNV_after(commandBuffer, taskCount, firstTask);
 #endif 
 }
 if(connected) {
@@ -8971,13 +8973,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMeshTasksIndirectNV!");
 }
 if(connected) {
 #ifdef CMDDRAWMESHTASKSINDIRECTNV_BEFORE_EXEC_EXISTS
-layer_CmdDrawMeshTasksIndirectNV(commandBuffer, buffer, offset, drawCount, stride);
+layer_CmdDrawMeshTasksIndirectNV_before(commandBuffer, buffer, offset, drawCount, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectNV(commandBuffer, buffer, offset, drawCount, stride);
 if(connected) {
 #ifdef CMDDRAWMESHTASKSINDIRECTNV_AFTER_EXEC_EXISTS
-layer_CmdDrawMeshTasksIndirectNV(commandBuffer, buffer, offset, drawCount, stride);
+layer_CmdDrawMeshTasksIndirectNV_after(commandBuffer, buffer, offset, drawCount, stride);
 #endif 
 }
 if(connected) {
@@ -8992,13 +8994,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMeshTasksIndirectCountNV!");
 }
 if(connected) {
 #ifdef CMDDRAWMESHTASKSINDIRECTCOUNTNV_BEFORE_EXEC_EXISTS
-layer_CmdDrawMeshTasksIndirectCountNV(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawMeshTasksIndirectCountNV_before(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectCountNV(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 if(connected) {
 #ifdef CMDDRAWMESHTASKSINDIRECTCOUNTNV_AFTER_EXEC_EXISTS
-layer_CmdDrawMeshTasksIndirectCountNV(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawMeshTasksIndirectCountNV_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 if(connected) {
@@ -9013,13 +9015,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMeshTasksEXT!");
 }
 if(connected) {
 #ifdef CMDDRAWMESHTASKSEXT_BEFORE_EXEC_EXISTS
-layer_CmdDrawMeshTasksEXT(commandBuffer, groupCountX, groupCountY, groupCountZ);
+layer_CmdDrawMeshTasksEXT_before(commandBuffer, groupCountX, groupCountY, groupCountZ);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksEXT(commandBuffer, groupCountX, groupCountY, groupCountZ);
 if(connected) {
 #ifdef CMDDRAWMESHTASKSEXT_AFTER_EXEC_EXISTS
-layer_CmdDrawMeshTasksEXT(commandBuffer, groupCountX, groupCountY, groupCountZ);
+layer_CmdDrawMeshTasksEXT_after(commandBuffer, groupCountX, groupCountY, groupCountZ);
 #endif 
 }
 if(connected) {
@@ -9034,13 +9036,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMeshTasksIndirectEXT!");
 }
 if(connected) {
 #ifdef CMDDRAWMESHTASKSINDIRECTEXT_BEFORE_EXEC_EXISTS
-layer_CmdDrawMeshTasksIndirectEXT(commandBuffer, buffer, offset, drawCount, stride);
+layer_CmdDrawMeshTasksIndirectEXT_before(commandBuffer, buffer, offset, drawCount, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectEXT(commandBuffer, buffer, offset, drawCount, stride);
 if(connected) {
 #ifdef CMDDRAWMESHTASKSINDIRECTEXT_AFTER_EXEC_EXISTS
-layer_CmdDrawMeshTasksIndirectEXT(commandBuffer, buffer, offset, drawCount, stride);
+layer_CmdDrawMeshTasksIndirectEXT_after(commandBuffer, buffer, offset, drawCount, stride);
 #endif 
 }
 if(connected) {
@@ -9055,13 +9057,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMeshTasksIndirectCountEXT!");
 }
 if(connected) {
 #ifdef CMDDRAWMESHTASKSINDIRECTCOUNTEXT_BEFORE_EXEC_EXISTS
-layer_CmdDrawMeshTasksIndirectCountEXT(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawMeshTasksIndirectCountEXT_before(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectCountEXT(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 if(connected) {
 #ifdef CMDDRAWMESHTASKSINDIRECTCOUNTEXT_AFTER_EXEC_EXISTS
-layer_CmdDrawMeshTasksIndirectCountEXT(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawMeshTasksIndirectCountEXT_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 if(connected) {
@@ -9076,13 +9078,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCompileDeferredNV!");
 }
 if(connected) {
 #ifdef COMPILEDEFERREDNV_BEFORE_EXEC_EXISTS
-layer_CompileDeferredNV(device, pipeline, shader);
+layer_CompileDeferredNV_before(device, pipeline, shader);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CompileDeferredNV(device, pipeline, shader);
 if(connected) {
 #ifdef COMPILEDEFERREDNV_AFTER_EXEC_EXISTS
-layer_CompileDeferredNV(device, pipeline, shader);
+layer_CompileDeferredNV_after(device, pipeline, shader);
 #endif 
 }
 if(connected) {
@@ -9098,13 +9100,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateAccelerationStructureNV!");
 }
 if(connected) {
 #ifdef CREATEACCELERATIONSTRUCTURENV_BEFORE_EXEC_EXISTS
-layer_CreateAccelerationStructureNV(device, pCreateInfo, pAllocator, pAccelerationStructure);
+layer_CreateAccelerationStructureNV_before(device, pCreateInfo, pAllocator, pAccelerationStructure);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateAccelerationStructureNV(device, pCreateInfo, pAllocator, pAccelerationStructure);
 if(connected) {
 #ifdef CREATEACCELERATIONSTRUCTURENV_AFTER_EXEC_EXISTS
-layer_CreateAccelerationStructureNV(device, pCreateInfo, pAllocator, pAccelerationStructure);
+layer_CreateAccelerationStructureNV_after(device, pCreateInfo, pAllocator, pAccelerationStructure);
 #endif 
 }
 if(connected) {
@@ -9120,13 +9122,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindInvocationMaskHUAWEI!");
 }
 if(connected) {
 #ifdef CMDBINDINVOCATIONMASKHUAWEI_BEFORE_EXEC_EXISTS
-layer_CmdBindInvocationMaskHUAWEI(commandBuffer, imageView, imageLayout);
+layer_CmdBindInvocationMaskHUAWEI_before(commandBuffer, imageView, imageLayout);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindInvocationMaskHUAWEI(commandBuffer, imageView, imageLayout);
 if(connected) {
 #ifdef CMDBINDINVOCATIONMASKHUAWEI_AFTER_EXEC_EXISTS
-layer_CmdBindInvocationMaskHUAWEI(commandBuffer, imageView, imageLayout);
+layer_CmdBindInvocationMaskHUAWEI_after(commandBuffer, imageView, imageLayout);
 #endif 
 }
 if(connected) {
@@ -9141,13 +9143,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyAccelerationStructureKHR!");
 }
 if(connected) {
 #ifdef DESTROYACCELERATIONSTRUCTUREKHR_BEFORE_EXEC_EXISTS
-layer_DestroyAccelerationStructureKHR(device, accelerationStructure, pAllocator);
+layer_DestroyAccelerationStructureKHR_before(device, accelerationStructure, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyAccelerationStructureKHR(device, accelerationStructure, pAllocator);
 if(connected) {
 #ifdef DESTROYACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
-layer_DestroyAccelerationStructureKHR(device, accelerationStructure, pAllocator);
+layer_DestroyAccelerationStructureKHR_after(device, accelerationStructure, pAllocator);
 #endif 
 }
 if(connected) {
@@ -9162,13 +9164,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyAccelerationStructureNV!");
 }
 if(connected) {
 #ifdef DESTROYACCELERATIONSTRUCTURENV_BEFORE_EXEC_EXISTS
-layer_DestroyAccelerationStructureNV(device, accelerationStructure, pAllocator);
+layer_DestroyAccelerationStructureNV_before(device, accelerationStructure, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyAccelerationStructureNV(device, accelerationStructure, pAllocator);
 if(connected) {
 #ifdef DESTROYACCELERATIONSTRUCTURENV_AFTER_EXEC_EXISTS
-layer_DestroyAccelerationStructureNV(device, accelerationStructure, pAllocator);
+layer_DestroyAccelerationStructureNV_after(device, accelerationStructure, pAllocator);
 #endif 
 }
 if(connected) {
@@ -9183,13 +9185,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetAccelerationStructureMemoryRequireme
 }
 if(connected) {
 #ifdef GETACCELERATIONSTRUCTUREMEMORYREQUIREMENTSNV_BEFORE_EXEC_EXISTS
-layer_GetAccelerationStructureMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
+layer_GetAccelerationStructureMemoryRequirementsNV_before(device, pInfo, pMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetAccelerationStructureMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
 if(connected) {
 #ifdef GETACCELERATIONSTRUCTUREMEMORYREQUIREMENTSNV_AFTER_EXEC_EXISTS
-layer_GetAccelerationStructureMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
+layer_GetAccelerationStructureMemoryRequirementsNV_after(device, pInfo, pMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -9204,13 +9206,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkBindAccelerationStructureMemoryNV!");
 }
 if(connected) {
 #ifdef BINDACCELERATIONSTRUCTUREMEMORYNV_BEFORE_EXEC_EXISTS
-layer_BindAccelerationStructureMemoryNV(device, bindInfoCount, pBindInfos);
+layer_BindAccelerationStructureMemoryNV_before(device, bindInfoCount, pBindInfos);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].BindAccelerationStructureMemoryNV(device, bindInfoCount, pBindInfos);
 if(connected) {
 #ifdef BINDACCELERATIONSTRUCTUREMEMORYNV_AFTER_EXEC_EXISTS
-layer_BindAccelerationStructureMemoryNV(device, bindInfoCount, pBindInfos);
+layer_BindAccelerationStructureMemoryNV_after(device, bindInfoCount, pBindInfos);
 #endif 
 }
 if(connected) {
@@ -9226,13 +9228,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyAccelerationStructureNV!");
 }
 if(connected) {
 #ifdef CMDCOPYACCELERATIONSTRUCTURENV_BEFORE_EXEC_EXISTS
-layer_CmdCopyAccelerationStructureNV(commandBuffer, dst, src, mode);
+layer_CmdCopyAccelerationStructureNV_before(commandBuffer, dst, src, mode);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureNV(commandBuffer, dst, src, mode);
 if(connected) {
 #ifdef CMDCOPYACCELERATIONSTRUCTURENV_AFTER_EXEC_EXISTS
-layer_CmdCopyAccelerationStructureNV(commandBuffer, dst, src, mode);
+layer_CmdCopyAccelerationStructureNV_after(commandBuffer, dst, src, mode);
 #endif 
 }
 if(connected) {
@@ -9247,13 +9249,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyAccelerationStructureKHR!");
 }
 if(connected) {
 #ifdef CMDCOPYACCELERATIONSTRUCTUREKHR_BEFORE_EXEC_EXISTS
-layer_CmdCopyAccelerationStructureKHR(commandBuffer, pInfo);
+layer_CmdCopyAccelerationStructureKHR_before(commandBuffer, pInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureKHR(commandBuffer, pInfo);
 if(connected) {
 #ifdef CMDCOPYACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
-layer_CmdCopyAccelerationStructureKHR(commandBuffer, pInfo);
+layer_CmdCopyAccelerationStructureKHR_after(commandBuffer, pInfo);
 #endif 
 }
 if(connected) {
@@ -9268,13 +9270,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCopyAccelerationStructureKHR!");
 }
 if(connected) {
 #ifdef COPYACCELERATIONSTRUCTUREKHR_BEFORE_EXEC_EXISTS
-layer_CopyAccelerationStructureKHR(device, deferredOperation, pInfo);
+layer_CopyAccelerationStructureKHR_before(device, deferredOperation, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CopyAccelerationStructureKHR(device, deferredOperation, pInfo);
 if(connected) {
 #ifdef COPYACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
-layer_CopyAccelerationStructureKHR(device, deferredOperation, pInfo);
+layer_CopyAccelerationStructureKHR_after(device, deferredOperation, pInfo);
 #endif 
 }
 if(connected) {
@@ -9290,13 +9292,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyAccelerationStructureToMemoryKHR
 }
 if(connected) {
 #ifdef CMDCOPYACCELERATIONSTRUCTURETOMEMORYKHR_BEFORE_EXEC_EXISTS
-layer_CmdCopyAccelerationStructureToMemoryKHR(commandBuffer, pInfo);
+layer_CmdCopyAccelerationStructureToMemoryKHR_before(commandBuffer, pInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureToMemoryKHR(commandBuffer, pInfo);
 if(connected) {
 #ifdef CMDCOPYACCELERATIONSTRUCTURETOMEMORYKHR_AFTER_EXEC_EXISTS
-layer_CmdCopyAccelerationStructureToMemoryKHR(commandBuffer, pInfo);
+layer_CmdCopyAccelerationStructureToMemoryKHR_after(commandBuffer, pInfo);
 #endif 
 }
 if(connected) {
@@ -9311,13 +9313,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCopyAccelerationStructureToMemoryKHR!")
 }
 if(connected) {
 #ifdef COPYACCELERATIONSTRUCTURETOMEMORYKHR_BEFORE_EXEC_EXISTS
-layer_CopyAccelerationStructureToMemoryKHR(device, deferredOperation, pInfo);
+layer_CopyAccelerationStructureToMemoryKHR_before(device, deferredOperation, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CopyAccelerationStructureToMemoryKHR(device, deferredOperation, pInfo);
 if(connected) {
 #ifdef COPYACCELERATIONSTRUCTURETOMEMORYKHR_AFTER_EXEC_EXISTS
-layer_CopyAccelerationStructureToMemoryKHR(device, deferredOperation, pInfo);
+layer_CopyAccelerationStructureToMemoryKHR_after(device, deferredOperation, pInfo);
 #endif 
 }
 if(connected) {
@@ -9333,13 +9335,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyMemoryToAccelerationStructureKHR
 }
 if(connected) {
 #ifdef CMDCOPYMEMORYTOACCELERATIONSTRUCTUREKHR_BEFORE_EXEC_EXISTS
-layer_CmdCopyMemoryToAccelerationStructureKHR(commandBuffer, pInfo);
+layer_CmdCopyMemoryToAccelerationStructureKHR_before(commandBuffer, pInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToAccelerationStructureKHR(commandBuffer, pInfo);
 if(connected) {
 #ifdef CMDCOPYMEMORYTOACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
-layer_CmdCopyMemoryToAccelerationStructureKHR(commandBuffer, pInfo);
+layer_CmdCopyMemoryToAccelerationStructureKHR_after(commandBuffer, pInfo);
 #endif 
 }
 if(connected) {
@@ -9354,13 +9356,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCopyMemoryToAccelerationStructureKHR!")
 }
 if(connected) {
 #ifdef COPYMEMORYTOACCELERATIONSTRUCTUREKHR_BEFORE_EXEC_EXISTS
-layer_CopyMemoryToAccelerationStructureKHR(device, deferredOperation, pInfo);
+layer_CopyMemoryToAccelerationStructureKHR_before(device, deferredOperation, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CopyMemoryToAccelerationStructureKHR(device, deferredOperation, pInfo);
 if(connected) {
 #ifdef COPYMEMORYTOACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
-layer_CopyMemoryToAccelerationStructureKHR(device, deferredOperation, pInfo);
+layer_CopyMemoryToAccelerationStructureKHR_after(device, deferredOperation, pInfo);
 #endif 
 }
 if(connected) {
@@ -9376,13 +9378,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteAccelerationStructuresPropertie
 }
 if(connected) {
 #ifdef CMDWRITEACCELERATIONSTRUCTURESPROPERTIESKHR_BEFORE_EXEC_EXISTS
-layer_CmdWriteAccelerationStructuresPropertiesKHR(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
+layer_CmdWriteAccelerationStructuresPropertiesKHR_before(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdWriteAccelerationStructuresPropertiesKHR(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
 if(connected) {
 #ifdef CMDWRITEACCELERATIONSTRUCTURESPROPERTIESKHR_AFTER_EXEC_EXISTS
-layer_CmdWriteAccelerationStructuresPropertiesKHR(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
+layer_CmdWriteAccelerationStructuresPropertiesKHR_after(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
 #endif 
 }
 if(connected) {
@@ -9397,13 +9399,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteAccelerationStructuresPropertie
 }
 if(connected) {
 #ifdef CMDWRITEACCELERATIONSTRUCTURESPROPERTIESNV_BEFORE_EXEC_EXISTS
-layer_CmdWriteAccelerationStructuresPropertiesNV(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
+layer_CmdWriteAccelerationStructuresPropertiesNV_before(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdWriteAccelerationStructuresPropertiesNV(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
 if(connected) {
 #ifdef CMDWRITEACCELERATIONSTRUCTURESPROPERTIESNV_AFTER_EXEC_EXISTS
-layer_CmdWriteAccelerationStructuresPropertiesNV(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
+layer_CmdWriteAccelerationStructuresPropertiesNV_after(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
 #endif 
 }
 if(connected) {
@@ -9418,13 +9420,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBuildAccelerationStructureNV!");
 }
 if(connected) {
 #ifdef CMDBUILDACCELERATIONSTRUCTURENV_BEFORE_EXEC_EXISTS
-layer_CmdBuildAccelerationStructureNV(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset);
+layer_CmdBuildAccelerationStructureNV_before(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructureNV(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset);
 if(connected) {
 #ifdef CMDBUILDACCELERATIONSTRUCTURENV_AFTER_EXEC_EXISTS
-layer_CmdBuildAccelerationStructureNV(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset);
+layer_CmdBuildAccelerationStructureNV_after(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset);
 #endif 
 }
 if(connected) {
@@ -9439,13 +9441,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkWriteAccelerationStructuresPropertiesKH
 }
 if(connected) {
 #ifdef WRITEACCELERATIONSTRUCTURESPROPERTIESKHR_BEFORE_EXEC_EXISTS
-layer_WriteAccelerationStructuresPropertiesKHR(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride);
+layer_WriteAccelerationStructuresPropertiesKHR_before(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].WriteAccelerationStructuresPropertiesKHR(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride);
 if(connected) {
 #ifdef WRITEACCELERATIONSTRUCTURESPROPERTIESKHR_AFTER_EXEC_EXISTS
-layer_WriteAccelerationStructuresPropertiesKHR(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride);
+layer_WriteAccelerationStructuresPropertiesKHR_after(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride);
 #endif 
 }
 if(connected) {
@@ -9461,13 +9463,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdTraceRaysKHR!");
 }
 if(connected) {
 #ifdef CMDTRACERAYSKHR_BEFORE_EXEC_EXISTS
-layer_CmdTraceRaysKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth);
+layer_CmdTraceRaysKHR_before(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth);
 if(connected) {
 #ifdef CMDTRACERAYSKHR_AFTER_EXEC_EXISTS
-layer_CmdTraceRaysKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth);
+layer_CmdTraceRaysKHR_after(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth);
 #endif 
 }
 if(connected) {
@@ -9482,13 +9484,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdTraceRaysNV!");
 }
 if(connected) {
 #ifdef CMDTRACERAYSNV_BEFORE_EXEC_EXISTS
-layer_CmdTraceRaysNV(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth);
+layer_CmdTraceRaysNV_before(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysNV(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth);
 if(connected) {
 #ifdef CMDTRACERAYSNV_AFTER_EXEC_EXISTS
-layer_CmdTraceRaysNV(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth);
+layer_CmdTraceRaysNV_after(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth);
 #endif 
 }
 if(connected) {
@@ -9503,13 +9505,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetRayTracingShaderGroupHandlesKHR!");
 }
 if(connected) {
 #ifdef GETRAYTRACINGSHADERGROUPHANDLESKHR_BEFORE_EXEC_EXISTS
-layer_GetRayTracingShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
+layer_GetRayTracingShaderGroupHandlesKHR_before(device, pipeline, firstGroup, groupCount, dataSize, pData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetRayTracingShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
 if(connected) {
 #ifdef GETRAYTRACINGSHADERGROUPHANDLESKHR_AFTER_EXEC_EXISTS
-layer_GetRayTracingShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
+layer_GetRayTracingShaderGroupHandlesKHR_after(device, pipeline, firstGroup, groupCount, dataSize, pData);
 #endif 
 }
 if(connected) {
@@ -9525,13 +9527,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetRayTracingCaptureReplayShaderGroupHa
 }
 if(connected) {
 #ifdef GETRAYTRACINGCAPTUREREPLAYSHADERGROUPHANDLESKHR_BEFORE_EXEC_EXISTS
-layer_GetRayTracingCaptureReplayShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
+layer_GetRayTracingCaptureReplayShaderGroupHandlesKHR_before(device, pipeline, firstGroup, groupCount, dataSize, pData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetRayTracingCaptureReplayShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
 if(connected) {
 #ifdef GETRAYTRACINGCAPTUREREPLAYSHADERGROUPHANDLESKHR_AFTER_EXEC_EXISTS
-layer_GetRayTracingCaptureReplayShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
+layer_GetRayTracingCaptureReplayShaderGroupHandlesKHR_after(device, pipeline, firstGroup, groupCount, dataSize, pData);
 #endif 
 }
 if(connected) {
@@ -9547,13 +9549,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetAccelerationStructureHandleNV!");
 }
 if(connected) {
 #ifdef GETACCELERATIONSTRUCTUREHANDLENV_BEFORE_EXEC_EXISTS
-layer_GetAccelerationStructureHandleNV(device, accelerationStructure, dataSize, pData);
+layer_GetAccelerationStructureHandleNV_before(device, accelerationStructure, dataSize, pData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetAccelerationStructureHandleNV(device, accelerationStructure, dataSize, pData);
 if(connected) {
 #ifdef GETACCELERATIONSTRUCTUREHANDLENV_AFTER_EXEC_EXISTS
-layer_GetAccelerationStructureHandleNV(device, accelerationStructure, dataSize, pData);
+layer_GetAccelerationStructureHandleNV_after(device, accelerationStructure, dataSize, pData);
 #endif 
 }
 if(connected) {
@@ -9569,13 +9571,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateRayTracingPipelinesNV!");
 }
 if(connected) {
 #ifdef CREATERAYTRACINGPIPELINESNV_BEFORE_EXEC_EXISTS
-layer_CreateRayTracingPipelinesNV(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+layer_CreateRayTracingPipelinesNV_before(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateRayTracingPipelinesNV(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 if(connected) {
 #ifdef CREATERAYTRACINGPIPELINESNV_AFTER_EXEC_EXISTS
-layer_CreateRayTracingPipelinesNV(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+layer_CreateRayTracingPipelinesNV_after(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 #endif 
 }
 if(connected) {
@@ -9591,13 +9593,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateRayTracingPipelinesKHR!");
 }
 if(connected) {
 #ifdef CREATERAYTRACINGPIPELINESKHR_BEFORE_EXEC_EXISTS
-layer_CreateRayTracingPipelinesKHR(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+layer_CreateRayTracingPipelinesKHR_before(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateRayTracingPipelinesKHR(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 if(connected) {
 #ifdef CREATERAYTRACINGPIPELINESKHR_AFTER_EXEC_EXISTS
-layer_CreateRayTracingPipelinesKHR(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+layer_CreateRayTracingPipelinesKHR_after(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 #endif 
 }
 if(connected) {
@@ -9613,13 +9615,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdTraceRaysIndirectKHR!");
 }
 if(connected) {
 #ifdef CMDTRACERAYSINDIRECTKHR_BEFORE_EXEC_EXISTS
-layer_CmdTraceRaysIndirectKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress);
+layer_CmdTraceRaysIndirectKHR_before(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysIndirectKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress);
 if(connected) {
 #ifdef CMDTRACERAYSINDIRECTKHR_AFTER_EXEC_EXISTS
-layer_CmdTraceRaysIndirectKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress);
+layer_CmdTraceRaysIndirectKHR_after(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress);
 #endif 
 }
 if(connected) {
@@ -9634,13 +9636,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdTraceRaysIndirect2KHR!");
 }
 if(connected) {
 #ifdef CMDTRACERAYSINDIRECT2KHR_BEFORE_EXEC_EXISTS
-layer_CmdTraceRaysIndirect2KHR(commandBuffer, indirectDeviceAddress);
+layer_CmdTraceRaysIndirect2KHR_before(commandBuffer, indirectDeviceAddress);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysIndirect2KHR(commandBuffer, indirectDeviceAddress);
 if(connected) {
 #ifdef CMDTRACERAYSINDIRECT2KHR_AFTER_EXEC_EXISTS
-layer_CmdTraceRaysIndirect2KHR(commandBuffer, indirectDeviceAddress);
+layer_CmdTraceRaysIndirect2KHR_after(commandBuffer, indirectDeviceAddress);
 #endif 
 }
 if(connected) {
@@ -9655,13 +9657,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceAccelerationStructureCompatibi
 }
 if(connected) {
 #ifdef GETDEVICEACCELERATIONSTRUCTURECOMPATIBILITYKHR_BEFORE_EXEC_EXISTS
-layer_GetDeviceAccelerationStructureCompatibilityKHR(device, pVersionInfo, pCompatibility);
+layer_GetDeviceAccelerationStructureCompatibilityKHR_before(device, pVersionInfo, pCompatibility);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDeviceAccelerationStructureCompatibilityKHR(device, pVersionInfo, pCompatibility);
 if(connected) {
 #ifdef GETDEVICEACCELERATIONSTRUCTURECOMPATIBILITYKHR_AFTER_EXEC_EXISTS
-layer_GetDeviceAccelerationStructureCompatibilityKHR(device, pVersionInfo, pCompatibility);
+layer_GetDeviceAccelerationStructureCompatibilityKHR_after(device, pVersionInfo, pCompatibility);
 #endif 
 }
 if(connected) {
@@ -9676,13 +9678,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetRayTracingShaderGroupStackSizeKHR!")
 }
 if(connected) {
 #ifdef GETRAYTRACINGSHADERGROUPSTACKSIZEKHR_BEFORE_EXEC_EXISTS
-layer_GetRayTracingShaderGroupStackSizeKHR(device, pipeline, group, groupShader);
+layer_GetRayTracingShaderGroupStackSizeKHR_before(device, pipeline, group, groupShader);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetRayTracingShaderGroupStackSizeKHR(device, pipeline, group, groupShader);
 if(connected) {
 #ifdef GETRAYTRACINGSHADERGROUPSTACKSIZEKHR_AFTER_EXEC_EXISTS
-layer_GetRayTracingShaderGroupStackSizeKHR(device, pipeline, group, groupShader);
+layer_GetRayTracingShaderGroupStackSizeKHR_after(device, pipeline, group, groupShader);
 #endif 
 }
 if(connected) {
@@ -9698,13 +9700,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetRayTracingPipelineStackSizeKHR!")
 }
 if(connected) {
 #ifdef CMDSETRAYTRACINGPIPELINESTACKSIZEKHR_BEFORE_EXEC_EXISTS
-layer_CmdSetRayTracingPipelineStackSizeKHR(commandBuffer, pipelineStackSize);
+layer_CmdSetRayTracingPipelineStackSizeKHR_before(commandBuffer, pipelineStackSize);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetRayTracingPipelineStackSizeKHR(commandBuffer, pipelineStackSize);
 if(connected) {
 #ifdef CMDSETRAYTRACINGPIPELINESTACKSIZEKHR_AFTER_EXEC_EXISTS
-layer_CmdSetRayTracingPipelineStackSizeKHR(commandBuffer, pipelineStackSize);
+layer_CmdSetRayTracingPipelineStackSizeKHR_after(commandBuffer, pipelineStackSize);
 #endif 
 }
 if(connected) {
@@ -9719,13 +9721,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetImageViewHandleNVX!");
 }
 if(connected) {
 #ifdef GETIMAGEVIEWHANDLENVX_BEFORE_EXEC_EXISTS
-layer_GetImageViewHandleNVX(device, pInfo);
+layer_GetImageViewHandleNVX_before(device, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetImageViewHandleNVX(device, pInfo);
 if(connected) {
 #ifdef GETIMAGEVIEWHANDLENVX_AFTER_EXEC_EXISTS
-layer_GetImageViewHandleNVX(device, pInfo);
+layer_GetImageViewHandleNVX_after(device, pInfo);
 #endif 
 }
 if(connected) {
@@ -9741,13 +9743,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetImageViewAddressNVX!");
 }
 if(connected) {
 #ifdef GETIMAGEVIEWADDRESSNVX_BEFORE_EXEC_EXISTS
-layer_GetImageViewAddressNVX(device, imageView, pProperties);
+layer_GetImageViewAddressNVX_before(device, imageView, pProperties);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetImageViewAddressNVX(device, imageView, pProperties);
 if(connected) {
 #ifdef GETIMAGEVIEWADDRESSNVX_AFTER_EXEC_EXISTS
-layer_GetImageViewAddressNVX(device, imageView, pProperties);
+layer_GetImageViewAddressNVX_after(device, imageView, pProperties);
 #endif 
 }
 if(connected) {
@@ -9764,13 +9766,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceGroupSurfacePresentModes2EXT!"
 }
 if(connected) {
 #ifdef GETDEVICEGROUPSURFACEPRESENTMODES2EXT_BEFORE_EXEC_EXISTS
-layer_GetDeviceGroupSurfacePresentModes2EXT(device, pSurfaceInfo, pModes);
+layer_GetDeviceGroupSurfacePresentModes2EXT_before(device, pSurfaceInfo, pModes);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetDeviceGroupSurfacePresentModes2EXT(device, pSurfaceInfo, pModes);
 if(connected) {
 #ifdef GETDEVICEGROUPSURFACEPRESENTMODES2EXT_AFTER_EXEC_EXISTS
-layer_GetDeviceGroupSurfacePresentModes2EXT(device, pSurfaceInfo, pModes);
+layer_GetDeviceGroupSurfacePresentModes2EXT_after(device, pSurfaceInfo, pModes);
 #endif 
 }
 if(connected) {
@@ -9788,13 +9790,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkAcquireFullScreenExclusiveModeEXT!");
 }
 if(connected) {
 #ifdef ACQUIREFULLSCREENEXCLUSIVEMODEEXT_BEFORE_EXEC_EXISTS
-layer_AcquireFullScreenExclusiveModeEXT(device, swapchain);
+layer_AcquireFullScreenExclusiveModeEXT_before(device, swapchain);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].AcquireFullScreenExclusiveModeEXT(device, swapchain);
 if(connected) {
 #ifdef ACQUIREFULLSCREENEXCLUSIVEMODEEXT_AFTER_EXEC_EXISTS
-layer_AcquireFullScreenExclusiveModeEXT(device, swapchain);
+layer_AcquireFullScreenExclusiveModeEXT_after(device, swapchain);
 #endif 
 }
 if(connected) {
@@ -9812,13 +9814,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkReleaseFullScreenExclusiveModeEXT!");
 }
 if(connected) {
 #ifdef RELEASEFULLSCREENEXCLUSIVEMODEEXT_BEFORE_EXEC_EXISTS
-layer_ReleaseFullScreenExclusiveModeEXT(device, swapchain);
+layer_ReleaseFullScreenExclusiveModeEXT_before(device, swapchain);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ReleaseFullScreenExclusiveModeEXT(device, swapchain);
 if(connected) {
 #ifdef RELEASEFULLSCREENEXCLUSIVEMODEEXT_AFTER_EXEC_EXISTS
-layer_ReleaseFullScreenExclusiveModeEXT(device, swapchain);
+layer_ReleaseFullScreenExclusiveModeEXT_after(device, swapchain);
 #endif 
 }
 if(connected) {
@@ -9835,13 +9837,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkAcquireProfilingLockKHR!");
 }
 if(connected) {
 #ifdef ACQUIREPROFILINGLOCKKHR_BEFORE_EXEC_EXISTS
-layer_AcquireProfilingLockKHR(device, pInfo);
+layer_AcquireProfilingLockKHR_before(device, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].AcquireProfilingLockKHR(device, pInfo);
 if(connected) {
 #ifdef ACQUIREPROFILINGLOCKKHR_AFTER_EXEC_EXISTS
-layer_AcquireProfilingLockKHR(device, pInfo);
+layer_AcquireProfilingLockKHR_after(device, pInfo);
 #endif 
 }
 if(connected) {
@@ -9857,13 +9859,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkReleaseProfilingLockKHR!");
 }
 if(connected) {
 #ifdef RELEASEPROFILINGLOCKKHR_BEFORE_EXEC_EXISTS
-layer_ReleaseProfilingLockKHR(device);
+layer_ReleaseProfilingLockKHR_before(device);
 #endif 
 }
 device_dispatch[GetKey(device)].ReleaseProfilingLockKHR(device);
 if(connected) {
 #ifdef RELEASEPROFILINGLOCKKHR_AFTER_EXEC_EXISTS
-layer_ReleaseProfilingLockKHR(device);
+layer_ReleaseProfilingLockKHR_after(device);
 #endif 
 }
 if(connected) {
@@ -9878,13 +9880,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetImageDrmFormatModifierPropertiesEXT!
 }
 if(connected) {
 #ifdef GETIMAGEDRMFORMATMODIFIERPROPERTIESEXT_BEFORE_EXEC_EXISTS
-layer_GetImageDrmFormatModifierPropertiesEXT(device, image, pProperties);
+layer_GetImageDrmFormatModifierPropertiesEXT_before(device, image, pProperties);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetImageDrmFormatModifierPropertiesEXT(device, image, pProperties);
 if(connected) {
 #ifdef GETIMAGEDRMFORMATMODIFIERPROPERTIESEXT_AFTER_EXEC_EXISTS
-layer_GetImageDrmFormatModifierPropertiesEXT(device, image, pProperties);
+layer_GetImageDrmFormatModifierPropertiesEXT_after(device, image, pProperties);
 #endif 
 }
 if(connected) {
@@ -9900,13 +9902,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetBufferOpaqueCaptureAddress!");
 }
 if(connected) {
 #ifdef GETBUFFEROPAQUECAPTUREADDRESS_BEFORE_EXEC_EXISTS
-layer_GetBufferOpaqueCaptureAddress(device, pInfo);
+layer_GetBufferOpaqueCaptureAddress_before(device, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetBufferOpaqueCaptureAddress(device, pInfo);
 if(connected) {
 #ifdef GETBUFFEROPAQUECAPTUREADDRESS_AFTER_EXEC_EXISTS
-layer_GetBufferOpaqueCaptureAddress(device, pInfo);
+layer_GetBufferOpaqueCaptureAddress_after(device, pInfo);
 #endif 
 }
 if(connected) {
@@ -9922,13 +9924,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetBufferDeviceAddress!");
 }
 if(connected) {
 #ifdef GETBUFFERDEVICEADDRESS_BEFORE_EXEC_EXISTS
-layer_GetBufferDeviceAddress(device, pInfo);
+layer_GetBufferDeviceAddress_before(device, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetBufferDeviceAddress(device, pInfo);
 if(connected) {
 #ifdef GETBUFFERDEVICEADDRESS_AFTER_EXEC_EXISTS
-layer_GetBufferDeviceAddress(device, pInfo);
+layer_GetBufferDeviceAddress_after(device, pInfo);
 #endif 
 }
 if(connected) {
@@ -9944,13 +9946,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkInitializePerformanceApiINTEL!");
 }
 if(connected) {
 #ifdef INITIALIZEPERFORMANCEAPIINTEL_BEFORE_EXEC_EXISTS
-layer_InitializePerformanceApiINTEL(device, pInitializeInfo);
+layer_InitializePerformanceApiINTEL_before(device, pInitializeInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].InitializePerformanceApiINTEL(device, pInitializeInfo);
 if(connected) {
 #ifdef INITIALIZEPERFORMANCEAPIINTEL_AFTER_EXEC_EXISTS
-layer_InitializePerformanceApiINTEL(device, pInitializeInfo);
+layer_InitializePerformanceApiINTEL_after(device, pInitializeInfo);
 #endif 
 }
 if(connected) {
@@ -9966,13 +9968,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkUninitializePerformanceApiINTEL!");
 }
 if(connected) {
 #ifdef UNINITIALIZEPERFORMANCEAPIINTEL_BEFORE_EXEC_EXISTS
-layer_UninitializePerformanceApiINTEL(device);
+layer_UninitializePerformanceApiINTEL_before(device);
 #endif 
 }
 device_dispatch[GetKey(device)].UninitializePerformanceApiINTEL(device);
 if(connected) {
 #ifdef UNINITIALIZEPERFORMANCEAPIINTEL_AFTER_EXEC_EXISTS
-layer_UninitializePerformanceApiINTEL(device);
+layer_UninitializePerformanceApiINTEL_after(device);
 #endif 
 }
 if(connected) {
@@ -9987,13 +9989,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPerformanceMarkerINTEL!");
 }
 if(connected) {
 #ifdef CMDSETPERFORMANCEMARKERINTEL_BEFORE_EXEC_EXISTS
-layer_CmdSetPerformanceMarkerINTEL(commandBuffer, pMarkerInfo);
+layer_CmdSetPerformanceMarkerINTEL_before(commandBuffer, pMarkerInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(commandBuffer)].CmdSetPerformanceMarkerINTEL(commandBuffer, pMarkerInfo);
 if(connected) {
 #ifdef CMDSETPERFORMANCEMARKERINTEL_AFTER_EXEC_EXISTS
-layer_CmdSetPerformanceMarkerINTEL(commandBuffer, pMarkerInfo);
+layer_CmdSetPerformanceMarkerINTEL_after(commandBuffer, pMarkerInfo);
 #endif 
 }
 if(connected) {
@@ -10009,13 +10011,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPerformanceStreamMarkerINTEL!");
 }
 if(connected) {
 #ifdef CMDSETPERFORMANCESTREAMMARKERINTEL_BEFORE_EXEC_EXISTS
-layer_CmdSetPerformanceStreamMarkerINTEL(commandBuffer, pMarkerInfo);
+layer_CmdSetPerformanceStreamMarkerINTEL_before(commandBuffer, pMarkerInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(commandBuffer)].CmdSetPerformanceStreamMarkerINTEL(commandBuffer, pMarkerInfo);
 if(connected) {
 #ifdef CMDSETPERFORMANCESTREAMMARKERINTEL_AFTER_EXEC_EXISTS
-layer_CmdSetPerformanceStreamMarkerINTEL(commandBuffer, pMarkerInfo);
+layer_CmdSetPerformanceStreamMarkerINTEL_after(commandBuffer, pMarkerInfo);
 #endif 
 }
 if(connected) {
@@ -10031,13 +10033,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPerformanceOverrideINTEL!");
 }
 if(connected) {
 #ifdef CMDSETPERFORMANCEOVERRIDEINTEL_BEFORE_EXEC_EXISTS
-layer_CmdSetPerformanceOverrideINTEL(commandBuffer, pOverrideInfo);
+layer_CmdSetPerformanceOverrideINTEL_before(commandBuffer, pOverrideInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(commandBuffer)].CmdSetPerformanceOverrideINTEL(commandBuffer, pOverrideInfo);
 if(connected) {
 #ifdef CMDSETPERFORMANCEOVERRIDEINTEL_AFTER_EXEC_EXISTS
-layer_CmdSetPerformanceOverrideINTEL(commandBuffer, pOverrideInfo);
+layer_CmdSetPerformanceOverrideINTEL_after(commandBuffer, pOverrideInfo);
 #endif 
 }
 if(connected) {
@@ -10053,13 +10055,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkAcquirePerformanceConfigurationINTEL!")
 }
 if(connected) {
 #ifdef ACQUIREPERFORMANCECONFIGURATIONINTEL_BEFORE_EXEC_EXISTS
-layer_AcquirePerformanceConfigurationINTEL(device, pAcquireInfo, pConfiguration);
+layer_AcquirePerformanceConfigurationINTEL_before(device, pAcquireInfo, pConfiguration);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].AcquirePerformanceConfigurationINTEL(device, pAcquireInfo, pConfiguration);
 if(connected) {
 #ifdef ACQUIREPERFORMANCECONFIGURATIONINTEL_AFTER_EXEC_EXISTS
-layer_AcquirePerformanceConfigurationINTEL(device, pAcquireInfo, pConfiguration);
+layer_AcquirePerformanceConfigurationINTEL_after(device, pAcquireInfo, pConfiguration);
 #endif 
 }
 if(connected) {
@@ -10075,13 +10077,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkReleasePerformanceConfigurationINTEL!")
 }
 if(connected) {
 #ifdef RELEASEPERFORMANCECONFIGURATIONINTEL_BEFORE_EXEC_EXISTS
-layer_ReleasePerformanceConfigurationINTEL(device, configuration);
+layer_ReleasePerformanceConfigurationINTEL_before(device, configuration);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ReleasePerformanceConfigurationINTEL(device, configuration);
 if(connected) {
 #ifdef RELEASEPERFORMANCECONFIGURATIONINTEL_AFTER_EXEC_EXISTS
-layer_ReleasePerformanceConfigurationINTEL(device, configuration);
+layer_ReleasePerformanceConfigurationINTEL_after(device, configuration);
 #endif 
 }
 if(connected) {
@@ -10097,13 +10099,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkQueueSetPerformanceConfigurationINTEL!"
 }
 if(connected) {
 #ifdef QUEUESETPERFORMANCECONFIGURATIONINTEL_BEFORE_EXEC_EXISTS
-layer_QueueSetPerformanceConfigurationINTEL(queue, configuration);
+layer_QueueSetPerformanceConfigurationINTEL_before(queue, configuration);
 #endif 
 }
 auto ret = device_dispatch[GetKey(queue)].QueueSetPerformanceConfigurationINTEL(queue, configuration);
 if(connected) {
 #ifdef QUEUESETPERFORMANCECONFIGURATIONINTEL_AFTER_EXEC_EXISTS
-layer_QueueSetPerformanceConfigurationINTEL(queue, configuration);
+layer_QueueSetPerformanceConfigurationINTEL_after(queue, configuration);
 #endif 
 }
 if(connected) {
@@ -10119,13 +10121,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPerformanceParameterINTEL!");
 }
 if(connected) {
 #ifdef GETPERFORMANCEPARAMETERINTEL_BEFORE_EXEC_EXISTS
-layer_GetPerformanceParameterINTEL(device, parameter, pValue);
+layer_GetPerformanceParameterINTEL_before(device, parameter, pValue);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetPerformanceParameterINTEL(device, parameter, pValue);
 if(connected) {
 #ifdef GETPERFORMANCEPARAMETERINTEL_AFTER_EXEC_EXISTS
-layer_GetPerformanceParameterINTEL(device, parameter, pValue);
+layer_GetPerformanceParameterINTEL_after(device, parameter, pValue);
 #endif 
 }
 if(connected) {
@@ -10141,13 +10143,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceMemoryOpaqueCaptureAddress!");
 }
 if(connected) {
 #ifdef GETDEVICEMEMORYOPAQUECAPTUREADDRESS_BEFORE_EXEC_EXISTS
-layer_GetDeviceMemoryOpaqueCaptureAddress(device, pInfo);
+layer_GetDeviceMemoryOpaqueCaptureAddress_before(device, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetDeviceMemoryOpaqueCaptureAddress(device, pInfo);
 if(connected) {
 #ifdef GETDEVICEMEMORYOPAQUECAPTUREADDRESS_AFTER_EXEC_EXISTS
-layer_GetDeviceMemoryOpaqueCaptureAddress(device, pInfo);
+layer_GetDeviceMemoryOpaqueCaptureAddress_after(device, pInfo);
 #endif 
 }
 if(connected) {
@@ -10163,13 +10165,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPipelineExecutablePropertiesKHR!");
 }
 if(connected) {
 #ifdef GETPIPELINEEXECUTABLEPROPERTIESKHR_BEFORE_EXEC_EXISTS
-layer_GetPipelineExecutablePropertiesKHR(device, pPipelineInfo, pExecutableCount, pProperties);
+layer_GetPipelineExecutablePropertiesKHR_before(device, pPipelineInfo, pExecutableCount, pProperties);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetPipelineExecutablePropertiesKHR(device, pPipelineInfo, pExecutableCount, pProperties);
 if(connected) {
 #ifdef GETPIPELINEEXECUTABLEPROPERTIESKHR_AFTER_EXEC_EXISTS
-layer_GetPipelineExecutablePropertiesKHR(device, pPipelineInfo, pExecutableCount, pProperties);
+layer_GetPipelineExecutablePropertiesKHR_after(device, pPipelineInfo, pExecutableCount, pProperties);
 #endif 
 }
 if(connected) {
@@ -10185,13 +10187,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPipelineExecutableStatisticsKHR!");
 }
 if(connected) {
 #ifdef GETPIPELINEEXECUTABLESTATISTICSKHR_BEFORE_EXEC_EXISTS
-layer_GetPipelineExecutableStatisticsKHR(device, pExecutableInfo, pStatisticCount, pStatistics);
+layer_GetPipelineExecutableStatisticsKHR_before(device, pExecutableInfo, pStatisticCount, pStatistics);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetPipelineExecutableStatisticsKHR(device, pExecutableInfo, pStatisticCount, pStatistics);
 if(connected) {
 #ifdef GETPIPELINEEXECUTABLESTATISTICSKHR_AFTER_EXEC_EXISTS
-layer_GetPipelineExecutableStatisticsKHR(device, pExecutableInfo, pStatisticCount, pStatistics);
+layer_GetPipelineExecutableStatisticsKHR_after(device, pExecutableInfo, pStatisticCount, pStatistics);
 #endif 
 }
 if(connected) {
@@ -10207,13 +10209,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPipelineExecutableInternalRepresenta
 }
 if(connected) {
 #ifdef GETPIPELINEEXECUTABLEINTERNALREPRESENTATIONSKHR_BEFORE_EXEC_EXISTS
-layer_GetPipelineExecutableInternalRepresentationsKHR(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations);
+layer_GetPipelineExecutableInternalRepresentationsKHR_before(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetPipelineExecutableInternalRepresentationsKHR(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations);
 if(connected) {
 #ifdef GETPIPELINEEXECUTABLEINTERNALREPRESENTATIONSKHR_AFTER_EXEC_EXISTS
-layer_GetPipelineExecutableInternalRepresentationsKHR(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations);
+layer_GetPipelineExecutableInternalRepresentationsKHR_after(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations);
 #endif 
 }
 if(connected) {
@@ -10229,13 +10231,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateAccelerationStructureKHR!");
 }
 if(connected) {
 #ifdef CREATEACCELERATIONSTRUCTUREKHR_BEFORE_EXEC_EXISTS
-layer_CreateAccelerationStructureKHR(device, pCreateInfo, pAllocator, pAccelerationStructure);
+layer_CreateAccelerationStructureKHR_before(device, pCreateInfo, pAllocator, pAccelerationStructure);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateAccelerationStructureKHR(device, pCreateInfo, pAllocator, pAccelerationStructure);
 if(connected) {
 #ifdef CREATEACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
-layer_CreateAccelerationStructureKHR(device, pCreateInfo, pAllocator, pAccelerationStructure);
+layer_CreateAccelerationStructureKHR_after(device, pCreateInfo, pAllocator, pAccelerationStructure);
 #endif 
 }
 if(connected) {
@@ -10251,13 +10253,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBuildAccelerationStructuresKHR!");
 }
 if(connected) {
 #ifdef CMDBUILDACCELERATIONSTRUCTURESKHR_BEFORE_EXEC_EXISTS
-layer_CmdBuildAccelerationStructuresKHR(commandBuffer, infoCount, pInfos, ppBuildRangeInfos);
+layer_CmdBuildAccelerationStructuresKHR_before(commandBuffer, infoCount, pInfos, ppBuildRangeInfos);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructuresKHR(commandBuffer, infoCount, pInfos, ppBuildRangeInfos);
 if(connected) {
 #ifdef CMDBUILDACCELERATIONSTRUCTURESKHR_AFTER_EXEC_EXISTS
-layer_CmdBuildAccelerationStructuresKHR(commandBuffer, infoCount, pInfos, ppBuildRangeInfos);
+layer_CmdBuildAccelerationStructuresKHR_after(commandBuffer, infoCount, pInfos, ppBuildRangeInfos);
 #endif 
 }
 if(connected) {
@@ -10272,13 +10274,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBuildAccelerationStructuresIndirectK
 }
 if(connected) {
 #ifdef CMDBUILDACCELERATIONSTRUCTURESINDIRECTKHR_BEFORE_EXEC_EXISTS
-layer_CmdBuildAccelerationStructuresIndirectKHR(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts);
+layer_CmdBuildAccelerationStructuresIndirectKHR_before(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructuresIndirectKHR(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts);
 if(connected) {
 #ifdef CMDBUILDACCELERATIONSTRUCTURESINDIRECTKHR_AFTER_EXEC_EXISTS
-layer_CmdBuildAccelerationStructuresIndirectKHR(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts);
+layer_CmdBuildAccelerationStructuresIndirectKHR_after(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts);
 #endif 
 }
 if(connected) {
@@ -10293,13 +10295,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkBuildAccelerationStructuresKHR!");
 }
 if(connected) {
 #ifdef BUILDACCELERATIONSTRUCTURESKHR_BEFORE_EXEC_EXISTS
-layer_BuildAccelerationStructuresKHR(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos);
+layer_BuildAccelerationStructuresKHR_before(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].BuildAccelerationStructuresKHR(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos);
 if(connected) {
 #ifdef BUILDACCELERATIONSTRUCTURESKHR_AFTER_EXEC_EXISTS
-layer_BuildAccelerationStructuresKHR(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos);
+layer_BuildAccelerationStructuresKHR_after(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos);
 #endif 
 }
 if(connected) {
@@ -10315,13 +10317,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetAccelerationStructureDeviceAddressKH
 }
 if(connected) {
 #ifdef GETACCELERATIONSTRUCTUREDEVICEADDRESSKHR_BEFORE_EXEC_EXISTS
-layer_GetAccelerationStructureDeviceAddressKHR(device, pInfo);
+layer_GetAccelerationStructureDeviceAddressKHR_before(device, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetAccelerationStructureDeviceAddressKHR(device, pInfo);
 if(connected) {
 #ifdef GETACCELERATIONSTRUCTUREDEVICEADDRESSKHR_AFTER_EXEC_EXISTS
-layer_GetAccelerationStructureDeviceAddressKHR(device, pInfo);
+layer_GetAccelerationStructureDeviceAddressKHR_after(device, pInfo);
 #endif 
 }
 if(connected) {
@@ -10337,13 +10339,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateDeferredOperationKHR!");
 }
 if(connected) {
 #ifdef CREATEDEFERREDOPERATIONKHR_BEFORE_EXEC_EXISTS
-layer_CreateDeferredOperationKHR(device, pAllocator, pDeferredOperation);
+layer_CreateDeferredOperationKHR_before(device, pAllocator, pDeferredOperation);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateDeferredOperationKHR(device, pAllocator, pDeferredOperation);
 if(connected) {
 #ifdef CREATEDEFERREDOPERATIONKHR_AFTER_EXEC_EXISTS
-layer_CreateDeferredOperationKHR(device, pAllocator, pDeferredOperation);
+layer_CreateDeferredOperationKHR_after(device, pAllocator, pDeferredOperation);
 #endif 
 }
 if(connected) {
@@ -10359,13 +10361,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyDeferredOperationKHR!");
 }
 if(connected) {
 #ifdef DESTROYDEFERREDOPERATIONKHR_BEFORE_EXEC_EXISTS
-layer_DestroyDeferredOperationKHR(device, operation, pAllocator);
+layer_DestroyDeferredOperationKHR_before(device, operation, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyDeferredOperationKHR(device, operation, pAllocator);
 if(connected) {
 #ifdef DESTROYDEFERREDOPERATIONKHR_AFTER_EXEC_EXISTS
-layer_DestroyDeferredOperationKHR(device, operation, pAllocator);
+layer_DestroyDeferredOperationKHR_after(device, operation, pAllocator);
 #endif 
 }
 if(connected) {
@@ -10380,13 +10382,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeferredOperationMaxConcurrencyKHR!"
 }
 if(connected) {
 #ifdef GETDEFERREDOPERATIONMAXCONCURRENCYKHR_BEFORE_EXEC_EXISTS
-layer_GetDeferredOperationMaxConcurrencyKHR(device, operation);
+layer_GetDeferredOperationMaxConcurrencyKHR_before(device, operation);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetDeferredOperationMaxConcurrencyKHR(device, operation);
 if(connected) {
 #ifdef GETDEFERREDOPERATIONMAXCONCURRENCYKHR_AFTER_EXEC_EXISTS
-layer_GetDeferredOperationMaxConcurrencyKHR(device, operation);
+layer_GetDeferredOperationMaxConcurrencyKHR_after(device, operation);
 #endif 
 }
 if(connected) {
@@ -10402,13 +10404,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeferredOperationResultKHR!");
 }
 if(connected) {
 #ifdef GETDEFERREDOPERATIONRESULTKHR_BEFORE_EXEC_EXISTS
-layer_GetDeferredOperationResultKHR(device, operation);
+layer_GetDeferredOperationResultKHR_before(device, operation);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetDeferredOperationResultKHR(device, operation);
 if(connected) {
 #ifdef GETDEFERREDOPERATIONRESULTKHR_AFTER_EXEC_EXISTS
-layer_GetDeferredOperationResultKHR(device, operation);
+layer_GetDeferredOperationResultKHR_after(device, operation);
 #endif 
 }
 if(connected) {
@@ -10424,13 +10426,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDeferredOperationJoinKHR!");
 }
 if(connected) {
 #ifdef DEFERREDOPERATIONJOINKHR_BEFORE_EXEC_EXISTS
-layer_DeferredOperationJoinKHR(device, operation);
+layer_DeferredOperationJoinKHR_before(device, operation);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].DeferredOperationJoinKHR(device, operation);
 if(connected) {
 #ifdef DEFERREDOPERATIONJOINKHR_AFTER_EXEC_EXISTS
-layer_DeferredOperationJoinKHR(device, operation);
+layer_DeferredOperationJoinKHR_after(device, operation);
 #endif 
 }
 if(connected) {
@@ -10446,13 +10448,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPipelineIndirectMemoryRequirementsNV
 }
 if(connected) {
 #ifdef GETPIPELINEINDIRECTMEMORYREQUIREMENTSNV_BEFORE_EXEC_EXISTS
-layer_GetPipelineIndirectMemoryRequirementsNV(device, pCreateInfo, pMemoryRequirements);
+layer_GetPipelineIndirectMemoryRequirementsNV_before(device, pCreateInfo, pMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetPipelineIndirectMemoryRequirementsNV(device, pCreateInfo, pMemoryRequirements);
 if(connected) {
 #ifdef GETPIPELINEINDIRECTMEMORYREQUIREMENTSNV_AFTER_EXEC_EXISTS
-layer_GetPipelineIndirectMemoryRequirementsNV(device, pCreateInfo, pMemoryRequirements);
+layer_GetPipelineIndirectMemoryRequirementsNV_after(device, pCreateInfo, pMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -10467,13 +10469,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPipelineIndirectDeviceAddressNV!");
 }
 if(connected) {
 #ifdef GETPIPELINEINDIRECTDEVICEADDRESSNV_BEFORE_EXEC_EXISTS
-layer_GetPipelineIndirectDeviceAddressNV(device, pInfo);
+layer_GetPipelineIndirectDeviceAddressNV_before(device, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetPipelineIndirectDeviceAddressNV(device, pInfo);
 if(connected) {
 #ifdef GETPIPELINEINDIRECTDEVICEADDRESSNV_AFTER_EXEC_EXISTS
-layer_GetPipelineIndirectDeviceAddressNV(device, pInfo);
+layer_GetPipelineIndirectDeviceAddressNV_after(device, pInfo);
 #endif 
 }
 if(connected) {
@@ -10489,13 +10491,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCullMode!");
 }
 if(connected) {
 #ifdef CMDSETCULLMODE_BEFORE_EXEC_EXISTS
-layer_CmdSetCullMode(commandBuffer, cullMode);
+layer_CmdSetCullMode_before(commandBuffer, cullMode);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetCullMode(commandBuffer, cullMode);
 if(connected) {
 #ifdef CMDSETCULLMODE_AFTER_EXEC_EXISTS
-layer_CmdSetCullMode(commandBuffer, cullMode);
+layer_CmdSetCullMode_after(commandBuffer, cullMode);
 #endif 
 }
 if(connected) {
@@ -10510,13 +10512,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetFrontFace!");
 }
 if(connected) {
 #ifdef CMDSETFRONTFACE_BEFORE_EXEC_EXISTS
-layer_CmdSetFrontFace(commandBuffer, frontFace);
+layer_CmdSetFrontFace_before(commandBuffer, frontFace);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetFrontFace(commandBuffer, frontFace);
 if(connected) {
 #ifdef CMDSETFRONTFACE_AFTER_EXEC_EXISTS
-layer_CmdSetFrontFace(commandBuffer, frontFace);
+layer_CmdSetFrontFace_after(commandBuffer, frontFace);
 #endif 
 }
 if(connected) {
@@ -10531,13 +10533,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPrimitiveTopology!");
 }
 if(connected) {
 #ifdef CMDSETPRIMITIVETOPOLOGY_BEFORE_EXEC_EXISTS
-layer_CmdSetPrimitiveTopology(commandBuffer, primitiveTopology);
+layer_CmdSetPrimitiveTopology_before(commandBuffer, primitiveTopology);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveTopology(commandBuffer, primitiveTopology);
 if(connected) {
 #ifdef CMDSETPRIMITIVETOPOLOGY_AFTER_EXEC_EXISTS
-layer_CmdSetPrimitiveTopology(commandBuffer, primitiveTopology);
+layer_CmdSetPrimitiveTopology_after(commandBuffer, primitiveTopology);
 #endif 
 }
 if(connected) {
@@ -10552,13 +10554,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetViewportWithCount!");
 }
 if(connected) {
 #ifdef CMDSETVIEWPORTWITHCOUNT_BEFORE_EXEC_EXISTS
-layer_CmdSetViewportWithCount(commandBuffer, viewportCount, pViewports);
+layer_CmdSetViewportWithCount_before(commandBuffer, viewportCount, pViewports);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWithCount(commandBuffer, viewportCount, pViewports);
 if(connected) {
 #ifdef CMDSETVIEWPORTWITHCOUNT_AFTER_EXEC_EXISTS
-layer_CmdSetViewportWithCount(commandBuffer, viewportCount, pViewports);
+layer_CmdSetViewportWithCount_after(commandBuffer, viewportCount, pViewports);
 #endif 
 }
 if(connected) {
@@ -10573,13 +10575,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetScissorWithCount!");
 }
 if(connected) {
 #ifdef CMDSETSCISSORWITHCOUNT_BEFORE_EXEC_EXISTS
-layer_CmdSetScissorWithCount(commandBuffer, scissorCount, pScissors);
+layer_CmdSetScissorWithCount_before(commandBuffer, scissorCount, pScissors);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetScissorWithCount(commandBuffer, scissorCount, pScissors);
 if(connected) {
 #ifdef CMDSETSCISSORWITHCOUNT_AFTER_EXEC_EXISTS
-layer_CmdSetScissorWithCount(commandBuffer, scissorCount, pScissors);
+layer_CmdSetScissorWithCount_after(commandBuffer, scissorCount, pScissors);
 #endif 
 }
 if(connected) {
@@ -10594,13 +10596,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindIndexBuffer2KHR!");
 }
 if(connected) {
 #ifdef CMDBINDINDEXBUFFER2KHR_BEFORE_EXEC_EXISTS
-layer_CmdBindIndexBuffer2KHR(commandBuffer, buffer, offset, size, indexType);
+layer_CmdBindIndexBuffer2KHR_before(commandBuffer, buffer, offset, size, indexType);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindIndexBuffer2KHR(commandBuffer, buffer, offset, size, indexType);
 if(connected) {
 #ifdef CMDBINDINDEXBUFFER2KHR_AFTER_EXEC_EXISTS
-layer_CmdBindIndexBuffer2KHR(commandBuffer, buffer, offset, size, indexType);
+layer_CmdBindIndexBuffer2KHR_after(commandBuffer, buffer, offset, size, indexType);
 #endif 
 }
 if(connected) {
@@ -10615,13 +10617,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindVertexBuffers2!");
 }
 if(connected) {
 #ifdef CMDBINDVERTEXBUFFERS2_BEFORE_EXEC_EXISTS
-layer_CmdBindVertexBuffers2(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
+layer_CmdBindVertexBuffers2_before(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers2(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
 if(connected) {
 #ifdef CMDBINDVERTEXBUFFERS2_AFTER_EXEC_EXISTS
-layer_CmdBindVertexBuffers2(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
+layer_CmdBindVertexBuffers2_after(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
 #endif 
 }
 if(connected) {
@@ -10636,13 +10638,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthTestEnable!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHTESTENABLE_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthTestEnable(commandBuffer, depthTestEnable);
+layer_CmdSetDepthTestEnable_before(commandBuffer, depthTestEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthTestEnable(commandBuffer, depthTestEnable);
 if(connected) {
 #ifdef CMDSETDEPTHTESTENABLE_AFTER_EXEC_EXISTS
-layer_CmdSetDepthTestEnable(commandBuffer, depthTestEnable);
+layer_CmdSetDepthTestEnable_after(commandBuffer, depthTestEnable);
 #endif 
 }
 if(connected) {
@@ -10657,13 +10659,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthWriteEnable!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHWRITEENABLE_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthWriteEnable(commandBuffer, depthWriteEnable);
+layer_CmdSetDepthWriteEnable_before(commandBuffer, depthWriteEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthWriteEnable(commandBuffer, depthWriteEnable);
 if(connected) {
 #ifdef CMDSETDEPTHWRITEENABLE_AFTER_EXEC_EXISTS
-layer_CmdSetDepthWriteEnable(commandBuffer, depthWriteEnable);
+layer_CmdSetDepthWriteEnable_after(commandBuffer, depthWriteEnable);
 #endif 
 }
 if(connected) {
@@ -10678,13 +10680,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthCompareOp!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHCOMPAREOP_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthCompareOp(commandBuffer, depthCompareOp);
+layer_CmdSetDepthCompareOp_before(commandBuffer, depthCompareOp);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthCompareOp(commandBuffer, depthCompareOp);
 if(connected) {
 #ifdef CMDSETDEPTHCOMPAREOP_AFTER_EXEC_EXISTS
-layer_CmdSetDepthCompareOp(commandBuffer, depthCompareOp);
+layer_CmdSetDepthCompareOp_after(commandBuffer, depthCompareOp);
 #endif 
 }
 if(connected) {
@@ -10699,13 +10701,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthBoundsTestEnable!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHBOUNDSTESTENABLE_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthBoundsTestEnable(commandBuffer, depthBoundsTestEnable);
+layer_CmdSetDepthBoundsTestEnable_before(commandBuffer, depthBoundsTestEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBoundsTestEnable(commandBuffer, depthBoundsTestEnable);
 if(connected) {
 #ifdef CMDSETDEPTHBOUNDSTESTENABLE_AFTER_EXEC_EXISTS
-layer_CmdSetDepthBoundsTestEnable(commandBuffer, depthBoundsTestEnable);
+layer_CmdSetDepthBoundsTestEnable_after(commandBuffer, depthBoundsTestEnable);
 #endif 
 }
 if(connected) {
@@ -10720,13 +10722,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetStencilTestEnable!");
 }
 if(connected) {
 #ifdef CMDSETSTENCILTESTENABLE_BEFORE_EXEC_EXISTS
-layer_CmdSetStencilTestEnable(commandBuffer, stencilTestEnable);
+layer_CmdSetStencilTestEnable_before(commandBuffer, stencilTestEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilTestEnable(commandBuffer, stencilTestEnable);
 if(connected) {
 #ifdef CMDSETSTENCILTESTENABLE_AFTER_EXEC_EXISTS
-layer_CmdSetStencilTestEnable(commandBuffer, stencilTestEnable);
+layer_CmdSetStencilTestEnable_after(commandBuffer, stencilTestEnable);
 #endif 
 }
 if(connected) {
@@ -10741,13 +10743,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetStencilOp!");
 }
 if(connected) {
 #ifdef CMDSETSTENCILOP_BEFORE_EXEC_EXISTS
-layer_CmdSetStencilOp(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
+layer_CmdSetStencilOp_before(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilOp(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
 if(connected) {
 #ifdef CMDSETSTENCILOP_AFTER_EXEC_EXISTS
-layer_CmdSetStencilOp(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
+layer_CmdSetStencilOp_after(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
 #endif 
 }
 if(connected) {
@@ -10762,13 +10764,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPatchControlPointsEXT!");
 }
 if(connected) {
 #ifdef CMDSETPATCHCONTROLPOINTSEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetPatchControlPointsEXT(commandBuffer, patchControlPoints);
+layer_CmdSetPatchControlPointsEXT_before(commandBuffer, patchControlPoints);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetPatchControlPointsEXT(commandBuffer, patchControlPoints);
 if(connected) {
 #ifdef CMDSETPATCHCONTROLPOINTSEXT_AFTER_EXEC_EXISTS
-layer_CmdSetPatchControlPointsEXT(commandBuffer, patchControlPoints);
+layer_CmdSetPatchControlPointsEXT_after(commandBuffer, patchControlPoints);
 #endif 
 }
 if(connected) {
@@ -10783,13 +10785,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetRasterizerDiscardEnable!");
 }
 if(connected) {
 #ifdef CMDSETRASTERIZERDISCARDENABLE_BEFORE_EXEC_EXISTS
-layer_CmdSetRasterizerDiscardEnable(commandBuffer, rasterizerDiscardEnable);
+layer_CmdSetRasterizerDiscardEnable_before(commandBuffer, rasterizerDiscardEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizerDiscardEnable(commandBuffer, rasterizerDiscardEnable);
 if(connected) {
 #ifdef CMDSETRASTERIZERDISCARDENABLE_AFTER_EXEC_EXISTS
-layer_CmdSetRasterizerDiscardEnable(commandBuffer, rasterizerDiscardEnable);
+layer_CmdSetRasterizerDiscardEnable_after(commandBuffer, rasterizerDiscardEnable);
 #endif 
 }
 if(connected) {
@@ -10804,13 +10806,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthBiasEnable!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHBIASENABLE_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthBiasEnable(commandBuffer, depthBiasEnable);
+layer_CmdSetDepthBiasEnable_before(commandBuffer, depthBiasEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBiasEnable(commandBuffer, depthBiasEnable);
 if(connected) {
 #ifdef CMDSETDEPTHBIASENABLE_AFTER_EXEC_EXISTS
-layer_CmdSetDepthBiasEnable(commandBuffer, depthBiasEnable);
+layer_CmdSetDepthBiasEnable_after(commandBuffer, depthBiasEnable);
 #endif 
 }
 if(connected) {
@@ -10825,13 +10827,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetLogicOpEXT!");
 }
 if(connected) {
 #ifdef CMDSETLOGICOPEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetLogicOpEXT(commandBuffer, logicOp);
+layer_CmdSetLogicOpEXT_before(commandBuffer, logicOp);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetLogicOpEXT(commandBuffer, logicOp);
 if(connected) {
 #ifdef CMDSETLOGICOPEXT_AFTER_EXEC_EXISTS
-layer_CmdSetLogicOpEXT(commandBuffer, logicOp);
+layer_CmdSetLogicOpEXT_after(commandBuffer, logicOp);
 #endif 
 }
 if(connected) {
@@ -10846,13 +10848,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPrimitiveRestartEnable!");
 }
 if(connected) {
 #ifdef CMDSETPRIMITIVERESTARTENABLE_BEFORE_EXEC_EXISTS
-layer_CmdSetPrimitiveRestartEnable(commandBuffer, primitiveRestartEnable);
+layer_CmdSetPrimitiveRestartEnable_before(commandBuffer, primitiveRestartEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveRestartEnable(commandBuffer, primitiveRestartEnable);
 if(connected) {
 #ifdef CMDSETPRIMITIVERESTARTENABLE_AFTER_EXEC_EXISTS
-layer_CmdSetPrimitiveRestartEnable(commandBuffer, primitiveRestartEnable);
+layer_CmdSetPrimitiveRestartEnable_after(commandBuffer, primitiveRestartEnable);
 #endif 
 }
 if(connected) {
@@ -10867,13 +10869,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetTessellationDomainOriginEXT!");
 }
 if(connected) {
 #ifdef CMDSETTESSELLATIONDOMAINORIGINEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetTessellationDomainOriginEXT(commandBuffer, domainOrigin);
+layer_CmdSetTessellationDomainOriginEXT_before(commandBuffer, domainOrigin);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetTessellationDomainOriginEXT(commandBuffer, domainOrigin);
 if(connected) {
 #ifdef CMDSETTESSELLATIONDOMAINORIGINEXT_AFTER_EXEC_EXISTS
-layer_CmdSetTessellationDomainOriginEXT(commandBuffer, domainOrigin);
+layer_CmdSetTessellationDomainOriginEXT_after(commandBuffer, domainOrigin);
 #endif 
 }
 if(connected) {
@@ -10888,13 +10890,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthClampEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHCLAMPENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthClampEnableEXT(commandBuffer, depthClampEnable);
+layer_CmdSetDepthClampEnableEXT_before(commandBuffer, depthClampEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthClampEnableEXT(commandBuffer, depthClampEnable);
 if(connected) {
 #ifdef CMDSETDEPTHCLAMPENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetDepthClampEnableEXT(commandBuffer, depthClampEnable);
+layer_CmdSetDepthClampEnableEXT_after(commandBuffer, depthClampEnable);
 #endif 
 }
 if(connected) {
@@ -10909,13 +10911,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPolygonModeEXT!");
 }
 if(connected) {
 #ifdef CMDSETPOLYGONMODEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetPolygonModeEXT(commandBuffer, polygonMode);
+layer_CmdSetPolygonModeEXT_before(commandBuffer, polygonMode);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetPolygonModeEXT(commandBuffer, polygonMode);
 if(connected) {
 #ifdef CMDSETPOLYGONMODEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetPolygonModeEXT(commandBuffer, polygonMode);
+layer_CmdSetPolygonModeEXT_after(commandBuffer, polygonMode);
 #endif 
 }
 if(connected) {
@@ -10930,13 +10932,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetRasterizationSamplesEXT!");
 }
 if(connected) {
 #ifdef CMDSETRASTERIZATIONSAMPLESEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetRasterizationSamplesEXT(commandBuffer, rasterizationSamples);
+layer_CmdSetRasterizationSamplesEXT_before(commandBuffer, rasterizationSamples);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizationSamplesEXT(commandBuffer, rasterizationSamples);
 if(connected) {
 #ifdef CMDSETRASTERIZATIONSAMPLESEXT_AFTER_EXEC_EXISTS
-layer_CmdSetRasterizationSamplesEXT(commandBuffer, rasterizationSamples);
+layer_CmdSetRasterizationSamplesEXT_after(commandBuffer, rasterizationSamples);
 #endif 
 }
 if(connected) {
@@ -10951,13 +10953,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetSampleMaskEXT!");
 }
 if(connected) {
 #ifdef CMDSETSAMPLEMASKEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetSampleMaskEXT(commandBuffer, samples, pSampleMask);
+layer_CmdSetSampleMaskEXT_before(commandBuffer, samples, pSampleMask);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetSampleMaskEXT(commandBuffer, samples, pSampleMask);
 if(connected) {
 #ifdef CMDSETSAMPLEMASKEXT_AFTER_EXEC_EXISTS
-layer_CmdSetSampleMaskEXT(commandBuffer, samples, pSampleMask);
+layer_CmdSetSampleMaskEXT_after(commandBuffer, samples, pSampleMask);
 #endif 
 }
 if(connected) {
@@ -10972,13 +10974,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetAlphaToCoverageEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETALPHATOCOVERAGEENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetAlphaToCoverageEnableEXT(commandBuffer, alphaToCoverageEnable);
+layer_CmdSetAlphaToCoverageEnableEXT_before(commandBuffer, alphaToCoverageEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetAlphaToCoverageEnableEXT(commandBuffer, alphaToCoverageEnable);
 if(connected) {
 #ifdef CMDSETALPHATOCOVERAGEENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetAlphaToCoverageEnableEXT(commandBuffer, alphaToCoverageEnable);
+layer_CmdSetAlphaToCoverageEnableEXT_after(commandBuffer, alphaToCoverageEnable);
 #endif 
 }
 if(connected) {
@@ -10993,13 +10995,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetAlphaToOneEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETALPHATOONEENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetAlphaToOneEnableEXT(commandBuffer, alphaToOneEnable);
+layer_CmdSetAlphaToOneEnableEXT_before(commandBuffer, alphaToOneEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetAlphaToOneEnableEXT(commandBuffer, alphaToOneEnable);
 if(connected) {
 #ifdef CMDSETALPHATOONEENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetAlphaToOneEnableEXT(commandBuffer, alphaToOneEnable);
+layer_CmdSetAlphaToOneEnableEXT_after(commandBuffer, alphaToOneEnable);
 #endif 
 }
 if(connected) {
@@ -11014,13 +11016,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetLogicOpEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETLOGICOPENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetLogicOpEnableEXT(commandBuffer, logicOpEnable);
+layer_CmdSetLogicOpEnableEXT_before(commandBuffer, logicOpEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetLogicOpEnableEXT(commandBuffer, logicOpEnable);
 if(connected) {
 #ifdef CMDSETLOGICOPENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetLogicOpEnableEXT(commandBuffer, logicOpEnable);
+layer_CmdSetLogicOpEnableEXT_after(commandBuffer, logicOpEnable);
 #endif 
 }
 if(connected) {
@@ -11035,13 +11037,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetColorBlendEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETCOLORBLENDENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetColorBlendEnableEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables);
+layer_CmdSetColorBlendEnableEXT_before(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendEnableEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables);
 if(connected) {
 #ifdef CMDSETCOLORBLENDENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetColorBlendEnableEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables);
+layer_CmdSetColorBlendEnableEXT_after(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables);
 #endif 
 }
 if(connected) {
@@ -11056,13 +11058,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetColorBlendEquationEXT!");
 }
 if(connected) {
 #ifdef CMDSETCOLORBLENDEQUATIONEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetColorBlendEquationEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations);
+layer_CmdSetColorBlendEquationEXT_before(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendEquationEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations);
 if(connected) {
 #ifdef CMDSETCOLORBLENDEQUATIONEXT_AFTER_EXEC_EXISTS
-layer_CmdSetColorBlendEquationEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations);
+layer_CmdSetColorBlendEquationEXT_after(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations);
 #endif 
 }
 if(connected) {
@@ -11077,13 +11079,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetColorWriteMaskEXT!");
 }
 if(connected) {
 #ifdef CMDSETCOLORWRITEMASKEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetColorWriteMaskEXT(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks);
+layer_CmdSetColorWriteMaskEXT_before(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetColorWriteMaskEXT(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks);
 if(connected) {
 #ifdef CMDSETCOLORWRITEMASKEXT_AFTER_EXEC_EXISTS
-layer_CmdSetColorWriteMaskEXT(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks);
+layer_CmdSetColorWriteMaskEXT_after(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks);
 #endif 
 }
 if(connected) {
@@ -11098,13 +11100,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetRasterizationStreamEXT!");
 }
 if(connected) {
 #ifdef CMDSETRASTERIZATIONSTREAMEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetRasterizationStreamEXT(commandBuffer, rasterizationStream);
+layer_CmdSetRasterizationStreamEXT_before(commandBuffer, rasterizationStream);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizationStreamEXT(commandBuffer, rasterizationStream);
 if(connected) {
 #ifdef CMDSETRASTERIZATIONSTREAMEXT_AFTER_EXEC_EXISTS
-layer_CmdSetRasterizationStreamEXT(commandBuffer, rasterizationStream);
+layer_CmdSetRasterizationStreamEXT_after(commandBuffer, rasterizationStream);
 #endif 
 }
 if(connected) {
@@ -11119,13 +11121,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetConservativeRasterizationModeEXT!
 }
 if(connected) {
 #ifdef CMDSETCONSERVATIVERASTERIZATIONMODEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetConservativeRasterizationModeEXT(commandBuffer, conservativeRasterizationMode);
+layer_CmdSetConservativeRasterizationModeEXT_before(commandBuffer, conservativeRasterizationMode);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetConservativeRasterizationModeEXT(commandBuffer, conservativeRasterizationMode);
 if(connected) {
 #ifdef CMDSETCONSERVATIVERASTERIZATIONMODEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetConservativeRasterizationModeEXT(commandBuffer, conservativeRasterizationMode);
+layer_CmdSetConservativeRasterizationModeEXT_after(commandBuffer, conservativeRasterizationMode);
 #endif 
 }
 if(connected) {
@@ -11140,13 +11142,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetExtraPrimitiveOverestimationSizeE
 }
 if(connected) {
 #ifdef CMDSETEXTRAPRIMITIVEOVERESTIMATIONSIZEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetExtraPrimitiveOverestimationSizeEXT(commandBuffer, extraPrimitiveOverestimationSize);
+layer_CmdSetExtraPrimitiveOverestimationSizeEXT_before(commandBuffer, extraPrimitiveOverestimationSize);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetExtraPrimitiveOverestimationSizeEXT(commandBuffer, extraPrimitiveOverestimationSize);
 if(connected) {
 #ifdef CMDSETEXTRAPRIMITIVEOVERESTIMATIONSIZEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetExtraPrimitiveOverestimationSizeEXT(commandBuffer, extraPrimitiveOverestimationSize);
+layer_CmdSetExtraPrimitiveOverestimationSizeEXT_after(commandBuffer, extraPrimitiveOverestimationSize);
 #endif 
 }
 if(connected) {
@@ -11161,13 +11163,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthClipEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHCLIPENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthClipEnableEXT(commandBuffer, depthClipEnable);
+layer_CmdSetDepthClipEnableEXT_before(commandBuffer, depthClipEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthClipEnableEXT(commandBuffer, depthClipEnable);
 if(connected) {
 #ifdef CMDSETDEPTHCLIPENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetDepthClipEnableEXT(commandBuffer, depthClipEnable);
+layer_CmdSetDepthClipEnableEXT_after(commandBuffer, depthClipEnable);
 #endif 
 }
 if(connected) {
@@ -11182,13 +11184,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetSampleLocationsEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETSAMPLELOCATIONSENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetSampleLocationsEnableEXT(commandBuffer, sampleLocationsEnable);
+layer_CmdSetSampleLocationsEnableEXT_before(commandBuffer, sampleLocationsEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetSampleLocationsEnableEXT(commandBuffer, sampleLocationsEnable);
 if(connected) {
 #ifdef CMDSETSAMPLELOCATIONSENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetSampleLocationsEnableEXT(commandBuffer, sampleLocationsEnable);
+layer_CmdSetSampleLocationsEnableEXT_after(commandBuffer, sampleLocationsEnable);
 #endif 
 }
 if(connected) {
@@ -11203,13 +11205,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetColorBlendAdvancedEXT!");
 }
 if(connected) {
 #ifdef CMDSETCOLORBLENDADVANCEDEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetColorBlendAdvancedEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendAdvanced);
+layer_CmdSetColorBlendAdvancedEXT_before(commandBuffer, firstAttachment, attachmentCount, pColorBlendAdvanced);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendAdvancedEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendAdvanced);
 if(connected) {
 #ifdef CMDSETCOLORBLENDADVANCEDEXT_AFTER_EXEC_EXISTS
-layer_CmdSetColorBlendAdvancedEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendAdvanced);
+layer_CmdSetColorBlendAdvancedEXT_after(commandBuffer, firstAttachment, attachmentCount, pColorBlendAdvanced);
 #endif 
 }
 if(connected) {
@@ -11224,13 +11226,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetProvokingVertexModeEXT!");
 }
 if(connected) {
 #ifdef CMDSETPROVOKINGVERTEXMODEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetProvokingVertexModeEXT(commandBuffer, provokingVertexMode);
+layer_CmdSetProvokingVertexModeEXT_before(commandBuffer, provokingVertexMode);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetProvokingVertexModeEXT(commandBuffer, provokingVertexMode);
 if(connected) {
 #ifdef CMDSETPROVOKINGVERTEXMODEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetProvokingVertexModeEXT(commandBuffer, provokingVertexMode);
+layer_CmdSetProvokingVertexModeEXT_after(commandBuffer, provokingVertexMode);
 #endif 
 }
 if(connected) {
@@ -11245,13 +11247,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetLineRasterizationModeEXT!");
 }
 if(connected) {
 #ifdef CMDSETLINERASTERIZATIONMODEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetLineRasterizationModeEXT(commandBuffer, lineRasterizationMode);
+layer_CmdSetLineRasterizationModeEXT_before(commandBuffer, lineRasterizationMode);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetLineRasterizationModeEXT(commandBuffer, lineRasterizationMode);
 if(connected) {
 #ifdef CMDSETLINERASTERIZATIONMODEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetLineRasterizationModeEXT(commandBuffer, lineRasterizationMode);
+layer_CmdSetLineRasterizationModeEXT_after(commandBuffer, lineRasterizationMode);
 #endif 
 }
 if(connected) {
@@ -11266,13 +11268,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetLineStippleEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETLINESTIPPLEENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetLineStippleEnableEXT(commandBuffer, stippledLineEnable);
+layer_CmdSetLineStippleEnableEXT_before(commandBuffer, stippledLineEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetLineStippleEnableEXT(commandBuffer, stippledLineEnable);
 if(connected) {
 #ifdef CMDSETLINESTIPPLEENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetLineStippleEnableEXT(commandBuffer, stippledLineEnable);
+layer_CmdSetLineStippleEnableEXT_after(commandBuffer, stippledLineEnable);
 #endif 
 }
 if(connected) {
@@ -11287,13 +11289,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthClipNegativeOneToOneEXT!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHCLIPNEGATIVEONETOONEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthClipNegativeOneToOneEXT(commandBuffer, negativeOneToOne);
+layer_CmdSetDepthClipNegativeOneToOneEXT_before(commandBuffer, negativeOneToOne);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthClipNegativeOneToOneEXT(commandBuffer, negativeOneToOne);
 if(connected) {
 #ifdef CMDSETDEPTHCLIPNEGATIVEONETOONEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetDepthClipNegativeOneToOneEXT(commandBuffer, negativeOneToOne);
+layer_CmdSetDepthClipNegativeOneToOneEXT_after(commandBuffer, negativeOneToOne);
 #endif 
 }
 if(connected) {
@@ -11308,13 +11310,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetViewportWScalingEnableNV!");
 }
 if(connected) {
 #ifdef CMDSETVIEWPORTWSCALINGENABLENV_BEFORE_EXEC_EXISTS
-layer_CmdSetViewportWScalingEnableNV(commandBuffer, viewportWScalingEnable);
+layer_CmdSetViewportWScalingEnableNV_before(commandBuffer, viewportWScalingEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWScalingEnableNV(commandBuffer, viewportWScalingEnable);
 if(connected) {
 #ifdef CMDSETVIEWPORTWSCALINGENABLENV_AFTER_EXEC_EXISTS
-layer_CmdSetViewportWScalingEnableNV(commandBuffer, viewportWScalingEnable);
+layer_CmdSetViewportWScalingEnableNV_after(commandBuffer, viewportWScalingEnable);
 #endif 
 }
 if(connected) {
@@ -11329,13 +11331,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetViewportSwizzleNV!");
 }
 if(connected) {
 #ifdef CMDSETVIEWPORTSWIZZLENV_BEFORE_EXEC_EXISTS
-layer_CmdSetViewportSwizzleNV(commandBuffer, firstViewport, viewportCount, pViewportSwizzles);
+layer_CmdSetViewportSwizzleNV_before(commandBuffer, firstViewport, viewportCount, pViewportSwizzles);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportSwizzleNV(commandBuffer, firstViewport, viewportCount, pViewportSwizzles);
 if(connected) {
 #ifdef CMDSETVIEWPORTSWIZZLENV_AFTER_EXEC_EXISTS
-layer_CmdSetViewportSwizzleNV(commandBuffer, firstViewport, viewportCount, pViewportSwizzles);
+layer_CmdSetViewportSwizzleNV_after(commandBuffer, firstViewport, viewportCount, pViewportSwizzles);
 #endif 
 }
 if(connected) {
@@ -11350,13 +11352,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCoverageToColorEnableNV!");
 }
 if(connected) {
 #ifdef CMDSETCOVERAGETOCOLORENABLENV_BEFORE_EXEC_EXISTS
-layer_CmdSetCoverageToColorEnableNV(commandBuffer, coverageToColorEnable);
+layer_CmdSetCoverageToColorEnableNV_before(commandBuffer, coverageToColorEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageToColorEnableNV(commandBuffer, coverageToColorEnable);
 if(connected) {
 #ifdef CMDSETCOVERAGETOCOLORENABLENV_AFTER_EXEC_EXISTS
-layer_CmdSetCoverageToColorEnableNV(commandBuffer, coverageToColorEnable);
+layer_CmdSetCoverageToColorEnableNV_after(commandBuffer, coverageToColorEnable);
 #endif 
 }
 if(connected) {
@@ -11371,13 +11373,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCoverageToColorLocationNV!");
 }
 if(connected) {
 #ifdef CMDSETCOVERAGETOCOLORLOCATIONNV_BEFORE_EXEC_EXISTS
-layer_CmdSetCoverageToColorLocationNV(commandBuffer, coverageToColorLocation);
+layer_CmdSetCoverageToColorLocationNV_before(commandBuffer, coverageToColorLocation);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageToColorLocationNV(commandBuffer, coverageToColorLocation);
 if(connected) {
 #ifdef CMDSETCOVERAGETOCOLORLOCATIONNV_AFTER_EXEC_EXISTS
-layer_CmdSetCoverageToColorLocationNV(commandBuffer, coverageToColorLocation);
+layer_CmdSetCoverageToColorLocationNV_after(commandBuffer, coverageToColorLocation);
 #endif 
 }
 if(connected) {
@@ -11392,13 +11394,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCoverageModulationModeNV!");
 }
 if(connected) {
 #ifdef CMDSETCOVERAGEMODULATIONMODENV_BEFORE_EXEC_EXISTS
-layer_CmdSetCoverageModulationModeNV(commandBuffer, coverageModulationMode);
+layer_CmdSetCoverageModulationModeNV_before(commandBuffer, coverageModulationMode);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationModeNV(commandBuffer, coverageModulationMode);
 if(connected) {
 #ifdef CMDSETCOVERAGEMODULATIONMODENV_AFTER_EXEC_EXISTS
-layer_CmdSetCoverageModulationModeNV(commandBuffer, coverageModulationMode);
+layer_CmdSetCoverageModulationModeNV_after(commandBuffer, coverageModulationMode);
 #endif 
 }
 if(connected) {
@@ -11413,13 +11415,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCoverageModulationTableEnableNV!"
 }
 if(connected) {
 #ifdef CMDSETCOVERAGEMODULATIONTABLEENABLENV_BEFORE_EXEC_EXISTS
-layer_CmdSetCoverageModulationTableEnableNV(commandBuffer, coverageModulationTableEnable);
+layer_CmdSetCoverageModulationTableEnableNV_before(commandBuffer, coverageModulationTableEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationTableEnableNV(commandBuffer, coverageModulationTableEnable);
 if(connected) {
 #ifdef CMDSETCOVERAGEMODULATIONTABLEENABLENV_AFTER_EXEC_EXISTS
-layer_CmdSetCoverageModulationTableEnableNV(commandBuffer, coverageModulationTableEnable);
+layer_CmdSetCoverageModulationTableEnableNV_after(commandBuffer, coverageModulationTableEnable);
 #endif 
 }
 if(connected) {
@@ -11434,13 +11436,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCoverageModulationTableNV!");
 }
 if(connected) {
 #ifdef CMDSETCOVERAGEMODULATIONTABLENV_BEFORE_EXEC_EXISTS
-layer_CmdSetCoverageModulationTableNV(commandBuffer, coverageModulationTableCount, pCoverageModulationTable);
+layer_CmdSetCoverageModulationTableNV_before(commandBuffer, coverageModulationTableCount, pCoverageModulationTable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationTableNV(commandBuffer, coverageModulationTableCount, pCoverageModulationTable);
 if(connected) {
 #ifdef CMDSETCOVERAGEMODULATIONTABLENV_AFTER_EXEC_EXISTS
-layer_CmdSetCoverageModulationTableNV(commandBuffer, coverageModulationTableCount, pCoverageModulationTable);
+layer_CmdSetCoverageModulationTableNV_after(commandBuffer, coverageModulationTableCount, pCoverageModulationTable);
 #endif 
 }
 if(connected) {
@@ -11455,13 +11457,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetShadingRateImageEnableNV!");
 }
 if(connected) {
 #ifdef CMDSETSHADINGRATEIMAGEENABLENV_BEFORE_EXEC_EXISTS
-layer_CmdSetShadingRateImageEnableNV(commandBuffer, shadingRateImageEnable);
+layer_CmdSetShadingRateImageEnableNV_before(commandBuffer, shadingRateImageEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetShadingRateImageEnableNV(commandBuffer, shadingRateImageEnable);
 if(connected) {
 #ifdef CMDSETSHADINGRATEIMAGEENABLENV_AFTER_EXEC_EXISTS
-layer_CmdSetShadingRateImageEnableNV(commandBuffer, shadingRateImageEnable);
+layer_CmdSetShadingRateImageEnableNV_after(commandBuffer, shadingRateImageEnable);
 #endif 
 }
 if(connected) {
@@ -11476,13 +11478,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCoverageReductionModeNV!");
 }
 if(connected) {
 #ifdef CMDSETCOVERAGEREDUCTIONMODENV_BEFORE_EXEC_EXISTS
-layer_CmdSetCoverageReductionModeNV(commandBuffer, coverageReductionMode);
+layer_CmdSetCoverageReductionModeNV_before(commandBuffer, coverageReductionMode);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageReductionModeNV(commandBuffer, coverageReductionMode);
 if(connected) {
 #ifdef CMDSETCOVERAGEREDUCTIONMODENV_AFTER_EXEC_EXISTS
-layer_CmdSetCoverageReductionModeNV(commandBuffer, coverageReductionMode);
+layer_CmdSetCoverageReductionModeNV_after(commandBuffer, coverageReductionMode);
 #endif 
 }
 if(connected) {
@@ -11497,13 +11499,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetRepresentativeFragmentTestEnableN
 }
 if(connected) {
 #ifdef CMDSETREPRESENTATIVEFRAGMENTTESTENABLENV_BEFORE_EXEC_EXISTS
-layer_CmdSetRepresentativeFragmentTestEnableNV(commandBuffer, representativeFragmentTestEnable);
+layer_CmdSetRepresentativeFragmentTestEnableNV_before(commandBuffer, representativeFragmentTestEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetRepresentativeFragmentTestEnableNV(commandBuffer, representativeFragmentTestEnable);
 if(connected) {
 #ifdef CMDSETREPRESENTATIVEFRAGMENTTESTENABLENV_AFTER_EXEC_EXISTS
-layer_CmdSetRepresentativeFragmentTestEnableNV(commandBuffer, representativeFragmentTestEnable);
+layer_CmdSetRepresentativeFragmentTestEnableNV_after(commandBuffer, representativeFragmentTestEnable);
 #endif 
 }
 if(connected) {
@@ -11518,13 +11520,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreatePrivateDataSlot!");
 }
 if(connected) {
 #ifdef CREATEPRIVATEDATASLOT_BEFORE_EXEC_EXISTS
-layer_CreatePrivateDataSlot(device, pCreateInfo, pAllocator, pPrivateDataSlot);
+layer_CreatePrivateDataSlot_before(device, pCreateInfo, pAllocator, pPrivateDataSlot);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreatePrivateDataSlot(device, pCreateInfo, pAllocator, pPrivateDataSlot);
 if(connected) {
 #ifdef CREATEPRIVATEDATASLOT_AFTER_EXEC_EXISTS
-layer_CreatePrivateDataSlot(device, pCreateInfo, pAllocator, pPrivateDataSlot);
+layer_CreatePrivateDataSlot_after(device, pCreateInfo, pAllocator, pPrivateDataSlot);
 #endif 
 }
 if(connected) {
@@ -11540,13 +11542,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyPrivateDataSlot!");
 }
 if(connected) {
 #ifdef DESTROYPRIVATEDATASLOT_BEFORE_EXEC_EXISTS
-layer_DestroyPrivateDataSlot(device, privateDataSlot, pAllocator);
+layer_DestroyPrivateDataSlot_before(device, privateDataSlot, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyPrivateDataSlot(device, privateDataSlot, pAllocator);
 if(connected) {
 #ifdef DESTROYPRIVATEDATASLOT_AFTER_EXEC_EXISTS
-layer_DestroyPrivateDataSlot(device, privateDataSlot, pAllocator);
+layer_DestroyPrivateDataSlot_after(device, privateDataSlot, pAllocator);
 #endif 
 }
 if(connected) {
@@ -11561,13 +11563,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSetPrivateData!");
 }
 if(connected) {
 #ifdef SETPRIVATEDATA_BEFORE_EXEC_EXISTS
-layer_SetPrivateData(device, objectType, objectHandle, privateDataSlot, data);
+layer_SetPrivateData_before(device, objectType, objectHandle, privateDataSlot, data);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].SetPrivateData(device, objectType, objectHandle, privateDataSlot, data);
 if(connected) {
 #ifdef SETPRIVATEDATA_AFTER_EXEC_EXISTS
-layer_SetPrivateData(device, objectType, objectHandle, privateDataSlot, data);
+layer_SetPrivateData_after(device, objectType, objectHandle, privateDataSlot, data);
 #endif 
 }
 if(connected) {
@@ -11583,13 +11585,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPrivateData!");
 }
 if(connected) {
 #ifdef GETPRIVATEDATA_BEFORE_EXEC_EXISTS
-layer_GetPrivateData(device, objectType, objectHandle, privateDataSlot, pData);
+layer_GetPrivateData_before(device, objectType, objectHandle, privateDataSlot, pData);
 #endif 
 }
 device_dispatch[GetKey(device)].GetPrivateData(device, objectType, objectHandle, privateDataSlot, pData);
 if(connected) {
 #ifdef GETPRIVATEDATA_AFTER_EXEC_EXISTS
-layer_GetPrivateData(device, objectType, objectHandle, privateDataSlot, pData);
+layer_GetPrivateData_after(device, objectType, objectHandle, privateDataSlot, pData);
 #endif 
 }
 if(connected) {
@@ -11604,13 +11606,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyBuffer2!");
 }
 if(connected) {
 #ifdef CMDCOPYBUFFER2_BEFORE_EXEC_EXISTS
-layer_CmdCopyBuffer2(commandBuffer, pCopyBufferInfo);
+layer_CmdCopyBuffer2_before(commandBuffer, pCopyBufferInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer2(commandBuffer, pCopyBufferInfo);
 if(connected) {
 #ifdef CMDCOPYBUFFER2_AFTER_EXEC_EXISTS
-layer_CmdCopyBuffer2(commandBuffer, pCopyBufferInfo);
+layer_CmdCopyBuffer2_after(commandBuffer, pCopyBufferInfo);
 #endif 
 }
 if(connected) {
@@ -11625,13 +11627,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyImage2!");
 }
 if(connected) {
 #ifdef CMDCOPYIMAGE2_BEFORE_EXEC_EXISTS
-layer_CmdCopyImage2(commandBuffer, pCopyImageInfo);
+layer_CmdCopyImage2_before(commandBuffer, pCopyImageInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyImage2(commandBuffer, pCopyImageInfo);
 if(connected) {
 #ifdef CMDCOPYIMAGE2_AFTER_EXEC_EXISTS
-layer_CmdCopyImage2(commandBuffer, pCopyImageInfo);
+layer_CmdCopyImage2_after(commandBuffer, pCopyImageInfo);
 #endif 
 }
 if(connected) {
@@ -11646,13 +11648,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBlitImage2!");
 }
 if(connected) {
 #ifdef CMDBLITIMAGE2_BEFORE_EXEC_EXISTS
-layer_CmdBlitImage2(commandBuffer, pBlitImageInfo);
+layer_CmdBlitImage2_before(commandBuffer, pBlitImageInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBlitImage2(commandBuffer, pBlitImageInfo);
 if(connected) {
 #ifdef CMDBLITIMAGE2_AFTER_EXEC_EXISTS
-layer_CmdBlitImage2(commandBuffer, pBlitImageInfo);
+layer_CmdBlitImage2_after(commandBuffer, pBlitImageInfo);
 #endif 
 }
 if(connected) {
@@ -11667,13 +11669,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyBufferToImage2!");
 }
 if(connected) {
 #ifdef CMDCOPYBUFFERTOIMAGE2_BEFORE_EXEC_EXISTS
-layer_CmdCopyBufferToImage2(commandBuffer, pCopyBufferToImageInfo);
+layer_CmdCopyBufferToImage2_before(commandBuffer, pCopyBufferToImageInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage2(commandBuffer, pCopyBufferToImageInfo);
 if(connected) {
 #ifdef CMDCOPYBUFFERTOIMAGE2_AFTER_EXEC_EXISTS
-layer_CmdCopyBufferToImage2(commandBuffer, pCopyBufferToImageInfo);
+layer_CmdCopyBufferToImage2_after(commandBuffer, pCopyBufferToImageInfo);
 #endif 
 }
 if(connected) {
@@ -11688,13 +11690,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyImageToBuffer2!");
 }
 if(connected) {
 #ifdef CMDCOPYIMAGETOBUFFER2_BEFORE_EXEC_EXISTS
-layer_CmdCopyImageToBuffer2(commandBuffer, pCopyImageToBufferInfo);
+layer_CmdCopyImageToBuffer2_before(commandBuffer, pCopyImageToBufferInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer2(commandBuffer, pCopyImageToBufferInfo);
 if(connected) {
 #ifdef CMDCOPYIMAGETOBUFFER2_AFTER_EXEC_EXISTS
-layer_CmdCopyImageToBuffer2(commandBuffer, pCopyImageToBufferInfo);
+layer_CmdCopyImageToBuffer2_after(commandBuffer, pCopyImageToBufferInfo);
 #endif 
 }
 if(connected) {
@@ -11709,13 +11711,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdResolveImage2!");
 }
 if(connected) {
 #ifdef CMDRESOLVEIMAGE2_BEFORE_EXEC_EXISTS
-layer_CmdResolveImage2(commandBuffer, pResolveImageInfo);
+layer_CmdResolveImage2_before(commandBuffer, pResolveImageInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdResolveImage2(commandBuffer, pResolveImageInfo);
 if(connected) {
 #ifdef CMDRESOLVEIMAGE2_AFTER_EXEC_EXISTS
-layer_CmdResolveImage2(commandBuffer, pResolveImageInfo);
+layer_CmdResolveImage2_after(commandBuffer, pResolveImageInfo);
 #endif 
 }
 if(connected) {
@@ -11730,13 +11732,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetFragmentShadingRateKHR!");
 }
 if(connected) {
 #ifdef CMDSETFRAGMENTSHADINGRATEKHR_BEFORE_EXEC_EXISTS
-layer_CmdSetFragmentShadingRateKHR(commandBuffer, pFragmentSize, combinerOps);
+layer_CmdSetFragmentShadingRateKHR_before(commandBuffer, pFragmentSize, combinerOps);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetFragmentShadingRateKHR(commandBuffer, pFragmentSize, combinerOps);
 if(connected) {
 #ifdef CMDSETFRAGMENTSHADINGRATEKHR_AFTER_EXEC_EXISTS
-layer_CmdSetFragmentShadingRateKHR(commandBuffer, pFragmentSize, combinerOps);
+layer_CmdSetFragmentShadingRateKHR_after(commandBuffer, pFragmentSize, combinerOps);
 #endif 
 }
 if(connected) {
@@ -11751,13 +11753,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetFragmentShadingRateEnumNV!");
 }
 if(connected) {
 #ifdef CMDSETFRAGMENTSHADINGRATEENUMNV_BEFORE_EXEC_EXISTS
-layer_CmdSetFragmentShadingRateEnumNV(commandBuffer, shadingRate, combinerOps);
+layer_CmdSetFragmentShadingRateEnumNV_before(commandBuffer, shadingRate, combinerOps);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetFragmentShadingRateEnumNV(commandBuffer, shadingRate, combinerOps);
 if(connected) {
 #ifdef CMDSETFRAGMENTSHADINGRATEENUMNV_AFTER_EXEC_EXISTS
-layer_CmdSetFragmentShadingRateEnumNV(commandBuffer, shadingRate, combinerOps);
+layer_CmdSetFragmentShadingRateEnumNV_after(commandBuffer, shadingRate, combinerOps);
 #endif 
 }
 if(connected) {
@@ -11772,13 +11774,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetAccelerationStructureBuildSizesKHR!"
 }
 if(connected) {
 #ifdef GETACCELERATIONSTRUCTUREBUILDSIZESKHR_BEFORE_EXEC_EXISTS
-layer_GetAccelerationStructureBuildSizesKHR(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo);
+layer_GetAccelerationStructureBuildSizesKHR_before(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo);
 #endif 
 }
 device_dispatch[GetKey(device)].GetAccelerationStructureBuildSizesKHR(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo);
 if(connected) {
 #ifdef GETACCELERATIONSTRUCTUREBUILDSIZESKHR_AFTER_EXEC_EXISTS
-layer_GetAccelerationStructureBuildSizesKHR(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo);
+layer_GetAccelerationStructureBuildSizesKHR_after(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo);
 #endif 
 }
 if(connected) {
@@ -11793,13 +11795,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetVertexInputEXT!");
 }
 if(connected) {
 #ifdef CMDSETVERTEXINPUTEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetVertexInputEXT(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions);
+layer_CmdSetVertexInputEXT_before(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetVertexInputEXT(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions);
 if(connected) {
 #ifdef CMDSETVERTEXINPUTEXT_AFTER_EXEC_EXISTS
-layer_CmdSetVertexInputEXT(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions);
+layer_CmdSetVertexInputEXT_after(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions);
 #endif 
 }
 if(connected) {
@@ -11814,13 +11816,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetColorWriteEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETCOLORWRITEENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetColorWriteEnableEXT(commandBuffer, attachmentCount, pColorWriteEnables);
+layer_CmdSetColorWriteEnableEXT_before(commandBuffer, attachmentCount, pColorWriteEnables);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetColorWriteEnableEXT(commandBuffer, attachmentCount, pColorWriteEnables);
 if(connected) {
 #ifdef CMDSETCOLORWRITEENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetColorWriteEnableEXT(commandBuffer, attachmentCount, pColorWriteEnables);
+layer_CmdSetColorWriteEnableEXT_after(commandBuffer, attachmentCount, pColorWriteEnables);
 #endif 
 }
 if(connected) {
@@ -11835,13 +11837,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetEvent2!");
 }
 if(connected) {
 #ifdef CMDSETEVENT2_BEFORE_EXEC_EXISTS
-layer_CmdSetEvent2(commandBuffer, event, pDependencyInfo);
+layer_CmdSetEvent2_before(commandBuffer, event, pDependencyInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetEvent2(commandBuffer, event, pDependencyInfo);
 if(connected) {
 #ifdef CMDSETEVENT2_AFTER_EXEC_EXISTS
-layer_CmdSetEvent2(commandBuffer, event, pDependencyInfo);
+layer_CmdSetEvent2_after(commandBuffer, event, pDependencyInfo);
 #endif 
 }
 if(connected) {
@@ -11856,13 +11858,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdResetEvent2!");
 }
 if(connected) {
 #ifdef CMDRESETEVENT2_BEFORE_EXEC_EXISTS
-layer_CmdResetEvent2(commandBuffer, event, stageMask);
+layer_CmdResetEvent2_before(commandBuffer, event, stageMask);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdResetEvent2(commandBuffer, event, stageMask);
 if(connected) {
 #ifdef CMDRESETEVENT2_AFTER_EXEC_EXISTS
-layer_CmdResetEvent2(commandBuffer, event, stageMask);
+layer_CmdResetEvent2_after(commandBuffer, event, stageMask);
 #endif 
 }
 if(connected) {
@@ -11877,13 +11879,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdWaitEvents2!");
 }
 if(connected) {
 #ifdef CMDWAITEVENTS2_BEFORE_EXEC_EXISTS
-layer_CmdWaitEvents2(commandBuffer, eventCount, pEvents, pDependencyInfos);
+layer_CmdWaitEvents2_before(commandBuffer, eventCount, pEvents, pDependencyInfos);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdWaitEvents2(commandBuffer, eventCount, pEvents, pDependencyInfos);
 if(connected) {
 #ifdef CMDWAITEVENTS2_AFTER_EXEC_EXISTS
-layer_CmdWaitEvents2(commandBuffer, eventCount, pEvents, pDependencyInfos);
+layer_CmdWaitEvents2_after(commandBuffer, eventCount, pEvents, pDependencyInfos);
 #endif 
 }
 if(connected) {
@@ -11898,13 +11900,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdPipelineBarrier2!");
 }
 if(connected) {
 #ifdef CMDPIPELINEBARRIER2_BEFORE_EXEC_EXISTS
-layer_CmdPipelineBarrier2(commandBuffer, pDependencyInfo);
+layer_CmdPipelineBarrier2_before(commandBuffer, pDependencyInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier2(commandBuffer, pDependencyInfo);
 if(connected) {
 #ifdef CMDPIPELINEBARRIER2_AFTER_EXEC_EXISTS
-layer_CmdPipelineBarrier2(commandBuffer, pDependencyInfo);
+layer_CmdPipelineBarrier2_after(commandBuffer, pDependencyInfo);
 #endif 
 }
 if(connected) {
@@ -11919,13 +11921,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkQueueSubmit2!");
 }
 if(connected) {
 #ifdef QUEUESUBMIT2_BEFORE_EXEC_EXISTS
-layer_QueueSubmit2(queue, submitCount, pSubmits, fence);
+layer_QueueSubmit2_before(queue, submitCount, pSubmits, fence);
 #endif 
 }
 auto ret = device_dispatch[GetKey(queue)].QueueSubmit2(queue, submitCount, pSubmits, fence);
 if(connected) {
 #ifdef QUEUESUBMIT2_AFTER_EXEC_EXISTS
-layer_QueueSubmit2(queue, submitCount, pSubmits, fence);
+layer_QueueSubmit2_after(queue, submitCount, pSubmits, fence);
 #endif 
 }
 if(connected) {
@@ -11941,13 +11943,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteTimestamp2!");
 }
 if(connected) {
 #ifdef CMDWRITETIMESTAMP2_BEFORE_EXEC_EXISTS
-layer_CmdWriteTimestamp2(commandBuffer, stage, queryPool, query);
+layer_CmdWriteTimestamp2_before(commandBuffer, stage, queryPool, query);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp2(commandBuffer, stage, queryPool, query);
 if(connected) {
 #ifdef CMDWRITETIMESTAMP2_AFTER_EXEC_EXISTS
-layer_CmdWriteTimestamp2(commandBuffer, stage, queryPool, query);
+layer_CmdWriteTimestamp2_after(commandBuffer, stage, queryPool, query);
 #endif 
 }
 if(connected) {
@@ -11962,13 +11964,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteBufferMarker2AMD!");
 }
 if(connected) {
 #ifdef CMDWRITEBUFFERMARKER2AMD_BEFORE_EXEC_EXISTS
-layer_CmdWriteBufferMarker2AMD(commandBuffer, stage, dstBuffer, dstOffset, marker);
+layer_CmdWriteBufferMarker2AMD_before(commandBuffer, stage, dstBuffer, dstOffset, marker);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdWriteBufferMarker2AMD(commandBuffer, stage, dstBuffer, dstOffset, marker);
 if(connected) {
 #ifdef CMDWRITEBUFFERMARKER2AMD_AFTER_EXEC_EXISTS
-layer_CmdWriteBufferMarker2AMD(commandBuffer, stage, dstBuffer, dstOffset, marker);
+layer_CmdWriteBufferMarker2AMD_after(commandBuffer, stage, dstBuffer, dstOffset, marker);
 #endif 
 }
 if(connected) {
@@ -11983,13 +11985,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetQueueCheckpointData2NV!");
 }
 if(connected) {
 #ifdef GETQUEUECHECKPOINTDATA2NV_BEFORE_EXEC_EXISTS
-layer_GetQueueCheckpointData2NV(queue, pCheckpointDataCount, pCheckpointData);
+layer_GetQueueCheckpointData2NV_before(queue, pCheckpointDataCount, pCheckpointData);
 #endif 
 }
 device_dispatch[GetKey(queue)].GetQueueCheckpointData2NV(queue, pCheckpointDataCount, pCheckpointData);
 if(connected) {
 #ifdef GETQUEUECHECKPOINTDATA2NV_AFTER_EXEC_EXISTS
-layer_GetQueueCheckpointData2NV(queue, pCheckpointDataCount, pCheckpointData);
+layer_GetQueueCheckpointData2NV_after(queue, pCheckpointDataCount, pCheckpointData);
 #endif 
 }
 if(connected) {
@@ -12004,13 +12006,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCopyMemoryToImageEXT!");
 }
 if(connected) {
 #ifdef COPYMEMORYTOIMAGEEXT_BEFORE_EXEC_EXISTS
-layer_CopyMemoryToImageEXT(device, pCopyMemoryToImageInfo);
+layer_CopyMemoryToImageEXT_before(device, pCopyMemoryToImageInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CopyMemoryToImageEXT(device, pCopyMemoryToImageInfo);
 if(connected) {
 #ifdef COPYMEMORYTOIMAGEEXT_AFTER_EXEC_EXISTS
-layer_CopyMemoryToImageEXT(device, pCopyMemoryToImageInfo);
+layer_CopyMemoryToImageEXT_after(device, pCopyMemoryToImageInfo);
 #endif 
 }
 if(connected) {
@@ -12026,13 +12028,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCopyImageToMemoryEXT!");
 }
 if(connected) {
 #ifdef COPYIMAGETOMEMORYEXT_BEFORE_EXEC_EXISTS
-layer_CopyImageToMemoryEXT(device, pCopyImageToMemoryInfo);
+layer_CopyImageToMemoryEXT_before(device, pCopyImageToMemoryInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CopyImageToMemoryEXT(device, pCopyImageToMemoryInfo);
 if(connected) {
 #ifdef COPYIMAGETOMEMORYEXT_AFTER_EXEC_EXISTS
-layer_CopyImageToMemoryEXT(device, pCopyImageToMemoryInfo);
+layer_CopyImageToMemoryEXT_after(device, pCopyImageToMemoryInfo);
 #endif 
 }
 if(connected) {
@@ -12048,13 +12050,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCopyImageToImageEXT!");
 }
 if(connected) {
 #ifdef COPYIMAGETOIMAGEEXT_BEFORE_EXEC_EXISTS
-layer_CopyImageToImageEXT(device, pCopyImageToImageInfo);
+layer_CopyImageToImageEXT_before(device, pCopyImageToImageInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CopyImageToImageEXT(device, pCopyImageToImageInfo);
 if(connected) {
 #ifdef COPYIMAGETOIMAGEEXT_AFTER_EXEC_EXISTS
-layer_CopyImageToImageEXT(device, pCopyImageToImageInfo);
+layer_CopyImageToImageEXT_after(device, pCopyImageToImageInfo);
 #endif 
 }
 if(connected) {
@@ -12070,13 +12072,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkTransitionImageLayoutEXT!");
 }
 if(connected) {
 #ifdef TRANSITIONIMAGELAYOUTEXT_BEFORE_EXEC_EXISTS
-layer_TransitionImageLayoutEXT(device, transitionCount, pTransitions);
+layer_TransitionImageLayoutEXT_before(device, transitionCount, pTransitions);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].TransitionImageLayoutEXT(device, transitionCount, pTransitions);
 if(connected) {
 #ifdef TRANSITIONIMAGELAYOUTEXT_AFTER_EXEC_EXISTS
-layer_TransitionImageLayoutEXT(device, transitionCount, pTransitions);
+layer_TransitionImageLayoutEXT_after(device, transitionCount, pTransitions);
 #endif 
 }
 if(connected) {
@@ -12092,13 +12094,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateVideoSessionKHR!");
 }
 if(connected) {
 #ifdef CREATEVIDEOSESSIONKHR_BEFORE_EXEC_EXISTS
-layer_CreateVideoSessionKHR(device, pCreateInfo, pAllocator, pVideoSession);
+layer_CreateVideoSessionKHR_before(device, pCreateInfo, pAllocator, pVideoSession);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateVideoSessionKHR(device, pCreateInfo, pAllocator, pVideoSession);
 if(connected) {
 #ifdef CREATEVIDEOSESSIONKHR_AFTER_EXEC_EXISTS
-layer_CreateVideoSessionKHR(device, pCreateInfo, pAllocator, pVideoSession);
+layer_CreateVideoSessionKHR_after(device, pCreateInfo, pAllocator, pVideoSession);
 #endif 
 }
 if(connected) {
@@ -12114,13 +12116,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyVideoSessionKHR!");
 }
 if(connected) {
 #ifdef DESTROYVIDEOSESSIONKHR_BEFORE_EXEC_EXISTS
-layer_DestroyVideoSessionKHR(device, videoSession, pAllocator);
+layer_DestroyVideoSessionKHR_before(device, videoSession, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyVideoSessionKHR(device, videoSession, pAllocator);
 if(connected) {
 #ifdef DESTROYVIDEOSESSIONKHR_AFTER_EXEC_EXISTS
-layer_DestroyVideoSessionKHR(device, videoSession, pAllocator);
+layer_DestroyVideoSessionKHR_after(device, videoSession, pAllocator);
 #endif 
 }
 if(connected) {
@@ -12135,13 +12137,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateVideoSessionParametersKHR!");
 }
 if(connected) {
 #ifdef CREATEVIDEOSESSIONPARAMETERSKHR_BEFORE_EXEC_EXISTS
-layer_CreateVideoSessionParametersKHR(device, pCreateInfo, pAllocator, pVideoSessionParameters);
+layer_CreateVideoSessionParametersKHR_before(device, pCreateInfo, pAllocator, pVideoSessionParameters);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateVideoSessionParametersKHR(device, pCreateInfo, pAllocator, pVideoSessionParameters);
 if(connected) {
 #ifdef CREATEVIDEOSESSIONPARAMETERSKHR_AFTER_EXEC_EXISTS
-layer_CreateVideoSessionParametersKHR(device, pCreateInfo, pAllocator, pVideoSessionParameters);
+layer_CreateVideoSessionParametersKHR_after(device, pCreateInfo, pAllocator, pVideoSessionParameters);
 #endif 
 }
 if(connected) {
@@ -12157,13 +12159,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkUpdateVideoSessionParametersKHR!");
 }
 if(connected) {
 #ifdef UPDATEVIDEOSESSIONPARAMETERSKHR_BEFORE_EXEC_EXISTS
-layer_UpdateVideoSessionParametersKHR(device, videoSessionParameters, pUpdateInfo);
+layer_UpdateVideoSessionParametersKHR_before(device, videoSessionParameters, pUpdateInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].UpdateVideoSessionParametersKHR(device, videoSessionParameters, pUpdateInfo);
 if(connected) {
 #ifdef UPDATEVIDEOSESSIONPARAMETERSKHR_AFTER_EXEC_EXISTS
-layer_UpdateVideoSessionParametersKHR(device, videoSessionParameters, pUpdateInfo);
+layer_UpdateVideoSessionParametersKHR_after(device, videoSessionParameters, pUpdateInfo);
 #endif 
 }
 if(connected) {
@@ -12179,13 +12181,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetEncodedVideoSessionParametersKHR!");
 }
 if(connected) {
 #ifdef GETENCODEDVIDEOSESSIONPARAMETERSKHR_BEFORE_EXEC_EXISTS
-layer_GetEncodedVideoSessionParametersKHR(device, pVideoSessionParametersInfo, pFeedbackInfo, pDataSize, pData);
+layer_GetEncodedVideoSessionParametersKHR_before(device, pVideoSessionParametersInfo, pFeedbackInfo, pDataSize, pData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetEncodedVideoSessionParametersKHR(device, pVideoSessionParametersInfo, pFeedbackInfo, pDataSize, pData);
 if(connected) {
 #ifdef GETENCODEDVIDEOSESSIONPARAMETERSKHR_AFTER_EXEC_EXISTS
-layer_GetEncodedVideoSessionParametersKHR(device, pVideoSessionParametersInfo, pFeedbackInfo, pDataSize, pData);
+layer_GetEncodedVideoSessionParametersKHR_after(device, pVideoSessionParametersInfo, pFeedbackInfo, pDataSize, pData);
 #endif 
 }
 if(connected) {
@@ -12201,13 +12203,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyVideoSessionParametersKHR!");
 }
 if(connected) {
 #ifdef DESTROYVIDEOSESSIONPARAMETERSKHR_BEFORE_EXEC_EXISTS
-layer_DestroyVideoSessionParametersKHR(device, videoSessionParameters, pAllocator);
+layer_DestroyVideoSessionParametersKHR_before(device, videoSessionParameters, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyVideoSessionParametersKHR(device, videoSessionParameters, pAllocator);
 if(connected) {
 #ifdef DESTROYVIDEOSESSIONPARAMETERSKHR_AFTER_EXEC_EXISTS
-layer_DestroyVideoSessionParametersKHR(device, videoSessionParameters, pAllocator);
+layer_DestroyVideoSessionParametersKHR_after(device, videoSessionParameters, pAllocator);
 #endif 
 }
 if(connected) {
@@ -12222,13 +12224,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetVideoSessionMemoryRequirementsKHR!")
 }
 if(connected) {
 #ifdef GETVIDEOSESSIONMEMORYREQUIREMENTSKHR_BEFORE_EXEC_EXISTS
-layer_GetVideoSessionMemoryRequirementsKHR(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements);
+layer_GetVideoSessionMemoryRequirementsKHR_before(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetVideoSessionMemoryRequirementsKHR(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements);
 if(connected) {
 #ifdef GETVIDEOSESSIONMEMORYREQUIREMENTSKHR_AFTER_EXEC_EXISTS
-layer_GetVideoSessionMemoryRequirementsKHR(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements);
+layer_GetVideoSessionMemoryRequirementsKHR_after(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -12244,13 +12246,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkBindVideoSessionMemoryKHR!");
 }
 if(connected) {
 #ifdef BINDVIDEOSESSIONMEMORYKHR_BEFORE_EXEC_EXISTS
-layer_BindVideoSessionMemoryKHR(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos);
+layer_BindVideoSessionMemoryKHR_before(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].BindVideoSessionMemoryKHR(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos);
 if(connected) {
 #ifdef BINDVIDEOSESSIONMEMORYKHR_AFTER_EXEC_EXISTS
-layer_BindVideoSessionMemoryKHR(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos);
+layer_BindVideoSessionMemoryKHR_after(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos);
 #endif 
 }
 if(connected) {
@@ -12266,13 +12268,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDecodeVideoKHR!");
 }
 if(connected) {
 #ifdef CMDDECODEVIDEOKHR_BEFORE_EXEC_EXISTS
-layer_CmdDecodeVideoKHR(commandBuffer, pDecodeInfo);
+layer_CmdDecodeVideoKHR_before(commandBuffer, pDecodeInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDecodeVideoKHR(commandBuffer, pDecodeInfo);
 if(connected) {
 #ifdef CMDDECODEVIDEOKHR_AFTER_EXEC_EXISTS
-layer_CmdDecodeVideoKHR(commandBuffer, pDecodeInfo);
+layer_CmdDecodeVideoKHR_after(commandBuffer, pDecodeInfo);
 #endif 
 }
 if(connected) {
@@ -12287,13 +12289,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginVideoCodingKHR!");
 }
 if(connected) {
 #ifdef CMDBEGINVIDEOCODINGKHR_BEFORE_EXEC_EXISTS
-layer_CmdBeginVideoCodingKHR(commandBuffer, pBeginInfo);
+layer_CmdBeginVideoCodingKHR_before(commandBuffer, pBeginInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBeginVideoCodingKHR(commandBuffer, pBeginInfo);
 if(connected) {
 #ifdef CMDBEGINVIDEOCODINGKHR_AFTER_EXEC_EXISTS
-layer_CmdBeginVideoCodingKHR(commandBuffer, pBeginInfo);
+layer_CmdBeginVideoCodingKHR_after(commandBuffer, pBeginInfo);
 #endif 
 }
 if(connected) {
@@ -12308,13 +12310,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdControlVideoCodingKHR!");
 }
 if(connected) {
 #ifdef CMDCONTROLVIDEOCODINGKHR_BEFORE_EXEC_EXISTS
-layer_CmdControlVideoCodingKHR(commandBuffer, pCodingControlInfo);
+layer_CmdControlVideoCodingKHR_before(commandBuffer, pCodingControlInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdControlVideoCodingKHR(commandBuffer, pCodingControlInfo);
 if(connected) {
 #ifdef CMDCONTROLVIDEOCODINGKHR_AFTER_EXEC_EXISTS
-layer_CmdControlVideoCodingKHR(commandBuffer, pCodingControlInfo);
+layer_CmdControlVideoCodingKHR_after(commandBuffer, pCodingControlInfo);
 #endif 
 }
 if(connected) {
@@ -12329,13 +12331,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdEndVideoCodingKHR!");
 }
 if(connected) {
 #ifdef CMDENDVIDEOCODINGKHR_BEFORE_EXEC_EXISTS
-layer_CmdEndVideoCodingKHR(commandBuffer, pEndCodingInfo);
+layer_CmdEndVideoCodingKHR_before(commandBuffer, pEndCodingInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdEndVideoCodingKHR(commandBuffer, pEndCodingInfo);
 if(connected) {
 #ifdef CMDENDVIDEOCODINGKHR_AFTER_EXEC_EXISTS
-layer_CmdEndVideoCodingKHR(commandBuffer, pEndCodingInfo);
+layer_CmdEndVideoCodingKHR_after(commandBuffer, pEndCodingInfo);
 #endif 
 }
 if(connected) {
@@ -12350,13 +12352,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdEncodeVideoKHR!");
 }
 if(connected) {
 #ifdef CMDENCODEVIDEOKHR_BEFORE_EXEC_EXISTS
-layer_CmdEncodeVideoKHR(commandBuffer, pEncodeInfo);
+layer_CmdEncodeVideoKHR_before(commandBuffer, pEncodeInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdEncodeVideoKHR(commandBuffer, pEncodeInfo);
 if(connected) {
 #ifdef CMDENCODEVIDEOKHR_AFTER_EXEC_EXISTS
-layer_CmdEncodeVideoKHR(commandBuffer, pEncodeInfo);
+layer_CmdEncodeVideoKHR_after(commandBuffer, pEncodeInfo);
 #endif 
 }
 if(connected) {
@@ -12371,13 +12373,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDecompressMemoryNV!");
 }
 if(connected) {
 #ifdef CMDDECOMPRESSMEMORYNV_BEFORE_EXEC_EXISTS
-layer_CmdDecompressMemoryNV(commandBuffer, decompressRegionCount, pDecompressMemoryRegions);
+layer_CmdDecompressMemoryNV_before(commandBuffer, decompressRegionCount, pDecompressMemoryRegions);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDecompressMemoryNV(commandBuffer, decompressRegionCount, pDecompressMemoryRegions);
 if(connected) {
 #ifdef CMDDECOMPRESSMEMORYNV_AFTER_EXEC_EXISTS
-layer_CmdDecompressMemoryNV(commandBuffer, decompressRegionCount, pDecompressMemoryRegions);
+layer_CmdDecompressMemoryNV_after(commandBuffer, decompressRegionCount, pDecompressMemoryRegions);
 #endif 
 }
 if(connected) {
@@ -12392,13 +12394,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDecompressMemoryIndirectCountNV!");
 }
 if(connected) {
 #ifdef CMDDECOMPRESSMEMORYINDIRECTCOUNTNV_BEFORE_EXEC_EXISTS
-layer_CmdDecompressMemoryIndirectCountNV(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride);
+layer_CmdDecompressMemoryIndirectCountNV_before(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDecompressMemoryIndirectCountNV(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride);
 if(connected) {
 #ifdef CMDDECOMPRESSMEMORYINDIRECTCOUNTNV_AFTER_EXEC_EXISTS
-layer_CmdDecompressMemoryIndirectCountNV(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride);
+layer_CmdDecompressMemoryIndirectCountNV_after(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride);
 #endif 
 }
 if(connected) {
@@ -12413,13 +12415,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateCuModuleNVX!");
 }
 if(connected) {
 #ifdef CREATECUMODULENVX_BEFORE_EXEC_EXISTS
-layer_CreateCuModuleNVX(device, pCreateInfo, pAllocator, pModule);
+layer_CreateCuModuleNVX_before(device, pCreateInfo, pAllocator, pModule);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateCuModuleNVX(device, pCreateInfo, pAllocator, pModule);
 if(connected) {
 #ifdef CREATECUMODULENVX_AFTER_EXEC_EXISTS
-layer_CreateCuModuleNVX(device, pCreateInfo, pAllocator, pModule);
+layer_CreateCuModuleNVX_after(device, pCreateInfo, pAllocator, pModule);
 #endif 
 }
 if(connected) {
@@ -12435,13 +12437,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateCuFunctionNVX!");
 }
 if(connected) {
 #ifdef CREATECUFUNCTIONNVX_BEFORE_EXEC_EXISTS
-layer_CreateCuFunctionNVX(device, pCreateInfo, pAllocator, pFunction);
+layer_CreateCuFunctionNVX_before(device, pCreateInfo, pAllocator, pFunction);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateCuFunctionNVX(device, pCreateInfo, pAllocator, pFunction);
 if(connected) {
 #ifdef CREATECUFUNCTIONNVX_AFTER_EXEC_EXISTS
-layer_CreateCuFunctionNVX(device, pCreateInfo, pAllocator, pFunction);
+layer_CreateCuFunctionNVX_after(device, pCreateInfo, pAllocator, pFunction);
 #endif 
 }
 if(connected) {
@@ -12457,13 +12459,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyCuModuleNVX!");
 }
 if(connected) {
 #ifdef DESTROYCUMODULENVX_BEFORE_EXEC_EXISTS
-layer_DestroyCuModuleNVX(device, module, pAllocator);
+layer_DestroyCuModuleNVX_before(device, module, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyCuModuleNVX(device, module, pAllocator);
 if(connected) {
 #ifdef DESTROYCUMODULENVX_AFTER_EXEC_EXISTS
-layer_DestroyCuModuleNVX(device, module, pAllocator);
+layer_DestroyCuModuleNVX_after(device, module, pAllocator);
 #endif 
 }
 if(connected) {
@@ -12478,13 +12480,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyCuFunctionNVX!");
 }
 if(connected) {
 #ifdef DESTROYCUFUNCTIONNVX_BEFORE_EXEC_EXISTS
-layer_DestroyCuFunctionNVX(device, function, pAllocator);
+layer_DestroyCuFunctionNVX_before(device, function, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyCuFunctionNVX(device, function, pAllocator);
 if(connected) {
 #ifdef DESTROYCUFUNCTIONNVX_AFTER_EXEC_EXISTS
-layer_DestroyCuFunctionNVX(device, function, pAllocator);
+layer_DestroyCuFunctionNVX_after(device, function, pAllocator);
 #endif 
 }
 if(connected) {
@@ -12499,13 +12501,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCuLaunchKernelNVX!");
 }
 if(connected) {
 #ifdef CMDCULAUNCHKERNELNVX_BEFORE_EXEC_EXISTS
-layer_CmdCuLaunchKernelNVX(commandBuffer, pLaunchInfo);
+layer_CmdCuLaunchKernelNVX_before(commandBuffer, pLaunchInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCuLaunchKernelNVX(commandBuffer, pLaunchInfo);
 if(connected) {
 #ifdef CMDCULAUNCHKERNELNVX_AFTER_EXEC_EXISTS
-layer_CmdCuLaunchKernelNVX(commandBuffer, pLaunchInfo);
+layer_CmdCuLaunchKernelNVX_after(commandBuffer, pLaunchInfo);
 #endif 
 }
 if(connected) {
@@ -12520,13 +12522,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDescriptorSetLayoutSizeEXT!");
 }
 if(connected) {
 #ifdef GETDESCRIPTORSETLAYOUTSIZEEXT_BEFORE_EXEC_EXISTS
-layer_GetDescriptorSetLayoutSizeEXT(device, layout, pLayoutSizeInBytes);
+layer_GetDescriptorSetLayoutSizeEXT_before(device, layout, pLayoutSizeInBytes);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutSizeEXT(device, layout, pLayoutSizeInBytes);
 if(connected) {
 #ifdef GETDESCRIPTORSETLAYOUTSIZEEXT_AFTER_EXEC_EXISTS
-layer_GetDescriptorSetLayoutSizeEXT(device, layout, pLayoutSizeInBytes);
+layer_GetDescriptorSetLayoutSizeEXT_after(device, layout, pLayoutSizeInBytes);
 #endif 
 }
 if(connected) {
@@ -12541,13 +12543,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDescriptorSetLayoutBindingOffsetEXT!
 }
 if(connected) {
 #ifdef GETDESCRIPTORSETLAYOUTBINDINGOFFSETEXT_BEFORE_EXEC_EXISTS
-layer_GetDescriptorSetLayoutBindingOffsetEXT(device, layout, binding, pOffset);
+layer_GetDescriptorSetLayoutBindingOffsetEXT_before(device, layout, binding, pOffset);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutBindingOffsetEXT(device, layout, binding, pOffset);
 if(connected) {
 #ifdef GETDESCRIPTORSETLAYOUTBINDINGOFFSETEXT_AFTER_EXEC_EXISTS
-layer_GetDescriptorSetLayoutBindingOffsetEXT(device, layout, binding, pOffset);
+layer_GetDescriptorSetLayoutBindingOffsetEXT_after(device, layout, binding, pOffset);
 #endif 
 }
 if(connected) {
@@ -12562,13 +12564,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDescriptorEXT!");
 }
 if(connected) {
 #ifdef GETDESCRIPTOREXT_BEFORE_EXEC_EXISTS
-layer_GetDescriptorEXT(device, pDescriptorInfo, dataSize, pDescriptor);
+layer_GetDescriptorEXT_before(device, pDescriptorInfo, dataSize, pDescriptor);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDescriptorEXT(device, pDescriptorInfo, dataSize, pDescriptor);
 if(connected) {
 #ifdef GETDESCRIPTOREXT_AFTER_EXEC_EXISTS
-layer_GetDescriptorEXT(device, pDescriptorInfo, dataSize, pDescriptor);
+layer_GetDescriptorEXT_after(device, pDescriptorInfo, dataSize, pDescriptor);
 #endif 
 }
 if(connected) {
@@ -12583,13 +12585,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindDescriptorBuffersEXT!");
 }
 if(connected) {
 #ifdef CMDBINDDESCRIPTORBUFFERSEXT_BEFORE_EXEC_EXISTS
-layer_CmdBindDescriptorBuffersEXT(commandBuffer, bufferCount, pBindingInfos);
+layer_CmdBindDescriptorBuffersEXT_before(commandBuffer, bufferCount, pBindingInfos);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBuffersEXT(commandBuffer, bufferCount, pBindingInfos);
 if(connected) {
 #ifdef CMDBINDDESCRIPTORBUFFERSEXT_AFTER_EXEC_EXISTS
-layer_CmdBindDescriptorBuffersEXT(commandBuffer, bufferCount, pBindingInfos);
+layer_CmdBindDescriptorBuffersEXT_after(commandBuffer, bufferCount, pBindingInfos);
 #endif 
 }
 if(connected) {
@@ -12604,13 +12606,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDescriptorBufferOffsetsEXT!");
 }
 if(connected) {
 #ifdef CMDSETDESCRIPTORBUFFEROFFSETSEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetDescriptorBufferOffsetsEXT(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets);
+layer_CmdSetDescriptorBufferOffsetsEXT_before(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDescriptorBufferOffsetsEXT(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets);
 if(connected) {
 #ifdef CMDSETDESCRIPTORBUFFEROFFSETSEXT_AFTER_EXEC_EXISTS
-layer_CmdSetDescriptorBufferOffsetsEXT(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets);
+layer_CmdSetDescriptorBufferOffsetsEXT_after(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets);
 #endif 
 }
 if(connected) {
@@ -12625,13 +12627,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindDescriptorBufferEmbeddedSamplers
 }
 if(connected) {
 #ifdef CMDBINDDESCRIPTORBUFFEREMBEDDEDSAMPLERSEXT_BEFORE_EXEC_EXISTS
-layer_CmdBindDescriptorBufferEmbeddedSamplersEXT(commandBuffer, pipelineBindPoint, layout, set);
+layer_CmdBindDescriptorBufferEmbeddedSamplersEXT_before(commandBuffer, pipelineBindPoint, layout, set);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBufferEmbeddedSamplersEXT(commandBuffer, pipelineBindPoint, layout, set);
 if(connected) {
 #ifdef CMDBINDDESCRIPTORBUFFEREMBEDDEDSAMPLERSEXT_AFTER_EXEC_EXISTS
-layer_CmdBindDescriptorBufferEmbeddedSamplersEXT(commandBuffer, pipelineBindPoint, layout, set);
+layer_CmdBindDescriptorBufferEmbeddedSamplersEXT_after(commandBuffer, pipelineBindPoint, layout, set);
 #endif 
 }
 if(connected) {
@@ -12646,13 +12648,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetBufferOpaqueCaptureDescriptorDataEXT
 }
 if(connected) {
 #ifdef GETBUFFEROPAQUECAPTUREDESCRIPTORDATAEXT_BEFORE_EXEC_EXISTS
-layer_GetBufferOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
+layer_GetBufferOpaqueCaptureDescriptorDataEXT_before(device, pInfo, pData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetBufferOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
 if(connected) {
 #ifdef GETBUFFEROPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
-layer_GetBufferOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
+layer_GetBufferOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
 #endif 
 }
 if(connected) {
@@ -12668,13 +12670,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetImageOpaqueCaptureDescriptorDataEXT!
 }
 if(connected) {
 #ifdef GETIMAGEOPAQUECAPTUREDESCRIPTORDATAEXT_BEFORE_EXEC_EXISTS
-layer_GetImageOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
+layer_GetImageOpaqueCaptureDescriptorDataEXT_before(device, pInfo, pData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetImageOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
 if(connected) {
 #ifdef GETIMAGEOPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
-layer_GetImageOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
+layer_GetImageOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
 #endif 
 }
 if(connected) {
@@ -12690,13 +12692,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetImageViewOpaqueCaptureDescriptorData
 }
 if(connected) {
 #ifdef GETIMAGEVIEWOPAQUECAPTUREDESCRIPTORDATAEXT_BEFORE_EXEC_EXISTS
-layer_GetImageViewOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
+layer_GetImageViewOpaqueCaptureDescriptorDataEXT_before(device, pInfo, pData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetImageViewOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
 if(connected) {
 #ifdef GETIMAGEVIEWOPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
-layer_GetImageViewOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
+layer_GetImageViewOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
 #endif 
 }
 if(connected) {
@@ -12712,13 +12714,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetSamplerOpaqueCaptureDescriptorDataEX
 }
 if(connected) {
 #ifdef GETSAMPLEROPAQUECAPTUREDESCRIPTORDATAEXT_BEFORE_EXEC_EXISTS
-layer_GetSamplerOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
+layer_GetSamplerOpaqueCaptureDescriptorDataEXT_before(device, pInfo, pData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetSamplerOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
 if(connected) {
 #ifdef GETSAMPLEROPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
-layer_GetSamplerOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
+layer_GetSamplerOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
 #endif 
 }
 if(connected) {
@@ -12734,13 +12736,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetAccelerationStructureOpaqueCaptureDe
 }
 if(connected) {
 #ifdef GETACCELERATIONSTRUCTUREOPAQUECAPTUREDESCRIPTORDATAEXT_BEFORE_EXEC_EXISTS
-layer_GetAccelerationStructureOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
+layer_GetAccelerationStructureOpaqueCaptureDescriptorDataEXT_before(device, pInfo, pData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetAccelerationStructureOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
 if(connected) {
 #ifdef GETACCELERATIONSTRUCTUREOPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
-layer_GetAccelerationStructureOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
+layer_GetAccelerationStructureOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
 #endif 
 }
 if(connected) {
@@ -12756,13 +12758,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSetDeviceMemoryPriorityEXT!");
 }
 if(connected) {
 #ifdef SETDEVICEMEMORYPRIORITYEXT_BEFORE_EXEC_EXISTS
-layer_SetDeviceMemoryPriorityEXT(device, memory, priority);
+layer_SetDeviceMemoryPriorityEXT_before(device, memory, priority);
 #endif 
 }
 device_dispatch[GetKey(device)].SetDeviceMemoryPriorityEXT(device, memory, priority);
 if(connected) {
 #ifdef SETDEVICEMEMORYPRIORITYEXT_AFTER_EXEC_EXISTS
-layer_SetDeviceMemoryPriorityEXT(device, memory, priority);
+layer_SetDeviceMemoryPriorityEXT_after(device, memory, priority);
 #endif 
 }
 if(connected) {
@@ -12777,13 +12779,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkWaitForPresentKHR!");
 }
 if(connected) {
 #ifdef WAITFORPRESENTKHR_BEFORE_EXEC_EXISTS
-layer_WaitForPresentKHR(device, swapchain, presentId, timeout);
+layer_WaitForPresentKHR_before(device, swapchain, presentId, timeout);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].WaitForPresentKHR(device, swapchain, presentId, timeout);
 if(connected) {
 #ifdef WAITFORPRESENTKHR_AFTER_EXEC_EXISTS
-layer_WaitForPresentKHR(device, swapchain, presentId, timeout);
+layer_WaitForPresentKHR_after(device, swapchain, presentId, timeout);
 #endif 
 }
 if(connected) {
@@ -12800,13 +12802,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateBufferCollectionFUCHSIA!");
 }
 if(connected) {
 #ifdef CREATEBUFFERCOLLECTIONFUCHSIA_BEFORE_EXEC_EXISTS
-layer_CreateBufferCollectionFUCHSIA(device, pCreateInfo, pAllocator, pCollection);
+layer_CreateBufferCollectionFUCHSIA_before(device, pCreateInfo, pAllocator, pCollection);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateBufferCollectionFUCHSIA(device, pCreateInfo, pAllocator, pCollection);
 if(connected) {
 #ifdef CREATEBUFFERCOLLECTIONFUCHSIA_AFTER_EXEC_EXISTS
-layer_CreateBufferCollectionFUCHSIA(device, pCreateInfo, pAllocator, pCollection);
+layer_CreateBufferCollectionFUCHSIA_after(device, pCreateInfo, pAllocator, pCollection);
 #endif 
 }
 if(connected) {
@@ -12824,13 +12826,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSetBufferCollectionBufferConstraintsFUC
 }
 if(connected) {
 #ifdef SETBUFFERCOLLECTIONBUFFERCONSTRAINTSFUCHSIA_BEFORE_EXEC_EXISTS
-layer_SetBufferCollectionBufferConstraintsFUCHSIA(device, collection, pBufferConstraintsInfo);
+layer_SetBufferCollectionBufferConstraintsFUCHSIA_before(device, collection, pBufferConstraintsInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].SetBufferCollectionBufferConstraintsFUCHSIA(device, collection, pBufferConstraintsInfo);
 if(connected) {
 #ifdef SETBUFFERCOLLECTIONBUFFERCONSTRAINTSFUCHSIA_AFTER_EXEC_EXISTS
-layer_SetBufferCollectionBufferConstraintsFUCHSIA(device, collection, pBufferConstraintsInfo);
+layer_SetBufferCollectionBufferConstraintsFUCHSIA_after(device, collection, pBufferConstraintsInfo);
 #endif 
 }
 if(connected) {
@@ -12848,13 +12850,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSetBufferCollectionImageConstraintsFUCH
 }
 if(connected) {
 #ifdef SETBUFFERCOLLECTIONIMAGECONSTRAINTSFUCHSIA_BEFORE_EXEC_EXISTS
-layer_SetBufferCollectionImageConstraintsFUCHSIA(device, collection, pImageConstraintsInfo);
+layer_SetBufferCollectionImageConstraintsFUCHSIA_before(device, collection, pImageConstraintsInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].SetBufferCollectionImageConstraintsFUCHSIA(device, collection, pImageConstraintsInfo);
 if(connected) {
 #ifdef SETBUFFERCOLLECTIONIMAGECONSTRAINTSFUCHSIA_AFTER_EXEC_EXISTS
-layer_SetBufferCollectionImageConstraintsFUCHSIA(device, collection, pImageConstraintsInfo);
+layer_SetBufferCollectionImageConstraintsFUCHSIA_after(device, collection, pImageConstraintsInfo);
 #endif 
 }
 if(connected) {
@@ -12872,13 +12874,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyBufferCollectionFUCHSIA!");
 }
 if(connected) {
 #ifdef DESTROYBUFFERCOLLECTIONFUCHSIA_BEFORE_EXEC_EXISTS
-layer_DestroyBufferCollectionFUCHSIA(device, collection, pAllocator);
+layer_DestroyBufferCollectionFUCHSIA_before(device, collection, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyBufferCollectionFUCHSIA(device, collection, pAllocator);
 if(connected) {
 #ifdef DESTROYBUFFERCOLLECTIONFUCHSIA_AFTER_EXEC_EXISTS
-layer_DestroyBufferCollectionFUCHSIA(device, collection, pAllocator);
+layer_DestroyBufferCollectionFUCHSIA_after(device, collection, pAllocator);
 #endif 
 }
 if(connected) {
@@ -12895,13 +12897,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetBufferCollectionPropertiesFUCHSIA!")
 }
 if(connected) {
 #ifdef GETBUFFERCOLLECTIONPROPERTIESFUCHSIA_BEFORE_EXEC_EXISTS
-layer_GetBufferCollectionPropertiesFUCHSIA(device, collection, pProperties);
+layer_GetBufferCollectionPropertiesFUCHSIA_before(device, collection, pProperties);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetBufferCollectionPropertiesFUCHSIA(device, collection, pProperties);
 if(connected) {
 #ifdef GETBUFFERCOLLECTIONPROPERTIESFUCHSIA_AFTER_EXEC_EXISTS
-layer_GetBufferCollectionPropertiesFUCHSIA(device, collection, pProperties);
+layer_GetBufferCollectionPropertiesFUCHSIA_after(device, collection, pProperties);
 #endif 
 }
 if(connected) {
@@ -12918,13 +12920,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateCudaModuleNV!");
 }
 if(connected) {
 #ifdef CREATECUDAMODULENV_BEFORE_EXEC_EXISTS
-layer_CreateCudaModuleNV(device, pCreateInfo, pAllocator, pModule);
+layer_CreateCudaModuleNV_before(device, pCreateInfo, pAllocator, pModule);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateCudaModuleNV(device, pCreateInfo, pAllocator, pModule);
 if(connected) {
 #ifdef CREATECUDAMODULENV_AFTER_EXEC_EXISTS
-layer_CreateCudaModuleNV(device, pCreateInfo, pAllocator, pModule);
+layer_CreateCudaModuleNV_after(device, pCreateInfo, pAllocator, pModule);
 #endif 
 }
 if(connected) {
@@ -12940,13 +12942,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetCudaModuleCacheNV!");
 }
 if(connected) {
 #ifdef GETCUDAMODULECACHENV_BEFORE_EXEC_EXISTS
-layer_GetCudaModuleCacheNV(device, module, pCacheSize, pCacheData);
+layer_GetCudaModuleCacheNV_before(device, module, pCacheSize, pCacheData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetCudaModuleCacheNV(device, module, pCacheSize, pCacheData);
 if(connected) {
 #ifdef GETCUDAMODULECACHENV_AFTER_EXEC_EXISTS
-layer_GetCudaModuleCacheNV(device, module, pCacheSize, pCacheData);
+layer_GetCudaModuleCacheNV_after(device, module, pCacheSize, pCacheData);
 #endif 
 }
 if(connected) {
@@ -12962,13 +12964,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateCudaFunctionNV!");
 }
 if(connected) {
 #ifdef CREATECUDAFUNCTIONNV_BEFORE_EXEC_EXISTS
-layer_CreateCudaFunctionNV(device, pCreateInfo, pAllocator, pFunction);
+layer_CreateCudaFunctionNV_before(device, pCreateInfo, pAllocator, pFunction);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateCudaFunctionNV(device, pCreateInfo, pAllocator, pFunction);
 if(connected) {
 #ifdef CREATECUDAFUNCTIONNV_AFTER_EXEC_EXISTS
-layer_CreateCudaFunctionNV(device, pCreateInfo, pAllocator, pFunction);
+layer_CreateCudaFunctionNV_after(device, pCreateInfo, pAllocator, pFunction);
 #endif 
 }
 if(connected) {
@@ -12984,13 +12986,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyCudaModuleNV!");
 }
 if(connected) {
 #ifdef DESTROYCUDAMODULENV_BEFORE_EXEC_EXISTS
-layer_DestroyCudaModuleNV(device, module, pAllocator);
+layer_DestroyCudaModuleNV_before(device, module, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyCudaModuleNV(device, module, pAllocator);
 if(connected) {
 #ifdef DESTROYCUDAMODULENV_AFTER_EXEC_EXISTS
-layer_DestroyCudaModuleNV(device, module, pAllocator);
+layer_DestroyCudaModuleNV_after(device, module, pAllocator);
 #endif 
 }
 if(connected) {
@@ -13005,13 +13007,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyCudaFunctionNV!");
 }
 if(connected) {
 #ifdef DESTROYCUDAFUNCTIONNV_BEFORE_EXEC_EXISTS
-layer_DestroyCudaFunctionNV(device, function, pAllocator);
+layer_DestroyCudaFunctionNV_before(device, function, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyCudaFunctionNV(device, function, pAllocator);
 if(connected) {
 #ifdef DESTROYCUDAFUNCTIONNV_AFTER_EXEC_EXISTS
-layer_DestroyCudaFunctionNV(device, function, pAllocator);
+layer_DestroyCudaFunctionNV_after(device, function, pAllocator);
 #endif 
 }
 if(connected) {
@@ -13026,13 +13028,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCudaLaunchKernelNV!");
 }
 if(connected) {
 #ifdef CMDCUDALAUNCHKERNELNV_BEFORE_EXEC_EXISTS
-layer_CmdCudaLaunchKernelNV(commandBuffer, pLaunchInfo);
+layer_CmdCudaLaunchKernelNV_before(commandBuffer, pLaunchInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCudaLaunchKernelNV(commandBuffer, pLaunchInfo);
 if(connected) {
 #ifdef CMDCUDALAUNCHKERNELNV_AFTER_EXEC_EXISTS
-layer_CmdCudaLaunchKernelNV(commandBuffer, pLaunchInfo);
+layer_CmdCudaLaunchKernelNV_after(commandBuffer, pLaunchInfo);
 #endif 
 }
 if(connected) {
@@ -13047,13 +13049,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginRendering!");
 }
 if(connected) {
 #ifdef CMDBEGINRENDERING_BEFORE_EXEC_EXISTS
-layer_CmdBeginRendering(commandBuffer, pRenderingInfo);
+layer_CmdBeginRendering_before(commandBuffer, pRenderingInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBeginRendering(commandBuffer, pRenderingInfo);
 if(connected) {
 #ifdef CMDBEGINRENDERING_AFTER_EXEC_EXISTS
-layer_CmdBeginRendering(commandBuffer, pRenderingInfo);
+layer_CmdBeginRendering_after(commandBuffer, pRenderingInfo);
 #endif 
 }
 if(connected) {
@@ -13068,13 +13070,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdEndRendering!");
 }
 if(connected) {
 #ifdef CMDENDRENDERING_BEFORE_EXEC_EXISTS
-layer_CmdEndRendering(commandBuffer);
+layer_CmdEndRendering_before(commandBuffer);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdEndRendering(commandBuffer);
 if(connected) {
 #ifdef CMDENDRENDERING_AFTER_EXEC_EXISTS
-layer_CmdEndRendering(commandBuffer);
+layer_CmdEndRendering_after(commandBuffer);
 #endif 
 }
 if(connected) {
@@ -13089,13 +13091,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDescriptorSetLayoutHostMappingInfoVA
 }
 if(connected) {
 #ifdef GETDESCRIPTORSETLAYOUTHOSTMAPPINGINFOVALVE_BEFORE_EXEC_EXISTS
-layer_GetDescriptorSetLayoutHostMappingInfoVALVE(device, pBindingReference, pHostMapping);
+layer_GetDescriptorSetLayoutHostMappingInfoVALVE_before(device, pBindingReference, pHostMapping);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutHostMappingInfoVALVE(device, pBindingReference, pHostMapping);
 if(connected) {
 #ifdef GETDESCRIPTORSETLAYOUTHOSTMAPPINGINFOVALVE_AFTER_EXEC_EXISTS
-layer_GetDescriptorSetLayoutHostMappingInfoVALVE(device, pBindingReference, pHostMapping);
+layer_GetDescriptorSetLayoutHostMappingInfoVALVE_after(device, pBindingReference, pHostMapping);
 #endif 
 }
 if(connected) {
@@ -13110,13 +13112,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDescriptorSetHostMappingVALVE!");
 }
 if(connected) {
 #ifdef GETDESCRIPTORSETHOSTMAPPINGVALVE_BEFORE_EXEC_EXISTS
-layer_GetDescriptorSetHostMappingVALVE(device, descriptorSet, ppData);
+layer_GetDescriptorSetHostMappingVALVE_before(device, descriptorSet, ppData);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDescriptorSetHostMappingVALVE(device, descriptorSet, ppData);
 if(connected) {
 #ifdef GETDESCRIPTORSETHOSTMAPPINGVALVE_AFTER_EXEC_EXISTS
-layer_GetDescriptorSetHostMappingVALVE(device, descriptorSet, ppData);
+layer_GetDescriptorSetHostMappingVALVE_after(device, descriptorSet, ppData);
 #endif 
 }
 if(connected) {
@@ -13131,13 +13133,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateMicromapEXT!");
 }
 if(connected) {
 #ifdef CREATEMICROMAPEXT_BEFORE_EXEC_EXISTS
-layer_CreateMicromapEXT(device, pCreateInfo, pAllocator, pMicromap);
+layer_CreateMicromapEXT_before(device, pCreateInfo, pAllocator, pMicromap);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateMicromapEXT(device, pCreateInfo, pAllocator, pMicromap);
 if(connected) {
 #ifdef CREATEMICROMAPEXT_AFTER_EXEC_EXISTS
-layer_CreateMicromapEXT(device, pCreateInfo, pAllocator, pMicromap);
+layer_CreateMicromapEXT_after(device, pCreateInfo, pAllocator, pMicromap);
 #endif 
 }
 if(connected) {
@@ -13153,13 +13155,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBuildMicromapsEXT!");
 }
 if(connected) {
 #ifdef CMDBUILDMICROMAPSEXT_BEFORE_EXEC_EXISTS
-layer_CmdBuildMicromapsEXT(commandBuffer, infoCount, pInfos);
+layer_CmdBuildMicromapsEXT_before(commandBuffer, infoCount, pInfos);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBuildMicromapsEXT(commandBuffer, infoCount, pInfos);
 if(connected) {
 #ifdef CMDBUILDMICROMAPSEXT_AFTER_EXEC_EXISTS
-layer_CmdBuildMicromapsEXT(commandBuffer, infoCount, pInfos);
+layer_CmdBuildMicromapsEXT_after(commandBuffer, infoCount, pInfos);
 #endif 
 }
 if(connected) {
@@ -13174,13 +13176,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkBuildMicromapsEXT!");
 }
 if(connected) {
 #ifdef BUILDMICROMAPSEXT_BEFORE_EXEC_EXISTS
-layer_BuildMicromapsEXT(device, deferredOperation, infoCount, pInfos);
+layer_BuildMicromapsEXT_before(device, deferredOperation, infoCount, pInfos);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].BuildMicromapsEXT(device, deferredOperation, infoCount, pInfos);
 if(connected) {
 #ifdef BUILDMICROMAPSEXT_AFTER_EXEC_EXISTS
-layer_BuildMicromapsEXT(device, deferredOperation, infoCount, pInfos);
+layer_BuildMicromapsEXT_after(device, deferredOperation, infoCount, pInfos);
 #endif 
 }
 if(connected) {
@@ -13196,13 +13198,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyMicromapEXT!");
 }
 if(connected) {
 #ifdef DESTROYMICROMAPEXT_BEFORE_EXEC_EXISTS
-layer_DestroyMicromapEXT(device, micromap, pAllocator);
+layer_DestroyMicromapEXT_before(device, micromap, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyMicromapEXT(device, micromap, pAllocator);
 if(connected) {
 #ifdef DESTROYMICROMAPEXT_AFTER_EXEC_EXISTS
-layer_DestroyMicromapEXT(device, micromap, pAllocator);
+layer_DestroyMicromapEXT_after(device, micromap, pAllocator);
 #endif 
 }
 if(connected) {
@@ -13217,13 +13219,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyMicromapEXT!");
 }
 if(connected) {
 #ifdef CMDCOPYMICROMAPEXT_BEFORE_EXEC_EXISTS
-layer_CmdCopyMicromapEXT(commandBuffer, pInfo);
+layer_CmdCopyMicromapEXT_before(commandBuffer, pInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyMicromapEXT(commandBuffer, pInfo);
 if(connected) {
 #ifdef CMDCOPYMICROMAPEXT_AFTER_EXEC_EXISTS
-layer_CmdCopyMicromapEXT(commandBuffer, pInfo);
+layer_CmdCopyMicromapEXT_after(commandBuffer, pInfo);
 #endif 
 }
 if(connected) {
@@ -13238,13 +13240,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCopyMicromapEXT!");
 }
 if(connected) {
 #ifdef COPYMICROMAPEXT_BEFORE_EXEC_EXISTS
-layer_CopyMicromapEXT(device, deferredOperation, pInfo);
+layer_CopyMicromapEXT_before(device, deferredOperation, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CopyMicromapEXT(device, deferredOperation, pInfo);
 if(connected) {
 #ifdef COPYMICROMAPEXT_AFTER_EXEC_EXISTS
-layer_CopyMicromapEXT(device, deferredOperation, pInfo);
+layer_CopyMicromapEXT_after(device, deferredOperation, pInfo);
 #endif 
 }
 if(connected) {
@@ -13260,13 +13262,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyMicromapToMemoryEXT!");
 }
 if(connected) {
 #ifdef CMDCOPYMICROMAPTOMEMORYEXT_BEFORE_EXEC_EXISTS
-layer_CmdCopyMicromapToMemoryEXT(commandBuffer, pInfo);
+layer_CmdCopyMicromapToMemoryEXT_before(commandBuffer, pInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyMicromapToMemoryEXT(commandBuffer, pInfo);
 if(connected) {
 #ifdef CMDCOPYMICROMAPTOMEMORYEXT_AFTER_EXEC_EXISTS
-layer_CmdCopyMicromapToMemoryEXT(commandBuffer, pInfo);
+layer_CmdCopyMicromapToMemoryEXT_after(commandBuffer, pInfo);
 #endif 
 }
 if(connected) {
@@ -13281,13 +13283,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCopyMicromapToMemoryEXT!");
 }
 if(connected) {
 #ifdef COPYMICROMAPTOMEMORYEXT_BEFORE_EXEC_EXISTS
-layer_CopyMicromapToMemoryEXT(device, deferredOperation, pInfo);
+layer_CopyMicromapToMemoryEXT_before(device, deferredOperation, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CopyMicromapToMemoryEXT(device, deferredOperation, pInfo);
 if(connected) {
 #ifdef COPYMICROMAPTOMEMORYEXT_AFTER_EXEC_EXISTS
-layer_CopyMicromapToMemoryEXT(device, deferredOperation, pInfo);
+layer_CopyMicromapToMemoryEXT_after(device, deferredOperation, pInfo);
 #endif 
 }
 if(connected) {
@@ -13303,13 +13305,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyMemoryToMicromapEXT!");
 }
 if(connected) {
 #ifdef CMDCOPYMEMORYTOMICROMAPEXT_BEFORE_EXEC_EXISTS
-layer_CmdCopyMemoryToMicromapEXT(commandBuffer, pInfo);
+layer_CmdCopyMemoryToMicromapEXT_before(commandBuffer, pInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToMicromapEXT(commandBuffer, pInfo);
 if(connected) {
 #ifdef CMDCOPYMEMORYTOMICROMAPEXT_AFTER_EXEC_EXISTS
-layer_CmdCopyMemoryToMicromapEXT(commandBuffer, pInfo);
+layer_CmdCopyMemoryToMicromapEXT_after(commandBuffer, pInfo);
 #endif 
 }
 if(connected) {
@@ -13324,13 +13326,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCopyMemoryToMicromapEXT!");
 }
 if(connected) {
 #ifdef COPYMEMORYTOMICROMAPEXT_BEFORE_EXEC_EXISTS
-layer_CopyMemoryToMicromapEXT(device, deferredOperation, pInfo);
+layer_CopyMemoryToMicromapEXT_before(device, deferredOperation, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CopyMemoryToMicromapEXT(device, deferredOperation, pInfo);
 if(connected) {
 #ifdef COPYMEMORYTOMICROMAPEXT_AFTER_EXEC_EXISTS
-layer_CopyMemoryToMicromapEXT(device, deferredOperation, pInfo);
+layer_CopyMemoryToMicromapEXT_after(device, deferredOperation, pInfo);
 #endif 
 }
 if(connected) {
@@ -13346,13 +13348,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteMicromapsPropertiesEXT!");
 }
 if(connected) {
 #ifdef CMDWRITEMICROMAPSPROPERTIESEXT_BEFORE_EXEC_EXISTS
-layer_CmdWriteMicromapsPropertiesEXT(commandBuffer, micromapCount, pMicromaps, queryType, queryPool, firstQuery);
+layer_CmdWriteMicromapsPropertiesEXT_before(commandBuffer, micromapCount, pMicromaps, queryType, queryPool, firstQuery);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdWriteMicromapsPropertiesEXT(commandBuffer, micromapCount, pMicromaps, queryType, queryPool, firstQuery);
 if(connected) {
 #ifdef CMDWRITEMICROMAPSPROPERTIESEXT_AFTER_EXEC_EXISTS
-layer_CmdWriteMicromapsPropertiesEXT(commandBuffer, micromapCount, pMicromaps, queryType, queryPool, firstQuery);
+layer_CmdWriteMicromapsPropertiesEXT_after(commandBuffer, micromapCount, pMicromaps, queryType, queryPool, firstQuery);
 #endif 
 }
 if(connected) {
@@ -13367,13 +13369,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkWriteMicromapsPropertiesEXT!");
 }
 if(connected) {
 #ifdef WRITEMICROMAPSPROPERTIESEXT_BEFORE_EXEC_EXISTS
-layer_WriteMicromapsPropertiesEXT(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride);
+layer_WriteMicromapsPropertiesEXT_before(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].WriteMicromapsPropertiesEXT(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride);
 if(connected) {
 #ifdef WRITEMICROMAPSPROPERTIESEXT_AFTER_EXEC_EXISTS
-layer_WriteMicromapsPropertiesEXT(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride);
+layer_WriteMicromapsPropertiesEXT_after(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride);
 #endif 
 }
 if(connected) {
@@ -13389,13 +13391,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceMicromapCompatibilityEXT!");
 }
 if(connected) {
 #ifdef GETDEVICEMICROMAPCOMPATIBILITYEXT_BEFORE_EXEC_EXISTS
-layer_GetDeviceMicromapCompatibilityEXT(device, pVersionInfo, pCompatibility);
+layer_GetDeviceMicromapCompatibilityEXT_before(device, pVersionInfo, pCompatibility);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDeviceMicromapCompatibilityEXT(device, pVersionInfo, pCompatibility);
 if(connected) {
 #ifdef GETDEVICEMICROMAPCOMPATIBILITYEXT_AFTER_EXEC_EXISTS
-layer_GetDeviceMicromapCompatibilityEXT(device, pVersionInfo, pCompatibility);
+layer_GetDeviceMicromapCompatibilityEXT_after(device, pVersionInfo, pCompatibility);
 #endif 
 }
 if(connected) {
@@ -13410,13 +13412,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetMicromapBuildSizesEXT!");
 }
 if(connected) {
 #ifdef GETMICROMAPBUILDSIZESEXT_BEFORE_EXEC_EXISTS
-layer_GetMicromapBuildSizesEXT(device, buildType, pBuildInfo, pSizeInfo);
+layer_GetMicromapBuildSizesEXT_before(device, buildType, pBuildInfo, pSizeInfo);
 #endif 
 }
 device_dispatch[GetKey(device)].GetMicromapBuildSizesEXT(device, buildType, pBuildInfo, pSizeInfo);
 if(connected) {
 #ifdef GETMICROMAPBUILDSIZESEXT_AFTER_EXEC_EXISTS
-layer_GetMicromapBuildSizesEXT(device, buildType, pBuildInfo, pSizeInfo);
+layer_GetMicromapBuildSizesEXT_after(device, buildType, pBuildInfo, pSizeInfo);
 #endif 
 }
 if(connected) {
@@ -13431,13 +13433,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetShaderModuleIdentifierEXT!");
 }
 if(connected) {
 #ifdef GETSHADERMODULEIDENTIFIEREXT_BEFORE_EXEC_EXISTS
-layer_GetShaderModuleIdentifierEXT(device, shaderModule, pIdentifier);
+layer_GetShaderModuleIdentifierEXT_before(device, shaderModule, pIdentifier);
 #endif 
 }
 device_dispatch[GetKey(device)].GetShaderModuleIdentifierEXT(device, shaderModule, pIdentifier);
 if(connected) {
 #ifdef GETSHADERMODULEIDENTIFIEREXT_AFTER_EXEC_EXISTS
-layer_GetShaderModuleIdentifierEXT(device, shaderModule, pIdentifier);
+layer_GetShaderModuleIdentifierEXT_after(device, shaderModule, pIdentifier);
 #endif 
 }
 if(connected) {
@@ -13452,13 +13454,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetShaderModuleCreateInfoIdentifierEXT!
 }
 if(connected) {
 #ifdef GETSHADERMODULECREATEINFOIDENTIFIEREXT_BEFORE_EXEC_EXISTS
-layer_GetShaderModuleCreateInfoIdentifierEXT(device, pCreateInfo, pIdentifier);
+layer_GetShaderModuleCreateInfoIdentifierEXT_before(device, pCreateInfo, pIdentifier);
 #endif 
 }
 device_dispatch[GetKey(device)].GetShaderModuleCreateInfoIdentifierEXT(device, pCreateInfo, pIdentifier);
 if(connected) {
 #ifdef GETSHADERMODULECREATEINFOIDENTIFIEREXT_AFTER_EXEC_EXISTS
-layer_GetShaderModuleCreateInfoIdentifierEXT(device, pCreateInfo, pIdentifier);
+layer_GetShaderModuleCreateInfoIdentifierEXT_after(device, pCreateInfo, pIdentifier);
 #endif 
 }
 if(connected) {
@@ -13473,13 +13475,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetImageSubresourceLayout2KHR!");
 }
 if(connected) {
 #ifdef GETIMAGESUBRESOURCELAYOUT2KHR_BEFORE_EXEC_EXISTS
-layer_GetImageSubresourceLayout2KHR(device, image, pSubresource, pLayout);
+layer_GetImageSubresourceLayout2KHR_before(device, image, pSubresource, pLayout);
 #endif 
 }
 device_dispatch[GetKey(device)].GetImageSubresourceLayout2KHR(device, image, pSubresource, pLayout);
 if(connected) {
 #ifdef GETIMAGESUBRESOURCELAYOUT2KHR_AFTER_EXEC_EXISTS
-layer_GetImageSubresourceLayout2KHR(device, image, pSubresource, pLayout);
+layer_GetImageSubresourceLayout2KHR_after(device, image, pSubresource, pLayout);
 #endif 
 }
 if(connected) {
@@ -13494,13 +13496,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPipelinePropertiesEXT!");
 }
 if(connected) {
 #ifdef GETPIPELINEPROPERTIESEXT_BEFORE_EXEC_EXISTS
-layer_GetPipelinePropertiesEXT(device, pPipelineInfo, pPipelineProperties);
+layer_GetPipelinePropertiesEXT_before(device, pPipelineInfo, pPipelineProperties);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetPipelinePropertiesEXT(device, pPipelineInfo, pPipelineProperties);
 if(connected) {
 #ifdef GETPIPELINEPROPERTIESEXT_AFTER_EXEC_EXISTS
-layer_GetPipelinePropertiesEXT(device, pPipelineInfo, pPipelineProperties);
+layer_GetPipelinePropertiesEXT_after(device, pPipelineInfo, pPipelineProperties);
 #endif 
 }
 if(connected) {
@@ -13517,13 +13519,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkExportMetalObjectsEXT!");
 }
 if(connected) {
 #ifdef EXPORTMETALOBJECTSEXT_BEFORE_EXEC_EXISTS
-layer_ExportMetalObjectsEXT(device, pMetalObjectsInfo);
+layer_ExportMetalObjectsEXT_before(device, pMetalObjectsInfo);
 #endif 
 }
 device_dispatch[GetKey(device)].ExportMetalObjectsEXT(device, pMetalObjectsInfo);
 if(connected) {
 #ifdef EXPORTMETALOBJECTSEXT_AFTER_EXEC_EXISTS
-layer_ExportMetalObjectsEXT(device, pMetalObjectsInfo);
+layer_ExportMetalObjectsEXT_after(device, pMetalObjectsInfo);
 #endif 
 }
 if(connected) {
@@ -13539,13 +13541,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetFramebufferTilePropertiesQCOM!");
 }
 if(connected) {
 #ifdef GETFRAMEBUFFERTILEPROPERTIESQCOM_BEFORE_EXEC_EXISTS
-layer_GetFramebufferTilePropertiesQCOM(device, framebuffer, pPropertiesCount, pProperties);
+layer_GetFramebufferTilePropertiesQCOM_before(device, framebuffer, pPropertiesCount, pProperties);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetFramebufferTilePropertiesQCOM(device, framebuffer, pPropertiesCount, pProperties);
 if(connected) {
 #ifdef GETFRAMEBUFFERTILEPROPERTIESQCOM_AFTER_EXEC_EXISTS
-layer_GetFramebufferTilePropertiesQCOM(device, framebuffer, pPropertiesCount, pProperties);
+layer_GetFramebufferTilePropertiesQCOM_after(device, framebuffer, pPropertiesCount, pProperties);
 #endif 
 }
 if(connected) {
@@ -13561,13 +13563,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDynamicRenderingTilePropertiesQCOM!"
 }
 if(connected) {
 #ifdef GETDYNAMICRENDERINGTILEPROPERTIESQCOM_BEFORE_EXEC_EXISTS
-layer_GetDynamicRenderingTilePropertiesQCOM(device, pRenderingInfo, pProperties);
+layer_GetDynamicRenderingTilePropertiesQCOM_before(device, pRenderingInfo, pProperties);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetDynamicRenderingTilePropertiesQCOM(device, pRenderingInfo, pProperties);
 if(connected) {
 #ifdef GETDYNAMICRENDERINGTILEPROPERTIESQCOM_AFTER_EXEC_EXISTS
-layer_GetDynamicRenderingTilePropertiesQCOM(device, pRenderingInfo, pProperties);
+layer_GetDynamicRenderingTilePropertiesQCOM_after(device, pRenderingInfo, pProperties);
 #endif 
 }
 if(connected) {
@@ -13583,13 +13585,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateOpticalFlowSessionNV!");
 }
 if(connected) {
 #ifdef CREATEOPTICALFLOWSESSIONNV_BEFORE_EXEC_EXISTS
-layer_CreateOpticalFlowSessionNV(device, pCreateInfo, pAllocator, pSession);
+layer_CreateOpticalFlowSessionNV_before(device, pCreateInfo, pAllocator, pSession);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateOpticalFlowSessionNV(device, pCreateInfo, pAllocator, pSession);
 if(connected) {
 #ifdef CREATEOPTICALFLOWSESSIONNV_AFTER_EXEC_EXISTS
-layer_CreateOpticalFlowSessionNV(device, pCreateInfo, pAllocator, pSession);
+layer_CreateOpticalFlowSessionNV_after(device, pCreateInfo, pAllocator, pSession);
 #endif 
 }
 if(connected) {
@@ -13605,13 +13607,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyOpticalFlowSessionNV!");
 }
 if(connected) {
 #ifdef DESTROYOPTICALFLOWSESSIONNV_BEFORE_EXEC_EXISTS
-layer_DestroyOpticalFlowSessionNV(device, session, pAllocator);
+layer_DestroyOpticalFlowSessionNV_before(device, session, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyOpticalFlowSessionNV(device, session, pAllocator);
 if(connected) {
 #ifdef DESTROYOPTICALFLOWSESSIONNV_AFTER_EXEC_EXISTS
-layer_DestroyOpticalFlowSessionNV(device, session, pAllocator);
+layer_DestroyOpticalFlowSessionNV_after(device, session, pAllocator);
 #endif 
 }
 if(connected) {
@@ -13626,13 +13628,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkBindOpticalFlowSessionImageNV!");
 }
 if(connected) {
 #ifdef BINDOPTICALFLOWSESSIONIMAGENV_BEFORE_EXEC_EXISTS
-layer_BindOpticalFlowSessionImageNV(device, session, bindingPoint, view, layout);
+layer_BindOpticalFlowSessionImageNV_before(device, session, bindingPoint, view, layout);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].BindOpticalFlowSessionImageNV(device, session, bindingPoint, view, layout);
 if(connected) {
 #ifdef BINDOPTICALFLOWSESSIONIMAGENV_AFTER_EXEC_EXISTS
-layer_BindOpticalFlowSessionImageNV(device, session, bindingPoint, view, layout);
+layer_BindOpticalFlowSessionImageNV_after(device, session, bindingPoint, view, layout);
 #endif 
 }
 if(connected) {
@@ -13648,13 +13650,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdOpticalFlowExecuteNV!");
 }
 if(connected) {
 #ifdef CMDOPTICALFLOWEXECUTENV_BEFORE_EXEC_EXISTS
-layer_CmdOpticalFlowExecuteNV(commandBuffer, session, pExecuteInfo);
+layer_CmdOpticalFlowExecuteNV_before(commandBuffer, session, pExecuteInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdOpticalFlowExecuteNV(commandBuffer, session, pExecuteInfo);
 if(connected) {
 #ifdef CMDOPTICALFLOWEXECUTENV_AFTER_EXEC_EXISTS
-layer_CmdOpticalFlowExecuteNV(commandBuffer, session, pExecuteInfo);
+layer_CmdOpticalFlowExecuteNV_after(commandBuffer, session, pExecuteInfo);
 #endif 
 }
 if(connected) {
@@ -13669,13 +13671,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceFaultInfoEXT!");
 }
 if(connected) {
 #ifdef GETDEVICEFAULTINFOEXT_BEFORE_EXEC_EXISTS
-layer_GetDeviceFaultInfoEXT(device, pFaultCounts, pFaultInfo);
+layer_GetDeviceFaultInfoEXT_before(device, pFaultCounts, pFaultInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetDeviceFaultInfoEXT(device, pFaultCounts, pFaultInfo);
 if(connected) {
 #ifdef GETDEVICEFAULTINFOEXT_AFTER_EXEC_EXISTS
-layer_GetDeviceFaultInfoEXT(device, pFaultCounts, pFaultInfo);
+layer_GetDeviceFaultInfoEXT_after(device, pFaultCounts, pFaultInfo);
 #endif 
 }
 if(connected) {
@@ -13691,13 +13693,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthBias2EXT!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHBIAS2EXT_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthBias2EXT(commandBuffer, pDepthBiasInfo);
+layer_CmdSetDepthBias2EXT_before(commandBuffer, pDepthBiasInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBias2EXT(commandBuffer, pDepthBiasInfo);
 if(connected) {
 #ifdef CMDSETDEPTHBIAS2EXT_AFTER_EXEC_EXISTS
-layer_CmdSetDepthBias2EXT(commandBuffer, pDepthBiasInfo);
+layer_CmdSetDepthBias2EXT_after(commandBuffer, pDepthBiasInfo);
 #endif 
 }
 if(connected) {
@@ -13712,13 +13714,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkReleaseSwapchainImagesEXT!");
 }
 if(connected) {
 #ifdef RELEASESWAPCHAINIMAGESEXT_BEFORE_EXEC_EXISTS
-layer_ReleaseSwapchainImagesEXT(device, pReleaseInfo);
+layer_ReleaseSwapchainImagesEXT_before(device, pReleaseInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].ReleaseSwapchainImagesEXT(device, pReleaseInfo);
 if(connected) {
 #ifdef RELEASESWAPCHAINIMAGESEXT_AFTER_EXEC_EXISTS
-layer_ReleaseSwapchainImagesEXT(device, pReleaseInfo);
+layer_ReleaseSwapchainImagesEXT_after(device, pReleaseInfo);
 #endif 
 }
 if(connected) {
@@ -13734,13 +13736,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceImageSubresourceLayoutKHR!");
 }
 if(connected) {
 #ifdef GETDEVICEIMAGESUBRESOURCELAYOUTKHR_BEFORE_EXEC_EXISTS
-layer_GetDeviceImageSubresourceLayoutKHR(device, pInfo, pLayout);
+layer_GetDeviceImageSubresourceLayoutKHR_before(device, pInfo, pLayout);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDeviceImageSubresourceLayoutKHR(device, pInfo, pLayout);
 if(connected) {
 #ifdef GETDEVICEIMAGESUBRESOURCELAYOUTKHR_AFTER_EXEC_EXISTS
-layer_GetDeviceImageSubresourceLayoutKHR(device, pInfo, pLayout);
+layer_GetDeviceImageSubresourceLayoutKHR_after(device, pInfo, pLayout);
 #endif 
 }
 if(connected) {
@@ -13755,13 +13757,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkMapMemory2KHR!");
 }
 if(connected) {
 #ifdef MAPMEMORY2KHR_BEFORE_EXEC_EXISTS
-layer_MapMemory2KHR(device, pMemoryMapInfo, ppData);
+layer_MapMemory2KHR_before(device, pMemoryMapInfo, ppData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].MapMemory2KHR(device, pMemoryMapInfo, ppData);
 if(connected) {
 #ifdef MAPMEMORY2KHR_AFTER_EXEC_EXISTS
-layer_MapMemory2KHR(device, pMemoryMapInfo, ppData);
+layer_MapMemory2KHR_after(device, pMemoryMapInfo, ppData);
 #endif 
 }
 if(connected) {
@@ -13777,13 +13779,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkUnmapMemory2KHR!");
 }
 if(connected) {
 #ifdef UNMAPMEMORY2KHR_BEFORE_EXEC_EXISTS
-layer_UnmapMemory2KHR(device, pMemoryUnmapInfo);
+layer_UnmapMemory2KHR_before(device, pMemoryUnmapInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].UnmapMemory2KHR(device, pMemoryUnmapInfo);
 if(connected) {
 #ifdef UNMAPMEMORY2KHR_AFTER_EXEC_EXISTS
-layer_UnmapMemory2KHR(device, pMemoryUnmapInfo);
+layer_UnmapMemory2KHR_after(device, pMemoryUnmapInfo);
 #endif 
 }
 if(connected) {
@@ -13799,13 +13801,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateShadersEXT!");
 }
 if(connected) {
 #ifdef CREATESHADERSEXT_BEFORE_EXEC_EXISTS
-layer_CreateShadersEXT(device, createInfoCount, pCreateInfos, pAllocator, pShaders);
+layer_CreateShadersEXT_before(device, createInfoCount, pCreateInfos, pAllocator, pShaders);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateShadersEXT(device, createInfoCount, pCreateInfos, pAllocator, pShaders);
 if(connected) {
 #ifdef CREATESHADERSEXT_AFTER_EXEC_EXISTS
-layer_CreateShadersEXT(device, createInfoCount, pCreateInfos, pAllocator, pShaders);
+layer_CreateShadersEXT_after(device, createInfoCount, pCreateInfos, pAllocator, pShaders);
 #endif 
 }
 if(connected) {
@@ -13821,13 +13823,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyShaderEXT!");
 }
 if(connected) {
 #ifdef DESTROYSHADEREXT_BEFORE_EXEC_EXISTS
-layer_DestroyShaderEXT(device, shader, pAllocator);
+layer_DestroyShaderEXT_before(device, shader, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyShaderEXT(device, shader, pAllocator);
 if(connected) {
 #ifdef DESTROYSHADEREXT_AFTER_EXEC_EXISTS
-layer_DestroyShaderEXT(device, shader, pAllocator);
+layer_DestroyShaderEXT_after(device, shader, pAllocator);
 #endif 
 }
 if(connected) {
@@ -13842,13 +13844,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetShaderBinaryDataEXT!");
 }
 if(connected) {
 #ifdef GETSHADERBINARYDATAEXT_BEFORE_EXEC_EXISTS
-layer_GetShaderBinaryDataEXT(device, shader, pDataSize, pData);
+layer_GetShaderBinaryDataEXT_before(device, shader, pDataSize, pData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetShaderBinaryDataEXT(device, shader, pDataSize, pData);
 if(connected) {
 #ifdef GETSHADERBINARYDATAEXT_AFTER_EXEC_EXISTS
-layer_GetShaderBinaryDataEXT(device, shader, pDataSize, pData);
+layer_GetShaderBinaryDataEXT_after(device, shader, pDataSize, pData);
 #endif 
 }
 if(connected) {
@@ -13864,13 +13866,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindShadersEXT!");
 }
 if(connected) {
 #ifdef CMDBINDSHADERSEXT_BEFORE_EXEC_EXISTS
-layer_CmdBindShadersEXT(commandBuffer, stageCount, pStages, pShaders);
+layer_CmdBindShadersEXT_before(commandBuffer, stageCount, pStages, pShaders);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindShadersEXT(commandBuffer, stageCount, pStages, pShaders);
 if(connected) {
 #ifdef CMDBINDSHADERSEXT_AFTER_EXEC_EXISTS
-layer_CmdBindShadersEXT(commandBuffer, stageCount, pStages, pShaders);
+layer_CmdBindShadersEXT_after(commandBuffer, stageCount, pStages, pShaders);
 #endif 
 }
 if(connected) {
@@ -13886,13 +13888,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetScreenBufferPropertiesQNX!");
 }
 if(connected) {
 #ifdef GETSCREENBUFFERPROPERTIESQNX_BEFORE_EXEC_EXISTS
-layer_GetScreenBufferPropertiesQNX(device, buffer, pProperties);
+layer_GetScreenBufferPropertiesQNX_before(device, buffer, pProperties);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetScreenBufferPropertiesQNX(device, buffer, pProperties);
 if(connected) {
 #ifdef GETSCREENBUFFERPROPERTIESQNX_AFTER_EXEC_EXISTS
-layer_GetScreenBufferPropertiesQNX(device, buffer, pProperties);
+layer_GetScreenBufferPropertiesQNX_after(device, buffer, pProperties);
 #endif 
 }
 if(connected) {
@@ -13910,13 +13912,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetExecutionGraphPipelineScratchSizeAMD
 }
 if(connected) {
 #ifdef GETEXECUTIONGRAPHPIPELINESCRATCHSIZEAMDX_BEFORE_EXEC_EXISTS
-layer_GetExecutionGraphPipelineScratchSizeAMDX(device, executionGraph, pSizeInfo);
+layer_GetExecutionGraphPipelineScratchSizeAMDX_before(device, executionGraph, pSizeInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetExecutionGraphPipelineScratchSizeAMDX(device, executionGraph, pSizeInfo);
 if(connected) {
 #ifdef GETEXECUTIONGRAPHPIPELINESCRATCHSIZEAMDX_AFTER_EXEC_EXISTS
-layer_GetExecutionGraphPipelineScratchSizeAMDX(device, executionGraph, pSizeInfo);
+layer_GetExecutionGraphPipelineScratchSizeAMDX_after(device, executionGraph, pSizeInfo);
 #endif 
 }
 if(connected) {
@@ -13934,13 +13936,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetExecutionGraphPipelineNodeIndexAMDX!
 }
 if(connected) {
 #ifdef GETEXECUTIONGRAPHPIPELINENODEINDEXAMDX_BEFORE_EXEC_EXISTS
-layer_GetExecutionGraphPipelineNodeIndexAMDX(device, executionGraph, pNodeInfo, pNodeIndex);
+layer_GetExecutionGraphPipelineNodeIndexAMDX_before(device, executionGraph, pNodeInfo, pNodeIndex);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetExecutionGraphPipelineNodeIndexAMDX(device, executionGraph, pNodeInfo, pNodeIndex);
 if(connected) {
 #ifdef GETEXECUTIONGRAPHPIPELINENODEINDEXAMDX_AFTER_EXEC_EXISTS
-layer_GetExecutionGraphPipelineNodeIndexAMDX(device, executionGraph, pNodeInfo, pNodeIndex);
+layer_GetExecutionGraphPipelineNodeIndexAMDX_after(device, executionGraph, pNodeInfo, pNodeIndex);
 #endif 
 }
 if(connected) {
@@ -13958,13 +13960,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateExecutionGraphPipelinesAMDX!");
 }
 if(connected) {
 #ifdef CREATEEXECUTIONGRAPHPIPELINESAMDX_BEFORE_EXEC_EXISTS
-layer_CreateExecutionGraphPipelinesAMDX(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+layer_CreateExecutionGraphPipelinesAMDX_before(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateExecutionGraphPipelinesAMDX(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 if(connected) {
 #ifdef CREATEEXECUTIONGRAPHPIPELINESAMDX_AFTER_EXEC_EXISTS
-layer_CreateExecutionGraphPipelinesAMDX(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
+layer_CreateExecutionGraphPipelinesAMDX_after(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 #endif 
 }
 if(connected) {
@@ -13982,13 +13984,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdInitializeGraphScratchMemoryAMDX!");
 }
 if(connected) {
 #ifdef CMDINITIALIZEGRAPHSCRATCHMEMORYAMDX_BEFORE_EXEC_EXISTS
-layer_CmdInitializeGraphScratchMemoryAMDX(commandBuffer, scratch);
+layer_CmdInitializeGraphScratchMemoryAMDX_before(commandBuffer, scratch);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdInitializeGraphScratchMemoryAMDX(commandBuffer, scratch);
 if(connected) {
 #ifdef CMDINITIALIZEGRAPHSCRATCHMEMORYAMDX_AFTER_EXEC_EXISTS
-layer_CmdInitializeGraphScratchMemoryAMDX(commandBuffer, scratch);
+layer_CmdInitializeGraphScratchMemoryAMDX_after(commandBuffer, scratch);
 #endif 
 }
 if(connected) {
@@ -14005,13 +14007,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDispatchGraphAMDX!");
 }
 if(connected) {
 #ifdef CMDDISPATCHGRAPHAMDX_BEFORE_EXEC_EXISTS
-layer_CmdDispatchGraphAMDX(commandBuffer, scratch, pCountInfo);
+layer_CmdDispatchGraphAMDX_before(commandBuffer, scratch, pCountInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphAMDX(commandBuffer, scratch, pCountInfo);
 if(connected) {
 #ifdef CMDDISPATCHGRAPHAMDX_AFTER_EXEC_EXISTS
-layer_CmdDispatchGraphAMDX(commandBuffer, scratch, pCountInfo);
+layer_CmdDispatchGraphAMDX_after(commandBuffer, scratch, pCountInfo);
 #endif 
 }
 if(connected) {
@@ -14028,13 +14030,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDispatchGraphIndirectAMDX!");
 }
 if(connected) {
 #ifdef CMDDISPATCHGRAPHINDIRECTAMDX_BEFORE_EXEC_EXISTS
-layer_CmdDispatchGraphIndirectAMDX(commandBuffer, scratch, pCountInfo);
+layer_CmdDispatchGraphIndirectAMDX_before(commandBuffer, scratch, pCountInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphIndirectAMDX(commandBuffer, scratch, pCountInfo);
 if(connected) {
 #ifdef CMDDISPATCHGRAPHINDIRECTAMDX_AFTER_EXEC_EXISTS
-layer_CmdDispatchGraphIndirectAMDX(commandBuffer, scratch, pCountInfo);
+layer_CmdDispatchGraphIndirectAMDX_after(commandBuffer, scratch, pCountInfo);
 #endif 
 }
 if(connected) {
@@ -14051,13 +14053,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDispatchGraphIndirectCountAMDX!");
 }
 if(connected) {
 #ifdef CMDDISPATCHGRAPHINDIRECTCOUNTAMDX_BEFORE_EXEC_EXISTS
-layer_CmdDispatchGraphIndirectCountAMDX(commandBuffer, scratch, countInfo);
+layer_CmdDispatchGraphIndirectCountAMDX_before(commandBuffer, scratch, countInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphIndirectCountAMDX(commandBuffer, scratch, countInfo);
 if(connected) {
 #ifdef CMDDISPATCHGRAPHINDIRECTCOUNTAMDX_AFTER_EXEC_EXISTS
-layer_CmdDispatchGraphIndirectCountAMDX(commandBuffer, scratch, countInfo);
+layer_CmdDispatchGraphIndirectCountAMDX_after(commandBuffer, scratch, countInfo);
 #endif 
 }
 if(connected) {
@@ -14073,13 +14075,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindDescriptorSets2KHR!");
 }
 if(connected) {
 #ifdef CMDBINDDESCRIPTORSETS2KHR_BEFORE_EXEC_EXISTS
-layer_CmdBindDescriptorSets2KHR(commandBuffer, pBindDescriptorSetsInfo);
+layer_CmdBindDescriptorSets2KHR_before(commandBuffer, pBindDescriptorSetsInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorSets2KHR(commandBuffer, pBindDescriptorSetsInfo);
 if(connected) {
 #ifdef CMDBINDDESCRIPTORSETS2KHR_AFTER_EXEC_EXISTS
-layer_CmdBindDescriptorSets2KHR(commandBuffer, pBindDescriptorSetsInfo);
+layer_CmdBindDescriptorSets2KHR_after(commandBuffer, pBindDescriptorSetsInfo);
 #endif 
 }
 if(connected) {
@@ -14094,13 +14096,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdPushConstants2KHR!");
 }
 if(connected) {
 #ifdef CMDPUSHCONSTANTS2KHR_BEFORE_EXEC_EXISTS
-layer_CmdPushConstants2KHR(commandBuffer, pPushConstantsInfo);
+layer_CmdPushConstants2KHR_before(commandBuffer, pPushConstantsInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdPushConstants2KHR(commandBuffer, pPushConstantsInfo);
 if(connected) {
 #ifdef CMDPUSHCONSTANTS2KHR_AFTER_EXEC_EXISTS
-layer_CmdPushConstants2KHR(commandBuffer, pPushConstantsInfo);
+layer_CmdPushConstants2KHR_after(commandBuffer, pPushConstantsInfo);
 #endif 
 }
 if(connected) {
@@ -14115,13 +14117,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdPushDescriptorSet2KHR!");
 }
 if(connected) {
 #ifdef CMDPUSHDESCRIPTORSET2KHR_BEFORE_EXEC_EXISTS
-layer_CmdPushDescriptorSet2KHR(commandBuffer, pPushDescriptorSetInfo);
+layer_CmdPushDescriptorSet2KHR_before(commandBuffer, pPushDescriptorSetInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSet2KHR(commandBuffer, pPushDescriptorSetInfo);
 if(connected) {
 #ifdef CMDPUSHDESCRIPTORSET2KHR_AFTER_EXEC_EXISTS
-layer_CmdPushDescriptorSet2KHR(commandBuffer, pPushDescriptorSetInfo);
+layer_CmdPushDescriptorSet2KHR_after(commandBuffer, pPushDescriptorSetInfo);
 #endif 
 }
 if(connected) {
@@ -14136,13 +14138,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdPushDescriptorSetWithTemplate2KHR!")
 }
 if(connected) {
 #ifdef CMDPUSHDESCRIPTORSETWITHTEMPLATE2KHR_BEFORE_EXEC_EXISTS
-layer_CmdPushDescriptorSetWithTemplate2KHR(commandBuffer, pPushDescriptorSetWithTemplateInfo);
+layer_CmdPushDescriptorSetWithTemplate2KHR_before(commandBuffer, pPushDescriptorSetWithTemplateInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetWithTemplate2KHR(commandBuffer, pPushDescriptorSetWithTemplateInfo);
 if(connected) {
 #ifdef CMDPUSHDESCRIPTORSETWITHTEMPLATE2KHR_AFTER_EXEC_EXISTS
-layer_CmdPushDescriptorSetWithTemplate2KHR(commandBuffer, pPushDescriptorSetWithTemplateInfo);
+layer_CmdPushDescriptorSetWithTemplate2KHR_after(commandBuffer, pPushDescriptorSetWithTemplateInfo);
 #endif 
 }
 if(connected) {
@@ -14157,13 +14159,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDescriptorBufferOffsets2EXT!");
 }
 if(connected) {
 #ifdef CMDSETDESCRIPTORBUFFEROFFSETS2EXT_BEFORE_EXEC_EXISTS
-layer_CmdSetDescriptorBufferOffsets2EXT(commandBuffer, pSetDescriptorBufferOffsetsInfo);
+layer_CmdSetDescriptorBufferOffsets2EXT_before(commandBuffer, pSetDescriptorBufferOffsetsInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDescriptorBufferOffsets2EXT(commandBuffer, pSetDescriptorBufferOffsetsInfo);
 if(connected) {
 #ifdef CMDSETDESCRIPTORBUFFEROFFSETS2EXT_AFTER_EXEC_EXISTS
-layer_CmdSetDescriptorBufferOffsets2EXT(commandBuffer, pSetDescriptorBufferOffsetsInfo);
+layer_CmdSetDescriptorBufferOffsets2EXT_after(commandBuffer, pSetDescriptorBufferOffsetsInfo);
 #endif 
 }
 if(connected) {
@@ -14178,13 +14180,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindDescriptorBufferEmbeddedSamplers
 }
 if(connected) {
 #ifdef CMDBINDDESCRIPTORBUFFEREMBEDDEDSAMPLERS2EXT_BEFORE_EXEC_EXISTS
-layer_CmdBindDescriptorBufferEmbeddedSamplers2EXT(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo);
+layer_CmdBindDescriptorBufferEmbeddedSamplers2EXT_before(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBufferEmbeddedSamplers2EXT(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo);
 if(connected) {
 #ifdef CMDBINDDESCRIPTORBUFFEREMBEDDEDSAMPLERS2EXT_AFTER_EXEC_EXISTS
-layer_CmdBindDescriptorBufferEmbeddedSamplers2EXT(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo);
+layer_CmdBindDescriptorBufferEmbeddedSamplers2EXT_after(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo);
 #endif 
 }
 if(connected) {
@@ -14199,13 +14201,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSetLatencySleepModeNV!");
 }
 if(connected) {
 #ifdef SETLATENCYSLEEPMODENV_BEFORE_EXEC_EXISTS
-layer_SetLatencySleepModeNV(device, swapchain, pSleepModeInfo);
+layer_SetLatencySleepModeNV_before(device, swapchain, pSleepModeInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].SetLatencySleepModeNV(device, swapchain, pSleepModeInfo);
 if(connected) {
 #ifdef SETLATENCYSLEEPMODENV_AFTER_EXEC_EXISTS
-layer_SetLatencySleepModeNV(device, swapchain, pSleepModeInfo);
+layer_SetLatencySleepModeNV_after(device, swapchain, pSleepModeInfo);
 #endif 
 }
 if(connected) {
@@ -14221,13 +14223,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkLatencySleepNV!");
 }
 if(connected) {
 #ifdef LATENCYSLEEPNV_BEFORE_EXEC_EXISTS
-layer_LatencySleepNV(device, swapchain, pSleepInfo);
+layer_LatencySleepNV_before(device, swapchain, pSleepInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].LatencySleepNV(device, swapchain, pSleepInfo);
 if(connected) {
 #ifdef LATENCYSLEEPNV_AFTER_EXEC_EXISTS
-layer_LatencySleepNV(device, swapchain, pSleepInfo);
+layer_LatencySleepNV_after(device, swapchain, pSleepInfo);
 #endif 
 }
 if(connected) {
@@ -14243,13 +14245,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSetLatencyMarkerNV!");
 }
 if(connected) {
 #ifdef SETLATENCYMARKERNV_BEFORE_EXEC_EXISTS
-layer_SetLatencyMarkerNV(device, swapchain, pLatencyMarkerInfo);
+layer_SetLatencyMarkerNV_before(device, swapchain, pLatencyMarkerInfo);
 #endif 
 }
 device_dispatch[GetKey(device)].SetLatencyMarkerNV(device, swapchain, pLatencyMarkerInfo);
 if(connected) {
 #ifdef SETLATENCYMARKERNV_AFTER_EXEC_EXISTS
-layer_SetLatencyMarkerNV(device, swapchain, pLatencyMarkerInfo);
+layer_SetLatencyMarkerNV_after(device, swapchain, pLatencyMarkerInfo);
 #endif 
 }
 if(connected) {
@@ -14264,13 +14266,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetLatencyTimingsNV!");
 }
 if(connected) {
 #ifdef GETLATENCYTIMINGSNV_BEFORE_EXEC_EXISTS
-layer_GetLatencyTimingsNV(device, swapchain, pLatencyMarkerInfo);
+layer_GetLatencyTimingsNV_before(device, swapchain, pLatencyMarkerInfo);
 #endif 
 }
 device_dispatch[GetKey(device)].GetLatencyTimingsNV(device, swapchain, pLatencyMarkerInfo);
 if(connected) {
 #ifdef GETLATENCYTIMINGSNV_AFTER_EXEC_EXISTS
-layer_GetLatencyTimingsNV(device, swapchain, pLatencyMarkerInfo);
+layer_GetLatencyTimingsNV_after(device, swapchain, pLatencyMarkerInfo);
 #endif 
 }
 if(connected) {
@@ -14285,13 +14287,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkQueueNotifyOutOfBandNV!");
 }
 if(connected) {
 #ifdef QUEUENOTIFYOUTOFBANDNV_BEFORE_EXEC_EXISTS
-layer_QueueNotifyOutOfBandNV(queue, pQueueTypeInfo);
+layer_QueueNotifyOutOfBandNV_before(queue, pQueueTypeInfo);
 #endif 
 }
 device_dispatch[GetKey(queue)].QueueNotifyOutOfBandNV(queue, pQueueTypeInfo);
 if(connected) {
 #ifdef QUEUENOTIFYOUTOFBANDNV_AFTER_EXEC_EXISTS
-layer_QueueNotifyOutOfBandNV(queue, pQueueTypeInfo);
+layer_QueueNotifyOutOfBandNV_after(queue, pQueueTypeInfo);
 #endif 
 }
 if(connected) {
@@ -14306,13 +14308,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkResetQueryPoolEXT!");
 }
 if(connected) {
 #ifdef RESETQUERYPOOLEXT_BEFORE_EXEC_EXISTS
-layer_ResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
+layer_ResetQueryPoolEXT_before(device, queryPool, firstQuery, queryCount);
 #endif 
 }
 device_dispatch[GetKey(device)].ResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
 if(connected) {
 #ifdef RESETQUERYPOOLEXT_AFTER_EXEC_EXISTS
-layer_ResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
+layer_ResetQueryPoolEXT_after(device, queryPool, firstQuery, queryCount);
 #endif 
 }
 if(connected) {
@@ -14327,13 +14329,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkTrimCommandPoolKHR!");
 }
 if(connected) {
 #ifdef TRIMCOMMANDPOOLKHR_BEFORE_EXEC_EXISTS
-layer_TrimCommandPoolKHR(device, commandPool, flags);
+layer_TrimCommandPoolKHR_before(device, commandPool, flags);
 #endif 
 }
 device_dispatch[GetKey(device)].TrimCommandPoolKHR(device, commandPool, flags);
 if(connected) {
 #ifdef TRIMCOMMANDPOOLKHR_AFTER_EXEC_EXISTS
-layer_TrimCommandPoolKHR(device, commandPool, flags);
+layer_TrimCommandPoolKHR_after(device, commandPool, flags);
 #endif 
 }
 if(connected) {
@@ -14348,13 +14350,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceGroupPeerMemoryFeaturesKHR!");
 }
 if(connected) {
 #ifdef GETDEVICEGROUPPEERMEMORYFEATURESKHR_BEFORE_EXEC_EXISTS
-layer_GetDeviceGroupPeerMemoryFeaturesKHR(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
+layer_GetDeviceGroupPeerMemoryFeaturesKHR_before(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDeviceGroupPeerMemoryFeaturesKHR(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
 if(connected) {
 #ifdef GETDEVICEGROUPPEERMEMORYFEATURESKHR_AFTER_EXEC_EXISTS
-layer_GetDeviceGroupPeerMemoryFeaturesKHR(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
+layer_GetDeviceGroupPeerMemoryFeaturesKHR_after(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
 #endif 
 }
 if(connected) {
@@ -14369,13 +14371,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkBindBufferMemory2KHR!");
 }
 if(connected) {
 #ifdef BINDBUFFERMEMORY2KHR_BEFORE_EXEC_EXISTS
-layer_BindBufferMemory2KHR(device, bindInfoCount, pBindInfos);
+layer_BindBufferMemory2KHR_before(device, bindInfoCount, pBindInfos);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].BindBufferMemory2KHR(device, bindInfoCount, pBindInfos);
 if(connected) {
 #ifdef BINDBUFFERMEMORY2KHR_AFTER_EXEC_EXISTS
-layer_BindBufferMemory2KHR(device, bindInfoCount, pBindInfos);
+layer_BindBufferMemory2KHR_after(device, bindInfoCount, pBindInfos);
 #endif 
 }
 if(connected) {
@@ -14391,13 +14393,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkBindImageMemory2KHR!");
 }
 if(connected) {
 #ifdef BINDIMAGEMEMORY2KHR_BEFORE_EXEC_EXISTS
-layer_BindImageMemory2KHR(device, bindInfoCount, pBindInfos);
+layer_BindImageMemory2KHR_before(device, bindInfoCount, pBindInfos);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].BindImageMemory2KHR(device, bindInfoCount, pBindInfos);
 if(connected) {
 #ifdef BINDIMAGEMEMORY2KHR_AFTER_EXEC_EXISTS
-layer_BindImageMemory2KHR(device, bindInfoCount, pBindInfos);
+layer_BindImageMemory2KHR_after(device, bindInfoCount, pBindInfos);
 #endif 
 }
 if(connected) {
@@ -14413,13 +14415,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDeviceMaskKHR!");
 }
 if(connected) {
 #ifdef CMDSETDEVICEMASKKHR_BEFORE_EXEC_EXISTS
-layer_CmdSetDeviceMaskKHR(commandBuffer, deviceMask);
+layer_CmdSetDeviceMaskKHR_before(commandBuffer, deviceMask);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDeviceMaskKHR(commandBuffer, deviceMask);
 if(connected) {
 #ifdef CMDSETDEVICEMASKKHR_AFTER_EXEC_EXISTS
-layer_CmdSetDeviceMaskKHR(commandBuffer, deviceMask);
+layer_CmdSetDeviceMaskKHR_after(commandBuffer, deviceMask);
 #endif 
 }
 if(connected) {
@@ -14434,13 +14436,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDispatchBaseKHR!");
 }
 if(connected) {
 #ifdef CMDDISPATCHBASEKHR_BEFORE_EXEC_EXISTS
-layer_CmdDispatchBaseKHR(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
+layer_CmdDispatchBaseKHR_before(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDispatchBaseKHR(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
 if(connected) {
 #ifdef CMDDISPATCHBASEKHR_AFTER_EXEC_EXISTS
-layer_CmdDispatchBaseKHR(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
+layer_CmdDispatchBaseKHR_after(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
 #endif 
 }
 if(connected) {
@@ -14455,13 +14457,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateDescriptorUpdateTemplateKHR!");
 }
 if(connected) {
 #ifdef CREATEDESCRIPTORUPDATETEMPLATEKHR_BEFORE_EXEC_EXISTS
-layer_CreateDescriptorUpdateTemplateKHR(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
+layer_CreateDescriptorUpdateTemplateKHR_before(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateDescriptorUpdateTemplateKHR(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
 if(connected) {
 #ifdef CREATEDESCRIPTORUPDATETEMPLATEKHR_AFTER_EXEC_EXISTS
-layer_CreateDescriptorUpdateTemplateKHR(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
+layer_CreateDescriptorUpdateTemplateKHR_after(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
 #endif 
 }
 if(connected) {
@@ -14477,13 +14479,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyDescriptorUpdateTemplateKHR!");
 }
 if(connected) {
 #ifdef DESTROYDESCRIPTORUPDATETEMPLATEKHR_BEFORE_EXEC_EXISTS
-layer_DestroyDescriptorUpdateTemplateKHR(device, descriptorUpdateTemplate, pAllocator);
+layer_DestroyDescriptorUpdateTemplateKHR_before(device, descriptorUpdateTemplate, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyDescriptorUpdateTemplateKHR(device, descriptorUpdateTemplate, pAllocator);
 if(connected) {
 #ifdef DESTROYDESCRIPTORUPDATETEMPLATEKHR_AFTER_EXEC_EXISTS
-layer_DestroyDescriptorUpdateTemplateKHR(device, descriptorUpdateTemplate, pAllocator);
+layer_DestroyDescriptorUpdateTemplateKHR_after(device, descriptorUpdateTemplate, pAllocator);
 #endif 
 }
 if(connected) {
@@ -14498,13 +14500,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkUpdateDescriptorSetWithTemplateKHR!");
 }
 if(connected) {
 #ifdef UPDATEDESCRIPTORSETWITHTEMPLATEKHR_BEFORE_EXEC_EXISTS
-layer_UpdateDescriptorSetWithTemplateKHR(device, descriptorSet, descriptorUpdateTemplate, pData);
+layer_UpdateDescriptorSetWithTemplateKHR_before(device, descriptorSet, descriptorUpdateTemplate, pData);
 #endif 
 }
 device_dispatch[GetKey(device)].UpdateDescriptorSetWithTemplateKHR(device, descriptorSet, descriptorUpdateTemplate, pData);
 if(connected) {
 #ifdef UPDATEDESCRIPTORSETWITHTEMPLATEKHR_AFTER_EXEC_EXISTS
-layer_UpdateDescriptorSetWithTemplateKHR(device, descriptorSet, descriptorUpdateTemplate, pData);
+layer_UpdateDescriptorSetWithTemplateKHR_after(device, descriptorSet, descriptorUpdateTemplate, pData);
 #endif 
 }
 if(connected) {
@@ -14519,13 +14521,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetBufferMemoryRequirements2KHR!");
 }
 if(connected) {
 #ifdef GETBUFFERMEMORYREQUIREMENTS2KHR_BEFORE_EXEC_EXISTS
-layer_GetBufferMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
+layer_GetBufferMemoryRequirements2KHR_before(device, pInfo, pMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetBufferMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
 if(connected) {
 #ifdef GETBUFFERMEMORYREQUIREMENTS2KHR_AFTER_EXEC_EXISTS
-layer_GetBufferMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
+layer_GetBufferMemoryRequirements2KHR_after(device, pInfo, pMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -14540,13 +14542,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetImageMemoryRequirements2KHR!");
 }
 if(connected) {
 #ifdef GETIMAGEMEMORYREQUIREMENTS2KHR_BEFORE_EXEC_EXISTS
-layer_GetImageMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
+layer_GetImageMemoryRequirements2KHR_before(device, pInfo, pMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetImageMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
 if(connected) {
 #ifdef GETIMAGEMEMORYREQUIREMENTS2KHR_AFTER_EXEC_EXISTS
-layer_GetImageMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
+layer_GetImageMemoryRequirements2KHR_after(device, pInfo, pMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -14561,13 +14563,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetImageSparseMemoryRequirements2KHR!")
 }
 if(connected) {
 #ifdef GETIMAGESPARSEMEMORYREQUIREMENTS2KHR_BEFORE_EXEC_EXISTS
-layer_GetImageSparseMemoryRequirements2KHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+layer_GetImageSparseMemoryRequirements2KHR_before(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements2KHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 if(connected) {
 #ifdef GETIMAGESPARSEMEMORYREQUIREMENTS2KHR_AFTER_EXEC_EXISTS
-layer_GetImageSparseMemoryRequirements2KHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+layer_GetImageSparseMemoryRequirements2KHR_after(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -14582,13 +14584,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceBufferMemoryRequirementsKHR!")
 }
 if(connected) {
 #ifdef GETDEVICEBUFFERMEMORYREQUIREMENTSKHR_BEFORE_EXEC_EXISTS
-layer_GetDeviceBufferMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
+layer_GetDeviceBufferMemoryRequirementsKHR_before(device, pInfo, pMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDeviceBufferMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
 if(connected) {
 #ifdef GETDEVICEBUFFERMEMORYREQUIREMENTSKHR_AFTER_EXEC_EXISTS
-layer_GetDeviceBufferMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
+layer_GetDeviceBufferMemoryRequirementsKHR_after(device, pInfo, pMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -14603,13 +14605,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceImageMemoryRequirementsKHR!");
 }
 if(connected) {
 #ifdef GETDEVICEIMAGEMEMORYREQUIREMENTSKHR_BEFORE_EXEC_EXISTS
-layer_GetDeviceImageMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
+layer_GetDeviceImageMemoryRequirementsKHR_before(device, pInfo, pMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDeviceImageMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
 if(connected) {
 #ifdef GETDEVICEIMAGEMEMORYREQUIREMENTSKHR_AFTER_EXEC_EXISTS
-layer_GetDeviceImageMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
+layer_GetDeviceImageMemoryRequirementsKHR_after(device, pInfo, pMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -14624,13 +14626,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceImageSparseMemoryRequirementsK
 }
 if(connected) {
 #ifdef GETDEVICEIMAGESPARSEMEMORYREQUIREMENTSKHR_BEFORE_EXEC_EXISTS
-layer_GetDeviceImageSparseMemoryRequirementsKHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+layer_GetDeviceImageSparseMemoryRequirementsKHR_before(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDeviceImageSparseMemoryRequirementsKHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 if(connected) {
 #ifdef GETDEVICEIMAGESPARSEMEMORYREQUIREMENTSKHR_AFTER_EXEC_EXISTS
-layer_GetDeviceImageSparseMemoryRequirementsKHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
+layer_GetDeviceImageSparseMemoryRequirementsKHR_after(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
 #endif 
 }
 if(connected) {
@@ -14645,13 +14647,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateSamplerYcbcrConversionKHR!");
 }
 if(connected) {
 #ifdef CREATESAMPLERYCBCRCONVERSIONKHR_BEFORE_EXEC_EXISTS
-layer_CreateSamplerYcbcrConversionKHR(device, pCreateInfo, pAllocator, pYcbcrConversion);
+layer_CreateSamplerYcbcrConversionKHR_before(device, pCreateInfo, pAllocator, pYcbcrConversion);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateSamplerYcbcrConversionKHR(device, pCreateInfo, pAllocator, pYcbcrConversion);
 if(connected) {
 #ifdef CREATESAMPLERYCBCRCONVERSIONKHR_AFTER_EXEC_EXISTS
-layer_CreateSamplerYcbcrConversionKHR(device, pCreateInfo, pAllocator, pYcbcrConversion);
+layer_CreateSamplerYcbcrConversionKHR_after(device, pCreateInfo, pAllocator, pYcbcrConversion);
 #endif 
 }
 if(connected) {
@@ -14667,13 +14669,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroySamplerYcbcrConversionKHR!");
 }
 if(connected) {
 #ifdef DESTROYSAMPLERYCBCRCONVERSIONKHR_BEFORE_EXEC_EXISTS
-layer_DestroySamplerYcbcrConversionKHR(device, ycbcrConversion, pAllocator);
+layer_DestroySamplerYcbcrConversionKHR_before(device, ycbcrConversion, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroySamplerYcbcrConversionKHR(device, ycbcrConversion, pAllocator);
 if(connected) {
 #ifdef DESTROYSAMPLERYCBCRCONVERSIONKHR_AFTER_EXEC_EXISTS
-layer_DestroySamplerYcbcrConversionKHR(device, ycbcrConversion, pAllocator);
+layer_DestroySamplerYcbcrConversionKHR_after(device, ycbcrConversion, pAllocator);
 #endif 
 }
 if(connected) {
@@ -14688,13 +14690,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDescriptorSetLayoutSupportKHR!");
 }
 if(connected) {
 #ifdef GETDESCRIPTORSETLAYOUTSUPPORTKHR_BEFORE_EXEC_EXISTS
-layer_GetDescriptorSetLayoutSupportKHR(device, pCreateInfo, pSupport);
+layer_GetDescriptorSetLayoutSupportKHR_before(device, pCreateInfo, pSupport);
 #endif 
 }
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutSupportKHR(device, pCreateInfo, pSupport);
 if(connected) {
 #ifdef GETDESCRIPTORSETLAYOUTSUPPORTKHR_AFTER_EXEC_EXISTS
-layer_GetDescriptorSetLayoutSupportKHR(device, pCreateInfo, pSupport);
+layer_GetDescriptorSetLayoutSupportKHR_after(device, pCreateInfo, pSupport);
 #endif 
 }
 if(connected) {
@@ -14709,13 +14711,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetCalibratedTimestampsEXT!");
 }
 if(connected) {
 #ifdef GETCALIBRATEDTIMESTAMPSEXT_BEFORE_EXEC_EXISTS
-layer_GetCalibratedTimestampsEXT(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
+layer_GetCalibratedTimestampsEXT_before(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetCalibratedTimestampsEXT(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
 if(connected) {
 #ifdef GETCALIBRATEDTIMESTAMPSEXT_AFTER_EXEC_EXISTS
-layer_GetCalibratedTimestampsEXT(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
+layer_GetCalibratedTimestampsEXT_after(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
 #endif 
 }
 if(connected) {
@@ -14731,13 +14733,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreateRenderPass2KHR!");
 }
 if(connected) {
 #ifdef CREATERENDERPASS2KHR_BEFORE_EXEC_EXISTS
-layer_CreateRenderPass2KHR(device, pCreateInfo, pAllocator, pRenderPass);
+layer_CreateRenderPass2KHR_before(device, pCreateInfo, pAllocator, pRenderPass);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreateRenderPass2KHR(device, pCreateInfo, pAllocator, pRenderPass);
 if(connected) {
 #ifdef CREATERENDERPASS2KHR_AFTER_EXEC_EXISTS
-layer_CreateRenderPass2KHR(device, pCreateInfo, pAllocator, pRenderPass);
+layer_CreateRenderPass2KHR_after(device, pCreateInfo, pAllocator, pRenderPass);
 #endif 
 }
 if(connected) {
@@ -14753,13 +14755,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginRenderPass2KHR!");
 }
 if(connected) {
 #ifdef CMDBEGINRENDERPASS2KHR_BEFORE_EXEC_EXISTS
-layer_CmdBeginRenderPass2KHR(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
+layer_CmdBeginRenderPass2KHR_before(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass2KHR(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
 if(connected) {
 #ifdef CMDBEGINRENDERPASS2KHR_AFTER_EXEC_EXISTS
-layer_CmdBeginRenderPass2KHR(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
+layer_CmdBeginRenderPass2KHR_after(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
 #endif 
 }
 if(connected) {
@@ -14774,13 +14776,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdNextSubpass2KHR!");
 }
 if(connected) {
 #ifdef CMDNEXTSUBPASS2KHR_BEFORE_EXEC_EXISTS
-layer_CmdNextSubpass2KHR(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
+layer_CmdNextSubpass2KHR_before(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdNextSubpass2KHR(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 if(connected) {
 #ifdef CMDNEXTSUBPASS2KHR_AFTER_EXEC_EXISTS
-layer_CmdNextSubpass2KHR(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
+layer_CmdNextSubpass2KHR_after(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 #endif 
 }
 if(connected) {
@@ -14795,13 +14797,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdEndRenderPass2KHR!");
 }
 if(connected) {
 #ifdef CMDENDRENDERPASS2KHR_BEFORE_EXEC_EXISTS
-layer_CmdEndRenderPass2KHR(commandBuffer, pSubpassEndInfo);
+layer_CmdEndRenderPass2KHR_before(commandBuffer, pSubpassEndInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass2KHR(commandBuffer, pSubpassEndInfo);
 if(connected) {
 #ifdef CMDENDRENDERPASS2KHR_AFTER_EXEC_EXISTS
-layer_CmdEndRenderPass2KHR(commandBuffer, pSubpassEndInfo);
+layer_CmdEndRenderPass2KHR_after(commandBuffer, pSubpassEndInfo);
 #endif 
 }
 if(connected) {
@@ -14816,13 +14818,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetSemaphoreCounterValueKHR!");
 }
 if(connected) {
 #ifdef GETSEMAPHORECOUNTERVALUEKHR_BEFORE_EXEC_EXISTS
-layer_GetSemaphoreCounterValueKHR(device, semaphore, pValue);
+layer_GetSemaphoreCounterValueKHR_before(device, semaphore, pValue);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreCounterValueKHR(device, semaphore, pValue);
 if(connected) {
 #ifdef GETSEMAPHORECOUNTERVALUEKHR_AFTER_EXEC_EXISTS
-layer_GetSemaphoreCounterValueKHR(device, semaphore, pValue);
+layer_GetSemaphoreCounterValueKHR_after(device, semaphore, pValue);
 #endif 
 }
 if(connected) {
@@ -14838,13 +14840,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkWaitSemaphoresKHR!");
 }
 if(connected) {
 #ifdef WAITSEMAPHORESKHR_BEFORE_EXEC_EXISTS
-layer_WaitSemaphoresKHR(device, pWaitInfo, timeout);
+layer_WaitSemaphoresKHR_before(device, pWaitInfo, timeout);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].WaitSemaphoresKHR(device, pWaitInfo, timeout);
 if(connected) {
 #ifdef WAITSEMAPHORESKHR_AFTER_EXEC_EXISTS
-layer_WaitSemaphoresKHR(device, pWaitInfo, timeout);
+layer_WaitSemaphoresKHR_after(device, pWaitInfo, timeout);
 #endif 
 }
 if(connected) {
@@ -14860,13 +14862,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSignalSemaphoreKHR!");
 }
 if(connected) {
 #ifdef SIGNALSEMAPHOREKHR_BEFORE_EXEC_EXISTS
-layer_SignalSemaphoreKHR(device, pSignalInfo);
+layer_SignalSemaphoreKHR_before(device, pSignalInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].SignalSemaphoreKHR(device, pSignalInfo);
 if(connected) {
 #ifdef SIGNALSEMAPHOREKHR_AFTER_EXEC_EXISTS
-layer_SignalSemaphoreKHR(device, pSignalInfo);
+layer_SignalSemaphoreKHR_after(device, pSignalInfo);
 #endif 
 }
 if(connected) {
@@ -14882,13 +14884,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndirectCountKHR!");
 }
 if(connected) {
 #ifdef CMDDRAWINDIRECTCOUNTKHR_BEFORE_EXEC_EXISTS
-layer_CmdDrawIndirectCountKHR(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawIndirectCountKHR_before(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCountKHR(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 if(connected) {
 #ifdef CMDDRAWINDIRECTCOUNTKHR_AFTER_EXEC_EXISTS
-layer_CmdDrawIndirectCountKHR(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawIndirectCountKHR_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 if(connected) {
@@ -14903,13 +14905,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndirectCountAMD!");
 }
 if(connected) {
 #ifdef CMDDRAWINDIRECTCOUNTAMD_BEFORE_EXEC_EXISTS
-layer_CmdDrawIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawIndirectCountAMD_before(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 if(connected) {
 #ifdef CMDDRAWINDIRECTCOUNTAMD_AFTER_EXEC_EXISTS
-layer_CmdDrawIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawIndirectCountAMD_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 if(connected) {
@@ -14924,13 +14926,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndexedIndirectCountKHR!");
 }
 if(connected) {
 #ifdef CMDDRAWINDEXEDINDIRECTCOUNTKHR_BEFORE_EXEC_EXISTS
-layer_CmdDrawIndexedIndirectCountKHR(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawIndexedIndirectCountKHR_before(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCountKHR(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 if(connected) {
 #ifdef CMDDRAWINDEXEDINDIRECTCOUNTKHR_AFTER_EXEC_EXISTS
-layer_CmdDrawIndexedIndirectCountKHR(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawIndexedIndirectCountKHR_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 if(connected) {
@@ -14945,13 +14947,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndexedIndirectCountAMD!");
 }
 if(connected) {
 #ifdef CMDDRAWINDEXEDINDIRECTCOUNTAMD_BEFORE_EXEC_EXISTS
-layer_CmdDrawIndexedIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawIndexedIndirectCountAMD_before(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 if(connected) {
 #ifdef CMDDRAWINDEXEDINDIRECTCOUNTAMD_AFTER_EXEC_EXISTS
-layer_CmdDrawIndexedIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
+layer_CmdDrawIndexedIndirectCountAMD_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
 #endif 
 }
 if(connected) {
@@ -14966,13 +14968,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetRayTracingShaderGroupHandlesNV!");
 }
 if(connected) {
 #ifdef GETRAYTRACINGSHADERGROUPHANDLESNV_BEFORE_EXEC_EXISTS
-layer_GetRayTracingShaderGroupHandlesNV(device, pipeline, firstGroup, groupCount, dataSize, pData);
+layer_GetRayTracingShaderGroupHandlesNV_before(device, pipeline, firstGroup, groupCount, dataSize, pData);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetRayTracingShaderGroupHandlesNV(device, pipeline, firstGroup, groupCount, dataSize, pData);
 if(connected) {
 #ifdef GETRAYTRACINGSHADERGROUPHANDLESNV_AFTER_EXEC_EXISTS
-layer_GetRayTracingShaderGroupHandlesNV(device, pipeline, firstGroup, groupCount, dataSize, pData);
+layer_GetRayTracingShaderGroupHandlesNV_after(device, pipeline, firstGroup, groupCount, dataSize, pData);
 #endif 
 }
 if(connected) {
@@ -14988,13 +14990,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetBufferOpaqueCaptureAddressKHR!");
 }
 if(connected) {
 #ifdef GETBUFFEROPAQUECAPTUREADDRESSKHR_BEFORE_EXEC_EXISTS
-layer_GetBufferOpaqueCaptureAddressKHR(device, pInfo);
+layer_GetBufferOpaqueCaptureAddressKHR_before(device, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetBufferOpaqueCaptureAddressKHR(device, pInfo);
 if(connected) {
 #ifdef GETBUFFEROPAQUECAPTUREADDRESSKHR_AFTER_EXEC_EXISTS
-layer_GetBufferOpaqueCaptureAddressKHR(device, pInfo);
+layer_GetBufferOpaqueCaptureAddressKHR_after(device, pInfo);
 #endif 
 }
 if(connected) {
@@ -15010,13 +15012,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetBufferDeviceAddressKHR!");
 }
 if(connected) {
 #ifdef GETBUFFERDEVICEADDRESSKHR_BEFORE_EXEC_EXISTS
-layer_GetBufferDeviceAddressKHR(device, pInfo);
+layer_GetBufferDeviceAddressKHR_before(device, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetBufferDeviceAddressKHR(device, pInfo);
 if(connected) {
 #ifdef GETBUFFERDEVICEADDRESSKHR_AFTER_EXEC_EXISTS
-layer_GetBufferDeviceAddressKHR(device, pInfo);
+layer_GetBufferDeviceAddressKHR_after(device, pInfo);
 #endif 
 }
 if(connected) {
@@ -15032,13 +15034,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetBufferDeviceAddressEXT!");
 }
 if(connected) {
 #ifdef GETBUFFERDEVICEADDRESSEXT_BEFORE_EXEC_EXISTS
-layer_GetBufferDeviceAddressEXT(device, pInfo);
+layer_GetBufferDeviceAddressEXT_before(device, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetBufferDeviceAddressEXT(device, pInfo);
 if(connected) {
 #ifdef GETBUFFERDEVICEADDRESSEXT_AFTER_EXEC_EXISTS
-layer_GetBufferDeviceAddressEXT(device, pInfo);
+layer_GetBufferDeviceAddressEXT_after(device, pInfo);
 #endif 
 }
 if(connected) {
@@ -15054,13 +15056,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceMemoryOpaqueCaptureAddressKHR!
 }
 if(connected) {
 #ifdef GETDEVICEMEMORYOPAQUECAPTUREADDRESSKHR_BEFORE_EXEC_EXISTS
-layer_GetDeviceMemoryOpaqueCaptureAddressKHR(device, pInfo);
+layer_GetDeviceMemoryOpaqueCaptureAddressKHR_before(device, pInfo);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].GetDeviceMemoryOpaqueCaptureAddressKHR(device, pInfo);
 if(connected) {
 #ifdef GETDEVICEMEMORYOPAQUECAPTUREADDRESSKHR_AFTER_EXEC_EXISTS
-layer_GetDeviceMemoryOpaqueCaptureAddressKHR(device, pInfo);
+layer_GetDeviceMemoryOpaqueCaptureAddressKHR_after(device, pInfo);
 #endif 
 }
 if(connected) {
@@ -15076,13 +15078,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetLineStippleEXT!");
 }
 if(connected) {
 #ifdef CMDSETLINESTIPPLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetLineStippleEXT(commandBuffer, lineStippleFactor, lineStipplePattern);
+layer_CmdSetLineStippleEXT_before(commandBuffer, lineStippleFactor, lineStipplePattern);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetLineStippleEXT(commandBuffer, lineStippleFactor, lineStipplePattern);
 if(connected) {
 #ifdef CMDSETLINESTIPPLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetLineStippleEXT(commandBuffer, lineStippleFactor, lineStipplePattern);
+layer_CmdSetLineStippleEXT_after(commandBuffer, lineStippleFactor, lineStipplePattern);
 #endif 
 }
 if(connected) {
@@ -15097,13 +15099,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCullModeEXT!");
 }
 if(connected) {
 #ifdef CMDSETCULLMODEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetCullModeEXT(commandBuffer, cullMode);
+layer_CmdSetCullModeEXT_before(commandBuffer, cullMode);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetCullModeEXT(commandBuffer, cullMode);
 if(connected) {
 #ifdef CMDSETCULLMODEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetCullModeEXT(commandBuffer, cullMode);
+layer_CmdSetCullModeEXT_after(commandBuffer, cullMode);
 #endif 
 }
 if(connected) {
@@ -15118,13 +15120,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetFrontFaceEXT!");
 }
 if(connected) {
 #ifdef CMDSETFRONTFACEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetFrontFaceEXT(commandBuffer, frontFace);
+layer_CmdSetFrontFaceEXT_before(commandBuffer, frontFace);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetFrontFaceEXT(commandBuffer, frontFace);
 if(connected) {
 #ifdef CMDSETFRONTFACEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetFrontFaceEXT(commandBuffer, frontFace);
+layer_CmdSetFrontFaceEXT_after(commandBuffer, frontFace);
 #endif 
 }
 if(connected) {
@@ -15139,13 +15141,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPrimitiveTopologyEXT!");
 }
 if(connected) {
 #ifdef CMDSETPRIMITIVETOPOLOGYEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetPrimitiveTopologyEXT(commandBuffer, primitiveTopology);
+layer_CmdSetPrimitiveTopologyEXT_before(commandBuffer, primitiveTopology);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveTopologyEXT(commandBuffer, primitiveTopology);
 if(connected) {
 #ifdef CMDSETPRIMITIVETOPOLOGYEXT_AFTER_EXEC_EXISTS
-layer_CmdSetPrimitiveTopologyEXT(commandBuffer, primitiveTopology);
+layer_CmdSetPrimitiveTopologyEXT_after(commandBuffer, primitiveTopology);
 #endif 
 }
 if(connected) {
@@ -15160,13 +15162,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetViewportWithCountEXT!");
 }
 if(connected) {
 #ifdef CMDSETVIEWPORTWITHCOUNTEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetViewportWithCountEXT(commandBuffer, viewportCount, pViewports);
+layer_CmdSetViewportWithCountEXT_before(commandBuffer, viewportCount, pViewports);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWithCountEXT(commandBuffer, viewportCount, pViewports);
 if(connected) {
 #ifdef CMDSETVIEWPORTWITHCOUNTEXT_AFTER_EXEC_EXISTS
-layer_CmdSetViewportWithCountEXT(commandBuffer, viewportCount, pViewports);
+layer_CmdSetViewportWithCountEXT_after(commandBuffer, viewportCount, pViewports);
 #endif 
 }
 if(connected) {
@@ -15181,13 +15183,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetScissorWithCountEXT!");
 }
 if(connected) {
 #ifdef CMDSETSCISSORWITHCOUNTEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetScissorWithCountEXT(commandBuffer, scissorCount, pScissors);
+layer_CmdSetScissorWithCountEXT_before(commandBuffer, scissorCount, pScissors);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetScissorWithCountEXT(commandBuffer, scissorCount, pScissors);
 if(connected) {
 #ifdef CMDSETSCISSORWITHCOUNTEXT_AFTER_EXEC_EXISTS
-layer_CmdSetScissorWithCountEXT(commandBuffer, scissorCount, pScissors);
+layer_CmdSetScissorWithCountEXT_after(commandBuffer, scissorCount, pScissors);
 #endif 
 }
 if(connected) {
@@ -15202,13 +15204,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBindVertexBuffers2EXT!");
 }
 if(connected) {
 #ifdef CMDBINDVERTEXBUFFERS2EXT_BEFORE_EXEC_EXISTS
-layer_CmdBindVertexBuffers2EXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
+layer_CmdBindVertexBuffers2EXT_before(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers2EXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
 if(connected) {
 #ifdef CMDBINDVERTEXBUFFERS2EXT_AFTER_EXEC_EXISTS
-layer_CmdBindVertexBuffers2EXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
+layer_CmdBindVertexBuffers2EXT_after(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
 #endif 
 }
 if(connected) {
@@ -15223,13 +15225,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthTestEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHTESTENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthTestEnableEXT(commandBuffer, depthTestEnable);
+layer_CmdSetDepthTestEnableEXT_before(commandBuffer, depthTestEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthTestEnableEXT(commandBuffer, depthTestEnable);
 if(connected) {
 #ifdef CMDSETDEPTHTESTENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetDepthTestEnableEXT(commandBuffer, depthTestEnable);
+layer_CmdSetDepthTestEnableEXT_after(commandBuffer, depthTestEnable);
 #endif 
 }
 if(connected) {
@@ -15244,13 +15246,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthWriteEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHWRITEENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthWriteEnableEXT(commandBuffer, depthWriteEnable);
+layer_CmdSetDepthWriteEnableEXT_before(commandBuffer, depthWriteEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthWriteEnableEXT(commandBuffer, depthWriteEnable);
 if(connected) {
 #ifdef CMDSETDEPTHWRITEENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetDepthWriteEnableEXT(commandBuffer, depthWriteEnable);
+layer_CmdSetDepthWriteEnableEXT_after(commandBuffer, depthWriteEnable);
 #endif 
 }
 if(connected) {
@@ -15265,13 +15267,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthCompareOpEXT!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHCOMPAREOPEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthCompareOpEXT(commandBuffer, depthCompareOp);
+layer_CmdSetDepthCompareOpEXT_before(commandBuffer, depthCompareOp);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthCompareOpEXT(commandBuffer, depthCompareOp);
 if(connected) {
 #ifdef CMDSETDEPTHCOMPAREOPEXT_AFTER_EXEC_EXISTS
-layer_CmdSetDepthCompareOpEXT(commandBuffer, depthCompareOp);
+layer_CmdSetDepthCompareOpEXT_after(commandBuffer, depthCompareOp);
 #endif 
 }
 if(connected) {
@@ -15286,13 +15288,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthBoundsTestEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHBOUNDSTESTENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthBoundsTestEnableEXT(commandBuffer, depthBoundsTestEnable);
+layer_CmdSetDepthBoundsTestEnableEXT_before(commandBuffer, depthBoundsTestEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBoundsTestEnableEXT(commandBuffer, depthBoundsTestEnable);
 if(connected) {
 #ifdef CMDSETDEPTHBOUNDSTESTENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetDepthBoundsTestEnableEXT(commandBuffer, depthBoundsTestEnable);
+layer_CmdSetDepthBoundsTestEnableEXT_after(commandBuffer, depthBoundsTestEnable);
 #endif 
 }
 if(connected) {
@@ -15307,13 +15309,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetStencilTestEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETSTENCILTESTENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetStencilTestEnableEXT(commandBuffer, stencilTestEnable);
+layer_CmdSetStencilTestEnableEXT_before(commandBuffer, stencilTestEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilTestEnableEXT(commandBuffer, stencilTestEnable);
 if(connected) {
 #ifdef CMDSETSTENCILTESTENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetStencilTestEnableEXT(commandBuffer, stencilTestEnable);
+layer_CmdSetStencilTestEnableEXT_after(commandBuffer, stencilTestEnable);
 #endif 
 }
 if(connected) {
@@ -15328,13 +15330,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetStencilOpEXT!");
 }
 if(connected) {
 #ifdef CMDSETSTENCILOPEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetStencilOpEXT(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
+layer_CmdSetStencilOpEXT_before(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilOpEXT(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
 if(connected) {
 #ifdef CMDSETSTENCILOPEXT_AFTER_EXEC_EXISTS
-layer_CmdSetStencilOpEXT(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
+layer_CmdSetStencilOpEXT_after(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
 #endif 
 }
 if(connected) {
@@ -15349,13 +15351,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetRasterizerDiscardEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETRASTERIZERDISCARDENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetRasterizerDiscardEnableEXT(commandBuffer, rasterizerDiscardEnable);
+layer_CmdSetRasterizerDiscardEnableEXT_before(commandBuffer, rasterizerDiscardEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizerDiscardEnableEXT(commandBuffer, rasterizerDiscardEnable);
 if(connected) {
 #ifdef CMDSETRASTERIZERDISCARDENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetRasterizerDiscardEnableEXT(commandBuffer, rasterizerDiscardEnable);
+layer_CmdSetRasterizerDiscardEnableEXT_after(commandBuffer, rasterizerDiscardEnable);
 #endif 
 }
 if(connected) {
@@ -15370,13 +15372,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthBiasEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETDEPTHBIASENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetDepthBiasEnableEXT(commandBuffer, depthBiasEnable);
+layer_CmdSetDepthBiasEnableEXT_before(commandBuffer, depthBiasEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBiasEnableEXT(commandBuffer, depthBiasEnable);
 if(connected) {
 #ifdef CMDSETDEPTHBIASENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetDepthBiasEnableEXT(commandBuffer, depthBiasEnable);
+layer_CmdSetDepthBiasEnableEXT_after(commandBuffer, depthBiasEnable);
 #endif 
 }
 if(connected) {
@@ -15391,13 +15393,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPrimitiveRestartEnableEXT!");
 }
 if(connected) {
 #ifdef CMDSETPRIMITIVERESTARTENABLEEXT_BEFORE_EXEC_EXISTS
-layer_CmdSetPrimitiveRestartEnableEXT(commandBuffer, primitiveRestartEnable);
+layer_CmdSetPrimitiveRestartEnableEXT_before(commandBuffer, primitiveRestartEnable);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveRestartEnableEXT(commandBuffer, primitiveRestartEnable);
 if(connected) {
 #ifdef CMDSETPRIMITIVERESTARTENABLEEXT_AFTER_EXEC_EXISTS
-layer_CmdSetPrimitiveRestartEnableEXT(commandBuffer, primitiveRestartEnable);
+layer_CmdSetPrimitiveRestartEnableEXT_after(commandBuffer, primitiveRestartEnable);
 #endif 
 }
 if(connected) {
@@ -15412,13 +15414,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCreatePrivateDataSlotEXT!");
 }
 if(connected) {
 #ifdef CREATEPRIVATEDATASLOTEXT_BEFORE_EXEC_EXISTS
-layer_CreatePrivateDataSlotEXT(device, pCreateInfo, pAllocator, pPrivateDataSlot);
+layer_CreatePrivateDataSlotEXT_before(device, pCreateInfo, pAllocator, pPrivateDataSlot);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].CreatePrivateDataSlotEXT(device, pCreateInfo, pAllocator, pPrivateDataSlot);
 if(connected) {
 #ifdef CREATEPRIVATEDATASLOTEXT_AFTER_EXEC_EXISTS
-layer_CreatePrivateDataSlotEXT(device, pCreateInfo, pAllocator, pPrivateDataSlot);
+layer_CreatePrivateDataSlotEXT_after(device, pCreateInfo, pAllocator, pPrivateDataSlot);
 #endif 
 }
 if(connected) {
@@ -15434,13 +15436,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkDestroyPrivateDataSlotEXT!");
 }
 if(connected) {
 #ifdef DESTROYPRIVATEDATASLOTEXT_BEFORE_EXEC_EXISTS
-layer_DestroyPrivateDataSlotEXT(device, privateDataSlot, pAllocator);
+layer_DestroyPrivateDataSlotEXT_before(device, privateDataSlot, pAllocator);
 #endif 
 }
 device_dispatch[GetKey(device)].DestroyPrivateDataSlotEXT(device, privateDataSlot, pAllocator);
 if(connected) {
 #ifdef DESTROYPRIVATEDATASLOTEXT_AFTER_EXEC_EXISTS
-layer_DestroyPrivateDataSlotEXT(device, privateDataSlot, pAllocator);
+layer_DestroyPrivateDataSlotEXT_after(device, privateDataSlot, pAllocator);
 #endif 
 }
 if(connected) {
@@ -15455,13 +15457,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkSetPrivateDataEXT!");
 }
 if(connected) {
 #ifdef SETPRIVATEDATAEXT_BEFORE_EXEC_EXISTS
-layer_SetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, data);
+layer_SetPrivateDataEXT_before(device, objectType, objectHandle, privateDataSlot, data);
 #endif 
 }
 auto ret = device_dispatch[GetKey(device)].SetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, data);
 if(connected) {
 #ifdef SETPRIVATEDATAEXT_AFTER_EXEC_EXISTS
-layer_SetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, data);
+layer_SetPrivateDataEXT_after(device, objectType, objectHandle, privateDataSlot, data);
 #endif 
 }
 if(connected) {
@@ -15477,13 +15479,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetPrivateDataEXT!");
 }
 if(connected) {
 #ifdef GETPRIVATEDATAEXT_BEFORE_EXEC_EXISTS
-layer_GetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, pData);
+layer_GetPrivateDataEXT_before(device, objectType, objectHandle, privateDataSlot, pData);
 #endif 
 }
 device_dispatch[GetKey(device)].GetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, pData);
 if(connected) {
 #ifdef GETPRIVATEDATAEXT_AFTER_EXEC_EXISTS
-layer_GetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, pData);
+layer_GetPrivateDataEXT_after(device, objectType, objectHandle, privateDataSlot, pData);
 #endif 
 }
 if(connected) {
@@ -15498,13 +15500,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyBuffer2KHR!");
 }
 if(connected) {
 #ifdef CMDCOPYBUFFER2KHR_BEFORE_EXEC_EXISTS
-layer_CmdCopyBuffer2KHR(commandBuffer, pCopyBufferInfo);
+layer_CmdCopyBuffer2KHR_before(commandBuffer, pCopyBufferInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer2KHR(commandBuffer, pCopyBufferInfo);
 if(connected) {
 #ifdef CMDCOPYBUFFER2KHR_AFTER_EXEC_EXISTS
-layer_CmdCopyBuffer2KHR(commandBuffer, pCopyBufferInfo);
+layer_CmdCopyBuffer2KHR_after(commandBuffer, pCopyBufferInfo);
 #endif 
 }
 if(connected) {
@@ -15519,13 +15521,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyImage2KHR!");
 }
 if(connected) {
 #ifdef CMDCOPYIMAGE2KHR_BEFORE_EXEC_EXISTS
-layer_CmdCopyImage2KHR(commandBuffer, pCopyImageInfo);
+layer_CmdCopyImage2KHR_before(commandBuffer, pCopyImageInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyImage2KHR(commandBuffer, pCopyImageInfo);
 if(connected) {
 #ifdef CMDCOPYIMAGE2KHR_AFTER_EXEC_EXISTS
-layer_CmdCopyImage2KHR(commandBuffer, pCopyImageInfo);
+layer_CmdCopyImage2KHR_after(commandBuffer, pCopyImageInfo);
 #endif 
 }
 if(connected) {
@@ -15540,13 +15542,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBlitImage2KHR!");
 }
 if(connected) {
 #ifdef CMDBLITIMAGE2KHR_BEFORE_EXEC_EXISTS
-layer_CmdBlitImage2KHR(commandBuffer, pBlitImageInfo);
+layer_CmdBlitImage2KHR_before(commandBuffer, pBlitImageInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBlitImage2KHR(commandBuffer, pBlitImageInfo);
 if(connected) {
 #ifdef CMDBLITIMAGE2KHR_AFTER_EXEC_EXISTS
-layer_CmdBlitImage2KHR(commandBuffer, pBlitImageInfo);
+layer_CmdBlitImage2KHR_after(commandBuffer, pBlitImageInfo);
 #endif 
 }
 if(connected) {
@@ -15561,13 +15563,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyBufferToImage2KHR!");
 }
 if(connected) {
 #ifdef CMDCOPYBUFFERTOIMAGE2KHR_BEFORE_EXEC_EXISTS
-layer_CmdCopyBufferToImage2KHR(commandBuffer, pCopyBufferToImageInfo);
+layer_CmdCopyBufferToImage2KHR_before(commandBuffer, pCopyBufferToImageInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage2KHR(commandBuffer, pCopyBufferToImageInfo);
 if(connected) {
 #ifdef CMDCOPYBUFFERTOIMAGE2KHR_AFTER_EXEC_EXISTS
-layer_CmdCopyBufferToImage2KHR(commandBuffer, pCopyBufferToImageInfo);
+layer_CmdCopyBufferToImage2KHR_after(commandBuffer, pCopyBufferToImageInfo);
 #endif 
 }
 if(connected) {
@@ -15582,13 +15584,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyImageToBuffer2KHR!");
 }
 if(connected) {
 #ifdef CMDCOPYIMAGETOBUFFER2KHR_BEFORE_EXEC_EXISTS
-layer_CmdCopyImageToBuffer2KHR(commandBuffer, pCopyImageToBufferInfo);
+layer_CmdCopyImageToBuffer2KHR_before(commandBuffer, pCopyImageToBufferInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer2KHR(commandBuffer, pCopyImageToBufferInfo);
 if(connected) {
 #ifdef CMDCOPYIMAGETOBUFFER2KHR_AFTER_EXEC_EXISTS
-layer_CmdCopyImageToBuffer2KHR(commandBuffer, pCopyImageToBufferInfo);
+layer_CmdCopyImageToBuffer2KHR_after(commandBuffer, pCopyImageToBufferInfo);
 #endif 
 }
 if(connected) {
@@ -15603,13 +15605,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdResolveImage2KHR!");
 }
 if(connected) {
 #ifdef CMDRESOLVEIMAGE2KHR_BEFORE_EXEC_EXISTS
-layer_CmdResolveImage2KHR(commandBuffer, pResolveImageInfo);
+layer_CmdResolveImage2KHR_before(commandBuffer, pResolveImageInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdResolveImage2KHR(commandBuffer, pResolveImageInfo);
 if(connected) {
 #ifdef CMDRESOLVEIMAGE2KHR_AFTER_EXEC_EXISTS
-layer_CmdResolveImage2KHR(commandBuffer, pResolveImageInfo);
+layer_CmdResolveImage2KHR_after(commandBuffer, pResolveImageInfo);
 #endif 
 }
 if(connected) {
@@ -15624,13 +15626,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdSetEvent2KHR!");
 }
 if(connected) {
 #ifdef CMDSETEVENT2KHR_BEFORE_EXEC_EXISTS
-layer_CmdSetEvent2KHR(commandBuffer, event, pDependencyInfo);
+layer_CmdSetEvent2KHR_before(commandBuffer, event, pDependencyInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdSetEvent2KHR(commandBuffer, event, pDependencyInfo);
 if(connected) {
 #ifdef CMDSETEVENT2KHR_AFTER_EXEC_EXISTS
-layer_CmdSetEvent2KHR(commandBuffer, event, pDependencyInfo);
+layer_CmdSetEvent2KHR_after(commandBuffer, event, pDependencyInfo);
 #endif 
 }
 if(connected) {
@@ -15645,13 +15647,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdResetEvent2KHR!");
 }
 if(connected) {
 #ifdef CMDRESETEVENT2KHR_BEFORE_EXEC_EXISTS
-layer_CmdResetEvent2KHR(commandBuffer, event, stageMask);
+layer_CmdResetEvent2KHR_before(commandBuffer, event, stageMask);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdResetEvent2KHR(commandBuffer, event, stageMask);
 if(connected) {
 #ifdef CMDRESETEVENT2KHR_AFTER_EXEC_EXISTS
-layer_CmdResetEvent2KHR(commandBuffer, event, stageMask);
+layer_CmdResetEvent2KHR_after(commandBuffer, event, stageMask);
 #endif 
 }
 if(connected) {
@@ -15666,13 +15668,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdWaitEvents2KHR!");
 }
 if(connected) {
 #ifdef CMDWAITEVENTS2KHR_BEFORE_EXEC_EXISTS
-layer_CmdWaitEvents2KHR(commandBuffer, eventCount, pEvents, pDependencyInfos);
+layer_CmdWaitEvents2KHR_before(commandBuffer, eventCount, pEvents, pDependencyInfos);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdWaitEvents2KHR(commandBuffer, eventCount, pEvents, pDependencyInfos);
 if(connected) {
 #ifdef CMDWAITEVENTS2KHR_AFTER_EXEC_EXISTS
-layer_CmdWaitEvents2KHR(commandBuffer, eventCount, pEvents, pDependencyInfos);
+layer_CmdWaitEvents2KHR_after(commandBuffer, eventCount, pEvents, pDependencyInfos);
 #endif 
 }
 if(connected) {
@@ -15687,13 +15689,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdPipelineBarrier2KHR!");
 }
 if(connected) {
 #ifdef CMDPIPELINEBARRIER2KHR_BEFORE_EXEC_EXISTS
-layer_CmdPipelineBarrier2KHR(commandBuffer, pDependencyInfo);
+layer_CmdPipelineBarrier2KHR_before(commandBuffer, pDependencyInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier2KHR(commandBuffer, pDependencyInfo);
 if(connected) {
 #ifdef CMDPIPELINEBARRIER2KHR_AFTER_EXEC_EXISTS
-layer_CmdPipelineBarrier2KHR(commandBuffer, pDependencyInfo);
+layer_CmdPipelineBarrier2KHR_after(commandBuffer, pDependencyInfo);
 #endif 
 }
 if(connected) {
@@ -15708,13 +15710,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkQueueSubmit2KHR!");
 }
 if(connected) {
 #ifdef QUEUESUBMIT2KHR_BEFORE_EXEC_EXISTS
-layer_QueueSubmit2KHR(queue, submitCount, pSubmits, fence);
+layer_QueueSubmit2KHR_before(queue, submitCount, pSubmits, fence);
 #endif 
 }
 auto ret = device_dispatch[GetKey(queue)].QueueSubmit2KHR(queue, submitCount, pSubmits, fence);
 if(connected) {
 #ifdef QUEUESUBMIT2KHR_AFTER_EXEC_EXISTS
-layer_QueueSubmit2KHR(queue, submitCount, pSubmits, fence);
+layer_QueueSubmit2KHR_after(queue, submitCount, pSubmits, fence);
 #endif 
 }
 if(connected) {
@@ -15730,13 +15732,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteTimestamp2KHR!");
 }
 if(connected) {
 #ifdef CMDWRITETIMESTAMP2KHR_BEFORE_EXEC_EXISTS
-layer_CmdWriteTimestamp2KHR(commandBuffer, stage, queryPool, query);
+layer_CmdWriteTimestamp2KHR_before(commandBuffer, stage, queryPool, query);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp2KHR(commandBuffer, stage, queryPool, query);
 if(connected) {
 #ifdef CMDWRITETIMESTAMP2KHR_AFTER_EXEC_EXISTS
-layer_CmdWriteTimestamp2KHR(commandBuffer, stage, queryPool, query);
+layer_CmdWriteTimestamp2KHR_after(commandBuffer, stage, queryPool, query);
 #endif 
 }
 if(connected) {
@@ -15751,13 +15753,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginRenderingKHR!");
 }
 if(connected) {
 #ifdef CMDBEGINRENDERINGKHR_BEFORE_EXEC_EXISTS
-layer_CmdBeginRenderingKHR(commandBuffer, pRenderingInfo);
+layer_CmdBeginRenderingKHR_before(commandBuffer, pRenderingInfo);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderingKHR(commandBuffer, pRenderingInfo);
 if(connected) {
 #ifdef CMDBEGINRENDERINGKHR_AFTER_EXEC_EXISTS
-layer_CmdBeginRenderingKHR(commandBuffer, pRenderingInfo);
+layer_CmdBeginRenderingKHR_after(commandBuffer, pRenderingInfo);
 #endif 
 }
 if(connected) {
@@ -15772,13 +15774,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkCmdEndRenderingKHR!");
 }
 if(connected) {
 #ifdef CMDENDRENDERINGKHR_BEFORE_EXEC_EXISTS
-layer_CmdEndRenderingKHR(commandBuffer);
+layer_CmdEndRenderingKHR_before(commandBuffer);
 #endif 
 }
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderingKHR(commandBuffer);
 if(connected) {
 #ifdef CMDENDRENDERINGKHR_AFTER_EXEC_EXISTS
-layer_CmdEndRenderingKHR(commandBuffer);
+layer_CmdEndRenderingKHR_after(commandBuffer);
 #endif 
 }
 if(connected) {
@@ -15793,13 +15795,13 @@ winsockSendToUI(&ConnectSocket, "begin_vkGetImageSubresourceLayout2EXT!");
 }
 if(connected) {
 #ifdef GETIMAGESUBRESOURCELAYOUT2EXT_BEFORE_EXEC_EXISTS
-layer_GetImageSubresourceLayout2EXT(device, image, pSubresource, pLayout);
+layer_GetImageSubresourceLayout2EXT_before(device, image, pSubresource, pLayout);
 #endif 
 }
 device_dispatch[GetKey(device)].GetImageSubresourceLayout2EXT(device, image, pSubresource, pLayout);
 if(connected) {
 #ifdef GETIMAGESUBRESOURCELAYOUT2EXT_AFTER_EXEC_EXISTS
-layer_GetImageSubresourceLayout2EXT(device, image, pSubresource, pLayout);
+layer_GetImageSubresourceLayout2EXT_after(device, image, pSubresource, pLayout);
 #endif 
 }
 if(connected) {

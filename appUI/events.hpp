@@ -16,15 +16,25 @@ namespace details {
 	public:
 		void connectToLayer();
 		std::list<std::string> getApiCalls() { return apiCalls; };
+
+		struct vkBufferStr
+		{
+			std::list<std::string> parameters;
+		};
+		std::list<vkBufferStr> getBuffers() { return Buffers; };
 	private:
 		static DWORD WINAPI listenForData(__in LPVOID lpParameter);
 
 		void newInfo(const char* input, size_t index);
 		void parseMessage(std::string* input);
 
+
+
 		SOCKET ConnectSocket = INVALID_SOCKET;
 		#define DEFAULT_BUFLEN 500
 
 		std::list<std::string> apiCalls;
+		std::list<vkBufferStr> Buffers;
+		vkBufferStr Buffer;
 	};
 }

@@ -60,13 +60,13 @@ namespace laygen
     {
         *output << "scoped_lock l(global_lock);" << std::endl;
     }
-    void LayerGenerator::PrintCustomCall(std::ofstream* output, std::string* functName, auto* parameterList, std::string suffix)
+    void LayerGenerator::PrintCustomCall(std::ofstream* output, std::string* functName, auto* parameterList, std::string functSuffix, std::string suffix)
     {
         std::string upperName = (*functName).substr(2, (*functName).size());
         std::transform(upperName.begin(), upperName.end(), upperName.begin(), ::toupper);
         *output << "#ifdef ";
         *output << upperName << "_" << suffix << std::endl;
-        *output << "layer_" << (*functName).substr(2, (*functName).size()) << "(";
+        *output << "layer_" << (*functName).substr(2, (*functName).size()) << "_" << functSuffix << "(";
         PrintParameters(output, parameterList, false);
         *output << ");" << std::endl;
         *output << "#endif " << std::endl;
@@ -347,7 +347,7 @@ namespace laygen
             * #endif
             */
             generatedLayerFile << "if(connected) {" << std::endl;
-            PrintCustomCall(&generatedLayerFile, &(item.functName), &(item.parameterList), "BEFORE_EXEC_EXISTS");
+            PrintCustomCall(&generatedLayerFile, &(item.functName), &(item.parameterList), "before", "BEFORE_EXEC_EXISTS");
             generatedLayerFile << "}" << std::endl;
             
             /*
@@ -366,7 +366,7 @@ namespace laygen
             * #endif
             */
             generatedLayerFile << "if(connected) {" << std::endl;
-            PrintCustomCall(&generatedLayerFile, &(item.functName), &(item.parameterList), "AFTER_EXEC_EXISTS");
+            PrintCustomCall(&generatedLayerFile, &(item.functName), &(item.parameterList), "after", "AFTER_EXEC_EXISTS");
             generatedLayerFile << "}" << std::endl;
 
 
