@@ -9,7 +9,7 @@ namespace details {
 		void run();
 	private:
 
-		void ShowMenu(details::appWindow* window, details::events *dataObject);
+		void ShowApiCalls(details::appWindow* window, details::events *dataObject);
 
 	};
 }
