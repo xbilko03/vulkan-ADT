@@ -1,5 +1,6 @@
 #include "appWindow.hpp"
 #include "callbacks.h"
+#include "events.hpp"
 
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -123,7 +124,11 @@ namespace details {
         // Upload to Buffer:
         {
             void* map = NULL;
+
             err = vkMapMemory(g_Device, tex_data->UploadBufferMemory, 0, image_size, 0, &map);
+
+            std::cout << map << std::endl;
+
             check_vk_result(err);
             memcpy(map, image_data, image_size);
             VkMappedMemoryRange range[1] = {};

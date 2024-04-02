@@ -130,7 +130,6 @@ int uiWinsockInit(SOCKET* ConnectSocket)
 /* sends the 'sendbuf' array of chars from the CLIENT to the SERVER */
 int winsockSendToUI(SOCKET* ConnectSocket, std::string sendbuf)
 {
-    sendbuf += '!';
     /* Send 'sendbuf' data */
     int ret = send(*ConnectSocket, sendbuf.c_str(), strlen(sendbuf.c_str()), 0);
     if (ret == SOCKET_ERROR) {

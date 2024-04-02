@@ -8,28 +8,24 @@
 */
 
 #include "layer.hpp"
-#include "../appUI/winsock.h"
-
-#include <windows.h>
 #include <iostream>
-
 #include <assert.h>
-#include <filesystem>
 #include <array>
-
-#include <stdlib.h> //atexit
 #include <mutex> //scoped lock
-#include <chrono> //sleep
-#include <thread>
 
 SOCKET ConnectSocket = INVALID_SOCKET;
 bool connected = false;
-
+void* map;
+uint64_t image_size;
 void layer_MapMemory(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData)
 {
     if (connected)
     {
-        //std::cout << "mapping ID -> [memory]: " << memory << std::endl;
+        std::cout << "mapping ID -> [memory]: " << memory << std::endl;
+        map = *ppData;
+        image_size = size;
+        // data is 0 after the command is called
+        
         //winsockSendToUI(&ConnectSocket, "VkDeviceSize:" + std::to_string(size) + s);
     }
 }
@@ -47,6 +43,12 @@ void layer_UnmapMemory(VkDevice device, VkDeviceMemory memory)
 {
     if (connected)
     {
+
+        int i = 0;
+        unsigned char* c = (unsigned char*)map;
+
+        while (i != image_size)
+            printf("%02x ", c[i++]);
         //std::cout << "unmapping ID -> [memory]: " << memory << std::endl;
     }
 }
@@ -199,37 +201,5 @@ void layer_DestroyBuffer(VkDevice device, VkBuffer buffer, VkAllocationCallbacks
 
 void layer_CreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
 {
-    /* Start UI */
-    /* If there is a running window already, do nothing. */
-
-    STARTUPINFO info = { sizeof(info) };
-    PROCESS_INFORMATION processInfo;
-
-    /* windows only: */
-    char buf[MAX_PATH];
-    GetModuleFileNameA(nullptr, buf, MAX_PATH);
-    std::filesystem::path progPath(buf);
-    std::string filename = progPath.filename().string();
-
-    if (strcmp(filename.c_str(), "vkDetails.exe") != 0)
-    {
-        /* prevent opening vkDetails on appUI startup */
-        CreateProcess("C:\\Users\\jozef\\Desktop\\vk details\\out\\build\\x64-debug\\vkDetails.exe", NULL, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo);
-        CloseHandle(processInfo.hProcess);
-        CloseHandle(processInfo.hThread);
-
-        /* Connect to UI */
-        if (layerWinsockInit(&ConnectSocket) == 0)
-        {
-            connected = true;
-        }
-        else
-            connected = false;
-
-        if (connected)
-        {
-            //winsockSendToUI(&ConnectSocket, "vkCreateInstance");
-        }
-    }
     /* windows only */
 }

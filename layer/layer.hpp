@@ -3,8 +3,17 @@
 #include <vulkan/vulkan.h>
 #include <vulkan/vk_layer.h>
 #include <winsock2.h>
+#include "../appUI/winsock.h"
 #include <string>
 #include <map>
+#include <thread>
+#include <windows.h>
+#include <filesystem>
+
+
+extern SOCKET ConnectSocket;
+extern bool connected;
+
 
 //#include "../appUI/winsock.h"
 

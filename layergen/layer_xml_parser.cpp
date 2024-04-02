@@ -4,7 +4,7 @@
 #include <algorithm>
 
 namespace laygen {
-
+    
     bool XmlParser::existsByName(std::list<XmlParser::Command> inputList, std::string inputName)
     {
         for (auto item : inputList)
@@ -25,12 +25,12 @@ namespace laygen {
         }
         return Command{};
     }
-    bool XmlParser::existsByNameCmd(std::list<std::string> inputList, std::string inputName)
+    bool XmlParser::existsByNameCmd(std::list<Parameter> inputList, std::string inputName)
     {
         for (auto item : inputList)
         {
 
-            if (strcmp(item.c_str(), inputName.c_str()) == 0)
+            if (strcmp(item.name.c_str(), inputName.c_str()) == 0)
                 return true;
         }
         return false;
@@ -109,7 +109,7 @@ namespace laygen {
             auto functRetType = point.node().select_node("./proto/type/text()").node().value();
 
             auto parametersPoint = point.node().select_nodes("./param");
-            std::list<std::string> parameters = {};
+            std::list<Parameter> parameters = {};
             for (auto param : parametersPoint)
             {
                 std::string pointer = param.node().select_node("text()").node().value();
@@ -135,8 +135,7 @@ namespace laygen {
                     if(strcmp(name.c_str(), "ppBuildRangeInfos") == 0 || strcmp(name.c_str(), "ppMaxPrimitiveCounts") == 0)
                         type.append("*");
                 }
-                parameters.push_back(type);
-                parameters.push_back(name);
+                parameters.push_back(Parameter(type,name));
             }
 
             auto parameter1 = point.node().select_node("./param/type/text()").node().value();
@@ -215,13 +214,13 @@ namespace laygen {
         {
             if (existsByName(commandListInstances, command.alias) == true)
             {
-                /* the alias belongs to a function inside to the InstanceDispatchTable */
+                /* the alias belongs to a function inside of the InstanceDispatchTable */
                 auto details = findByName(commandListInstances, command.alias);
                 commandListInstances.push_back(Command{ command.functName, "", details.functType, details.parameterList });
             }
             else if (existsByName(commandListDevices, command.alias) == true)
             {
-                /* the alias belongs to a function inside to the InstanceDispatchTable */
+                /* the alias belongs to a function inside of the InstanceDispatchTable */
                 auto details = findByName(commandListDevices, command.alias);
                 commandListDevices.push_back(Command{ command.functName, "", details.functType, details.parameterList });
             }

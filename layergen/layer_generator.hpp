@@ -69,6 +69,15 @@ namespace laygen {
 		std::list<std::string> ignoreCmdList = { IGNORED_COMMANDS };
 		std::list<std::string> ignoreLayerCmdList = { LAYER_LEVEL_IGNORE_COMMANDS };
 
+		void PrintParameters(std::ofstream* output, auto* parameterList, bool typesIncluded);
+		void PrintParameter(std::ofstream* output, auto* parameterList, uint32_t index, bool typesIncluded);
+
+		void PrintCallDefinition(std::ofstream* output, std::string* functType, std::string* functName, auto* parameterList);
+		void PrintLock(std::ofstream* output);
+		void PrintCustomCall(std::ofstream* output, std::string* functName, auto* parameterList, std::string suffix);
+		void PrintExecuteCall(std::ofstream* output, std::string* functType, std::string* functName, auto* parameterList, std::string cmdListType);
+		void PrintSendToUI(std::ofstream* output, std::string input);
+
 		std::string GetGuardString(std::string commandName, std::list<XmlParser::cGuard> cmdGuard);
 
 		void generateTableInstance();

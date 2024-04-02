@@ -5,75 +5,53 @@
 * Author	: Jozef Bilko (xbilko03) {excluding the explicitly marked parts of the code}
 * Licence   : MIT
 */
-//#include <winsock2.h>
-//#include "winsock.h"
-//#include "events.h"
-
 #include "appUI.hpp"
-#include "appWindow.hpp"
-
-#define DEFAULT_BUFLEN 500
+#include <iostream>
 
 namespace details {
-
-    void appUI::newInfo(const char* input)
-    {
-        std::string inp = input;
-        std::replace(inp.begin(), inp.end(), '!', '\0');
-        testList.push_back(inp);
-    }
-    DWORD WINAPI appUI::listenForData(__in LPVOID lpParameter)
-    {
-        /* Create socket */
-        int ret;
-        SOCKET ClientSocket = INVALID_SOCKET;
-        char recvbuf[DEFAULT_BUFLEN];
-        uiWinsockInit(&ClientSocket);
-
-        // Receive until the peer shuts down the connection
-        do {
-            ret = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0);
-            if (ret > 0)
-            {
-                /* Parse data */
-                newInfo(recvbuf);
-                /* New data from layer received */
-                glfwPostEmptyEvent();
-            }
-            else if (ret == 0)
-            {
-                /* closing connection */
-            }
-            else
-            {
-                /* recv failed */
-                closesocket(ClientSocket);
-                WSACleanup();
-                //throw runtime error
-            }
-        } while (ret > 0);
-
-        /* Destroy socket */
-        uiWinsockExit(&ClientSocket);
-        return 0;
-    }
-    void appUI::ShowMenu(details::appWindow *window)
+    /* App thread */
+    void appUI::ShowMenu(details::appWindow *window, details::events *dataObject)
     {
         static float f = 0.0f;
         static int counter = 0;
 
-
-        ImGui::Begin("Layer receiver");
-        /*
+        ImGui::Begin("Vk_API_Calls");
         bool show_demo_window = true;
         ImGui::ShowDemoWindow(&show_demo_window);
-        */
-        for (auto item : testList)
+
+
+        auto callsList = (*dataObject).getApiCalls();
+        std::list<std::string>::iterator iterator = callsList.begin();
+        size_t apiCount = callsList.size();
+        size_t apiGroupCount = 10000;
+
+        for (size_t i = 0; i < apiCount; i += apiGroupCount)
         {
-            ImGui::Text(item.c_str());
+            size_t range = i + apiGroupCount;
+            std::string headerName = std::to_string(i) + "-" + std::to_string(range) + '\0';
+
+            if (ImGui::CollapsingHeader(headerName.c_str()))
+            {
+                ImGuiListClipper clipper;
+                clipper.Begin(apiGroupCount);
+                while (clipper.Step())
+                {
+                    for (int row = clipper.DisplayStart; row < clipper.DisplayEnd; row++)
+                    {
+                        ImGui::Text(iterator++->c_str());
+                    }
+                }
+            }
         }
 
 
+
+        /*
+        for (auto item : )
+        {
+            ImGui::Text(item.c_str());
+        }
+        */
 
         //ImGui::ColorEdit3("clear color", (float*)&(*window).clear_color); // Edit 3 floats representing a color
 
@@ -111,11 +89,10 @@ namespace details {
 
     void appUI::run()
     {
-        DWORD mythreadId;
-        /* Collect data from socket continuously */
-        CreateThread(0, 0, appUI::listenForData, 0, 0, &mythreadId);
-
         details::appWindow window;
+        details::events eventManager;
+
+        eventManager.connectToLayer();
         
         /* init UI */
         window.dataInit();
@@ -135,7 +112,7 @@ namespace details {
             window.startNewFrame();
 
             /* imGui */
-            //ShowMenu(&window);
+            ShowMenu(&window, &eventManager);
             window.ShowTexture();
 
             window.renderNewFrame();

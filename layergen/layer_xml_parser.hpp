@@ -11,11 +11,16 @@ namespace laygen {
 			std::string guard;
 			std::list<std::string> commandList;
 		};
+		struct Parameter
+		{
+			std::string type;
+			std::string name;
+		};
 		struct Command {
 			std::string functName;
 			std::string alias;
 			std::string functType;
-			std::list<std::string> parameterList;
+			std::list<Parameter> parameterList;
 		};
 
 		bool containsCommands();
@@ -37,7 +42,7 @@ namespace laygen {
 		XmlParser::Command findByName(std::list<XmlParser::Command> inputList, std::string inputName);
 		std::list<std::string> findCommands(std::string platformName, pugi::xml_document* doc);
 		std::string GetGuardString(std::string commandName, std::list<cGuard> cmdGuard);
-		bool existsByNameCmd(std::list<std::string> inputList, std::string inputName);
+		bool existsByNameCmd(std::list<Parameter> inputList, std::string inputName);
 
 		pugi::xml_document doc;
 		pugi::xml_node commandRootNode;

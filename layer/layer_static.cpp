@@ -7,12 +7,47 @@ struct CommandStats
 std::map<VkCommandBuffer, CommandStats> commandbuffer_stats;
 
 /* Layer init and shutdown */
-
 VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
 {
-#ifdef CREATEINSTANCE_EXISTS
-    layer_CreateInstance(pCreateInfo, pAllocator, pInstance);
-#endif
+
+    /* Start UI */
+    /* If there is a running window already, do nothing. */
+
+    STARTUPINFO info = { sizeof(info) };
+    PROCESS_INFORMATION processInfo;
+
+    /* windows only: */
+    char buf[MAX_PATH];
+    GetModuleFileNameA(nullptr, buf, MAX_PATH);
+    std::filesystem::path progPath(buf);
+    std::string filename = progPath.filename().string();
+
+    if (strcmp(filename.c_str(), "vkDetails.exe") != 0)
+    {
+        /* prevent opening vkDetails on appUI startup */
+        CreateProcess("C:\\Users\\jozef\\Desktop\\vk details\\out\\build\\x64-debug\\vkDetails.exe", NULL, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo);
+        CloseHandle(processInfo.hProcess);
+        CloseHandle(processInfo.hThread);
+
+        /* Connect to UI */
+        if (layerWinsockInit(&ConnectSocket) == 0)
+        {
+            connected = true;
+        }
+        else
+            connected = false;
+
+        if (connected)
+        {
+            //winsockSendToUI(&ConnectSocket, "vkCreateInstance");
+        }
+    }
+
+
+
+
+
+
 
     VkLayerInstanceCreateInfo* layerCreateInfo = (VkLayerInstanceCreateInfo*)pCreateInfo->pNext;
 

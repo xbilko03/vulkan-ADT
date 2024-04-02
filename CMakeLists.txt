@@ -34,7 +34,9 @@ ${IMGUI_DIR}/imgui_widgets.cpp
  
  "appUI/winsock.h"
  "appUI/winsock.cpp"
-
+ 
+ "appUI/events.cpp"
+ "appUI/events.hpp"
 )
 
 # vulkan
