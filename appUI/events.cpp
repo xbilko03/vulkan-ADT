@@ -17,7 +17,7 @@ namespace details {
     {
         if ((*input).size() < 6)
             return;
-
+        
         if ((*input).substr(0, 6) == "begin_")
         {
             /* api command begin message */

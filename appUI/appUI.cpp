@@ -9,6 +9,14 @@
 #include <iostream>
 
 namespace details {
+    void appUI::ShowDeviceInfo(details::appWindow* window, details::events* dataObject)
+    {
+        ImGui::Begin("Device Info");
+
+
+
+        ImGui::End();
+    }
     void appUI::ShowBuffers(details::appWindow* window, details::events* dataObject)
     {
         ImGui::Begin("Vk_Buffers");
@@ -37,8 +45,6 @@ namespace details {
         static int counter = 0;
 
         ImGui::Begin("Vk_API_Calls");
-        bool show_demo_window = true;
-        ImGui::ShowDemoWindow(&show_demo_window);
 
 
         auto callsList = (*dataObject).getApiCalls();
@@ -81,7 +87,7 @@ namespace details {
 
         eventManager.connectToLayer();
         
-        /* init UI */
+        /* init App */
         window.dataInit();
         window.glfwWindowInit();
         window.setupVulkan();
@@ -90,7 +96,11 @@ namespace details {
         window.imGuiInit();
         window.CreateTexture();
 
-
+        bool apiCalls = false;
+        bool buffers = false;
+        bool demo = false;
+        bool texture = false;
+        bool deviceInfo = true;
         /* window render loop */
         while (!glfwWindowShouldClose(window.window))
         {
@@ -98,10 +108,27 @@ namespace details {
 
             window.startNewFrame();
 
-            /* imGui */
-            ShowApiCalls(&window, &eventManager);
-            ShowBuffers(&window, &eventManager);
-            window.ShowTexture();
+            /* imGui */            
+            {
+                ImGui::Begin("Menu");
+                ImGui::Checkbox("Device_Info", &deviceInfo);
+                ImGui::Checkbox("Api_Calls", &apiCalls);
+                ImGui::Checkbox("Vk_Buffers", &buffers);
+                ImGui::Checkbox("Demo_Window", &demo);
+                ImGui::Checkbox("Texture_Test", &texture);
+                ImGui::End();
+            }
+
+            if (deviceInfo == true)
+                ShowDeviceInfo(&window, &eventManager);
+            if(apiCalls == true)
+                ShowApiCalls(&window, &eventManager);
+            if(buffers == true)
+                ShowBuffers(&window, &eventManager);
+            if(demo == true)
+                ImGui::ShowDemoWindow(&demo);
+            if(texture == true)
+                window.ShowTexture();
 
             window.renderNewFrame();
         }

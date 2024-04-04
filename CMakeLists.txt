@@ -56,10 +56,6 @@ target_link_libraries(${project_name} ${Glfw_LIBRARY} wsock32 ws2_32)
 # layer
 include_directories("libs/vklayer/" "layergen/")
 
-# app
-#set(headers "appUI/winsock.h" "appUI/events.h")
-# "appUI/winsock.cpp" "appUI/events.cpp"   ${headers} ${imguiIncludes} 
-
 # generator
 add_executable(${generator_name} 
 "layergen/layer_generator.cpp"
@@ -85,11 +81,4 @@ ${Vulkan_LIBRARIES}
 
 )
 target_link_libraries(dbgrvlayer wsock32 ws2_32 ${Vulkan_LIBRARIES})
-#"appUI/winsock.h" "appUI/winsock.cpp" "appUI/events.cpp" "appUI/events.h"
 
-#target_link_libraries(${project_name} ${Vulkan_LIBRARIES} ${Glfw_LIBRARY})
-
-#add_executable(vkdetails "appUI/appUI.cpp" ${VK_INCLUDE_DIRS} ${imgui})
-
-#option(BUILD_SHARED_LIBS ON)
-#add_library(dbgrvlayer SHARED ${CMAKE_SOURCE_DIR}/layer/layer.cpp  "appUI/winsock.h" "appUI/winsock.cpp" "appUI/events.cpp" "appUI/events.h")

@@ -4,11 +4,11 @@
 
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "stb_image.h" //texture test
 #define MAX_TEXTURES_COUNT 800
 
 namespace details {
-    // Helper function to find Vulkan memory type bits. See ImGui_ImplVulkan_MemoryType() in imgui_impl_vulkan.cpp
+    /* [Texture] Helper function to find Vulkan memory type bits.See ImGui_ImplVulkan_MemoryType() in imgui_impl_vulkan.cpp */
     uint32_t appWindow::findMemoryType(uint32_t type_filter, VkMemoryPropertyFlags properties)
     {
         VkPhysicalDeviceMemoryProperties mem_properties;
@@ -21,7 +21,7 @@ namespace details {
         return 0xFFFFFFFF; // Unable to find memoryType
     }
 
-    // Helper function to load an image with common settings and return a MyTextureData with a VkDescriptorSet as a sort of Vulkan pointer
+    /* [Texture] Helper function to load an image with common settings and return a MyTextureData with a VkDescriptorSet as a sort of Vulkan pointer */
     bool appWindow::LoadTextureFromFile(const char* filename, MyTextureData* tex_data)
     {
         // Specifying 4 channels forces stb to load the image in RGBA which is an easy format for Vulkan
@@ -219,7 +219,7 @@ namespace details {
         return true;
     }
 
-    // Helper function to cleanup an image loaded with LoadTextureFromFile
+    /* [Texture] Helper function to cleanup an image loaded with LoadTextureFromFile */
     void appWindow::RemoveTexture(MyTextureData* tex_data)
     {
         vkFreeMemory(g_Device, tex_data->UploadBufferMemory, nullptr);
@@ -231,17 +231,14 @@ namespace details {
         ImGui_ImplVulkan_RemoveTexture(tex_data->DS);
     }
     
-
+    /* [Texture] texture test */
     void appWindow::CreateTexture()
     {
         bool ret = LoadTextureFromFile("C:\\Users\\jozef\\Desktop\\MyImage01.jpg", &my_texture);
         IM_ASSERT(ret);
-
-
-
-        //RemoveTexture(&my_texture);
     }
 
+    /* [Texture] texture test */
     void appWindow::ShowTexture()
     {
         ImGui::Begin("Vulkan Texture Test");
@@ -251,10 +248,7 @@ namespace details {
         ImGui::End();
     }
 
-
-
-
-
+    /* render frame */
     void appWindow::renderNewFrame()
     {
         ImGui::Render();
@@ -271,11 +265,11 @@ namespace details {
         }
     }
 
+    /* start frame */
     void appWindow::startNewFrame()
     {
         glfwPollEvents();
 
-        // Resize swap chain?
         if (g_SwapChainRebuild)
         {
             int width, height;
@@ -294,21 +288,25 @@ namespace details {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
     }
+    
+    /* free imGui */
     void appWindow::cleanupImGui()
     {
         auto err = vkDeviceWaitIdle(g_Device);
         check_vk_result(err);
-        /* TEXTURE TODO */
         RemoveTexture(&my_texture);
         ImGui_ImplVulkan_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
     }
+    
+    /* free glfw */
     void appWindow::cleanupGLFW()
     {
         glfwDestroyWindow(window);
         glfwTerminate();
     }
+    
     void appWindow::imGuiInit()
     {
         // Setup Dear ImGui context
@@ -696,7 +694,5 @@ namespace details {
         check_vk_result(err);
         wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->ImageCount; // Now we can use the next set of semaphores
     }
-
-
 
 }

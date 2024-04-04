@@ -8,7 +8,6 @@
 
 namespace laygen
 {
-
     void LayerGenerator::PrintParameters(std::ofstream* output, auto* parameterList, bool typesIncluded)
     {
         uint32_t i = 0;
@@ -48,7 +47,6 @@ namespace laygen
             i++;
         }
     }
-
     void LayerGenerator::PrintCallDefinition(std::ofstream* output, std::string* functType, std::string* functName, auto* parameterList)
     {
         *output << "\n VK_LAYER_EXPORT " << *functType << " VKAPI_CALL DetailsLayer_" << (*functName).substr(2, (*functName).size()) << "(";
@@ -66,9 +64,11 @@ namespace laygen
         std::transform(upperName.begin(), upperName.end(), upperName.begin(), ::toupper);
         *output << "#ifdef ";
         *output << upperName << "_" << suffix << std::endl;
+        generatedLayerFile << "if(connected) {" << std::endl;
         *output << "layer_" << (*functName).substr(2, (*functName).size()) << "_" << functSuffix << "(";
         PrintParameters(output, parameterList, false);
         *output << ");" << std::endl;
+        generatedLayerFile << "}" << std::endl;
         *output << "#endif " << std::endl;
 
     }
@@ -93,7 +93,6 @@ namespace laygen
     {
         *output << "winsockSendToUI(&ConnectSocket, \"" << input << "!\");" << std::endl;
     }
-
     std::string LayerGenerator::GetGuardString(std::string commandName, std::list<XmlParser::cGuard> cmdGuard)
     {
         for (auto guard : cmdGuard)
@@ -264,17 +263,20 @@ namespace laygen
         if (strcmp(cmdListType.c_str(), "instance") == 0)
         {
             generatedLayerFile << "InstanceProcAddr(VkInstance instance, const char* pName) {" << std::endl;
+            /* header */
+            generatedLayerFile << "if (GetWindowName() == \"vkDetails.exe\") { GETPROCADDR(CreateDevice); GETPROCADDR(CreateInstance); return instance_dispatch[GetKey(instance)].GetInstanceProcAddr(instance, pName); }" << std::endl;
             generateCmdProcCalls(xmlp.commandListInstances);
             generateCmdProcCalls(xmlp.commandListDevices);
         }
         else
         {
             generatedLayerFile << "DeviceProcAddr(VkDevice device, const char* pName) {" << std::endl;
+            /* header */
+            generatedLayerFile << "if (GetWindowName() == \"vkDetails.exe\") { return device_dispatch[GetKey(device)].GetDeviceProcAddr(device, pName); }" << std::endl;
             generateCmdProcCalls(xmlp.commandListDevices);
         }
 
-        generatedLayerFile << "scoped_lock l(global_lock);" << std::endl;
-
+        PrintLock(&generatedLayerFile);
         if (strcmp(cmdListType.c_str(), "instance") == 0)
         {
             generatedLayerFile << "return instance_dispatch[GetKey(instance)].GetInstanceProcAddr(instance, pName);}" << std::endl;
@@ -346,9 +348,7 @@ namespace laygen
             * layer_GetPhysicalDeviceMemoryProperties(physicalDevice, pMemoryProperties);
             * #endif
             */
-            generatedLayerFile << "if(connected) {" << std::endl;
             PrintCustomCall(&generatedLayerFile, &(item.functName), &(item.parameterList), "before", "BEFORE_EXEC_EXISTS");
-            generatedLayerFile << "}" << std::endl;
             
             /*
             * pass the call to the loader
@@ -365,9 +365,7 @@ namespace laygen
             * layer_GetPhysicalDeviceMemoryProperties(physicalDevice, pMemoryProperties);
             * #endif
             */
-            generatedLayerFile << "if(connected) {" << std::endl;
             PrintCustomCall(&generatedLayerFile, &(item.functName), &(item.parameterList), "after", "AFTER_EXEC_EXISTS");
-            generatedLayerFile << "}" << std::endl;
 
 
             /*
@@ -420,7 +418,6 @@ namespace laygen
         }
         generatedLayerFile << " " << std::endl;
     }
-
     void LayerGenerator::run()
     {
         /* xml parse */
