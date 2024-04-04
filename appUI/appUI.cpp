@@ -13,7 +13,26 @@ namespace details {
     {
         ImGui::Begin("Device Info");
 
+        if (ImGui::CollapsingHeader("Available Physical Devices"))
+        {
+            uint32_t test = (*window).GetPhysicalDeviceCount();
+            ImGui::Text(("Available physical devices: " + std::to_string(test)).c_str());
 
+            auto devices = (*window).GetPhysicalDeviceProperties();
+
+            for (auto& dev : devices)
+            {
+                if (ImGui::CollapsingHeader(dev.deviceName))
+                {
+                    ImGui::Text(("apiVersion: " + std::to_string(dev.apiVersion)).c_str());
+                    ImGui::Text(("driverVersion: " + std::to_string(dev.driverVersion)).c_str());
+                    ImGui::Text(("vendorID: " + std::to_string(dev.vendorID)).c_str());
+                    ImGui::Text(("deviceID: " + std::to_string(dev.deviceID)).c_str());
+                    ImGui::Text(("deviceType: " + std::to_string(dev.deviceType)).c_str());
+                }
+                /* INCOMPLETE ... */
+            }
+        }
 
         ImGui::End();
     }

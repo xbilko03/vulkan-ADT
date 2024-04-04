@@ -393,33 +393,41 @@ namespace details {
         return false;
     }
 
+    /* prioritize discrete GPU, if not found, select integrated one, if there are none, return VK_NULL_HANDLE */
     VkPhysicalDevice appWindow::SetupVulkan_SelectPhysicalDevice()
     {
-        uint32_t gpu_count;
-        VkResult err = vkEnumeratePhysicalDevices(g_Instance, &gpu_count, nullptr);
+        VkResult err = vkEnumeratePhysicalDevices(g_Instance, &physicalDeviceCount, nullptr);
         check_vk_result(err);
-        IM_ASSERT(gpu_count > 0);
+        IM_ASSERT(physicalDeviceCount > 0);
 
         ImVector<VkPhysicalDevice> gpus;
-        gpus.resize(gpu_count);
-        err = vkEnumeratePhysicalDevices(g_Instance, &gpu_count, gpus.Data);
+        gpus.resize(physicalDeviceCount);
+        err = vkEnumeratePhysicalDevices(g_Instance, &physicalDeviceCount, gpus.Data);
         check_vk_result(err);
 
-        // If a number >1 of GPUs got reported, find discrete GPU if present, or use first one available. This covers
-        // most common cases (multi-gpu/integrated+dedicated graphics). Handling more complicated setups (multiple
-        // dedicated GPUs) is out of scope of this sample.
+        VkPhysicalDevice chosenDevice = nullptr;
         for (VkPhysicalDevice& device : gpus)
         {
             VkPhysicalDeviceProperties properties;
             vkGetPhysicalDeviceProperties(device, &properties);
+
+            /* extract physical devices data */
+            physicalDevicePropertiesList.push_back(properties);
+
             if (properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
-                return device;
+                chosenDevice = device;
         }
 
-        // Use first GPU (Integrated) is a Discrete one is not available.
-        if (gpu_count > 0)
-            return gpus[0];
-        return VK_NULL_HANDLE;
+        if (chosenDevice == nullptr)
+        {
+            /* in case no discrete GPUs are available */
+            if(physicalDeviceCount > 0)
+                chosenDevice = gpus[0];
+        }
+        if (physicalDeviceCount > 0)
+            return chosenDevice;
+        else
+            return VK_NULL_HANDLE; // no suitable device found
     }
 
     void appWindow::setupVulkan()

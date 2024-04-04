@@ -13,6 +13,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <string>
+#include <list>
 
 #include "winsock.h"
 
@@ -51,6 +52,9 @@ namespace details {
 
         void CreateTexture();
         void ShowTexture();
+
+        uint32_t GetPhysicalDeviceCount() { return physicalDeviceCount; }
+        std::list<VkPhysicalDeviceProperties> GetPhysicalDeviceProperties() { return physicalDevicePropertiesList; }
 	private:
         // A struct to manage data related to one image in vulkan
         struct MyTextureData
@@ -92,6 +96,10 @@ namespace details {
         VkSurfaceKHR surface;
         ImGui_ImplVulkanH_Window* wd;
 
+
+        /* Physical devices */
+        uint32_t physicalDeviceCount;
+        std::list<VkPhysicalDeviceProperties> physicalDevicePropertiesList;
 
         DWORD __stdcall layerReceiver(LPVOID lpParameter);
     };
