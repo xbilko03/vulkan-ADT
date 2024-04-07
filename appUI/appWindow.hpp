@@ -55,6 +55,8 @@ namespace details {
 
         uint32_t GetPhysicalDeviceCount() { return physicalDeviceCount; }
         std::list<VkPhysicalDeviceProperties> GetPhysicalDeviceProperties() { return physicalDevicePropertiesList; }
+        ImVector<VkExtensionProperties> GetInstanceExtensions() { return instanceExtensions; }
+        ImVector<VkExtensionProperties> GetDeviceExtensions() { return deviceExtensions; }
 	private:
         // A struct to manage data related to one image in vulkan
         struct MyTextureData
@@ -79,6 +81,9 @@ namespace details {
         uint32_t findMemoryType(uint32_t type_filter, VkMemoryPropertyFlags properties);
         bool LoadTextureFromFile(const char* filename, MyTextureData* tex_data);
         void RemoveTexture(MyTextureData* tex_data);
+        ImVector<VkExtensionProperties> instanceExtensions;
+        ImVector<VkExtensionProperties> deviceExtensions;
+
 
         #define WINDOWNAME "vkDetails"
         VkAllocationCallbacks* g_Allocator;

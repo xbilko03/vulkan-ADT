@@ -22,6 +22,24 @@ namespace details {
 			std::list<std::string> parameters;
 		};
 		std::list<vkBufferStr> getBuffers() { return Buffers; };
+
+		struct appInfoStr
+		{
+			std::list<std::string> parameters;
+		};
+		appInfoStr getAppInfo() { return appInfo; };
+
+		struct vkCommandBuffersStr
+		{
+			std::list<std::string> parameters;
+		};
+		std::list<vkCommandBuffersStr> getCommandBuffers() { return CmdBuffers; };
+
+		struct vkImageStr
+		{
+			std::list<std::string> parameters;
+		};
+		std::list<vkImageStr> getImages() { return Images; };
 	private:
 		static DWORD WINAPI listenForData(__in LPVOID lpParameter);
 
@@ -34,7 +52,15 @@ namespace details {
 		#define DEFAULT_BUFLEN 500
 
 		std::list<std::string> apiCalls;
+		appInfoStr appInfo;
+
 		std::list<vkBufferStr> Buffers;
 		vkBufferStr Buffer;
+
+		std::list<vkCommandBuffersStr> CmdBuffers;
+		vkCommandBuffersStr CmdBuffer;
+
+		std::list<vkImageStr> Images;
+		vkImageStr Image;
 	};
 }

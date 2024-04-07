@@ -11,7 +11,9 @@ namespace details {
 
 		void ShowApiCalls(details::appWindow* window, details::events *dataObject);
 		void ShowBuffers(details::appWindow* window, details::events* dataObject);
-		void ShowDeviceInfo(details::appWindow* window, details::events* dataObject);
-
+		void ShowVulkanInfo(details::appWindow* window, details::events* dataObject);
+		void ShowAppInfo(details::appWindow* window, details::events* dataObject);
+		void ShowCommandBuffers(details::appWindow* window, details::events* dataObject);
+		void ShowImages(details::appWindow* window, details::events* dataObject);
 	};
 }

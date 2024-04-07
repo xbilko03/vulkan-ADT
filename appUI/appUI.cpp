@@ -9,9 +9,66 @@
 #include <iostream>
 
 namespace details {
-    void appUI::ShowDeviceInfo(details::appWindow* window, details::events* dataObject)
+
+    void appUI::ShowImages(details::appWindow* window, details::events* dataObject)
     {
-        ImGui::Begin("Device Info");
+        ImGui::Begin("Images");
+
+        auto imageList = (*dataObject).getImages();
+        size_t imageCount = imageList.size();
+
+        for (size_t i = 0; i < imageCount; i++)
+        {
+            std::string headerName = "vkImage #" + std::to_string(i) + '\0';
+            if (ImGui::CollapsingHeader(headerName.c_str()))
+            {
+                std::list<events::vkImageStr>::iterator iterator = imageList.begin();
+                std::advance(iterator, i);
+                for (auto param : iterator->parameters)
+                {
+                    ImGui::Text(param.c_str());
+                }
+            }
+        }
+
+        ImGui::End();
+    }
+    void appUI::ShowCommandBuffers(details::appWindow* window, details::events* dataObject)
+    {
+        ImGui::Begin("CommandBuffers");
+
+        auto cmdBuffList = (*dataObject).getCommandBuffers();
+        size_t cmdBuffCount = cmdBuffList.size();
+
+        for (size_t i = 0; i < cmdBuffCount; i++)
+        {
+            std::string headerName = "CommandBuffers #" + std::to_string(i) + '\0';
+            if (ImGui::CollapsingHeader(headerName.c_str()))
+            {
+                std::list<events::vkCommandBuffersStr>::iterator iterator = cmdBuffList.begin();
+                std::advance(iterator, i);
+                for (auto param : iterator->parameters)
+                {
+                    ImGui::Text(param.c_str());
+                }
+            }
+        }
+
+        ImGui::End();
+    }
+    void appUI::ShowAppInfo(details::appWindow* window, details::events* dataObject)
+    {
+        ImGui::Begin("Vulkan Info");
+
+        auto appInfo = (*dataObject).getAppInfo();
+        for (auto item : appInfo.parameters)
+            ImGui::Text((item).c_str());
+
+        ImGui::End();
+    }
+    void appUI::ShowVulkanInfo(details::appWindow* window, details::events* dataObject)
+    {
+        ImGui::Begin("Vulkan Info");
 
         if (ImGui::CollapsingHeader("Available Physical Devices"))
         {
@@ -34,6 +91,26 @@ namespace details {
             }
         }
 
+        if (ImGui::CollapsingHeader("Available Instance Extensions"))
+        {
+            auto instanceExtensions = (*window).GetInstanceExtensions();
+            uint32_t i = 0;
+            for (auto item : instanceExtensions)
+            {
+                ImGui::Text((std::to_string(++i) + " extension: " + item.extensionName).c_str());
+            }
+        }
+
+        if (ImGui::CollapsingHeader("Available Device Extensions"))
+        {
+            auto deviceExtensions = (*window).GetDeviceExtensions();
+            uint32_t i = 0;
+            for (auto item : deviceExtensions)
+            {
+                ImGui::Text((std::to_string(++i) + " extension: " + item.extensionName).c_str());
+            }
+        }
+        
         ImGui::End();
     }
     void appUI::ShowBuffers(details::appWindow* window, details::events* dataObject)
@@ -119,7 +196,10 @@ namespace details {
         bool buffers = false;
         bool demo = false;
         bool texture = false;
-        bool deviceInfo = true;
+        bool vulkanInfo = false;
+        bool appInfo = false;
+        bool commandBuffers = false;
+        bool images = false;
         /* window render loop */
         while (!glfwWindowShouldClose(window.window))
         {
@@ -127,19 +207,22 @@ namespace details {
 
             window.startNewFrame();
 
-            /* imGui */            
+            /* imGui menu */            
             {
                 ImGui::Begin("Menu");
-                ImGui::Checkbox("Device_Info", &deviceInfo);
+                ImGui::Checkbox("Vulkan_Info", &vulkanInfo);
                 ImGui::Checkbox("Api_Calls", &apiCalls);
                 ImGui::Checkbox("Vk_Buffers", &buffers);
                 ImGui::Checkbox("Demo_Window", &demo);
                 ImGui::Checkbox("Texture_Test", &texture);
+                ImGui::Checkbox("App_Info", &appInfo);
+                ImGui::Checkbox("Vk_Command_Buffers", &commandBuffers);
+                ImGui::Checkbox("Vk_Images", &images);
                 ImGui::End();
             }
 
-            if (deviceInfo == true)
-                ShowDeviceInfo(&window, &eventManager);
+            if (vulkanInfo == true)
+                ShowVulkanInfo(&window, &eventManager);
             if(apiCalls == true)
                 ShowApiCalls(&window, &eventManager);
             if(buffers == true)
@@ -148,6 +231,12 @@ namespace details {
                 ImGui::ShowDemoWindow(&demo);
             if(texture == true)
                 window.ShowTexture();
+            if (appInfo == true)
+                ShowAppInfo(&window, &eventManager);
+            if (commandBuffers == true)
+                ShowCommandBuffers(&window, &eventManager);
+            if (images == true)
+                ShowImages(&window, &eventManager);
 
             window.renderNewFrame();
         }

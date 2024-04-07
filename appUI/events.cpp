@@ -12,43 +12,64 @@
 namespace details {
 
     std::string receptionState = "";
+    std::string remainder = "";
 
     void events::parseMessage(std::string *input)
     {
         if ((*input).size() < 6)
             return;
         
+        /* begin of an api call */
         if ((*input).substr(0, 6) == "begin_")
         {
             /* api command begin message */
             apiCalls.push_back((*input).substr(6, (*input).size()));
             /* refresh window */
             //glfwPostEmptyEvent();
-            if ((*input) == "begin_vkCreateBuffer")
-            {   
-                receptionState = "begin_vkCreateBuffer";
-            }
+            receptionState = *input;
         }
+        /* end of an api call */
         else if ((*input).substr(0, 4) == "end_")
         {
-            if ((*input) == "end_vkCreateBuffer")
+            receptionState = *input;
+            if (receptionState == "end_vkCreateBuffer")
             {
-                receptionState = "";
                 Buffers.push_back(Buffer);
                 /* reset buffer struct */
                 Buffer = {};
             }
+            if (receptionState == "end_vkAllocateCommandBuffers")
+            {
+                CmdBuffers.push_back(CmdBuffer);
+                /* reset buffer struct */
+                CmdBuffer = {};
+            }
+            if (receptionState == "end_vkCreateImage")
+            {
+                Images.push_back(Image);
+                /* reset buffer struct */
+                Image = {};
+            }
             /* api command end message */
         }
-        else if ((*input).substr(0, 5) == "data_")
-        {
-            /* api command data message */
-        }
+        /* other data in between api calls */
         else
         {
             if (receptionState == "begin_vkCreateBuffer")
             {
                 Buffer.parameters.push_back(*input);
+            }
+            else if (receptionState == "begin_vkCreateInstance")
+            {
+                appInfo.parameters.push_back(*input);
+            }
+            else if (receptionState == "begin_vkAllocateCommandBuffers")
+            {
+                CmdBuffer.parameters.push_back(*input);
+            }
+            else if (receptionState == "begin_vkCreateImage")
+            {
+                Image.parameters.push_back(*input);
             }
             else
             {
@@ -56,8 +77,6 @@ namespace details {
             }
         }
     }
-
-    std::string remainder = "";
 
     void events::newInfo(const char* input, size_t index)
     {

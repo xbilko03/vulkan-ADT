@@ -17,8 +17,10 @@ extern bool connected;
 
 //#include "../appUI/winsock.h"
 
-//#define CREATEINSTANCE_EXISTS
-void layer_CreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance);
+std::string GetWindowName();
+
+#define CREATEINSTANCE_BEFORE_EXEC_EXISTS
+void layer_CreateInstance_before(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance);
 
 #define CREATEBUFFER_BEFORE_EXEC_EXISTS
 void layer_CreateBuffer_before(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer);
@@ -26,20 +28,20 @@ void layer_CreateBuffer_before(VkDevice device, VkBufferCreateInfo* pCreateInfo,
 //#define CMDDRAW_EXISTS
 void layer_CmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance);
 
-//#define MAPMEMORY_EXISTS
-void layer_MapMemory(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData);
+#define MAPMEMORY_AFTER_EXEC_EXISTS
+void layer_MapMemory_after(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData);
+
+#define UNMAPMEMORY_BEFORE_EXEC_EXISTS
+void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory);
 
 //#define DESTROYBUFFER_EXISTS
 void layer_DestroyBuffer(VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pAllocator);
 
-//#define UNMAPMEMORY_EXISTS
-void layer_UnmapMemory(VkDevice device, VkDeviceMemory memory);
-
 //#define BINDBUFFERMEMORY_EXISTS
 void layer_BindBufferMemory(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset);
 
-//#define CREATEIMAGE_EXISTS
-void layer_CreateImage(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage);
+#define CREATEIMAGE_BEFORE_EXEC_EXISTS
+void layer_CreateImage_before(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage);
 
 //#define BINDIMAGEMEMORY_EXISTS
 void layer_BindImageMemory(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset);
@@ -47,8 +49,8 @@ void layer_BindImageMemory(VkDevice device, VkImage image, VkDeviceMemory memory
 //#define DESTROYIMAGE_EXISTS
 void layer_DestroyImage(VkDevice device, VkImage image, VkAllocationCallbacks* pAllocator);
 
-//#define ALLOCATECOMMANDBUFFERS_EXISTS
-void layer_AllocateCommandBuffers(VkDevice device, VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers);
+#define ALLOCATECOMMANDBUFFERS_BEFORE_EXEC_EXISTS
+void layer_AllocateCommandBuffers_before(VkDevice device, VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers);
 
 //#define FREECOMMANDBUFFERS_EXISTS
 void layer_FreeCommandBuffers(VkDevice device, VkCommandPool commandPool, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers);
