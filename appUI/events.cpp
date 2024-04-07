@@ -50,6 +50,12 @@ namespace details {
                 /* reset buffer struct */
                 Image = {};
             }
+            if (receptionState == "end_vkAllocateMemory")
+            {
+                Memories.push_back(Memory);
+                /* reset buffer struct */
+                Memory = {};
+            }
             /* api command end message */
         }
         /* other data in between api calls */
@@ -58,6 +64,10 @@ namespace details {
             if (receptionState == "begin_vkCreateBuffer")
             {
                 Buffer.parameters.push_back(*input);
+            }
+            else if (receptionState == "begin_vkAllocateMemory")
+            {
+                Memory.parameters.push_back(*input);
             }
             else if (receptionState == "begin_vkCreateInstance")
             {

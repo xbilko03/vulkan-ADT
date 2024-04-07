@@ -40,13 +40,17 @@ namespace details {
 			std::list<std::string> parameters;
 		};
 		std::list<vkImageStr> getImages() { return Images; };
+
+		struct vkMemoryStr
+		{
+			std::list<std::string> parameters;
+		};
+		std::list<vkMemoryStr> getMemories() { return Memories; };
 	private:
 		static DWORD WINAPI listenForData(__in LPVOID lpParameter);
 
 		void newInfo(const char* input, size_t index);
 		void parseMessage(std::string* input);
-
-
 
 		SOCKET ConnectSocket = INVALID_SOCKET;
 		#define DEFAULT_BUFLEN 500
@@ -62,5 +66,8 @@ namespace details {
 
 		std::list<vkImageStr> Images;
 		vkImageStr Image;
+
+		std::list<vkMemoryStr> Memories;
+		vkMemoryStr Memory;
 	};
 }

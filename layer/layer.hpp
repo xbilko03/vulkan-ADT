@@ -19,6 +19,12 @@ extern bool connected;
 
 std::string GetWindowName();
 
+#define BINDBUFFERMEMORY_AFTER_EXEC_EXISTS
+void layer_BindBufferMemory_after(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset);
+
+#define ALLOCATEMEMORY_AFTER_EXEC_EXISTS
+void layer_AllocateMemory_after(VkDevice device, VkMemoryAllocateInfo* pAllocateInfo, VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory);
+
 #define CREATEINSTANCE_BEFORE_EXEC_EXISTS
 void layer_CreateInstance_before(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance);
 
@@ -49,8 +55,8 @@ void layer_BindImageMemory(VkDevice device, VkImage image, VkDeviceMemory memory
 //#define DESTROYIMAGE_EXISTS
 void layer_DestroyImage(VkDevice device, VkImage image, VkAllocationCallbacks* pAllocator);
 
-#define ALLOCATECOMMANDBUFFERS_BEFORE_EXEC_EXISTS
-void layer_AllocateCommandBuffers_before(VkDevice device, VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers);
+#define ALLOCATECOMMANDBUFFERS_AFTER_EXEC_EXISTS
+void layer_AllocateCommandBuffers_after(VkDevice device, VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers);
 
 //#define FREECOMMANDBUFFERS_EXISTS
 void layer_FreeCommandBuffers(VkDevice device, VkCommandPool commandPool, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers);

@@ -10,6 +10,29 @@
 
 namespace details {
 
+    void appUI::ShowMemories(details::appWindow* window, details::events* dataObject)
+    {
+        ImGui::Begin("Memory");
+
+        auto memoryList = (*dataObject).getMemories();
+        size_t memoryCount = memoryList.size();
+
+        for (size_t i = 0; i < memoryCount; i++)
+        {
+            std::string headerName = "vkMemory #" + std::to_string(i) + '\0';
+            if (ImGui::CollapsingHeader(headerName.c_str()))
+            {
+                std::list<events::vkMemoryStr>::iterator iterator = memoryList.begin();
+                std::advance(iterator, i);
+                for (auto param : iterator->parameters)
+                {
+                    ImGui::Text(param.c_str());
+                }
+            }
+        }
+
+        ImGui::End();
+    }
     void appUI::ShowImages(details::appWindow* window, details::events* dataObject)
     {
         ImGui::Begin("Images");
@@ -200,6 +223,7 @@ namespace details {
         bool appInfo = false;
         bool commandBuffers = false;
         bool images = false;
+        bool memories = false;
         /* window render loop */
         while (!glfwWindowShouldClose(window.window))
         {
@@ -218,6 +242,7 @@ namespace details {
                 ImGui::Checkbox("App_Info", &appInfo);
                 ImGui::Checkbox("Vk_Command_Buffers", &commandBuffers);
                 ImGui::Checkbox("Vk_Images", &images);
+                ImGui::Checkbox("Vk_Memory", &memories);
                 ImGui::End();
             }
 
@@ -237,7 +262,8 @@ namespace details {
                 ShowCommandBuffers(&window, &eventManager);
             if (images == true)
                 ShowImages(&window, &eventManager);
-
+            if (memories == true)
+                ShowMemories(&window, &eventManager);
             window.renderNewFrame();
         }
 
