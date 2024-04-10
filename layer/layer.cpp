@@ -25,6 +25,8 @@ uint64_t image_size;
 /* Helper Functions */
 std::string ptrToString(auto* input)
 {
+    if (input == NULL)
+        return "NULL";
     std::stringstream s;
     s << *input;
     return s.str();
@@ -32,17 +34,16 @@ std::string ptrToString(auto* input)
 
 /* VkMemory */
 typedef struct memoryObj {
-    void** data;
     VkDeviceSize size;
     VkBuffer boundBuffer;
     VkImage boundImage;
+    void** data;
 };
 std::map<VkDeviceMemory, memoryObj> memoryMap;
 void layer_AllocateMemory_after(VkDevice device, VkMemoryAllocateInfo* pAllocateInfo, VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory)
 {
     std::string output = "pMemory=" + ptrToString(pMemory) + '!';
     winsockSendToUI(&ConnectSocket, output);
-    std::cout << "new memory = " << output << std::endl;
 
     output = "sType=" + std::to_string((*pAllocateInfo).sType) + '!';
     winsockSendToUI(&ConnectSocket, output);
@@ -55,38 +56,92 @@ void layer_AllocateMemory_after(VkDevice device, VkMemoryAllocateInfo* pAllocate
 
     output = "memoryTypeIndex=" + std::to_string((*pAllocateInfo).memoryTypeIndex) + '!';
     winsockSendToUI(&ConnectSocket, output);
+
+    /* map memory to memoryObj */
+    memoryMap[*pMemory] = {};
+    memoryMap[*pMemory] = memoryObj((*pAllocateInfo).allocationSize, 0, 0, 0);
+
 }
 void layer_BindBufferMemory_after(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset)
 {
-    std::cout << "binding memory = " << memory << " to buffer = " << buffer << std::endl;
+    auto tarObject = memoryMap[memory];
+    tarObject.boundBuffer = buffer;
+
+    std::string output = "memory=" + ptrToString(&memory) + '!';
+    winsockSendToUI(&ConnectSocket, output);
+
+    output = "buffer=" + ptrToString(&buffer) + '!';
+    winsockSendToUI(&ConnectSocket, output);
 }
+void layer_BindImageMemory_after(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset)
+{
+    auto tarObject = memoryMap[memory];
+    tarObject.boundImage = image;
+
+    std::string output = "memory=" + ptrToString(&memory) + '!';
+    winsockSendToUI(&ConnectSocket, output);
+
+    output = "image=" + ptrToString(&image) + '!';
+    winsockSendToUI(&ConnectSocket, output);
+}
+
 void layer_MapMemory_after(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData)
 {
-    //std::string output = "offset=" + std::to_string(offset) + '!';
-    //winsockSendToUI(&ConnectSocket, output);
+    auto tarObject = memoryMap[memory];
+    if (tarObject.size > size)
+        tarObject.size = size;
+    tarObject.data = ppData;
+    memoryMap[memory] = tarObject;
+}
 
-    //output = "size=" + std::to_string(size) + '!';
-    //winsockSendToUI(&ConnectSocket, output);
+#include <fstream>
 
-    //output = "flags=" + std::to_string(flags) + '!';
-    //winsockSendToUI(&ConnectSocket, output);
 
-    //output = "ppData=" + ptrToString(ppData) + '!';
-    //winsockSendToUI(&ConnectSocket, output);
+std::string ToHex(const std::string& s, bool upper_case /* = true */)
+{
+    std::ostringstream ret;
 
-    //testMap[memory] = memoryObj(ppData,size);
+    for (std::string::size_type i = 0; i < s.length(); ++i)
+        ret << std::hex << std::setfill('0') << std::setw(2) << (upper_case ? std::uppercase : std::nouppercase) << (int)s[i];
+
+    return ret.str();
 }
 void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
 {
-    //auto object = testMap[memory];
+    auto tarObject = memoryMap[memory];
+    //void* cpuData = (void*)malloc(tarObject.size);
+    //memcpy(cpuData, *tarObject.data, tarObject.size);
 
-    //std::string dt = (char*)*object.data;
-    /* send data */
+    /*
+    std::ofstream file;
+    file.open("C:\\Users\\jozef\\Desktop\\" + ptrToString(&cpuData), std::ios_base::binary);
+    assert(file.is_open());
+    file.write((const char*)cpuData, tarObject.size);
+    file.close();
+    */
 
-    //std::string output = "data=" + dt + '!';
-    //winsockSendToUI(&ConnectSocket, output);
+    
 
-    //testMap[memory] = {};
+    //std::string s(static_cast<char*>(*tarObject.data), static_cast<char*>(*tarObject.data) + tarObject.size);
+    //std::cout << "outputData = '" << s << "'" << std::endl;
+    //return;
+    int* cpuData = (int*)*tarObject.data;
+    std::string output = "";
+    for (unsigned i = 0; i < tarObject.size / sizeof(int); i++)
+    {
+        output += std::to_string((cpuData[i]));
+        output += '!';
+    }
+
+    std::string dataMessage = "data";
+    dataMessage += std::to_string(output.size());
+    //dataMessage += std::to_string();
+    dataMessage += '!';
+    winsockSendToUI(&ConnectSocket, dataMessage);
+    winsockSendToUI(&ConnectSocket, output);
+
+    /* Catch data before they are invalidated */
+    //std::cout << "raw data try = " << tarObject.data << std::endl;
 }
 
 
@@ -211,7 +266,6 @@ void layer_CreateBuffer_before(VkDevice device, VkBufferCreateInfo* pCreateInfo,
     winsockSendToUI(&ConnectSocket, output);
 }
 
-
 /* Unused */
 void layer_QueueSubmit(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence)
 {
@@ -234,11 +288,6 @@ void layer_FreeCommandBuffers(VkDevice device, VkCommandPool commandPool, uint32
     //std::cout << "free cmdBuff -> [VkCommandBuffer*]" << *pCommandBuffers << std::endl;
     //std::cout << "free cmdBuff -> [VkCommandPool]" << commandPool << std::endl;
 }
-void layer_BindBufferMemory(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset)
-{
-        //std::cout << "binding ID -> [buffer]:" << buffer << std::endl;
-        //std::cout << "binding ID -> [memory]:" << memory << std::endl;
-}
 void layer_DestroyBuffer(VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pAllocator)
 {
         //std::cout << "DestroyBuffer -> buffer ID -> [buffer]: " << buffer << std::endl << std::endl;
@@ -247,11 +296,6 @@ void layer_CmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t
 {
     //std::cout << std::endl;
     //winsockSendToUI(&ConnectSocket, "CmdDraw");
-}
-void layer_BindImageMemory(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset)
-{
-    //std::cout << "bind image -> [VkImage] " << image << std::endl;
-    //std::cout << "bind image -> [VkDeviceMemory] " << memory << std::endl;
 }
 void layer_DestroyImage(VkDevice device, VkImage image, VkAllocationCallbacks* pAllocator)
 {

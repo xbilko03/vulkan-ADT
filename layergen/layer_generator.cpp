@@ -5,9 +5,136 @@
 #include <list>
 #include <filesystem>
 #include <algorithm>
+#include <map>
 
 namespace laygen
 {
+    bool LayerGenerator::IsEnum(std::string input)
+    {
+        auto mapped = xmlp.enumList;
+        auto item = mapped.find(input);
+        if (item == mapped.end())
+        {
+            return false;
+        }
+        return true;
+    }
+    bool LayerGenerator::PrintParameterSendStruct(std::ofstream* output, std::string type, std::string name, std::map<std::string,XmlParser::Struct>* structs, std::string prefix, int* attempts)
+    {
+        if (*attempts <= 0)
+            return false;
+        else
+            *attempts -= 1;
+        std::string ptrlessType = type.substr(0, type.size() - 1);
+        auto selectedStruct = (*structs)[ptrlessType];
+        if (selectedStruct.structType == ptrlessType)
+        {
+            for (auto item : selectedStruct.parameterList)
+            {
+                prefix = name + "->";
+                std::string outputType = item.type;
+                /* if there is enum, it is an array */
+                if (item.enumType != "" || item.name == "color")
+                {
+                    outputType = "array";
+                }
+
+                if (PrintParameterSend(output, outputType, item.name, prefix) == false)
+                {
+                    /* try again */
+                    if (PrintParameterSendStruct(output, outputType, item.name, structs, prefix, attempts) == false)
+                    {
+                        /* cannot identify type, print as other type */
+                        PrintParameterSend(output, "other", item.name, prefix);
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+    bool LayerGenerator::PrintParameterSend(std::ofstream* output,std::string type, std::string name, std::string prefix)
+    {
+        bool ret = false;
+        std::string outputStr = "winsockSendToUI(&ConnectSocket,";
+
+        outputStr += "\"" + prefix + name + "=\" + ";
+        /* imperfect xml parsing consequence exception */
+        if (type == "uint32_t*" || type == "void*" || type == "void" || name == "presentMask")
+        {
+            outputStr += "ptrToString((void*)";
+            outputStr += prefix + name;
+            outputStr += ")";
+            ret = true;
+        }
+        else if (type == "uint32_t" || type == "int32_t" || type == "float" || IsEnum(type) || type == "int" || type == "size_t" || type == "uint64_t" || type == "uint8_t")
+        {
+            /* imperfect xml parsing consequence exception */
+            if (name == "pResults")
+            {
+                name = '*' + name;
+            }
+            outputStr += "std::to_string(";
+            outputStr += prefix + name;
+            outputStr += ")";
+            ret = true;
+        }
+        else if (type == "VkBool32")
+        {
+            outputStr += "bool_as_text(";
+            outputStr += prefix + name;
+            outputStr += ")";
+            ret = true;
+        }
+        else if (type == "char" || type == "char*")
+        {
+            outputStr += "charToString(";
+            outputStr += prefix + name;
+            outputStr += ")";
+            ret = true;
+        }
+        else if (type == "array")
+        {
+            outputStr = "winsockSendToUI(&ConnectSocket,";
+            outputStr += "\"";
+            outputStr += prefix + name;
+            outputStr += "=[array]\"";
+            ret = true;
+        }
+        else
+        {
+            outputStr += "ptrToString((void*)";
+            outputStr += prefix + name;
+            outputStr += ")";
+            ret = true;
+        }
+        
+        outputStr += " + '!');";
+
+        if(ret)
+            *output << outputStr << std::endl;
+
+        return ret;
+    }
+    void LayerGenerator::PrintParemeterSends(std::ofstream* output, std::map<std::string, XmlParser::Struct>* structs, auto* parameterList)
+    {
+        //if (connected) {}
+        int defaultAttempts = 3;
+
+        std::list<XmlParser::Parameter>::iterator it;
+        for (it = (*parameterList).begin(); it != (*parameterList).end(); ++it) {
+            //std::cout << it->type << " " << it->name << std::endl;
+            if (PrintParameterSend(output, it->type, it->name, "") == false)
+            {
+                if (PrintParameterSendStruct(output, it->type, it->name, structs, "", &defaultAttempts) == false)
+                {
+                    //std::cout << "could not print sendung parameter = " << it->type << " " << it->name << std::endl;
+                }
+
+            }
+        }
+        //generatedLayerFile << "\n#if defined(" << GetGuardString(item.functName, xmlp.cmdGuard) << ")";
+    }
     void LayerGenerator::PrintParameters(std::ofstream* output, auto* parameterList, bool typesIncluded)
     {
         uint32_t i = 0;
@@ -357,6 +484,10 @@ namespace laygen
             */
             PrintExecuteCall(&generatedLayerFile, &(item.functType), &(item.functName), &(item.parameterList), cmdListType);
 
+            /*
+            * print parameters that can be sent
+            */
+            PrintParemeterSends(&generatedLayerFile, &(xmlp.structList), &(item.parameterList));
 
             /*
             * additional functionality (if) defined in layer.cpp
@@ -444,6 +575,8 @@ namespace laygen
 
             xmlp.assignCmdsToTables();
             xmlp.assignAliasesToTables();
+            xmlp.assignStructsToTables();
+            xmlp.assignEnumsToTables();
         }
 
         /* vk_layer_dispatch_table.h generation */

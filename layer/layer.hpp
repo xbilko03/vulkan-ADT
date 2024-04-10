@@ -19,6 +19,9 @@ extern bool connected;
 
 std::string GetWindowName();
 
+#define BINDIMAGEMEMORY_AFTER_EXEC_EXISTS
+void layer_BindImageMemory_after(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset);
+
 #define BINDBUFFERMEMORY_AFTER_EXEC_EXISTS
 void layer_BindBufferMemory_after(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset);
 

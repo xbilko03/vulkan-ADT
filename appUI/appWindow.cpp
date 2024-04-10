@@ -7,6 +7,9 @@
 #include "stb_image.h" //texture test
 #define MAX_TEXTURES_COUNT 800
 
+#include <fstream> // texture test
+#include <sstream> // texture test
+
 namespace details {
     /* [Texture] Helper function to find Vulkan memory type bits.See ImGui_ImplVulkan_MemoryType() in imgui_impl_vulkan.cpp */
     uint32_t appWindow::findMemoryType(uint32_t type_filter, VkMemoryPropertyFlags properties)
@@ -26,7 +29,21 @@ namespace details {
     {
         // Specifying 4 channels forces stb to load the image in RGBA which is an easy format for Vulkan
         tex_data->Channels = 4;
-        unsigned char* image_data = stbi_load(filename, &tex_data->Width, &tex_data->Height, 0, tex_data->Channels);
+        //unsigned char* image_data = stbi_load(filename, &tex_data->Width, &tex_data->Height, 0, tex_data->Channels);
+
+        tex_data->Height = 1024;
+        tex_data->Width = 1024;
+        std::ifstream file;
+
+        file.open("C:\\Users\\jozef\\Desktop\\binary2", std::ios_base::binary);
+        assert(file.is_open());
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        
+        //char* image_data = (char*)malloc(4194304);
+        std::string str = buffer.str();
+        unsigned char*  image_data = (unsigned char*)str.c_str();
+        
 
         if (image_data == NULL)
             return false;
@@ -35,7 +52,6 @@ namespace details {
         size_t image_size = tex_data->Width * tex_data->Height * tex_data->Channels;
 
         VkResult err;
-
         // Create the Vulkan image.
         {
             VkImageCreateInfo info = {};
@@ -141,7 +157,7 @@ namespace details {
         }
 
         // Release image memory using stb
-        stbi_image_free(image_data);
+        //stbi_image_free(image_data);
 
         // Create a command buffer that will perform following steps when hit in the command queue.
         // TODO: this works in the example, but may need input if this is an acceptable way to access the pool/create the command buffer.
@@ -234,7 +250,7 @@ namespace details {
     /* [Texture] texture test */
     void appWindow::CreateTexture()
     {
-        bool ret = LoadTextureFromFile("C:\\Users\\jozef\\Desktop\\MyImage01.jpg", &my_texture);
+        bool ret = LoadTextureFromFile("C:\\Users\\jozef\\Desktop\\viking_room.png", &my_texture);
         IM_ASSERT(ret);
     }
 

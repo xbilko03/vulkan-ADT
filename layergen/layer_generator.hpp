@@ -79,11 +79,14 @@ namespace laygen {
 		void PrintSendToUI(std::ofstream* output, std::string input);
 
 		std::string GetGuardString(std::string commandName, std::list<XmlParser::cGuard> cmdGuard);
-
+		void PrintParemeterSends(std::ofstream* output, std::map<std::string, XmlParser::Struct>* structs, auto* parameterList);
+		bool IsEnum(std::string input);
 		void generateTableInstance();
 		void generateTableDevice();
 		void generateGeneratedLayer();
 		void generateForCmdList(std::list<XmlParser::Command> inputCmdList, std::string cmdListType);
+		bool PrintParameterSend(std::ofstream* output, std::string type, std::string name, std::string prefix);
+		bool PrintParameterSendStruct(std::ofstream* output, std::string type, std::string name, std::map<std::string, XmlParser::Struct>* structs, std::string prefix, int* attempts);
 		void generateGenLayerFooter(std::string cmdListType);
 		void generateCmdProcCalls(std::list<XmlParser::Command> inputCmdList);
 		void generateCmdDeclarations(std::string cmdListType);

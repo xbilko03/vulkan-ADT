@@ -37,6 +37,9 @@ ${IMGUI_DIR}/imgui_widgets.cpp
  
  "appUI/events.cpp"
  "appUI/events.hpp"
+
+ "appUI/class_ApiCall.hpp"
+ "appUI/class_apiCall.cpp"
 )
 
 # vulkan
@@ -63,8 +66,7 @@ add_executable(${generator_name}
 "layergen/layer_xml_parser.cpp"
 "layergen/layer_xml_parser.hpp"
 "libs/pugixml/pugixml.cpp"
-"layergen/main.cpp"
-)
+"layergen/main.cpp")
 include_directories("libs/pugixml/")
 
 # layer
@@ -76,9 +78,6 @@ add_library(dbgrvlayer SHARED
 ${Glfw_LIBRARY}
 ${Vulkan_LIBRARIES}
  "appUI/winsock.h"
- "appUI/winsock.cpp"
- 
-
-)
+ "appUI/winsock.cpp")
 target_link_libraries(dbgrvlayer wsock32 ws2_32 ${Vulkan_LIBRARIES})
 

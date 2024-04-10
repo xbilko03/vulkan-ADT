@@ -9,6 +9,29 @@ std::map<VkCommandBuffer, CommandStats> commandbuffer_stats;
 */
 bool connected = false;
 
+std::string bool_as_text(VkBool32 b)
+{
+    std::stringstream converter;
+    converter << std::boolalpha << b;   // flag boolalpha calls converter.setf(std::ios_base::boolalpha)
+    return converter.str();
+}
+
+std::string ptrToString(void* input)
+{
+    if (input == NULL)
+        return "NULL";
+    std::stringstream s;
+    s << input;
+    return s.str();
+}
+std::string charToString(auto* input)
+{
+    if (input == NULL)
+        return "NULL";
+    std::stringstream s;
+    s << *input;
+    return s.str();
+}
 std::string GetWindowName()
 {
     /* get the name of the program the layer is on [windows only] */

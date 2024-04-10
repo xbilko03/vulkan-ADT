@@ -13,17 +13,22 @@ namespace details {
 
     std::string receptionState = "";
     std::string remainder = "";
+    std::string currentMemoryPtr = "";
 
+    apiCall* currentCall;
+    std::list<apiCall> currentCallList;
+    unsigned callID = 0;
+    
     void events::parseMessage(std::string *input)
     {
-        if ((*input).size() < 6)
-            return;
-        
         /* begin of an api call */
         if ((*input).substr(0, 6) == "begin_")
         {
+            currentCall = new apiCall(callID);
             /* api command begin message */
-            apiCalls.push_back((*input).substr(6, (*input).size()));
+            (*currentCall).assignName(*input);
+            //std::cout << "new call = " << currentCall->getName() << std::endl;
+            //std::cout << "new call = " << apiCallObjectList.size() << std::endl;
             /* refresh window */
             //glfwPostEmptyEvent();
             receptionState = *input;
@@ -32,81 +37,72 @@ namespace details {
         else if ((*input).substr(0, 4) == "end_")
         {
             receptionState = *input;
-            if (receptionState == "end_vkCreateBuffer")
-            {
-                Buffers.push_back(Buffer);
-                /* reset buffer struct */
-                Buffer = {};
-            }
-            if (receptionState == "end_vkAllocateCommandBuffers")
-            {
-                CmdBuffers.push_back(CmdBuffer);
-                /* reset buffer struct */
-                CmdBuffer = {};
-            }
-            if (receptionState == "end_vkCreateImage")
-            {
-                Images.push_back(Image);
-                /* reset buffer struct */
-                Image = {};
-            }
-            if (receptionState == "end_vkAllocateMemory")
-            {
-                Memories.push_back(Memory);
-                /* reset buffer struct */
-                Memory = {};
-            }
-            /* api command end message */
+            /* finish reading and save call */
+            currentCallList.push_back(*currentCall);
+            frames[callID++] = currentCallList;
         }
         /* other data in between api calls */
+        else if ((*input).substr(0, 5) == "data_")
+        {
+            
+        }
         else
         {
-            if (receptionState == "begin_vkCreateBuffer")
+            (*currentCall).assignParameter(*input);
+        }
+    }
+    
+    unsigned long dataSize = 0;
+    unsigned long currentDataSize = 0;
+    std::string newData;
+    void events::newInfo(const char* input, size_t index)
+    {
+        std::string s = input;
+        s = s.substr(0,index);
+
+        if (currentDataSize < dataSize)
+        {
+            dataHandler:
+            /* catch data */
+            currentDataSize += s.size();
+            if (currentDataSize >= dataSize)
             {
-                Buffer.parameters.push_back(*input);
-            }
-            else if (receptionState == "begin_vkAllocateMemory")
-            {
-                Memory.parameters.push_back(*input);
-            }
-            else if (receptionState == "begin_vkCreateInstance")
-            {
-                appInfo.parameters.push_back(*input);
-            }
-            else if (receptionState == "begin_vkAllocateCommandBuffers")
-            {
-                CmdBuffer.parameters.push_back(*input);
-            }
-            else if (receptionState == "begin_vkCreateImage")
-            {
-                Image.parameters.push_back(*input);
+                unsigned long remainderIndex = currentDataSize - dataSize;
+                remainderIndex = s.size() - remainderIndex;
+                remainder = s.substr(remainderIndex, s.size());
+                newData += s.substr(0, remainderIndex);
+                newData = "data_" + newData;
+                parseMessage(&newData);
+                currentDataSize = 0;
+                dataSize = 0;
             }
             else
             {
-                std::cout << "different message = " << *input << std::endl;
+                newData += s;
             }
+            return;
         }
-    }
-
-    void events::newInfo(const char* input, size_t index)
-    {
-        /*
-        * received data example
-        * apicall1()!apicall2()!\0XXXXXXXXXXXX
-        * 
-        * apicall3()!apical\0XXXXXXXXXXXX
-        * l4()!\0XXXXXXXXXXXX
-        */
-        std::string s = input;
-        s = s.substr(0,index);
         s = remainder + s;
 
         std::string token;
         size_t pos = 0;
+
         while ((pos = s.find("!")) != std::string::npos) {
             token = s.substr(0, pos);
-            parseMessage(&token);
             s.erase(0, pos + 1);
+            if (token.substr(0, 4) == "data")
+            {
+                /* Get size */
+                auto dataLen = token.substr(4, pos);
+                dataSize = stoul(dataLen, nullptr, 10);
+                currentDataSize = 0;
+                newData = "";
+                goto dataHandler;
+            }
+            else
+            {
+                parseMessage(&token);
+            }
         }
         if (s.size() > 0)
             remainder = s;

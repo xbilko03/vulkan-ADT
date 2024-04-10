@@ -13,7 +13,7 @@ namespace details {
     void appUI::ShowMemories(details::appWindow* window, details::events* dataObject)
     {
         ImGui::Begin("Memory");
-
+        /*
         auto memoryList = (*dataObject).getMemories();
         size_t memoryCount = memoryList.size();
 
@@ -30,13 +30,13 @@ namespace details {
                 }
             }
         }
-
+        */
         ImGui::End();
     }
     void appUI::ShowImages(details::appWindow* window, details::events* dataObject)
     {
         ImGui::Begin("Images");
-
+        /*
         auto imageList = (*dataObject).getImages();
         size_t imageCount = imageList.size();
 
@@ -53,13 +53,13 @@ namespace details {
                 }
             }
         }
-
+        */
         ImGui::End();
     }
     void appUI::ShowCommandBuffers(details::appWindow* window, details::events* dataObject)
     {
         ImGui::Begin("CommandBuffers");
-
+        /*
         auto cmdBuffList = (*dataObject).getCommandBuffers();
         size_t cmdBuffCount = cmdBuffList.size();
 
@@ -76,23 +76,23 @@ namespace details {
                 }
             }
         }
-
+        */
         ImGui::End();
     }
     void appUI::ShowAppInfo(details::appWindow* window, details::events* dataObject)
     {
         ImGui::Begin("Vulkan Info");
-
+        /*
         auto appInfo = (*dataObject).getAppInfo();
         for (auto item : appInfo.parameters)
             ImGui::Text((item).c_str());
-
+        */
         ImGui::End();
     }
     void appUI::ShowVulkanInfo(details::appWindow* window, details::events* dataObject)
     {
         ImGui::Begin("Vulkan Info");
-
+        /*
         if (ImGui::CollapsingHeader("Available Physical Devices"))
         {
             uint32_t test = (*window).GetPhysicalDeviceCount();
@@ -110,10 +110,8 @@ namespace details {
                     ImGui::Text(("deviceID: " + std::to_string(dev.deviceID)).c_str());
                     ImGui::Text(("deviceType: " + std::to_string(dev.deviceType)).c_str());
                 }
-                /* INCOMPLETE ... */
             }
         }
-
         if (ImGui::CollapsingHeader("Available Instance Extensions"))
         {
             auto instanceExtensions = (*window).GetInstanceExtensions();
@@ -134,11 +132,13 @@ namespace details {
             }
         }
         
+        */
         ImGui::End();
     }
     void appUI::ShowBuffers(details::appWindow* window, details::events* dataObject)
     {
         ImGui::Begin("Vk_Buffers");
+        /*
         auto bufferList = (*dataObject).getBuffers();
         size_t bufferCount = bufferList.size();
 
@@ -155,7 +155,7 @@ namespace details {
                 }
             }
         }
-
+        */
         ImGui::End();
     }
     void appUI::ShowApiCalls(details::appWindow *window, details::events *dataObject)
@@ -165,7 +165,73 @@ namespace details {
 
         ImGui::Begin("Vk_API_Calls");
 
+        auto calls = (*dataObject).getFrameCount();
 
+        std::cout << calls << " is count. " << std::endl;
+
+
+        auto callis = (*dataObject).getFrameCalls(0);
+        for (auto item : callis)
+        {
+            std::cout << item.getName() << " is subject. " << std::endl;
+        }
+
+
+
+
+        static ImGuiTableFlags flags =
+            ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
+            | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_NoBordersInBody
+            | ImGuiTableFlags_ScrollY;
+        //PushStyleCompact();
+        //ImGui::CheckboxFlags("ImGuiTableFlags_SortMulti", &flags, ImGuiTableFlags_SortMulti);
+        //ImGui::SameLine(); HelpMarker("When sorting is enabled: hold shift when clicking headers to sort on multiple column. TableGetSortSpecs() may return specs where (SpecsCount > 1).");
+        //ImGui::CheckboxFlags("ImGuiTableFlags_SortTristate", &flags, ImGuiTableFlags_SortTristate);
+        //ImGui::SameLine(); HelpMarker("When sorting is enabled: allow no sorting, disable default sorting. TableGetSortSpecs() may return specs where (SpecsCount == 0).");
+        //PopStyleCompact();
+        const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
+        int MyItemColumnID_ID = 5;
+        int MyItemColumnID_Name = 10;
+        int MyItemColumnID_Action = 15;
+        int MyItemColumnID_Quantity = 20;
+        if (ImGui::BeginTable("table_sorting", 4, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * 15), 0.0f))
+        {            
+            ImGui::TableSetupColumn("Call_ID", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, MyItemColumnID_ID++);
+            ImGui::TableSetupColumn("Vk_Call", ImGuiTableColumnFlags_WidthFixed, 0.0f, MyItemColumnID_Name++);
+            ImGui::TableSetupColumn("Detail", ImGuiTableColumnFlags_NoSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, MyItemColumnID_Action++);
+            ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
+            ImGui::TableHeadersRow();
+
+            // Sort our data if sort specs have been changed!
+            if (ImGuiTableSortSpecs* sort_specs = ImGui::TableGetSortSpecs())
+                if (sort_specs->SpecsDirty)
+                {
+                    //MyItem::SortWithSortSpecs(sort_specs, items.Data, items.Size);
+                    sort_specs->SpecsDirty = false;
+                }
+
+            // Demonstrate using clipper for large vertical lists
+            ImGuiListClipper clipper;
+            clipper.Begin(5); //size
+            while (clipper.Step())
+                for (int row_n = clipper.DisplayStart; row_n < clipper.DisplayEnd; row_n++)
+                {
+                    // Display a data item
+                    ImGui::PushID("item->ID");
+                    ImGui::TableNextRow();
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%04d", "item->ID");
+                    ImGui::TableNextColumn();
+                    ImGui::TextUnformatted("item->Name");
+                    ImGui::TableNextColumn();
+                    ImGui::SmallButton("None");
+                    ImGui::TableNextColumn();
+                    ImGui::Text("%d", "item->Quantity");
+                    ImGui::PopID();
+                }
+            ImGui::EndTable();
+        }
+        /*
         auto callsList = (*dataObject).getApiCalls();
         size_t apiCount = callsList.size();
         size_t apiGroupCount = 1000;
@@ -196,6 +262,7 @@ namespace details {
                 }
             }
         }
+        */
         ImGui::End();
     }
 

@@ -104,7 +104,6 @@ namespace laygen {
     {
         for (auto point : commandRootNode.select_nodes(".//command")) {
 
-
             auto functNamePoint = point.node().select_node("./proto/name/text()").node();
             auto functRetType = point.node().select_node("./proto/type/text()").node().value();
 
@@ -232,5 +231,49 @@ namespace laygen {
         }
 
     }
-    
+    void XmlParser::assignStructsToTables()
+    {
+        auto structRootNode = doc.select_node(".//types").node();
+        for (auto point : structRootNode.select_nodes(".//type"))
+        {
+            auto type = point.node().attribute("category");
+            auto name = point.node().attribute("name");
+            auto alias = point.node().attribute("alias");
+            
+            if (strcmp(type.value(), "struct") == 0 || strcmp(type.value(), "type") == 0)
+            {
+                std::list<StructParameter> pList = {};
+                for (auto item : point.node().select_nodes(".//member"))
+                {
+                    std::string pType = item.node().select_node(".//type/text()").node().value();
+                    std::string pName = item.node().select_node(".//name/text()").node().value();
+                    std::string pEnum = item.node().select_node(".//enum/text()").node().value();
+                    std::string pointerCheck = item.node().select_node(".//text()").node().value();
+                    if (pType != pointerCheck) // pointer
+                    {
+                        pType += '*';
+                    }
+                    pList.push_back(StructParameter(pType, pName, pEnum));
+                }
+                structList[name.value()] = Struct(type.value(), alias.value(), name.value(), pList);
+            }
+        }
+    }
+    void XmlParser::assignEnumsToTables()
+    {
+        for (auto point : doc.select_nodes(".//enums"))
+        {
+            std::string name = point.node().attribute("name").value();
+            std::list<XmlParser::Enum> newList;
+            for (auto item : point.node().select_nodes(".//enum"))
+            {
+                std::string pvalue = item.node().attribute("value").value();
+                std::string pbitpos = item.node().attribute("bitpos").value();
+                std::string pname = item.node().attribute("name").value();
+                std::string pcomment = item.node().attribute("comment").value();
+                newList.push_back(Enum(pvalue,pbitpos,pname,pcomment));
+            }
+            enumList[name] = newList;
+        }
+    }
 }
