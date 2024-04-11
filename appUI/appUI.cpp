@@ -7,10 +7,12 @@
 */
 #include "appUI.hpp"
 #include <iostream>
+#include <map>
 
 namespace details {
     #define MAX_TABLE_SIZE 10
 
+    std::map < std::string, bool> apiDetails;
     void appUI::ShowMemories(details::appWindow* window, details::events* dataObject)
     {
         ImGui::Begin("Memory");
@@ -161,9 +163,6 @@ namespace details {
     }
     void appUI::ShowApiCalls(details::appWindow *window, details::events *dataObject)
     {
-        static float f = 0.0f;
-        static int counter = 0;
-
         static ImGuiTableFlags flags =
             ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
             | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_NoBordersInBody
@@ -242,7 +241,32 @@ namespace details {
                                 ImGui::TableNextColumn();
                                 ImGui::TextUnformatted(item.getName().c_str());
                                 ImGui::TableNextColumn();
-                                ImGui::SmallButton("Detail");
+
+                                std::string IdStr = ("vk_Call [ID=" + std::to_string(item.getID()) + "]");
+                                ImGui::Checkbox("Detail", &(apiDetails[IdStr]));
+                                if(apiDetails[IdStr])
+                                {
+                                    bool p_open;
+                                    p_open = true;
+                                    ImGui::Begin(IdStr.c_str(), &p_open, 0);
+                                    ImGui::Text(IdStr.c_str());
+                                    if (ImGui::BeginTable((IdStr + "table").c_str(), 2, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * tableSize), 0.0f))
+                                    {
+                                        ImGui::TableSetupColumn("Parameter_Name", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, 0);
+                                        ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthFixed, 0.0f, 1);
+                                        ImGui::TableHeadersRow();
+                                        for (auto itm : item.getParameters())
+                                        {
+                                            ImGui::TableNextRow();
+                                            ImGui::TableNextColumn();
+                                            ImGui::Text(itm.name.c_str());
+                                            ImGui::TableNextColumn();
+                                            ImGui::Text(itm.value.c_str());
+                                        }
+                                        ImGui::EndTable();
+                                    }
+                                    ImGui::End();
+                                }
                                 ImGui::PopID();
                             }
                             

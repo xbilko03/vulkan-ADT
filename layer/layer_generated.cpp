@@ -976,6 +976,21 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateInstance(const VkInstance
 
     /* send call after loader */
     if (connected) {
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->sType=" + std::to_string(pCreateInfo->sType) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pNext=" + ptrToString((void*)pCreateInfo->pNext) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->flags=" + std::to_string(pCreateInfo->flags) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->sType=" + std::to_string(pCreateInfo->pApplicationInfo->sType) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->pNext=" + ptrToString((void*)pCreateInfo->pApplicationInfo->pNext) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->pApplicationName=" + charToString(pCreateInfo->pApplicationInfo->pApplicationName) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->applicationVersion=" + std::to_string(pCreateInfo->pApplicationInfo->applicationVersion) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->pEngineName=" + charToString(pCreateInfo->pApplicationInfo->pEngineName) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->engineVersion=" + std::to_string(pCreateInfo->pApplicationInfo->engineVersion) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->apiVersion=" + std::to_string(pCreateInfo->pApplicationInfo->apiVersion) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->enabledLayerCount=" + std::to_string(pCreateInfo->enabledLayerCount) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledLayerNames=" + charToString(pCreateInfo->ppEnabledLayerNames) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->enabledExtensionCount=" + std::to_string(pCreateInfo->enabledExtensionCount) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledExtensionNames=" + charToString(pCreateInfo->ppEnabledExtensionNames) + '!');
+
         winsockSendToUI(&ConnectSocket, "end_vkCreateInstance!");
     }
 
@@ -1065,6 +1080,24 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDevice(VkPhysicalDevice p
 
     /* send call after loader */
     if (connected) {
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->sType=" + std::to_string(pCreateInfo->sType) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pNext=" + ptrToString((void*)pCreateInfo->pNext) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->flags=" + std::to_string(pCreateInfo->flags) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->queueCreateInfoCount=" + std::to_string(pCreateInfo->queueCreateInfoCount) + '!');
+        for (int i = 0; i < pCreateInfo->queueCreateInfoCount; i++)
+        {
+            winsockSendToUI(&ConnectSocket, "pCreateInfo->pQueueCreateInfos" + std::to_string(i) + "->sType=" + std::to_string(pCreateInfo->pQueueCreateInfos[i].sType) + '!');
+            winsockSendToUI(&ConnectSocket, "pCreateInfo->pQueueCreateInfos" + std::to_string(i) + "->flags=" + std::to_string(pCreateInfo->pQueueCreateInfos[i].flags) + '!');
+            winsockSendToUI(&ConnectSocket, "pCreateInfo->pQueueCreateInfos" + std::to_string(i) + "->queueFamilyIndex=" + std::to_string(pCreateInfo->pQueueCreateInfos[i].queueFamilyIndex) + '!');
+            winsockSendToUI(&ConnectSocket, "pCreateInfo->pQueueCreateInfos" + std::to_string(i) + "->queueCount=" + std::to_string(pCreateInfo->pQueueCreateInfos[i].queueCount) + '!');
+            for (int a = 0; a < pCreateInfo->pQueueCreateInfos[i].queueCount; a++)
+                winsockSendToUI(&ConnectSocket, "pCreateInfo->pQueueCreateInfos" + std::to_string(i) + "->pQueuePriorities" + std::to_string(a) + "=" + std::to_string(pCreateInfo->pQueueCreateInfos[i].pQueuePriorities[a]) + '!');
+        }
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->enabledLayerCount=" + std::to_string(pCreateInfo->enabledLayerCount) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledLayerNames=" + charToString(pCreateInfo->ppEnabledLayerNames) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->enabledExtensionCount=" + std::to_string(pCreateInfo->enabledExtensionCount) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledExtensionNames=" + charToString(pCreateInfo->ppEnabledExtensionNames) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pNext=" + ptrToString((void*)pCreateInfo->pEnabledFeatures) + '!');
         winsockSendToUI(&ConnectSocket, "end_vkCreateDevice!");
     }
 

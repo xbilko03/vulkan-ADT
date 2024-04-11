@@ -18,6 +18,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#define CUSTOM_DATA_PREFIX "data_"
+
+
 SOCKET ConnectSocket = INVALID_SOCKET;
 void* map;
 uint64_t image_size;
@@ -42,21 +45,6 @@ typedef struct memoryObj {
 std::map<VkDeviceMemory, memoryObj> memoryMap;
 void layer_AllocateMemory_after(VkDevice device, VkMemoryAllocateInfo* pAllocateInfo, VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory)
 {
-    std::string output = "pMemory=" + ptrToString(pMemory) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "sType=" + std::to_string((*pAllocateInfo).sType) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "pNext=" + ptrToString(&(*pAllocateInfo).pNext) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "allocationSize=" + std::to_string((*pAllocateInfo).allocationSize) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "memoryTypeIndex=" + std::to_string((*pAllocateInfo).memoryTypeIndex) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
     /* map memory to memoryObj */
     memoryMap[*pMemory] = {};
     memoryMap[*pMemory] = memoryObj((*pAllocateInfo).allocationSize, 0, 0, 0);
@@ -66,23 +54,12 @@ void layer_BindBufferMemory_after(VkDevice device, VkBuffer buffer, VkDeviceMemo
 {
     auto tarObject = memoryMap[memory];
     tarObject.boundBuffer = buffer;
-
-    std::string output = "memory=" + ptrToString(&memory) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "buffer=" + ptrToString(&buffer) + '!';
-    winsockSendToUI(&ConnectSocket, output);
 }
 void layer_BindImageMemory_after(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset)
 {
     auto tarObject = memoryMap[memory];
     tarObject.boundImage = image;
 
-    std::string output = "memory=" + ptrToString(&memory) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "image=" + ptrToString(&image) + '!';
-    winsockSendToUI(&ConnectSocket, output);
 }
 
 void layer_MapMemory_after(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData)
@@ -133,7 +110,7 @@ void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
         output += '!';
     }
 
-    std::string dataMessage = "data";
+    std::string dataMessage = CUSTOM_DATA_PREFIX;
     dataMessage += std::to_string(output.size());
     //dataMessage += std::to_string();
     dataMessage += '!';
@@ -148,122 +125,31 @@ void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
 /* Init */
 void layer_CreateInstance_before(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
 {
+    /*
     std::string output = "pid=" + std::to_string(getpid()) + '!';
     winsockSendToUI(&ConnectSocket, output);
 
     output = "windowName=" + GetWindowName() + '!';
     winsockSendToUI(&ConnectSocket, output);
+    */
 }
 
 /* VkImage */
 void layer_CreateImage_before(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage)
 {
-    std::string output = "arrayLayers=" + std::to_string((*pCreateInfo).arrayLayers) + '!';
-    winsockSendToUI(&ConnectSocket, output);
 
-    output = "extent.width=" + std::to_string((*pCreateInfo).extent.width) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "extent.height=" + std::to_string((*pCreateInfo).extent.height) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "extent.depth=" + std::to_string((*pCreateInfo).extent.depth) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "flags=" + std::to_string((*pCreateInfo).flags) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "format=" + std::to_string((*pCreateInfo).format) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "imageType=" + std::to_string((*pCreateInfo).imageType) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "initialLayout=" + std::to_string((*pCreateInfo).initialLayout) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "mipLevels=" + std::to_string((*pCreateInfo).mipLevels) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "pNext=" + ptrToString(&((*pCreateInfo).pNext)) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "queueFamilyIndexCount=" + std::to_string((*pCreateInfo).queueFamilyIndexCount) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "pQueueFamilyIndices=" + ptrToString(&((*pCreateInfo).pQueueFamilyIndices)) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "samples=" + std::to_string((*pCreateInfo).samples) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "sharingMode=" + std::to_string((*pCreateInfo).sharingMode) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "sType=" + std::to_string((*pCreateInfo).sType) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "tiling=" + std::to_string((*pCreateInfo).tiling) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "usage=" + std::to_string((*pCreateInfo).usage) + '!';
-    winsockSendToUI(&ConnectSocket, output);
 }
 
 /* VkCommandBuffer */
 void layer_AllocateCommandBuffers_after(VkDevice device, VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers)
 {
-    std::string output = "pCommandBuffers=" + ptrToString(pCommandBuffers) + '!';
-    winsockSendToUI(&ConnectSocket, output);
 
-    output = "commandBufferCount=" + std::to_string((*pAllocateInfo).commandBufferCount) + '!';
-    winsockSendToUI(&ConnectSocket, output);
 
-    output = "arrayLayers=" + std::to_string((*pAllocateInfo).commandBufferCount) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "commandPool=" + ptrToString(&((*pAllocateInfo).commandPool)) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "level=" + std::to_string((*pAllocateInfo).level) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "sType=" + std::to_string((*pAllocateInfo).sType) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "pNext=" + ptrToString(&((*pAllocateInfo).pNext)) + '!';
-    winsockSendToUI(&ConnectSocket, output);
 }
 
 /* VkBuffer */
 void layer_CreateBuffer_before(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer)
 {
-    std::string output = "bufferID=" + ptrToString(&pBuffer) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "sType=" + std::to_string(pCreateInfo->sType) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "pNext=" + ptrToString(&(pCreateInfo->pNext)) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "flags=" + std::to_string(pCreateInfo->flags) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "size=" + std::to_string(pCreateInfo->size) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "usage=" + std::to_string(pCreateInfo->usage) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "sharingMode=" + std::to_string(pCreateInfo->sharingMode) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "queueFamilyIndexCount=" + std::to_string(pCreateInfo->queueFamilyIndexCount) + '!';
-    winsockSendToUI(&ConnectSocket, output);
-
-    output = "pQueueFamilyIndices=" + ptrToString(&(pCreateInfo->pQueueFamilyIndices)) + '!';
-    winsockSendToUI(&ConnectSocket, output);
 }
 
 /* Unused */
