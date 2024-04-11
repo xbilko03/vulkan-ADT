@@ -19,6 +19,9 @@ extern bool connected;
 
 std::string GetWindowName();
 
+#define FREEMEMORY_BEFORE_EXEC_EXISTS
+void layer_FreeMemory_before(VkDevice device, VkDeviceMemory memory, VkAllocationCallbacks* pAllocator);
+
 #define BINDIMAGEMEMORY_AFTER_EXEC_EXISTS
 void layer_BindImageMemory_after(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset);
 

@@ -16,24 +16,22 @@ namespace details {
     void appUI::ShowMemories(details::appWindow* window, details::events* dataObject)
     {
         ImGui::Begin("Memory");
-        /*
-        auto memoryList = (*dataObject).getMemories();
-        size_t memoryCount = memoryList.size();
+        
+        unsigned long long memoryCount = (*dataObject).getMemoriesCount();
 
-        for (size_t i = 0; i < memoryCount; i++)
+        for (unsigned long long i = 0; i < memoryCount;i++)
         {
-            std::string headerName = "vkMemory #" + std::to_string(i) + '\0';
-            if (ImGui::CollapsingHeader(headerName.c_str()))
+            std::string hdrName = "vkMemory #" + std::to_string(i);
+            std::string output = hdrName + "[" + (*dataObject).getMemoryState(i) + "]";
+            if(ImGui::CollapsingHeader(output.c_str()))
             {
-                std::list<events::vkMemoryStr>::iterator iterator = memoryList.begin();
-                std::advance(iterator, i);
-                for (auto param : iterator->parameters)
-                {
-                    ImGui::Text(param.c_str());
-                }
+                output = (*dataObject).getMemoryPointer(i);
+                ImGui::Text(output.c_str());
+                output = (*dataObject).getMemoryData(i);
+                ImGui::Text(output.c_str());
             }
         }
-        */
+
         ImGui::End();
     }
     void appUI::ShowImages(details::appWindow* window, details::events* dataObject)

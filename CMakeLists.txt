@@ -37,9 +37,12 @@ ${IMGUI_DIR}/imgui_widgets.cpp
  
  "appUI/events.cpp"
  "appUI/events.hpp"
-
+ 
  "appUI/class_ApiCall.hpp"
  "appUI/class_apiCall.cpp"
+
+ "appUI/class_memory.hpp"
+ "appUI/class_memory.cpp"
 )
 
 # vulkan

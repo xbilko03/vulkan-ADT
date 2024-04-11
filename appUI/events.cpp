@@ -19,9 +19,20 @@ namespace details {
     std::list<apiCall> currentCallList;
     unsigned long long callID = 0;
     unsigned long long frameID = 0;
+    unsigned long long memoryID = 0;
+    unsigned long long modifiedMemoryID;
     
+    void events::createDataManagers()
+    {
+        memMan = new vkMemoryManager();
+    }
+
     void events::parseMessage(std::string *input)
     {
+        /* refresh window */
+        //glfwPostEmptyEvent();
+
+        //std::cout << "new dataIN." << *input << std::endl;
         /* begin of an api call */
         if ((*input).substr(0, 6) == "begin_")
         {
@@ -29,14 +40,14 @@ namespace details {
             currentCall = new apiCall(callID++);
             /* api command begin message */
             (*currentCall).assignName(*input);
-            //std::cout << "new call = " << currentCall->getName() << std::endl;
-            //std::cout << "new call = " << apiCallObjectList.size() << std::endl;
-            /* refresh window */
-            //glfwPostEmptyEvent();
             if (receptionState == "begin_vkAcquireNextImageKHR")
             {
                 frameID++;
                 currentCallList = {};
+            }
+            else if (receptionState == "begin_vkAllocateMemory")
+            {
+                memMan->newMemory(memoryID);
             }
         }
         /* end of an api call */
@@ -46,11 +57,36 @@ namespace details {
             /* finish reading and save call */
             currentCallList.push_back(*currentCall);
             frames[frameID] = currentCallList;
+        if (receptionState == "end_vkAllocateMemory")
+        {
+            memoryID++;
+        }
         }
         /* other data in between api calls */
         else if ((*input).substr(0, 5) == "data_")
         {
-            
+            if (receptionState == "begin_vkUnmapMemory")
+            {
+                std::cout << "new data at " << modifiedMemoryID << std::endl;
+                memMan->AssignData((*input), modifiedMemoryID);
+            }
+            //std::cout << "new data." << std::endl;
+        }
+        else if ((*input).substr(0, 6) == "layer_")
+        {
+            if (receptionState == "begin_vkUnmapMemory")
+            {
+                /* get ID by pointer */
+                modifiedMemoryID = memMan->GetFromPointerID(*input);
+            }
+            else if (receptionState == "begin_vkAllocateMemory")
+            {
+                memMan->AssignPointer((*input), memoryID);
+            }
+            else if (receptionState == "begin_vkFreeMemory")
+            {
+                memMan->FreeMemory(memMan->GetFromPointerID(*input));
+            }
         }
         else
         {
@@ -127,6 +163,7 @@ namespace details {
 
         // Receive until the peer shuts down the connection
         details::events* myObj = (details::events*)lpParameter;
+        (*myObj).createDataManagers();
         do {
             //std::fill(recvbuf, recvbuf + DEFAULT_BUFLEN - 1, 0);
             ret = recv(ClientSocket, recvbuf, DEFAULT_BUFLEN, 0);

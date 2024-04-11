@@ -18,6 +18,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#define CUSTOM_PARAM_PREFIX "layer_"
 #define CUSTOM_DATA_PREFIX "data_"
 
 
@@ -48,6 +49,24 @@ void layer_AllocateMemory_after(VkDevice device, VkMemoryAllocateInfo* pAllocate
     /* map memory to memoryObj */
     memoryMap[*pMemory] = {};
     memoryMap[*pMemory] = memoryObj((*pAllocateInfo).allocationSize, 0, 0, 0);
+    std::string output = CUSTOM_PARAM_PREFIX;
+    output += "ptr=";
+    output += ptrToString(pMemory);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
+
+}
+void layer_FreeMemory_before(VkDevice device, VkDeviceMemory memory, VkAllocationCallbacks* pAllocator)
+{
+    /* map memory to memoryObj */
+    memoryMap[memory] = {};
+    std::string output = CUSTOM_PARAM_PREFIX;
+    output += "ptr=";
+    std::stringstream s;
+    s << memory;
+    output += s.str();
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
 
 }
 void layer_BindBufferMemory_after(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset)
@@ -71,18 +90,6 @@ void layer_MapMemory_after(VkDevice device, VkDeviceMemory memory, VkDeviceSize 
     memoryMap[memory] = tarObject;
 }
 
-#include <fstream>
-
-
-std::string ToHex(const std::string& s, bool upper_case /* = true */)
-{
-    std::ostringstream ret;
-
-    for (std::string::size_type i = 0; i < s.length(); ++i)
-        ret << std::hex << std::setfill('0') << std::setw(2) << (upper_case ? std::uppercase : std::nouppercase) << (int)s[i];
-
-    return ret.str();
-}
 void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
 {
     auto tarObject = memoryMap[memory];
@@ -97,8 +104,6 @@ void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
     file.close();
     */
 
-    
-
     //std::string s(static_cast<char*>(*tarObject.data), static_cast<char*>(*tarObject.data) + tarObject.size);
     //std::cout << "outputData = '" << s << "'" << std::endl;
     //return;
@@ -109,10 +114,17 @@ void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
         output += std::to_string((cpuData[i]));
         output += '!';
     }
+    std::string memAddrSend = CUSTOM_PARAM_PREFIX;
+    memAddrSend += "ptr=";
+    std::stringstream s;
+    s << memory;
+    memAddrSend += s.str();
+    memAddrSend += '!';
+    winsockSendToUI(&ConnectSocket, memAddrSend);
 
-    std::string dataMessage = CUSTOM_DATA_PREFIX;
+
+    std::string dataMessage = "data";
     dataMessage += std::to_string(output.size());
-    //dataMessage += std::to_string();
     dataMessage += '!';
     winsockSendToUI(&ConnectSocket, dataMessage);
     winsockSendToUI(&ConnectSocket, output);
