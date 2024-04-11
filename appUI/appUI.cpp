@@ -9,6 +9,7 @@
 #include <iostream>
 
 namespace details {
+    #define MAX_TABLE_SIZE 10
 
     void appUI::ShowMemories(details::appWindow* window, details::events* dataObject)
     {
@@ -163,22 +164,6 @@ namespace details {
         static float f = 0.0f;
         static int counter = 0;
 
-        ImGui::Begin("Vk_API_Calls");
-
-        auto calls = (*dataObject).getFrameCount();
-
-        std::cout << calls << " is count. " << std::endl;
-
-
-        auto callis = (*dataObject).getFrameCalls(0);
-        for (auto item : callis)
-        {
-            std::cout << item.getName() << " is subject. " << std::endl;
-        }
-
-
-
-
         static ImGuiTableFlags flags =
             ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
             | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_NoBordersInBody
@@ -190,47 +175,96 @@ namespace details {
         //ImGui::SameLine(); HelpMarker("When sorting is enabled: allow no sorting, disable default sorting. TableGetSortSpecs() may return specs where (SpecsCount == 0).");
         //PopStyleCompact();
         const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
-        int MyItemColumnID_ID = 5;
-        int MyItemColumnID_Name = 10;
-        int MyItemColumnID_Action = 15;
-        int MyItemColumnID_Quantity = 20;
-        if (ImGui::BeginTable("table_sorting", 4, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * 15), 0.0f))
-        {            
-            ImGui::TableSetupColumn("Call_ID", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, MyItemColumnID_ID++);
-            ImGui::TableSetupColumn("Vk_Call", ImGuiTableColumnFlags_WidthFixed, 0.0f, MyItemColumnID_Name++);
-            ImGui::TableSetupColumn("Detail", ImGuiTableColumnFlags_NoSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, MyItemColumnID_Action++);
-            ImGui::TableSetupScrollFreeze(0, 1); // Make row always visible
-            ImGui::TableHeadersRow();
 
-            // Sort our data if sort specs have been changed!
-            if (ImGuiTableSortSpecs* sort_specs = ImGui::TableGetSortSpecs())
-                if (sort_specs->SpecsDirty)
-                {
-                    //MyItem::SortWithSortSpecs(sort_specs, items.Data, items.Size);
-                    sort_specs->SpecsDirty = false;
-                }
+        ImGui::Begin("Vk_API_Calls");
 
-            // Demonstrate using clipper for large vertical lists
-            ImGuiListClipper clipper;
-            clipper.Begin(5); //size
-            while (clipper.Step())
-                for (int row_n = clipper.DisplayStart; row_n < clipper.DisplayEnd; row_n++)
+        unsigned long long frameRangesCount;
+        unsigned long long framesCount = (*dataObject).getFrameCount();
+        unsigned long long groupFrameSingleCount = 1000;
+        frameRangesCount = framesCount / groupFrameSingleCount + 1;
+
+        for (unsigned long long i = 0; i < frameRangesCount; i++)
+        {
+            std::string headerName = "frames " + std::to_string(i * groupFrameSingleCount) + "-" + std::to_string((i + 1) * groupFrameSingleCount) + '\0';
+            if (ImGui::CollapsingHeader(headerName.c_str()))
+            {
+                unsigned long long framesPerThisRange;
+                if (framesCount / ((i + 1) * groupFrameSingleCount) >= 1)
                 {
-                    // Display a data item
-                    ImGui::PushID("item->ID");
-                    ImGui::TableNextRow();
-                    ImGui::TableNextColumn();
-                    ImGui::Text("%04d", "item->ID");
-                    ImGui::TableNextColumn();
-                    ImGui::TextUnformatted("item->Name");
-                    ImGui::TableNextColumn();
-                    ImGui::SmallButton("None");
-                    ImGui::TableNextColumn();
-                    ImGui::Text("%d", "item->Quantity");
-                    ImGui::PopID();
+                    framesPerThisRange = groupFrameSingleCount;
                 }
-            ImGui::EndTable();
+                else
+                {
+                    framesPerThisRange = framesCount % groupFrameSingleCount;
+                }
+                for (unsigned long long index = 0; index < framesPerThisRange; index++)
+                {
+                    if (i + index == 0)
+                    {
+                        headerName = "before frames" + '\0';
+                    }
+                    else
+                    {
+                        headerName = "frame #" + std::to_string(i * groupFrameSingleCount + index) + '\0';
+                    }
+                    if (ImGui::CollapsingHeader(headerName.c_str()))
+                    {
+                        auto frame = (*dataObject).getFrameCalls(i * groupFrameSingleCount + index);
+
+                        int tableSize = frame.size();
+                        if (MAX_TABLE_SIZE < tableSize)
+                            tableSize = MAX_TABLE_SIZE;
+                        if (ImGui::BeginTable("table_sorting", 3, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * tableSize), 0.0f))
+                        {
+                            ImGui::TableSetupColumn("Call_ID", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, 0);
+                            ImGui::TableSetupColumn("Vk_Call", ImGuiTableColumnFlags_WidthFixed, 0.0f, 1);
+                            ImGui::TableSetupColumn("Parameters", ImGuiTableColumnFlags_NoSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, 2);
+                            ImGui::TableHeadersRow();
+
+                            /*
+                            // Sort our data if sort specs have been changed!
+                            if (ImGuiTableSortSpecs* sort_specs = ImGui::TableGetSortSpecs())
+                                if (sort_specs->SpecsDirty)
+                                {
+                                    item::SortWithSortSpecs(sort_specs, frame.Data, frame.Size);
+                                    sort_specs->SpecsDirty = false;
+                                }
+                            */
+
+                            int tableItemID = 0;
+                            for (auto item : frame)
+                            {
+                                // Display a data item
+                                ImGui::PushID(tableItemID++);
+                                ImGui::TableNextRow();
+                                ImGui::TableNextColumn();
+                                ImGui::Text("%llu", item.getID());
+                                ImGui::TableNextColumn();
+                                ImGui::TextUnformatted(item.getName().c_str());
+                                ImGui::TableNextColumn();
+                                ImGui::SmallButton("Detail");
+                                ImGui::PopID();
+                            }
+                            
+                            ImGui::EndTable();
+                        }
+                    }
+                }
+            }
         }
+            
+        
+        /*
+        auto callis = (*dataObject).getFrameCalls(0);
+        for (auto item : callis)
+        {
+            std::cout << item.getName() << " is subject. " << std::endl;
+        }
+        */
+
+
+
+        
         /*
         auto callsList = (*dataObject).getApiCalls();
         size_t apiCount = callsList.size();

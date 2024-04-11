@@ -17,21 +17,27 @@ namespace details {
 
     apiCall* currentCall;
     std::list<apiCall> currentCallList;
-    unsigned callID = 0;
+    unsigned long long callID = 0;
+    unsigned long long frameID = 0;
     
     void events::parseMessage(std::string *input)
     {
         /* begin of an api call */
         if ((*input).substr(0, 6) == "begin_")
         {
-            currentCall = new apiCall(callID);
+            receptionState = *input;
+            currentCall = new apiCall(callID++);
             /* api command begin message */
             (*currentCall).assignName(*input);
             //std::cout << "new call = " << currentCall->getName() << std::endl;
             //std::cout << "new call = " << apiCallObjectList.size() << std::endl;
             /* refresh window */
             //glfwPostEmptyEvent();
-            receptionState = *input;
+            if (receptionState == "begin_vkAcquireNextImageKHR")
+            {
+                frameID++;
+                currentCallList = {};
+            }
         }
         /* end of an api call */
         else if ((*input).substr(0, 4) == "end_")
@@ -39,7 +45,7 @@ namespace details {
             receptionState = *input;
             /* finish reading and save call */
             currentCallList.push_back(*currentCall);
-            frames[callID++] = currentCallList;
+            frames[frameID] = currentCallList;
         }
         /* other data in between api calls */
         else if ((*input).substr(0, 5) == "data_")

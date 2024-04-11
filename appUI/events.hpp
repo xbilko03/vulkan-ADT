@@ -18,7 +18,9 @@ namespace details {
 	public:
 		void connectToLayer();
 		unsigned long long getFrameCount() { return frames.size(); }
+		unsigned long long getFrameCallsCount(unsigned long long frameID) { return frames[frameID].size(); }
 		std::list<apiCall> getFrameCalls(unsigned long long frameID) { return frames[frameID]; }
+
 	private:
 		SOCKET ConnectSocket = INVALID_SOCKET;
 		#define DEFAULT_BUFLEN 500
