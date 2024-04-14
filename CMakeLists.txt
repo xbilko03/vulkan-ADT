@@ -40,9 +40,15 @@ ${IMGUI_DIR}/imgui_widgets.cpp
  
  "appUI/class_ApiCall.hpp"
  "appUI/class_apiCall.cpp"
-
+ 
  "appUI/class_memory.hpp"
  "appUI/class_memory.cpp"
+ 
+ "appUI/class_buffer.hpp"
+ "appUI/class_buffer.cpp"
+
+ "appUI/class_image.hpp"
+ "appUI/class_image.cpp"
 )
 
 # vulkan

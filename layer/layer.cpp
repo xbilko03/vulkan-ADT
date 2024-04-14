@@ -35,6 +35,14 @@ std::string ptrToString(auto* input)
     s << *input;
     return s.str();
 }
+std::string addrToString(auto input)
+{
+    if (input == NULL)
+        return "NULL";
+    std::stringstream s;
+    s << input;
+    return s.str();
+}
 
 /* VkMemory */
 typedef struct memoryObj {
@@ -44,6 +52,7 @@ typedef struct memoryObj {
     void** data;
 };
 std::map<VkDeviceMemory, memoryObj> memoryMap;
+/* Create memory object */
 void layer_AllocateMemory_after(VkDevice device, VkMemoryAllocateInfo* pAllocateInfo, VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory)
 {
     /* map memory to memoryObj */
@@ -54,33 +63,55 @@ void layer_AllocateMemory_after(VkDevice device, VkMemoryAllocateInfo* pAllocate
     output += ptrToString(pMemory);
     output += '!';
     winsockSendToUI(&ConnectSocket, output);
-
 }
+/* Free memory object */
 void layer_FreeMemory_before(VkDevice device, VkDeviceMemory memory, VkAllocationCallbacks* pAllocator)
 {
     /* map memory to memoryObj */
     memoryMap[memory] = {};
     std::string output = CUSTOM_PARAM_PREFIX;
     output += "ptr=";
-    std::stringstream s;
-    s << memory;
-    output += s.str();
+    output += addrToString(memory);
     output += '!';
     winsockSendToUI(&ConnectSocket, output);
 
 }
+
 void layer_BindBufferMemory_after(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset)
 {
     auto tarObject = memoryMap[memory];
     tarObject.boundBuffer = buffer;
+
+    std::string output = CUSTOM_PARAM_PREFIX;
+    output += "memPtr=";
+    output += addrToString(memory);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
+
+    output = CUSTOM_PARAM_PREFIX;
+    output += "bufPtr=";
+    output += addrToString(buffer);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
 }
 void layer_BindImageMemory_after(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset)
 {
     auto tarObject = memoryMap[memory];
     tarObject.boundImage = image;
 
-}
+    std::string output = CUSTOM_PARAM_PREFIX;
+    output += "memPtr=";
+    output += addrToString(memory);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
 
+    output = CUSTOM_PARAM_PREFIX;
+    output += "imgPtr=";
+    output += addrToString(image);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
+}
+/* Get local pointer to memory data */
 void layer_MapMemory_after(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData)
 {
     auto tarObject = memoryMap[memory];
@@ -89,7 +120,7 @@ void layer_MapMemory_after(VkDevice device, VkDeviceMemory memory, VkDeviceSize 
     tarObject.data = ppData;
     memoryMap[memory] = tarObject;
 }
-
+/* Get data from the local pointer */
 void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
 {
     auto tarObject = memoryMap[memory];
@@ -116,87 +147,113 @@ void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
     }
     std::string memAddrSend = CUSTOM_PARAM_PREFIX;
     memAddrSend += "ptr=";
-    std::stringstream s;
-    s << memory;
-    memAddrSend += s.str();
+    memAddrSend += addrToString(memory);
     memAddrSend += '!';
     winsockSendToUI(&ConnectSocket, memAddrSend);
-
-
+        
     std::string dataMessage = "data";
     dataMessage += std::to_string(output.size());
     dataMessage += '!';
     winsockSendToUI(&ConnectSocket, dataMessage);
     winsockSendToUI(&ConnectSocket, output);
+    //winsockSendToUIraw(&ConnectSocket, (char*)*tarObject.data, tarObject.size);
 
     /* Catch data before they are invalidated */
     //std::cout << "raw data try = " << tarObject.data << std::endl;
 }
-
-
-/* Init */
-void layer_CreateInstance_before(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
+/* Create Image object */
+void layer_CreateImage_after(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage)
 {
-    /*
-    std::string output = "pid=" + std::to_string(getpid()) + '!';
+    std::string output = CUSTOM_PARAM_PREFIX;
+    output += "ptr=";
+    output += ptrToString(pImage);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
+}
+/* Create buffer object */
+void layer_CreateBuffer_after(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer)
+{
+    std::string output = CUSTOM_PARAM_PREFIX;
+    output += "ptr=";
+    output += ptrToString(pBuffer);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
+}
+/* Free image object */
+void layer_DestroyImage_before(VkDevice device, VkImage image, VkAllocationCallbacks* pAllocator)
+{
+    std::string output = CUSTOM_PARAM_PREFIX;
+    output += "ptr=";
+    output += addrToString(image);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
+}
+/* Free buffer object */
+void layer_DestroyBuffer_before(VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pAllocator)
+{
+    std::string output = CUSTOM_PARAM_PREFIX;
+    output += "ptr=";
+    output += addrToString(buffer);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
+}
+/* copy image data to buffer */
+void layer_CmdCopyImageToBuffer_before(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, VkBufferImageCopy* pRegions)
+{
+    std::string output = CUSTOM_PARAM_PREFIX;
+    output += "dstBuf=";
+    output += addrToString(dstBuffer);
+    output += '!';
     winsockSendToUI(&ConnectSocket, output);
 
-    output = "windowName=" + GetWindowName() + '!';
+    output = CUSTOM_PARAM_PREFIX;
+    output += "srcImg=";
+    output += addrToString(srcImage);
+    output += '!';
     winsockSendToUI(&ConnectSocket, output);
-    */
 }
+/* copy buffer data to image */
+void layer_CmdCopyBufferToImage_before(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkBufferImageCopy* pRegions)
+{
+    std::string output = CUSTOM_PARAM_PREFIX;
+    output += "srcBuf=";
+    output += addrToString(srcBuffer);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
 
-/* VkImage */
-void layer_CreateImage_before(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage)
+    output = CUSTOM_PARAM_PREFIX;
+    output += "dstImg=";
+    output += addrToString(dstImage);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
+}
+/* copy buffer data to buffer */
+void layer_CmdCopyBuffer_before(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, VkBufferCopy* pRegions)
 {
+    std::string output = CUSTOM_PARAM_PREFIX;
+    output += "srcBuf=";
+    output += addrToString(srcBuffer);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
 
+    output = CUSTOM_PARAM_PREFIX;
+    output += "dstBuf=";
+    output += addrToString(dstBuffer);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
 }
+/* copy image data to image */
+void layer_CmdCopyImage_before(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageCopy* pRegions)
+{
+    std::string output = CUSTOM_PARAM_PREFIX;
+    output += "srcImg=";
+    output += addrToString(srcImage);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
 
-/* VkCommandBuffer */
-void layer_AllocateCommandBuffers_after(VkDevice device, VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers)
-{
-
-
+    output = CUSTOM_PARAM_PREFIX;
+    output += "dstImg=";
+    output += addrToString(dstImage);
+    output += '!';
+    winsockSendToUI(&ConnectSocket, output);
 }
-
-/* VkBuffer */
-void layer_CreateBuffer_before(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer)
-{
-}
-
-/* Unused */
-void layer_QueueSubmit(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence)
-{
-    //std::cout << "submit cmdBuff -> [pCommandBuffers*]" << std::hex << *(pSubmits->pCommandBuffers) << std::endl;
-}
-void layer_BeginCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferBeginInfo* pBeginInfo)
-{
-    //std::cout << "begin cmdBuff -> [VkCommandBuffer]" << commandBuffer << std::endl;
-}
-void layer_ResetCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags)
-{
-    //std::cout << "reset cmdBuff -> [VkCommandBuffer]" << commandBuffer << std::endl;
-}
-void layer_EndCommandBuffer(VkCommandBuffer commandBuffer)
-{
-    //std::cout << "end cmdBuff -> [VkCommandBuffer]" << commandBuffer << std::endl;
-}
-void layer_FreeCommandBuffers(VkDevice device, VkCommandPool commandPool, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers)
-{
-    //std::cout << "free cmdBuff -> [VkCommandBuffer*]" << *pCommandBuffers << std::endl;
-    //std::cout << "free cmdBuff -> [VkCommandPool]" << commandPool << std::endl;
-}
-void layer_DestroyBuffer(VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pAllocator)
-{
-        //std::cout << "DestroyBuffer -> buffer ID -> [buffer]: " << buffer << std::endl << std::endl;
-}
-void layer_CmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
-{
-    //std::cout << std::endl;
-    //winsockSendToUI(&ConnectSocket, "CmdDraw");
-}
-void layer_DestroyImage(VkDevice device, VkImage image, VkAllocationCallbacks* pAllocator)
-{
-    //std::cout << "destroy image -> [VkImage] " << image << std::endl;
-}
-

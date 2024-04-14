@@ -14,9 +14,6 @@
 extern SOCKET ConnectSocket;
 extern bool connected;
 
-
-//#include "../appUI/winsock.h"
-
 std::string GetWindowName();
 
 #define FREEMEMORY_BEFORE_EXEC_EXISTS
@@ -31,14 +28,10 @@ void layer_BindBufferMemory_after(VkDevice device, VkBuffer buffer, VkDeviceMemo
 #define ALLOCATEMEMORY_AFTER_EXEC_EXISTS
 void layer_AllocateMemory_after(VkDevice device, VkMemoryAllocateInfo* pAllocateInfo, VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory);
 
-#define CREATEINSTANCE_BEFORE_EXEC_EXISTS
-void layer_CreateInstance_before(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance);
-
-#define CREATEBUFFER_BEFORE_EXEC_EXISTS
-void layer_CreateBuffer_before(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer);
-
-//#define CMDDRAW_EXISTS
-void layer_CmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance);
+#define CREATEBUFFER_AFTER_EXEC_EXISTS
+void layer_CreateBuffer_after(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer);
+#define DESTROYBUFFER_BEFORE_EXEC_EXISTS
+void layer_DestroyBuffer_before(VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pAllocator);
 
 #define MAPMEMORY_AFTER_EXEC_EXISTS
 void layer_MapMemory_after(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData);
@@ -46,38 +39,23 @@ void layer_MapMemory_after(VkDevice device, VkDeviceMemory memory, VkDeviceSize 
 #define UNMAPMEMORY_BEFORE_EXEC_EXISTS
 void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory);
 
-//#define DESTROYBUFFER_EXISTS
-void layer_DestroyBuffer(VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pAllocator);
+#define CREATEIMAGE_AFTER_EXEC_EXISTS
+void layer_CreateImage_after(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage);
+#define DESTROYIMAGE_BEFORE_EXEC_EXISTS
+void layer_DestroyImage_before(VkDevice device, VkImage image, VkAllocationCallbacks* pAllocator);
 
-//#define BINDBUFFERMEMORY_EXISTS
-void layer_BindBufferMemory(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset);
+#define CMDCOPYBUFFERTOIMAGE_BEFORE_EXEC_EXISTS
+void layer_CmdCopyBufferToImage_before(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkBufferImageCopy* pRegions);
 
-#define CREATEIMAGE_BEFORE_EXEC_EXISTS
-void layer_CreateImage_before(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage);
+#define CMDCOPYIMAGETOBUFFER_BEFORE_EXEC_EXISTS
+void layer_CmdCopyImageToBuffer_before(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, VkBufferImageCopy* pRegions);
 
-//#define BINDIMAGEMEMORY_EXISTS
-void layer_BindImageMemory(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset);
+#define CMDCOPYBUFFER_BEFORE_EXEC_EXISTS
+void layer_CmdCopyBuffer_before(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, VkBufferCopy* pRegions);
 
-//#define DESTROYIMAGE_EXISTS
-void layer_DestroyImage(VkDevice device, VkImage image, VkAllocationCallbacks* pAllocator);
+#define CMDCOPYIMAGE_BEFORE_EXEC_EXISTS
+void layer_CmdCopyImage_before(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageCopy* pRegions);
 
-#define ALLOCATECOMMANDBUFFERS_AFTER_EXEC_EXISTS
-void layer_AllocateCommandBuffers_after(VkDevice device, VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers);
-
-//#define FREECOMMANDBUFFERS_EXISTS
-void layer_FreeCommandBuffers(VkDevice device, VkCommandPool commandPool, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers);
-
-//#define BEGINCOMMANDBUFFER_EXISTS
-void layer_BeginCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferBeginInfo* pBeginInfo);
-
-//#define ENDCOMMANDBUFFER_EXISTS
-void layer_EndCommandBuffer(VkCommandBuffer commandBuffer);
-
-//#define RESETCOMMANDBUFFER_EXISTS
-void layer_ResetCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags);
-
-//#define QUEUESUBMIT_EXISTS
-void layer_QueueSubmit(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence);
 
 //#pragma comment(lib, "Ws2_32.lib")
 #define WINDOW_NAME "VK_DEBUGGER"

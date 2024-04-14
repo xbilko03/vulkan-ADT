@@ -139,6 +139,18 @@ int winsockSendToUI(SOCKET* ConnectSocket, std::string sendbuf)
     }
     return 0;
 }
+/* sends the 'sendbuf' array of chars from the CLIENT to the SERVER */
+int winsockSendToUIraw(SOCKET* ConnectSocket, const char* sendbuf, unsigned long long size)
+{
+    /* Send 'sendbuf' data */
+    int ret = send(*ConnectSocket, sendbuf, size, 0);
+    if (ret == SOCKET_ERROR) {
+        closesocket(*ConnectSocket);
+        WSACleanup();
+        return 1;
+    }
+    return 0;
+}
 
 /* shuts down connection from the CLIENT side */
 int layerWinsockExit(SOCKET* ConnectSocket)

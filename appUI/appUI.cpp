@@ -37,47 +37,45 @@ namespace details {
     void appUI::ShowImages(details::appWindow* window, details::events* dataObject)
     {
         ImGui::Begin("Images");
-        /*
-        auto imageList = (*dataObject).getImages();
-        size_t imageCount = imageList.size();
 
-        for (size_t i = 0; i < imageCount; i++)
+        unsigned long long imageCount = (*dataObject).getImagesCount();
+
+        for (unsigned long long i = 0; i < imageCount;i++)
         {
-            std::string headerName = "vkImage #" + std::to_string(i) + '\0';
-            if (ImGui::CollapsingHeader(headerName.c_str()))
+            std::string hdrName = "vkImage #" + std::to_string(i);
+            std::string output = hdrName + "[" + (*dataObject).getImageState(i) + "]";
+            if (ImGui::CollapsingHeader(output.c_str()))
             {
-                std::list<events::vkImageStr>::iterator iterator = imageList.begin();
-                std::advance(iterator, i);
-                for (auto param : iterator->parameters)
-                {
-                    ImGui::Text(param.c_str());
-                }
+                output = (*dataObject).getImagePointer(i);
+                ImGui::Text(output.c_str());
+                output = (*dataObject).getImageData(i);
+                ImGui::Text(output.c_str());
+                output = (*dataObject).getImageDataRaw(i);
+                ImGui::Text(output.c_str());
             }
         }
-        */
+
         ImGui::End();
     }
-    void appUI::ShowCommandBuffers(details::appWindow* window, details::events* dataObject)
+    void appUI::ShowBuffers(details::appWindow* window, details::events* dataObject)
     {
-        ImGui::Begin("CommandBuffers");
-        /*
-        auto cmdBuffList = (*dataObject).getCommandBuffers();
-        size_t cmdBuffCount = cmdBuffList.size();
+        ImGui::Begin("Vk_Buffers");
 
-        for (size_t i = 0; i < cmdBuffCount; i++)
+        unsigned long long bufferCount = (*dataObject).getBufferCount();
+
+        for (unsigned long long i = 0; i < bufferCount;i++)
         {
-            std::string headerName = "CommandBuffers #" + std::to_string(i) + '\0';
-            if (ImGui::CollapsingHeader(headerName.c_str()))
+            std::string hdrName = "vkBuffer #" + std::to_string(i);
+            std::string output = hdrName + "[" + (*dataObject).getBufferState(i) + "]";
+            if (ImGui::CollapsingHeader(output.c_str()))
             {
-                std::list<events::vkCommandBuffersStr>::iterator iterator = cmdBuffList.begin();
-                std::advance(iterator, i);
-                for (auto param : iterator->parameters)
-                {
-                    ImGui::Text(param.c_str());
-                }
+                output = (*dataObject).getBufferPointer(i);
+                ImGui::Text(output.c_str());
+                output = (*dataObject).getBufferData(i);
+                ImGui::Text(output.c_str());
             }
         }
-        */
+
         ImGui::End();
     }
     void appUI::ShowAppInfo(details::appWindow* window, details::events* dataObject)
@@ -133,29 +131,6 @@ namespace details {
             }
         }
         
-        */
-        ImGui::End();
-    }
-    void appUI::ShowBuffers(details::appWindow* window, details::events* dataObject)
-    {
-        ImGui::Begin("Vk_Buffers");
-        /*
-        auto bufferList = (*dataObject).getBuffers();
-        size_t bufferCount = bufferList.size();
-
-        for (size_t i = 0; i < bufferCount; i++)
-        {
-            std::string headerName = "vkBuffer #" + std::to_string(i) + '\0';
-            if (ImGui::CollapsingHeader(headerName.c_str()))
-            {
-                std::list<events::vkBufferStr>::iterator iterator = bufferList.begin();
-                std::advance(iterator, i);
-                for (auto param : iterator->parameters)
-                {
-                    ImGui::Text(param.c_str());
-                }
-            }
-        }
         */
         ImGui::End();
     }
@@ -344,7 +319,6 @@ namespace details {
         bool texture = false;
         bool vulkanInfo = false;
         bool appInfo = false;
-        bool commandBuffers = false;
         bool images = false;
         bool memories = false;
         /* window render loop */
@@ -363,7 +337,6 @@ namespace details {
                 ImGui::Checkbox("Demo_Window", &demo);
                 ImGui::Checkbox("Texture_Test", &texture);
                 ImGui::Checkbox("App_Info", &appInfo);
-                ImGui::Checkbox("Vk_Command_Buffers", &commandBuffers);
                 ImGui::Checkbox("Vk_Images", &images);
                 ImGui::Checkbox("Vk_Memory", &memories);
                 ImGui::End();
@@ -381,8 +354,6 @@ namespace details {
                 window.ShowTexture();
             if (appInfo == true)
                 ShowAppInfo(&window, &eventManager);
-            if (commandBuffers == true)
-                ShowCommandBuffers(&window, &eventManager);
             if (images == true)
                 ShowImages(&window, &eventManager);
             if (memories == true)
