@@ -27,8 +27,11 @@ namespace details {
             {
                 output = (*dataObject).getMemoryPointer(i);
                 ImGui::Text(output.c_str());
-                output = (*dataObject).getMemoryData(i);
-                ImGui::Text(output.c_str());
+                char* data = (*dataObject).getMemoryData(i);
+                if(data == NULL)
+                    ImGui::Text("No data.");
+                else
+                    ImGui::Text(data);
             }
         }
 
@@ -48,8 +51,11 @@ namespace details {
             {
                 output = (*dataObject).getImagePointer(i);
                 ImGui::Text(output.c_str());
-                //output = (*dataObject).getImageData(i);
-                //ImGui::Text(output.c_str());
+                char* data = (*dataObject).getImageData(i);
+                if (data == NULL)
+                    ImGui::Text("No data.");
+                else
+                    ImGui::Text(data);
             }
         }
 
@@ -69,8 +75,11 @@ namespace details {
             {
                 output = (*dataObject).getBufferPointer(i);
                 ImGui::Text(output.c_str());
-                //output = (*dataObject).getBufferData(i);
-                //ImGui::Text(output.c_str());
+                char* data = (*dataObject).getBufferData(i);
+                if (data == NULL)
+                    ImGui::Text("No data.");
+                else
+                    ImGui::Text(data);
             }
         }
 
@@ -247,51 +256,6 @@ namespace details {
                 }
             }
         }
-            
-        
-        /*
-        auto callis = (*dataObject).getFrameCalls(0);
-        for (auto item : callis)
-        {
-            std::cout << item.getName() << " is subject. " << std::endl;
-        }
-        */
-
-
-
-        
-        /*
-        auto callsList = (*dataObject).getApiCalls();
-        size_t apiCount = callsList.size();
-        size_t apiGroupCount = 1000;
-
-        for (size_t i = 0; i < apiCount; i += apiGroupCount)
-        {
-            size_t range = i + apiGroupCount;
-            std::string headerName = std::to_string(i) + "-" + std::to_string(range) + '\0';
-
-            if (ImGui::CollapsingHeader(headerName.c_str()))
-            {
-                std::list<std::string>::iterator iterator = callsList.begin();
-                std::advance(iterator, i);
-                //34
-                size_t commandsInBracket = apiCount - i;
-                //4317
-                if (commandsInBracket > apiGroupCount)
-                {
-                    commandsInBracket = apiGroupCount;
-                }
-
-
-
-                for (int row = 0; row < commandsInBracket; row++)
-                {
-                    std::string out = std::to_string(i + row) + ": " + iterator++->c_str() + '\0';
-                    ImGui::Text(out.c_str());
-                }
-            }
-        }
-        */
         ImGui::End();
     }
 
@@ -300,7 +264,7 @@ namespace details {
         details::appWindow window;
         details::events eventManager;
 
-        eventManager.connectToLayer();
+        eventManager.connectToLayer(&window);
         
         /* init App */
         window.dataInit();

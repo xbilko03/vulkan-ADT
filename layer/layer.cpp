@@ -161,7 +161,7 @@ void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
     //winsockSendToUI(&ConnectSocket, output);
     //std::string output = (char*)*tarObject.data;
     winsockSendToUIraw(&ConnectSocket, reinterpret_cast<char*>(*tarObject.data), tarObject.size);
-
+    
     /* Catch data before they are invalidated */
     //std::cout << "raw data try = " << tarObject.data << std::endl;
 }

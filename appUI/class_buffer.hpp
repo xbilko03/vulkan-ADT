@@ -4,30 +4,32 @@
 #include "class_memory.hpp"
 
 #include <iostream>
+
+#define BOUNDARYCHECK if (inputID == -1) return
 namespace details {
     class vkBufferManager {
     public:
-        unsigned long long GetBufferCount() { return this->bufferMap.size(); }
-        std::string GetState(unsigned long long inputID) { return this->bufferMap[inputID].bufferState; }
+        unsigned long long GetBufferCount() { return bufferCount; }
+        std::string GetState(unsigned long long inputID) { return bufferMap[inputID].bufferState; }
 
-        void newBuffer(unsigned long long inputID) { this->bufferMap[inputID] = vkBuffer(); bufferMap[inputID].bufferState = "allocated"; }
-        void FreeBuffer(unsigned long long inputID) { this->bufferMap[inputID].bufferState = "freed"; };
+        void newBuffer(unsigned long long inputID) { bufferCount++; bufferMap[inputID] = vkBuffer(); bufferMap[inputID].bufferState = "allocated"; }
+        void FreeBuffer(unsigned long long inputID) { BOUNDARYCHECK; bufferMap[inputID].bufferState = "freed"; };
 
-        std::string GetPointer(unsigned long long inputID) { return this->bufferMap[inputID].localPointer; }
-        void AssignPointer(unsigned long long inputID, std::string ptr) { this->bufferMap[inputID].localPointer = ptr; this->bufferMap[inputID].bufferState = "created"; }
+        std::string GetPointer(unsigned long long inputID) { return bufferMap[inputID].localPointer; }
+        void AssignPointer(unsigned long long inputID, std::string ptr) { BOUNDARYCHECK; bufferMap[inputID].localPointer = ptr; this->bufferMap[inputID].bufferState = "created"; }
         
-        void AssignData(unsigned long long inputID, char* inputData) { this->bufferMap[inputID].memoryData = inputData; }
-        char* GetData(unsigned long long inputID) { return this->bufferMap[inputID].memoryData; }
+        void AssignData(unsigned long long inputID, char* inputData) { BOUNDARYCHECK; bufferMap[inputID].memoryData = inputData; }
+        char* GetData(unsigned long long inputID) { return bufferMap[inputID].memoryData; }
         
-        void AssignBoundObj(unsigned long long inputID, std::string inputData) { this->bufferMap[inputID].attachedMemoryPtr = inputData; }
-        std::string GetBoundObj(unsigned long long inputID) { return this->bufferMap[inputID].attachedMemoryPtr; }        
+        void AssignBoundObj(unsigned long long inputID, std::string inputData) { BOUNDARYCHECK; bufferMap[inputID].attachedMemoryPtr = inputData; }
+        std::string GetBoundObj(unsigned long long inputID) { return bufferMap[inputID].attachedMemoryPtr; }        
 
         unsigned long long GetFromPointerID(std::string message);
-        std::string GetConvertRaw(unsigned long long inputID);
 
-        void FreeMemory(unsigned long long inputID) { this->bufferMap[inputID].bufferState = "freed"; }
-        char* GetDataRaw(unsigned long long inputID) { return this->bufferMap[inputID].memoryData; };
-        unsigned long long GetDataSize(unsigned long long inputID) { return this->bufferMap[inputID].dataSize; };
+        void FreeMemory(unsigned long long inputID) { BOUNDARYCHECK; bufferMap[inputID].bufferState = "freed"; }
+
+        void AssignDataSize(unsigned long long inputID, unsigned long long size) { BOUNDARYCHECK; bufferMap[inputID].dataSize = size; }
+        unsigned long long GetDataSize(unsigned long long inputID) { return bufferMap[inputID].dataSize; };
 
         struct vkBuffer {
             std::string localPointer;
@@ -38,5 +40,6 @@ namespace details {
         };
         std::map<unsigned long long, vkBuffer> bufferMap;
     private:
+        unsigned long long bufferCount = 0;
     };
 }

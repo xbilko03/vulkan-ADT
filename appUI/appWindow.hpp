@@ -57,6 +57,7 @@ namespace details {
         std::list<VkPhysicalDeviceProperties> GetPhysicalDeviceProperties() { return physicalDevicePropertiesList; }
         ImVector<VkExtensionProperties> GetInstanceExtensions() { return instanceExtensions; }
         ImVector<VkExtensionProperties> GetDeviceExtensions() { return deviceExtensions; }
+        bool LoadImageTexture(int width, int height, int channels, void* imageData);
 	private:
         // A struct to manage data related to one image in vulkan
         struct MyTextureData

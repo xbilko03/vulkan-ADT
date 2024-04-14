@@ -14,12 +14,13 @@
 #include "class_buffer.hpp"
 #include "class_image.hpp"
 #include "class_apiCall.hpp"
+#include "appWindow.hpp"
 #include <map>
 
 namespace details {
 	class events {
 	public:
-		void connectToLayer();
+		void connectToLayer(details::appWindow* windowManager);
 		unsigned long long getFrameCount() { return frames.size(); }
 		unsigned long long getFrameCallsCount(unsigned long long frameID) { return frames[frameID].size(); }
 		std::list<apiCall> getFrameCalls(unsigned long long frameID) { return frames[frameID]; }
@@ -27,17 +28,17 @@ namespace details {
 		unsigned long long getMemoriesCount() { return memMan->GetMemoryCount(); }
 		std::string getMemoryPointer(unsigned long long ID) { return memMan->GetPointer(ID); }
 		std::string getMemoryState(unsigned long long ID) { return memMan->GetState(ID); }
-		std::string getMemoryData(unsigned long long ID) { return memMan->GetData(ID); }
+		char* getMemoryData(unsigned long long ID) { return memMan->GetData(ID); }
 
 		unsigned long long getBufferCount() { return bufMan->GetBufferCount(); }
 		std::string getBufferPointer(unsigned long long ID) { return bufMan->GetPointer(ID); }
 		std::string getBufferState(unsigned long long ID) { return bufMan->GetState(ID); }
-		std::string getBufferData(unsigned long long ID) { return bufMan->GetData(ID); }
+		char* getBufferData(unsigned long long ID) { return bufMan->GetData(ID); }
 
 		unsigned long long getImagesCount() { return imgMan->GetBufferCount(); }
 		std::string getImagePointer(unsigned long long ID) { return imgMan->GetPointer(ID); }
 		std::string getImageState(unsigned long long ID) { return imgMan->GetState(ID); }
-		std::string getImageData(unsigned long long ID) { return imgMan->GetData(ID); }
+		char* getImageData(unsigned long long ID) { return imgMan->GetData(ID); }
 	private:
 		SOCKET ConnectSocket = INVALID_SOCKET;
 		#define DEFAULT_BUFLEN 500
