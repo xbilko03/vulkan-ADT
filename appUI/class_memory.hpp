@@ -13,8 +13,8 @@ namespace details {
         void AssignPointer(unsigned long long inputID, std::string inputPtr) { memoryMap[inputID].localPointer = inputPtr; }
         std::string GetPointer(unsigned long long inputID) { return memoryMap[inputID].localPointer; }
 
-        void AssignData(unsigned long long inputID, std::string inputData) { memoryMap[inputID].memoryData = inputData; }
-        std::string GetData(unsigned long long inputID) { return memoryMap[inputID].memoryData; }
+        void AssignData(unsigned long long inputID, char* inputData) { memoryMap[inputID].memoryData = inputData; }
+        char* GetData(unsigned long long inputID) { return memoryMap[inputID].memoryData; }
 
         void AssignBoundObj(unsigned long long inputID, std::string inputData) { memoryMap[inputID].boundObjPtr = inputData; }
         std::string GetBoundObj(unsigned long long inputID) { return memoryMap[inputID].boundObjPtr; }
@@ -26,9 +26,10 @@ namespace details {
         struct vkMemory {
             unsigned long long ID;
             std::string localPointer;
-            std::string memoryData;
             std::string memoryState;
             std::string boundObjPtr;
+            char* memoryData;
+            unsigned long long dataSize;
         };
     private:
         std::map<unsigned long long, vkMemory> memoryMap;

@@ -48,10 +48,8 @@ namespace details {
             {
                 output = (*dataObject).getImagePointer(i);
                 ImGui::Text(output.c_str());
-                output = (*dataObject).getImageData(i);
-                ImGui::Text(output.c_str());
-                output = (*dataObject).getImageDataRaw(i);
-                ImGui::Text(output.c_str());
+                //output = (*dataObject).getImageData(i);
+                //ImGui::Text(output.c_str());
             }
         }
 
@@ -71,8 +69,8 @@ namespace details {
             {
                 output = (*dataObject).getBufferPointer(i);
                 ImGui::Text(output.c_str());
-                output = (*dataObject).getBufferData(i);
-                ImGui::Text(output.c_str());
+                //output = (*dataObject).getBufferData(i);
+                //ImGui::Text(output.c_str());
             }
         }
 

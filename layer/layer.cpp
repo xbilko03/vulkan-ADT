@@ -138,6 +138,7 @@ void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
     //std::string s(static_cast<char*>(*tarObject.data), static_cast<char*>(*tarObject.data) + tarObject.size);
     //std::cout << "outputData = '" << s << "'" << std::endl;
     //return;
+    /*
     int* cpuData = (int*)*tarObject.data;
     std::string output = "";
     for (unsigned i = 0; i < tarObject.size / sizeof(int); i++)
@@ -145,6 +146,7 @@ void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
         output += std::to_string((cpuData[i]));
         output += '!';
     }
+    */
     std::string memAddrSend = CUSTOM_PARAM_PREFIX;
     memAddrSend += "ptr=";
     memAddrSend += addrToString(memory);
@@ -157,8 +159,8 @@ void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
     dataMessage += '!';
     winsockSendToUI(&ConnectSocket, dataMessage);
     //winsockSendToUI(&ConnectSocket, output);
-    output = (char*)*tarObject.data;
-    winsockSendToUIraw(&ConnectSocket, (char*)*tarObject.data, tarObject.size);
+    //std::string output = (char*)*tarObject.data;
+    winsockSendToUIraw(&ConnectSocket, reinterpret_cast<char*>(*tarObject.data), tarObject.size);
 
     /* Catch data before they are invalidated */
     //std::cout << "raw data try = " << tarObject.data << std::endl;

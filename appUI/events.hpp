@@ -38,7 +38,6 @@ namespace details {
 		std::string getImagePointer(unsigned long long ID) { return imgMan->GetPointer(ID); }
 		std::string getImageState(unsigned long long ID) { return imgMan->GetState(ID); }
 		std::string getImageData(unsigned long long ID) { return imgMan->GetData(ID); }
-		std::string getImageDataRaw(unsigned long long ID) { return imgMan->GetDataRaw(ID); }
 	private:
 		SOCKET ConnectSocket = INVALID_SOCKET;
 		#define DEFAULT_BUFLEN 500
@@ -46,7 +45,7 @@ namespace details {
 		static DWORD WINAPI listenForData(__in LPVOID lpParameter);
 
 		void newInfo(const char* input, size_t index);
-		void parseMessage(std::string* input);
+		void parseMessage(const char* inputChar);
 		void createDataManagers();
 		std::string omitMessage(std::string input);
 		std::string omitValue(std::string input);

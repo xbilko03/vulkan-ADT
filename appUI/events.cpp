@@ -59,18 +59,30 @@ namespace details {
         return input.substr(0, pos);
     }
     /* Decipher received input message */
-    void events::parseMessage(std::string *input)
+    void events::parseMessage(const char* inputChar)
     {
+        std::string input = inputChar;
         /* refresh window */
         //glfwPostEmptyEvent();
+        //std::cout << "in parse " << inputChar << std::endl;
+        /* handle data input */
+        if (receptionState == "data_loadMemory")
+        {
+            memMan->AssignData(modifiedMemoryID, (char*)inputChar);
+            modifiedBufferID = bufMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID));
+            modifiedImageID = imgMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID));
+            bufMan->AssignData(modifiedBufferID, (char*)inputChar);
+            imgMan->AssignData(modifiedImageID, (char*)inputChar);
+            receptionState = "begin_vkUnmapMemory";
+        }
 
         /* begin of an api call */
-        if ((*input).substr(0, 6) == "begin_")
+        if (input.substr(0, 6) == "begin_")
         {
-            receptionState = *input;
+            receptionState = input;
             currentCall = new apiCall(callID++);
             /* api command begin message */
-            (*currentCall).assignName(*input);
+            (*currentCall).assignName(input);
             if (receptionState == "begin_vkAcquireNextImageKHR")
             {
                 frameID++;
@@ -90,9 +102,9 @@ namespace details {
             }
         }
         /* end of an api call */
-        else if ((*input).substr(0, 4) == "end_")
+        else if (input.substr(0, 4) == "end_")
         {
-            receptionState = *input;
+            receptionState = input;
             /* finish reading and save call */
             currentCallList.push_back(*currentCall);
             frames[frameID] = currentCallList;
@@ -109,134 +121,127 @@ namespace details {
             bufferID++;
         }
         }
-        /* other data in between api calls */
-        else if ((*input).substr(0, 5) == "data_")
-        {
-            if (receptionState == "begin_vkUnmapMemory")
-            {
-                memMan->AssignData(modifiedMemoryID, (*input));
-                modifiedBufferID = bufMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID));
-                modifiedImageID = imgMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID));
-                bufMan->AssignData(modifiedBufferID, (*input));
-                imgMan->AssignData(modifiedImageID, (*input));
-                imgMan->AssignDataRaw(modifiedImageID, (*input));
-            }
-        }
-        else if ((*input).substr(0, 6) == "layer_")
+        else if (input.substr(0, 6) == "layer_")
         {
             /* instructions sent by layer.cpp */
             if (receptionState == "begin_vkUnmapMemory")
             {
-                modifiedMemoryID = memMan->GetFromPointerID(omitMessage(*input));
+                if (input.substr(0, 11) == "layer_data=")
+                {
+                    receptionState = "data_loadMemory";
+                }
+                else
+                {
+                    modifiedMemoryID = memMan->GetFromPointerID(omitMessage(input));
+                }
             }
             else if (receptionState == "begin_vkAllocateMemory")
             {
-                memMan->AssignPointer(memoryID, omitMessage(*input));
+                memMan->AssignPointer(memoryID, omitMessage(input));
             }
             else if (receptionState == "begin_vkFreeMemory")
             {
-                memMan->FreeMemory(memMan->GetFromPointerID(omitMessage(*input)));
+                memMan->FreeMemory(memMan->GetFromPointerID(omitMessage(input)));
             }
             else if (receptionState == "begin_vkCreateImage")
             {
-                imgMan->AssignPointer(imageID, omitMessage(*input));
+                imgMan->AssignPointer(imageID, omitMessage(input));
             }
             else if (receptionState == "begin_vkDestroyImage")
             {
-                modifiedImageID = imgMan->GetFromPointerID(omitMessage(*input));
+                modifiedImageID = imgMan->GetFromPointerID(omitMessage(input));
                 imgMan->FreeBuffer(modifiedImageID);
             }
             else if (receptionState == "begin_vkCreateBuffer")
             {
-                bufMan->AssignPointer(bufferID, omitMessage(*input));
+                bufMan->AssignPointer(bufferID, omitMessage(input));
             }
             else if (receptionState == "begin_vkDestroyBuffer")
             {
-                modifiedBufferID = bufMan->GetFromPointerID(omitMessage(*input));
+                modifiedBufferID = bufMan->GetFromPointerID(omitMessage(input));
                 bufMan->FreeBuffer(modifiedBufferID);
             }
             else if (receptionState == "begin_vkBindBufferMemory")
             {
-                if (omitValue(*input) == "layer_memPtr")
+                if (omitValue(input) == "layer_memPtr")
                 {
-                    modifiedMemoryID = memMan->GetFromPointerID(omitMessage(*input));
+                    modifiedMemoryID = memMan->GetFromPointerID(omitMessage(input));
                 }
-                else if (omitValue(*input) == "layer_bufPtr")
+                else if (omitValue(input) == "layer_bufPtr")
                 {
-                    modifiedBufferID = bufMan->GetFromPointerID(omitMessage(*input));
+                    modifiedBufferID = bufMan->GetFromPointerID(omitMessage(input));
                     bufMan->AssignBoundObj(modifiedBufferID, memMan->GetPointer(modifiedMemoryID));
-                    memMan->AssignBoundObj(modifiedMemoryID, omitMessage(*input));
+                    memMan->AssignBoundObj(modifiedMemoryID, omitMessage(input));
                     bufMan->AssignData(modifiedBufferID, memMan->GetData(modifiedMemoryID));
                 }
             }
             else if (receptionState == "begin_vkBindImageMemory")
             {
-                if (omitValue(*input) == "layer_memPtr")
+                if (omitValue(input) == "layer_memPtr")
                 {
-                    modifiedMemoryID = memMan->GetFromPointerID(omitMessage(*input));
+                    modifiedMemoryID = memMan->GetFromPointerID(omitMessage(input));
                 }
-                else if (omitValue(*input) == "layer_imgPtr")
+                else if (omitValue(input) == "layer_imgPtr")
                 {
-                    modifiedImageID = imgMan->GetFromPointerID(omitMessage(*input));
+                    modifiedImageID = imgMan->GetFromPointerID(omitMessage(input));
                     imgMan->AssignBoundObj(modifiedImageID, memMan->GetPointer(modifiedMemoryID));
-                    memMan->AssignBoundObj(modifiedMemoryID, omitMessage(*input));
+                    memMan->AssignBoundObj(modifiedMemoryID, omitMessage(input));
                     imgMan->AssignData(modifiedImageID, memMan->GetData(modifiedMemoryID));
                 }
             }
             else if (receptionState == "begin_vkCmdCopyImageToBuffer")
             {
-                if (omitValue(*input) == "layer_dstBuf")
+                if (omitValue(input) == "layer_dstBuf")
                 {
                     bufMan->AssignData(modifiedImageID,imgMan->GetData(modifiedImageID));
                 }
-                else if (omitValue(*input) == "layer_srcImg")
+                else if (omitValue(input) == "layer_srcImg")
                 {
-                    modifiedImageID = imgMan->GetFromPointerID(omitMessage(*input));
+                    modifiedImageID = imgMan->GetFromPointerID(omitMessage(input));
                 }
             }
             else if (receptionState == "begin_vkCmdCopyBufferToImage")
             {
-                if (omitValue(*input) == "layer_srcBuf")
+                if (omitValue(input) == "layer_srcBuf")
                 {
-                    modifiedBufferID = bufMan->GetFromPointerID(omitMessage(*input));
+                    modifiedBufferID = bufMan->GetFromPointerID(omitMessage(input));
                 }
-                else if (omitValue(*input) == "layer_dstImg")
+                else if (omitValue(input) == "layer_dstImg")
                 {
-                    modifiedImageID = imgMan->GetFromPointerID(omitMessage(*input));
+                    modifiedImageID = imgMan->GetFromPointerID(omitMessage(input));
                     imgMan->AssignData(modifiedImageID, bufMan->GetData(modifiedBufferID));
                 }
             }
             else if (receptionState == "begin_vkCmdCopyImage")
             {
 
-                if (omitValue(*input) == "layer_srcImg")
+                if (omitValue(input) == "layer_srcImg")
                 {
-                    modifiedImageID = imgMan->GetFromPointerID(omitMessage(*input));
+                    modifiedImageID = imgMan->GetFromPointerID(omitMessage(input));
                 }
-                else if (omitValue(*input) == "layer_dstImg")
+                else if (omitValue(input) == "layer_dstImg")
                 {
-                    modifiedMemoryID = imgMan->GetFromPointerID(omitMessage(*input));
+                    modifiedMemoryID = imgMan->GetFromPointerID(omitMessage(input));
                     bufMan->AssignData(modifiedMemoryID, imgMan->GetData(modifiedImageID));
                 }
             }
             else if (receptionState == "begin_vkCmdCopyBuffer")
             {
-                if (omitValue(*input) == "layer_srcBuf")
+                if (omitValue(input) == "layer_srcBuf")
                 {
-                    modifiedBufferID = bufMan->GetFromPointerID(omitMessage(*input));
+                    modifiedBufferID = bufMan->GetFromPointerID(omitMessage(input));
                 }
-                else if (omitValue(*input) == "layer_dstBuf")
+                else if (omitValue(input) == "layer_dstBuf")
                 {
-                    modifiedMemoryID = bufMan->GetFromPointerID(omitMessage(*input));
+                    modifiedMemoryID = bufMan->GetFromPointerID(omitMessage(input));
 
-                    std::cout << "modified image data = " << modifiedImageID << std::endl;
                     imgMan->AssignData(modifiedMemoryID, imgMan->GetData(modifiedBufferID));
                 }
             }
         }
         else
         {
-            (*currentCall).assignParameter(*input);
+            (*currentCall).assignParameter(input);
         }
     }
     
@@ -248,28 +253,34 @@ namespace details {
 
         if (currentDataSize < dataSize)
         {
-            dataHandler:
             /* catch data */
             currentDataSize += index;
             if (currentDataSize >= dataSize)
             {
                 unsigned long remainderIndex = currentDataSize - dataSize;
                 remainderIndex = index - remainderIndex;
-
+                /* 
+                * in some cases, input may look like this
+                * data112!XXXXXcommand1!command2!
+                * therefore you need to catch just the XXXXX data
+                * we do this by copying data (XXXXX) from the memory to allocatedData
+                * and then copying command1!command2! to the remainder string,
+                * which will be handled in the next call of the function
+                */
                 memcpy(allocatedData + currentDataSize - index, input, remainderIndex);
-                std::cout << "string over " << allocatedData << std::endl;
-                exit(0);
-                //remainder = s.substr(remainderIndex, s.size());
-                //newData += s.substr(0, remainderIndex);
-                //newData = "data_" + newData;
-                //parseMessage(&newData);
+                char* temp = (char*)malloc(remainderIndex);
+                memcpy(temp, input + remainderIndex, remainderIndex);
+                remainder = temp;
+
+                std::string invokeData = "layer_data=" + std::to_string(dataSize);
+                parseMessage(invokeData.c_str());
+                parseMessage(allocatedData);
                 currentDataSize = 0;
                 dataSize = 0;
             }
             else
             {
                 memcpy(allocatedData + currentDataSize - index, input, index);
-                //std::cout << "allocatedData " << allocatedData << std::endl;
             }
             return;
         }
@@ -277,7 +288,6 @@ namespace details {
 
         std::string token;
         size_t pos = 0;
-
         while ((pos = s.find("!")) != std::string::npos) {
             token = s.substr(0, pos);
             s.erase(0, pos + 1);
@@ -287,14 +297,15 @@ namespace details {
                 auto dataLen = token.substr(4, pos);
                 dataSize = stoul(dataLen, nullptr, 10);
                 currentDataSize = 0;
-                //newData = "";
                 allocatedData = (char*)malloc(dataSize);
-                //strcat(allocatedData, input);
-                //goto dataHandler;
+                std::string posString = input;
+                size_t dataIndex = posString.find(token);
+                newInfo(input + dataIndex + token.size() + 1, index - dataIndex - token.size() - 1);
+                return;
             }
             else
             {
-                parseMessage(&token);
+                parseMessage(token.c_str());
             }
         }
         if (s.size() > 0)

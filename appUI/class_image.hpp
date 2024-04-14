@@ -6,7 +6,6 @@
 namespace details {
     class vkImageManager : public vkBufferManager {
     public:
-        void AssignDataRaw(unsigned long long inputID, std::string inputData);
     private:
     };
 }

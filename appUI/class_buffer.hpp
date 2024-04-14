@@ -16,8 +16,8 @@ namespace details {
         std::string GetPointer(unsigned long long inputID) { return this->bufferMap[inputID].localPointer; }
         void AssignPointer(unsigned long long inputID, std::string ptr) { this->bufferMap[inputID].localPointer = ptr; this->bufferMap[inputID].bufferState = "created"; }
         
-        void AssignData(unsigned long long inputID, std::string inputData) { this->bufferMap[inputID].attachedMemoryData = inputData; }
-        std::string GetData(unsigned long long inputID) { return this->bufferMap[inputID].attachedMemoryData; }
+        void AssignData(unsigned long long inputID, char* inputData) { this->bufferMap[inputID].memoryData = inputData; }
+        char* GetData(unsigned long long inputID) { return this->bufferMap[inputID].memoryData; }
         
         void AssignBoundObj(unsigned long long inputID, std::string inputData) { this->bufferMap[inputID].attachedMemoryPtr = inputData; }
         std::string GetBoundObj(unsigned long long inputID) { return this->bufferMap[inputID].attachedMemoryPtr; }        
@@ -26,14 +26,15 @@ namespace details {
         std::string GetConvertRaw(unsigned long long inputID);
 
         void FreeMemory(unsigned long long inputID) { this->bufferMap[inputID].bufferState = "freed"; }
-        char* GetDataRaw(unsigned long long inputID) { return this->bufferMap[inputID].attachedMemoryDataRaw; };
+        char* GetDataRaw(unsigned long long inputID) { return this->bufferMap[inputID].memoryData; };
+        unsigned long long GetDataSize(unsigned long long inputID) { return this->bufferMap[inputID].dataSize; };
 
         struct vkBuffer {
             std::string localPointer;
             std::string bufferState;
             std::string attachedMemoryPtr;
-            std::string attachedMemoryData;
-            char* attachedMemoryDataRaw;
+            char* memoryData;
+            unsigned long long dataSize;
         };
         std::map<unsigned long long, vkBuffer> bufferMap;
     private:
