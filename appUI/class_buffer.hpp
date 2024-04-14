@@ -26,13 +26,14 @@ namespace details {
         std::string GetConvertRaw(unsigned long long inputID);
 
         void FreeMemory(unsigned long long inputID) { this->bufferMap[inputID].bufferState = "freed"; }
+        char* GetDataRaw(unsigned long long inputID) { return this->bufferMap[inputID].attachedMemoryDataRaw; };
 
         struct vkBuffer {
             std::string localPointer;
             std::string bufferState;
             std::string attachedMemoryPtr;
             std::string attachedMemoryData;
-            std::string attachedMemoryRawData;
+            char* attachedMemoryDataRaw;
         };
         std::map<unsigned long long, vkBuffer> bufferMap;
     private:

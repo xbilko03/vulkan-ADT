@@ -16,6 +16,7 @@ namespace details {
     /* Data concatenation string in case the input is longer than 500 chars or if not the entire data has been accepted */
     std::string remainder = "";
     std::string newData;
+    char* allocatedData;
     unsigned long dataSize = 0;
     unsigned long currentDataSize = 0;
     /* Keep track of the current Api Call in the single command iteration */
@@ -118,12 +119,11 @@ namespace details {
                 modifiedImageID = imgMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID));
                 bufMan->AssignData(modifiedBufferID, (*input));
                 imgMan->AssignData(modifiedImageID, (*input));
+                imgMan->AssignDataRaw(modifiedImageID, (*input));
             }
-            //std::cout << "new data." << std::endl;
         }
         else if ((*input).substr(0, 6) == "layer_")
         {
-            std::cout << "gaming = " << receptionState <<"/" << *input << std::endl;
             /* instructions sent by layer.cpp */
             if (receptionState == "begin_vkUnmapMemory")
             {
@@ -255,16 +255,21 @@ namespace details {
             {
                 unsigned long remainderIndex = currentDataSize - dataSize;
                 remainderIndex = index - remainderIndex;
-                remainder = s.substr(remainderIndex, s.size());
-                newData += s.substr(0, remainderIndex);
-                newData += "data_";
-                parseMessage(&newData);
+
+                memcpy(allocatedData + currentDataSize - index, input, remainderIndex);
+                std::cout << "string over " << allocatedData << std::endl;
+                exit(0);
+                //remainder = s.substr(remainderIndex, s.size());
+                //newData += s.substr(0, remainderIndex);
+                //newData = "data_" + newData;
+                //parseMessage(&newData);
                 currentDataSize = 0;
                 dataSize = 0;
             }
             else
             {
-                newData += s;
+                memcpy(allocatedData + currentDataSize - index, input, index);
+                //std::cout << "allocatedData " << allocatedData << std::endl;
             }
             return;
         }
@@ -282,8 +287,10 @@ namespace details {
                 auto dataLen = token.substr(4, pos);
                 dataSize = stoul(dataLen, nullptr, 10);
                 currentDataSize = 0;
-                newData = "";
-                goto dataHandler;
+                //newData = "";
+                allocatedData = (char*)malloc(dataSize);
+                //strcat(allocatedData, input);
+                //goto dataHandler;
             }
             else
             {

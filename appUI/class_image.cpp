@@ -1,25 +1,27 @@
 #include "class_image.hpp"
 
 namespace details {
-	std::string vkBufferManager::GetConvertRaw(unsigned long long inputID)
+	void  vkImageManager::AssignDataRaw(unsigned long long inputID, std::string inputData)
 	{
 		std::string rawData = this->bufferMap[inputID].attachedMemoryData;
 		std::string token;
 		std::string output = "";
-		unsigned long long pos;
+		char* testOutput = (char*)malloc(5000000);
+		unsigned long long pos = rawData.find("_") + 1;
+		rawData.erase(0, pos);
 
-		std::cout << "transforming data ... " << rawData << std::endl;
 
-		return "";
-
+		testOutput = strtok((char*)rawData.c_str(), "!");
+		std::cout << "transformed ... " << testOutput << std::endl;
+		return;
 		while ((pos = rawData.find("!")) != std::string::npos)
 		{
-			//token = rawData.substr(0, pos);
-			//rawData = rawData.erase(0, pos + 1);
+			token = rawData.substr(0, pos);
+			rawData.erase(0, pos + 1);
 			//int partialValue = stoi(token);
 			//output += (char*)partialValue;
 		}
-		std::cout << "token " << token << std::endl;
-		return output;
+		std::cout << "transformed ... " << rawData.size() << std::endl;
+		
 	}
 }
