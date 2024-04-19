@@ -73,6 +73,7 @@ namespace details {
             modifiedBufferID = bufMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID));
             modifiedImageID = imgMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID));
 
+
             if (modifiedBufferID != -1)
             {
                 bufMan->AssignData(modifiedBufferID, (char*)inputChar);
@@ -82,7 +83,7 @@ namespace details {
             {
                 imgMan->AssignData(modifiedImageID, (char*)inputChar);
                 imgMan->AssignDataSize(modifiedImageID, dataSize);
-                winMan->LoadImageTexture(1024,1024,4,(char*)inputChar);
+                //winMan->LoadImageTexture(modifiedImageID,1024,1024,4,(char*)inputChar);
             }
             receptionState = "begin_vkUnmapMemory";
             return;

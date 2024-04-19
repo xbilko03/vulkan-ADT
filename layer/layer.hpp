@@ -2,14 +2,14 @@
 
 #include <vulkan/vulkan.h>
 #include <vulkan/vk_layer.h>
-#include <winsock2.h>
+//#include <winsock2.h>
 #include "../appUI/winsock.h"
 #include <string>
 #include <map>
-#include <thread>
-#include <windows.h>
+//#include <thread>
 #include <filesystem>
-
+#include <windows.h>
+#include "layer_messages.h"
 
 extern SOCKET ConnectSocket;
 extern bool connected;

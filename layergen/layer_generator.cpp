@@ -62,7 +62,7 @@ namespace laygen
         /* imperfect xml parsing consequence exception */
         if (type == "uint32_t*" || type == "void*" || type == "void" || name == "presentMask")
         {
-            outputStr += "ptrToString((void*)";
+            outputStr += "ptrToString((void**)";
             outputStr += prefix + name;
             outputStr += ")";
             ret = true;
@@ -88,7 +88,7 @@ namespace laygen
         }
         else if (type == "char" || type == "char*")
         {
-            outputStr += "charToString(";
+            outputStr += "charToString((char*)";
             outputStr += prefix + name;
             outputStr += ")";
             ret = true;
@@ -103,7 +103,7 @@ namespace laygen
         }
         else
         {
-            outputStr += "ptrToString((void*)";
+            outputStr += "ptrToString((void**)";
             outputStr += prefix + name;
             outputStr += ")";
             ret = true;
@@ -487,7 +487,8 @@ namespace laygen
             /*
             * print parameters that can be sent
             */
-            PrintParemeterSends(&generatedLayerFile, &(xmlp.structList), &(item.parameterList));
+
+            //PrintParemeterSends(&generatedLayerFile, &(xmlp.structList), &(item.parameterList));
 
             /*
             * additional functionality (if) defined in layer.cpp

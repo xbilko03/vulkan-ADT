@@ -21,7 +21,7 @@ namespace laygen {
 		"..\\..\\..\\layergen\\vk_layer_dispatch_table.h"
 
 		#define XML_PATH \
-		"C:\\Users\\jozef\\Desktop\\vk details\\layergen\\vk.xml"
+		"..\\..\\..\\layergen\\vk.xml"
 
 		#define INSTANCE_TABLE_HEADER \
 		"#pragma once\n\

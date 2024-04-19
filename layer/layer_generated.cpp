@@ -876,22 +876,6 @@ std::string bool_as_text(VkBool32 b)
     return converter.str();
 }
 
-std::string ptrToString(void* input)
-{
-    if (input == NULL)
-        return "NULL";
-    std::stringstream s;
-    s << input;
-    return s.str();
-}
-std::string charToString(auto* input)
-{
-    if (input == NULL)
-        return "NULL";
-    std::stringstream s;
-    s << *input;
-    return s.str();
-}
 std::string GetWindowName()
 {
     /* get the name of the program the layer is on [windows only] */
@@ -976,20 +960,21 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateInstance(const VkInstance
 
     /* send call after loader */
     if (connected) {
+
         winsockSendToUI(&ConnectSocket, "pCreateInfo->sType=" + std::to_string(pCreateInfo->sType) + '!');
-        winsockSendToUI(&ConnectSocket, "pCreateInfo->pNext=" + ptrToString((void*)pCreateInfo->pNext) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pNext=" + ptrToString((void**)pCreateInfo->pNext) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->flags=" + std::to_string(pCreateInfo->flags) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->sType=" + std::to_string(pCreateInfo->pApplicationInfo->sType) + '!');
-        winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->pNext=" + ptrToString((void*)pCreateInfo->pApplicationInfo->pNext) + '!');
-        winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->pApplicationName=" + charToString(pCreateInfo->pApplicationInfo->pApplicationName) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->pNext=" + ptrToString((void**)pCreateInfo->pApplicationInfo->pNext) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->pApplicationName=" + charToString((char*)pCreateInfo->pApplicationInfo->pApplicationName) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->applicationVersion=" + std::to_string(pCreateInfo->pApplicationInfo->applicationVersion) + '!');
-        winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->pEngineName=" + charToString(pCreateInfo->pApplicationInfo->pEngineName) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->pEngineName=" + charToString((char*)pCreateInfo->pApplicationInfo->pEngineName) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->engineVersion=" + std::to_string(pCreateInfo->pApplicationInfo->engineVersion) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->pApplicationInfo->apiVersion=" + std::to_string(pCreateInfo->pApplicationInfo->apiVersion) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->enabledLayerCount=" + std::to_string(pCreateInfo->enabledLayerCount) + '!');
-        winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledLayerNames=" + charToString(pCreateInfo->ppEnabledLayerNames) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledLayerNames=" + charToString((char*)pCreateInfo->ppEnabledLayerNames) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->enabledExtensionCount=" + std::to_string(pCreateInfo->enabledExtensionCount) + '!');
-        winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledExtensionNames=" + charToString(pCreateInfo->ppEnabledExtensionNames) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledExtensionNames=" + charToString((char*)pCreateInfo->ppEnabledExtensionNames) + '!');
 
         winsockSendToUI(&ConnectSocket, "end_vkCreateInstance!");
     }
@@ -1081,7 +1066,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDevice(VkPhysicalDevice p
     /* send call after loader */
     if (connected) {
         winsockSendToUI(&ConnectSocket, "pCreateInfo->sType=" + std::to_string(pCreateInfo->sType) + '!');
-        winsockSendToUI(&ConnectSocket, "pCreateInfo->pNext=" + ptrToString((void*)pCreateInfo->pNext) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pNext=" + ptrToString((void**)pCreateInfo->pNext) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->flags=" + std::to_string(pCreateInfo->flags) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->queueCreateInfoCount=" + std::to_string(pCreateInfo->queueCreateInfoCount) + '!');
         for (int i = 0; i < pCreateInfo->queueCreateInfoCount; i++)
@@ -1094,14 +1079,12 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDevice(VkPhysicalDevice p
                 winsockSendToUI(&ConnectSocket, "pCreateInfo->pQueueCreateInfos" + std::to_string(i) + "->pQueuePriorities" + std::to_string(a) + "=" + std::to_string(pCreateInfo->pQueueCreateInfos[i].pQueuePriorities[a]) + '!');
         }
         winsockSendToUI(&ConnectSocket, "pCreateInfo->enabledLayerCount=" + std::to_string(pCreateInfo->enabledLayerCount) + '!');
-        winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledLayerNames=" + charToString(pCreateInfo->ppEnabledLayerNames) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledLayerNames=" + charToString((char*)pCreateInfo->ppEnabledLayerNames) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->enabledExtensionCount=" + std::to_string(pCreateInfo->enabledExtensionCount) + '!');
-        winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledExtensionNames=" + charToString(pCreateInfo->ppEnabledExtensionNames) + '!');
-        winsockSendToUI(&ConnectSocket, "pCreateInfo->pNext=" + ptrToString((void*)pCreateInfo->pEnabledFeatures) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledExtensionNames=" + charToString((char*)pCreateInfo->ppEnabledExtensionNames) + '!');
+        winsockSendToUI(&ConnectSocket, "pCreateInfo->pNext=" + ptrToString((void**)pCreateInfo->pEnabledFeatures) + '!');
         winsockSendToUI(&ConnectSocket, "end_vkCreateDevice!");
     }
-
-
 
     /* fetch our own dispatch table for the functions we need, into the next layer */
     CreateDeviceDispatch(gdpa, pDevice);
@@ -1259,9 +1242,6 @@ layer_EnumeratePhysicalDevices_before(instance, pPhysicalDeviceCount, pPhysicalD
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].EnumeratePhysicalDevices(instance, pPhysicalDeviceCount, pPhysicalDevices);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceCount=" + ptrToString((void*)pPhysicalDeviceCount) + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDevices=" + ptrToString((void*)pPhysicalDevices) + '!');
 #ifdef ENUMERATEPHYSICALDEVICES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_EnumeratePhysicalDevices_after(instance, pPhysicalDeviceCount, pPhysicalDevices);
@@ -1284,8 +1264,6 @@ layer_GetPhysicalDeviceProperties_before(physicalDevice, pProperties);
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties(physicalDevice, pProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETPHYSICALDEVICEPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceProperties_after(physicalDevice, pProperties);
@@ -1307,9 +1285,6 @@ layer_GetPhysicalDeviceQueueFamilyProperties_before(physicalDevice, pQueueFamily
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueFamilyPropertyCount=" + ptrToString((void*)pQueueFamilyPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueFamilyProperties=" + ptrToString((void*)pQueueFamilyProperties) + '!');
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceQueueFamilyProperties_after(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
@@ -1331,8 +1306,6 @@ layer_GetPhysicalDeviceMemoryProperties_before(physicalDevice, pMemoryProperties
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties(physicalDevice, pMemoryProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryProperties=" + ptrToString((void*)pMemoryProperties) + '!');
 #ifdef GETPHYSICALDEVICEMEMORYPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceMemoryProperties_after(physicalDevice, pMemoryProperties);
@@ -1354,8 +1327,6 @@ layer_GetPhysicalDeviceFeatures_before(physicalDevice, pFeatures);
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures(physicalDevice, pFeatures);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures=" + ptrToString((void*)pFeatures) + '!');
 #ifdef GETPHYSICALDEVICEFEATURES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceFeatures_after(physicalDevice, pFeatures);
@@ -1377,9 +1348,6 @@ layer_GetPhysicalDeviceFormatProperties_before(physicalDevice, format, pFormatPr
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties(physicalDevice, format, pFormatProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"format=" + std::to_string(format) + '!');
-winsockSendToUI(&ConnectSocket,"pFormatProperties=" + ptrToString((void*)pFormatProperties) + '!');
 #ifdef GETPHYSICALDEVICEFORMATPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceFormatProperties_after(physicalDevice, format, pFormatProperties);
@@ -1401,13 +1369,6 @@ layer_GetPhysicalDeviceImageFormatProperties_before(physicalDevice, format, type
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceImageFormatProperties(physicalDevice, format, type, tiling, usage, flags, pImageFormatProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"format=" + std::to_string(format) + '!');
-winsockSendToUI(&ConnectSocket,"type=" + std::to_string(type) + '!');
-winsockSendToUI(&ConnectSocket,"tiling=" + std::to_string(tiling) + '!');
-winsockSendToUI(&ConnectSocket,"usage=" + ptrToString((void*)usage) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void*)flags) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatProperties=" + ptrToString((void*)pImageFormatProperties) + '!');
 #ifdef GETPHYSICALDEVICEIMAGEFORMATPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceImageFormatProperties_after(physicalDevice, format, type, tiling, usage, flags, pImageFormatProperties);
@@ -1430,14 +1391,6 @@ layer_GetPhysicalDeviceSparseImageFormatProperties_before(physicalDevice, format
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProperties(physicalDevice, format, type, samples, usage, tiling, pPropertyCount, pProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"format=" + std::to_string(format) + '!');
-winsockSendToUI(&ConnectSocket,"type=" + std::to_string(type) + '!');
-winsockSendToUI(&ConnectSocket,"samples=" + std::to_string(samples) + '!');
-winsockSendToUI(&ConnectSocket,"usage=" + ptrToString((void*)usage) + '!');
-winsockSendToUI(&ConnectSocket,"tiling=" + std::to_string(tiling) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void*)pPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETPHYSICALDEVICESPARSEIMAGEFORMATPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSparseImageFormatProperties_after(physicalDevice, format, type, samples, usage, tiling, pPropertyCount, pProperties);
@@ -1460,10 +1413,6 @@ layer_CreateAndroidSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateAndroidSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATEANDROIDSURFACEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateAndroidSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -1487,9 +1436,6 @@ layer_GetPhysicalDeviceDisplayPropertiesKHR_before(physicalDevice, pPropertyCoun
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDisplayPropertiesKHR(physicalDevice, pPropertyCount, pProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void*)pPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETPHYSICALDEVICEDISPLAYPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceDisplayPropertiesKHR_after(physicalDevice, pPropertyCount, pProperties);
@@ -1512,9 +1458,6 @@ layer_GetPhysicalDeviceDisplayPlanePropertiesKHR_before(physicalDevice, pPropert
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDisplayPlanePropertiesKHR(physicalDevice, pPropertyCount, pProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void*)pPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETPHYSICALDEVICEDISPLAYPLANEPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceDisplayPlanePropertiesKHR_after(physicalDevice, pPropertyCount, pProperties);
@@ -1537,10 +1480,6 @@ layer_GetDisplayPlaneSupportedDisplaysKHR_before(physicalDevice, planeIndex, pDi
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayPlaneSupportedDisplaysKHR(physicalDevice, planeIndex, pDisplayCount, pDisplays);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"planeIndex=" + std::to_string(planeIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDisplayCount=" + ptrToString((void*)pDisplayCount) + '!');
-winsockSendToUI(&ConnectSocket,"pDisplays=" + ptrToString((void*)pDisplays) + '!');
 #ifdef GETDISPLAYPLANESUPPORTEDDISPLAYSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDisplayPlaneSupportedDisplaysKHR_after(physicalDevice, planeIndex, pDisplayCount, pDisplays);
@@ -1563,10 +1502,6 @@ layer_GetDisplayModePropertiesKHR_before(physicalDevice, display, pPropertyCount
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayModePropertiesKHR(physicalDevice, display, pPropertyCount, pProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void*)display) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void*)pPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETDISPLAYMODEPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDisplayModePropertiesKHR_after(physicalDevice, display, pPropertyCount, pProperties);
@@ -1589,11 +1524,6 @@ layer_CreateDisplayModeKHR_before(physicalDevice, display, pCreateInfo, pAllocat
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].CreateDisplayModeKHR(physicalDevice, display, pCreateInfo, pAllocator, pMode);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void*)display) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pMode=" + ptrToString((void*)pMode) + '!');
 #ifdef CREATEDISPLAYMODEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDisplayModeKHR_after(physicalDevice, display, pCreateInfo, pAllocator, pMode);
@@ -1616,10 +1546,6 @@ layer_GetDisplayPlaneCapabilitiesKHR_before(physicalDevice, mode, planeIndex, pC
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayPlaneCapabilitiesKHR(physicalDevice, mode, planeIndex, pCapabilities);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"mode=" + ptrToString((void*)mode) + '!');
-winsockSendToUI(&ConnectSocket,"planeIndex=" + std::to_string(planeIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities=" + ptrToString((void*)pCapabilities) + '!');
 #ifdef GETDISPLAYPLANECAPABILITIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDisplayPlaneCapabilitiesKHR_after(physicalDevice, mode, planeIndex, pCapabilities);
@@ -1642,10 +1568,6 @@ layer_CreateDisplayPlaneSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSu
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateDisplayPlaneSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATEDISPLAYPLANESURFACEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDisplayPlaneSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -1668,9 +1590,6 @@ layer_DestroySurfaceKHR_before(instance, surface, pAllocator);
 }
 #endif 
 instance_dispatch[GetKey(instance)].DestroySurfaceKHR(instance, surface, pAllocator);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void*)surface) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYSURFACEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroySurfaceKHR_after(instance, surface, pAllocator);
@@ -1692,10 +1611,6 @@ layer_GetPhysicalDeviceSurfaceSupportKHR_before(physicalDevice, queueFamilyIndex
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceSupportKHR(physicalDevice, queueFamilyIndex, surface, pSupported);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void*)surface) + '!');
-winsockSendToUI(&ConnectSocket,"pSupported=" + ptrToString((void*)pSupported) + '!');
 #ifdef GETPHYSICALDEVICESURFACESUPPORTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfaceSupportKHR_after(physicalDevice, queueFamilyIndex, surface, pSupported);
@@ -1718,9 +1633,6 @@ layer_GetPhysicalDeviceSurfaceCapabilitiesKHR_before(physicalDevice, surface, pS
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, pSurfaceCapabilities);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void*)surface) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities=" + ptrToString((void*)pSurfaceCapabilities) + '!');
 #ifdef GETPHYSICALDEVICESURFACECAPABILITIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfaceCapabilitiesKHR_after(physicalDevice, surface, pSurfaceCapabilities);
@@ -1743,10 +1655,6 @@ layer_GetPhysicalDeviceSurfaceFormatsKHR_before(physicalDevice, surface, pSurfac
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void*)surface) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceFormatCount=" + ptrToString((void*)pSurfaceFormatCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceFormats=" + ptrToString((void*)pSurfaceFormats) + '!');
 #ifdef GETPHYSICALDEVICESURFACEFORMATSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfaceFormatsKHR_after(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats);
@@ -1769,10 +1677,6 @@ layer_GetPhysicalDeviceSurfacePresentModesKHR_before(physicalDevice, surface, pP
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, pPresentModeCount, pPresentModes);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void*)surface) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentModeCount=" + ptrToString((void*)pPresentModeCount) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentModes=" + ptrToString((void*)pPresentModes) + '!');
 #ifdef GETPHYSICALDEVICESURFACEPRESENTMODESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfacePresentModesKHR_after(physicalDevice, surface, pPresentModeCount, pPresentModes);
@@ -1796,10 +1700,6 @@ layer_CreateViSurfaceNN_before(instance, pCreateInfo, pAllocator, pSurface);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateViSurfaceNN(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATEVISURFACENN_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateViSurfaceNN_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -1824,10 +1724,6 @@ layer_CreateWaylandSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateWaylandSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATEWAYLANDSURFACEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateWaylandSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -1852,9 +1748,6 @@ layer_GetPhysicalDeviceWaylandPresentationSupportKHR_before(physicalDevice, queu
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceWaylandPresentationSupportKHR(physicalDevice, queueFamilyIndex, display);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void*)display) + '!');
 #ifdef GETPHYSICALDEVICEWAYLANDPRESENTATIONSUPPORTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceWaylandPresentationSupportKHR_after(physicalDevice, queueFamilyIndex, display);
@@ -1879,10 +1772,6 @@ layer_CreateWin32SurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateWin32SurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATEWIN32SURFACEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateWin32SurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -1907,8 +1796,6 @@ layer_GetPhysicalDeviceWin32PresentationSupportKHR_before(physicalDevice, queueF
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceWin32PresentationSupportKHR(physicalDevice, queueFamilyIndex);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
 #ifdef GETPHYSICALDEVICEWIN32PRESENTATIONSUPPORTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceWin32PresentationSupportKHR_after(physicalDevice, queueFamilyIndex);
@@ -1933,10 +1820,6 @@ layer_CreateXlibSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateXlibSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATEXLIBSURFACEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateXlibSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -1961,10 +1844,6 @@ layer_GetPhysicalDeviceXlibPresentationSupportKHR_before(physicalDevice, queueFa
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceXlibPresentationSupportKHR(physicalDevice, queueFamilyIndex, dpy, visualID);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"dpy=" + ptrToString((void*)dpy) + '!');
-winsockSendToUI(&ConnectSocket,"visualID=" + ptrToString((void*)visualID) + '!');
 #ifdef GETPHYSICALDEVICEXLIBPRESENTATIONSUPPORTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceXlibPresentationSupportKHR_after(physicalDevice, queueFamilyIndex, dpy, visualID);
@@ -1989,10 +1868,6 @@ layer_CreateXcbSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateXcbSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATEXCBSURFACEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateXcbSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2017,10 +1892,6 @@ layer_GetPhysicalDeviceXcbPresentationSupportKHR_before(physicalDevice, queueFam
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceXcbPresentationSupportKHR(physicalDevice, queueFamilyIndex, connection, visual_id);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"connection=" + ptrToString((void*)connection) + '!');
-winsockSendToUI(&ConnectSocket,"visual_id=" + ptrToString((void*)visual_id) + '!');
 #ifdef GETPHYSICALDEVICEXCBPRESENTATIONSUPPORTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceXcbPresentationSupportKHR_after(physicalDevice, queueFamilyIndex, connection, visual_id);
@@ -2045,10 +1916,6 @@ layer_CreateDirectFBSurfaceEXT_before(instance, pCreateInfo, pAllocator, pSurfac
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateDirectFBSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATEDIRECTFBSURFACEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDirectFBSurfaceEXT_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2073,9 +1940,6 @@ layer_GetPhysicalDeviceDirectFBPresentationSupportEXT_before(physicalDevice, que
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDirectFBPresentationSupportEXT(physicalDevice, queueFamilyIndex, dfb);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"dfb=" + ptrToString((void*)dfb) + '!');
 #ifdef GETPHYSICALDEVICEDIRECTFBPRESENTATIONSUPPORTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceDirectFBPresentationSupportEXT_after(physicalDevice, queueFamilyIndex, dfb);
@@ -2100,10 +1964,6 @@ layer_CreateImagePipeSurfaceFUCHSIA_before(instance, pCreateInfo, pAllocator, pS
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateImagePipeSurfaceFUCHSIA(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATEIMAGEPIPESURFACEFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateImagePipeSurfaceFUCHSIA_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2128,10 +1988,6 @@ layer_CreateStreamDescriptorSurfaceGGP_before(instance, pCreateInfo, pAllocator,
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateStreamDescriptorSurfaceGGP(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATESTREAMDESCRIPTORSURFACEGGP_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateStreamDescriptorSurfaceGGP_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2156,10 +2012,6 @@ layer_CreateScreenSurfaceQNX_before(instance, pCreateInfo, pAllocator, pSurface)
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateScreenSurfaceQNX(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATESCREENSURFACEQNX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateScreenSurfaceQNX_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2184,9 +2036,6 @@ layer_GetPhysicalDeviceScreenPresentationSupportQNX_before(physicalDevice, queue
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceScreenPresentationSupportQNX(physicalDevice, queueFamilyIndex, window);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"window=" + ptrToString((void*)window) + '!');
 #ifdef GETPHYSICALDEVICESCREENPRESENTATIONSUPPORTQNX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceScreenPresentationSupportQNX_after(physicalDevice, queueFamilyIndex, window);
@@ -2210,10 +2059,6 @@ layer_CreateDebugReportCallbackEXT_before(instance, pCreateInfo, pAllocator, pCa
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateDebugReportCallbackEXT(instance, pCreateInfo, pAllocator, pCallback);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pCallback=" + ptrToString((void*)pCallback) + '!');
 #ifdef CREATEDEBUGREPORTCALLBACKEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDebugReportCallbackEXT_after(instance, pCreateInfo, pAllocator, pCallback);
@@ -2236,9 +2081,6 @@ layer_DestroyDebugReportCallbackEXT_before(instance, callback, pAllocator);
 }
 #endif 
 instance_dispatch[GetKey(instance)].DestroyDebugReportCallbackEXT(instance, callback, pAllocator);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"callback=" + ptrToString((void*)callback) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYDEBUGREPORTCALLBACKEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyDebugReportCallbackEXT_after(instance, callback, pAllocator);
@@ -2260,14 +2102,6 @@ layer_DebugReportMessageEXT_before(instance, flags, objectType, object, location
 }
 #endif 
 instance_dispatch[GetKey(instance)].DebugReportMessageEXT(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void*)flags) + '!');
-winsockSendToUI(&ConnectSocket,"objectType=" + std::to_string(objectType) + '!');
-winsockSendToUI(&ConnectSocket,"object=" + std::to_string(object) + '!');
-winsockSendToUI(&ConnectSocket,"location=" + std::to_string(location) + '!');
-winsockSendToUI(&ConnectSocket,"messageCode=" + std::to_string(messageCode) + '!');
-winsockSendToUI(&ConnectSocket,"pLayerPrefix=" + charToString(pLayerPrefix) + '!');
-winsockSendToUI(&ConnectSocket,"pMessage=" + charToString(pMessage) + '!');
 #ifdef DEBUGREPORTMESSAGEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DebugReportMessageEXT_after(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage);
@@ -2289,14 +2123,6 @@ layer_GetPhysicalDeviceExternalImageFormatPropertiesNV_before(physicalDevice, fo
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalImageFormatPropertiesNV(physicalDevice, format, type, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"format=" + std::to_string(format) + '!');
-winsockSendToUI(&ConnectSocket,"type=" + std::to_string(type) + '!');
-winsockSendToUI(&ConnectSocket,"tiling=" + std::to_string(tiling) + '!');
-winsockSendToUI(&ConnectSocket,"usage=" + ptrToString((void*)usage) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void*)flags) + '!');
-winsockSendToUI(&ConnectSocket,"externalHandleType=" + ptrToString((void*)externalHandleType) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalImageFormatProperties=" + ptrToString((void*)pExternalImageFormatProperties) + '!');
 #ifdef GETPHYSICALDEVICEEXTERNALIMAGEFORMATPROPERTIESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalImageFormatPropertiesNV_after(physicalDevice, format, type, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties);
@@ -2319,8 +2145,6 @@ layer_GetPhysicalDeviceFeatures2_before(physicalDevice, pFeatures);
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures2(physicalDevice, pFeatures);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures=" + ptrToString((void*)pFeatures) + '!');
 #ifdef GETPHYSICALDEVICEFEATURES2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceFeatures2_after(physicalDevice, pFeatures);
@@ -2342,8 +2166,6 @@ layer_GetPhysicalDeviceProperties2_before(physicalDevice, pProperties);
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties2(physicalDevice, pProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETPHYSICALDEVICEPROPERTIES2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceProperties2_after(physicalDevice, pProperties);
@@ -2365,9 +2187,6 @@ layer_GetPhysicalDeviceFormatProperties2_before(physicalDevice, format, pFormatP
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties2(physicalDevice, format, pFormatProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"format=" + std::to_string(format) + '!');
-winsockSendToUI(&ConnectSocket,"pFormatProperties=" + ptrToString((void*)pFormatProperties) + '!');
 #ifdef GETPHYSICALDEVICEFORMATPROPERTIES2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceFormatProperties2_after(physicalDevice, format, pFormatProperties);
@@ -2389,9 +2208,6 @@ layer_GetPhysicalDeviceImageFormatProperties2_before(physicalDevice, pImageForma
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceImageFormatProperties2(physicalDevice, pImageFormatInfo, pImageFormatProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatInfo=" + ptrToString((void*)pImageFormatInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatProperties=" + ptrToString((void*)pImageFormatProperties) + '!');
 #ifdef GETPHYSICALDEVICEIMAGEFORMATPROPERTIES2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceImageFormatProperties2_after(physicalDevice, pImageFormatInfo, pImageFormatProperties);
@@ -2414,9 +2230,6 @@ layer_GetPhysicalDeviceQueueFamilyProperties2_before(physicalDevice, pQueueFamil
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties2(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueFamilyPropertyCount=" + ptrToString((void*)pQueueFamilyPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueFamilyProperties=" + ptrToString((void*)pQueueFamilyProperties) + '!');
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPROPERTIES2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceQueueFamilyProperties2_after(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
@@ -2438,8 +2251,6 @@ layer_GetPhysicalDeviceMemoryProperties2_before(physicalDevice, pMemoryPropertie
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties2(physicalDevice, pMemoryProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryProperties=" + ptrToString((void*)pMemoryProperties) + '!');
 #ifdef GETPHYSICALDEVICEMEMORYPROPERTIES2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceMemoryProperties2_after(physicalDevice, pMemoryProperties);
@@ -2461,10 +2272,6 @@ layer_GetPhysicalDeviceSparseImageFormatProperties2_before(physicalDevice, pForm
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pFormatInfo=" + ptrToString((void*)pFormatInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void*)pPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETPHYSICALDEVICESPARSEIMAGEFORMATPROPERTIES2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSparseImageFormatProperties2_after(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
@@ -2486,9 +2293,6 @@ layer_GetPhysicalDeviceExternalBufferProperties_before(physicalDevice, pExternal
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalBufferProperties(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalBufferInfo=" + ptrToString((void*)pExternalBufferInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalBufferProperties=" + ptrToString((void*)pExternalBufferProperties) + '!');
 #ifdef GETPHYSICALDEVICEEXTERNALBUFFERPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalBufferProperties_after(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
@@ -2511,10 +2315,6 @@ layer_GetPhysicalDeviceExternalMemorySciBufPropertiesNV_before(physicalDevice, h
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalMemorySciBufPropertiesNV(physicalDevice, handleType, handle, pMemorySciBufProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"handleType=" + std::to_string(handleType) + '!');
-winsockSendToUI(&ConnectSocket,"handle=" + ptrToString((void*)handle) + '!');
-winsockSendToUI(&ConnectSocket,"pMemorySciBufProperties=" + ptrToString((void*)pMemorySciBufProperties) + '!');
 #ifdef GETPHYSICALDEVICEEXTERNALMEMORYSCIBUFPROPERTIESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalMemorySciBufPropertiesNV_after(physicalDevice, handleType, handle, pMemorySciBufProperties);
@@ -2539,8 +2339,6 @@ layer_GetPhysicalDeviceSciBufAttributesNV_before(physicalDevice, pAttributes);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSciBufAttributesNV(physicalDevice, pAttributes);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pAttributes=" + ptrToString((void*)pAttributes) + '!');
 #ifdef GETPHYSICALDEVICESCIBUFATTRIBUTESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSciBufAttributesNV_after(physicalDevice, pAttributes);
@@ -2564,9 +2362,6 @@ layer_GetPhysicalDeviceExternalSemaphoreProperties_before(physicalDevice, pExter
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalSemaphoreInfo=" + ptrToString((void*)pExternalSemaphoreInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalSemaphoreProperties=" + ptrToString((void*)pExternalSemaphoreProperties) + '!');
 #ifdef GETPHYSICALDEVICEEXTERNALSEMAPHOREPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalSemaphoreProperties_after(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
@@ -2588,9 +2383,6 @@ layer_GetPhysicalDeviceExternalFenceProperties_before(physicalDevice, pExternalF
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalFenceProperties(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalFenceInfo=" + ptrToString((void*)pExternalFenceInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalFenceProperties=" + ptrToString((void*)pExternalFenceProperties) + '!');
 #ifdef GETPHYSICALDEVICEEXTERNALFENCEPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalFenceProperties_after(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
@@ -2613,9 +2405,6 @@ layer_GetPhysicalDeviceSciSyncAttributesNV_before(physicalDevice, pSciSyncAttrib
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSciSyncAttributesNV(physicalDevice, pSciSyncAttributesInfo, pAttributes);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pSciSyncAttributesInfo=" + ptrToString((void*)pSciSyncAttributesInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAttributes=" + ptrToString((void*)pAttributes) + '!');
 #ifdef GETPHYSICALDEVICESCISYNCATTRIBUTESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSciSyncAttributesNV_after(physicalDevice, pSciSyncAttributesInfo, pAttributes);
@@ -2639,8 +2428,6 @@ layer_ReleaseDisplayEXT_before(physicalDevice, display);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].ReleaseDisplayEXT(physicalDevice, display);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void*)display) + '!');
 #ifdef RELEASEDISPLAYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ReleaseDisplayEXT_after(physicalDevice, display);
@@ -2664,9 +2451,6 @@ layer_AcquireXlibDisplayEXT_before(physicalDevice, dpy, display);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].AcquireXlibDisplayEXT(physicalDevice, dpy, display);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"dpy=" + ptrToString((void*)dpy) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void*)display) + '!');
 #ifdef ACQUIREXLIBDISPLAYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireXlibDisplayEXT_after(physicalDevice, dpy, display);
@@ -2691,10 +2475,6 @@ layer_GetRandROutputDisplayEXT_before(physicalDevice, dpy, rrOutput, pDisplay);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetRandROutputDisplayEXT(physicalDevice, dpy, rrOutput, pDisplay);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"dpy=" + ptrToString((void*)dpy) + '!');
-winsockSendToUI(&ConnectSocket,"rrOutput=" + ptrToString((void*)rrOutput) + '!');
-winsockSendToUI(&ConnectSocket,"pDisplay=" + ptrToString((void*)pDisplay) + '!');
 #ifdef GETRANDROUTPUTDISPLAYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRandROutputDisplayEXT_after(physicalDevice, dpy, rrOutput, pDisplay);
@@ -2719,8 +2499,6 @@ layer_AcquireWinrtDisplayNV_before(physicalDevice, display);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].AcquireWinrtDisplayNV(physicalDevice, display);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void*)display) + '!');
 #ifdef ACQUIREWINRTDISPLAYNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireWinrtDisplayNV_after(physicalDevice, display);
@@ -2745,9 +2523,6 @@ layer_GetWinrtDisplayNV_before(physicalDevice, deviceRelativeId, pDisplay);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetWinrtDisplayNV(physicalDevice, deviceRelativeId, pDisplay);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"deviceRelativeId=" + std::to_string(deviceRelativeId) + '!');
-winsockSendToUI(&ConnectSocket,"pDisplay=" + ptrToString((void*)pDisplay) + '!');
 #ifdef GETWINRTDISPLAYNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetWinrtDisplayNV_after(physicalDevice, deviceRelativeId, pDisplay);
@@ -2771,9 +2546,6 @@ layer_GetPhysicalDeviceSurfaceCapabilities2EXT_before(physicalDevice, surface, p
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceCapabilities2EXT(physicalDevice, surface, pSurfaceCapabilities);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void*)surface) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities=" + ptrToString((void*)pSurfaceCapabilities) + '!');
 #ifdef GETPHYSICALDEVICESURFACECAPABILITIES2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfaceCapabilities2EXT_after(physicalDevice, surface, pSurfaceCapabilities);
@@ -2796,9 +2568,6 @@ layer_EnumeratePhysicalDeviceGroups_before(instance, pPhysicalDeviceGroupCount, 
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].EnumeratePhysicalDeviceGroups(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceGroupCount=" + ptrToString((void*)pPhysicalDeviceGroupCount) + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceGroupProperties=" + ptrToString((void*)pPhysicalDeviceGroupProperties) + '!');
 #ifdef ENUMERATEPHYSICALDEVICEGROUPS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_EnumeratePhysicalDeviceGroups_after(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
@@ -2821,10 +2590,6 @@ layer_GetPhysicalDevicePresentRectanglesKHR_before(physicalDevice, surface, pRec
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDevicePresentRectanglesKHR(physicalDevice, surface, pRectCount, pRects);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void*)surface) + '!');
-winsockSendToUI(&ConnectSocket,"pRectCount=" + ptrToString((void*)pRectCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRects=" + ptrToString((void*)pRects) + '!');
 #ifdef GETPHYSICALDEVICEPRESENTRECTANGLESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDevicePresentRectanglesKHR_after(physicalDevice, surface, pRectCount, pRects);
@@ -2848,10 +2613,6 @@ layer_CreateIOSSurfaceMVK_before(instance, pCreateInfo, pAllocator, pSurface);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateIOSSurfaceMVK(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATEIOSSURFACEMVK_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateIOSSurfaceMVK_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2876,10 +2637,6 @@ layer_CreateMacOSSurfaceMVK_before(instance, pCreateInfo, pAllocator, pSurface);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateMacOSSurfaceMVK(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATEMACOSSURFACEMVK_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateMacOSSurfaceMVK_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2904,10 +2661,6 @@ layer_CreateMetalSurfaceEXT_before(instance, pCreateInfo, pAllocator, pSurface);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateMetalSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATEMETALSURFACEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateMetalSurfaceEXT_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2931,9 +2684,6 @@ layer_GetPhysicalDeviceMultisamplePropertiesEXT_before(physicalDevice, samples, 
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMultisamplePropertiesEXT(physicalDevice, samples, pMultisampleProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"samples=" + std::to_string(samples) + '!');
-winsockSendToUI(&ConnectSocket,"pMultisampleProperties=" + ptrToString((void*)pMultisampleProperties) + '!');
 #ifdef GETPHYSICALDEVICEMULTISAMPLEPROPERTIESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceMultisamplePropertiesEXT_after(physicalDevice, samples, pMultisampleProperties);
@@ -2955,9 +2705,6 @@ layer_GetPhysicalDeviceSurfaceCapabilities2KHR_before(physicalDevice, pSurfaceIn
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceCapabilities2KHR(physicalDevice, pSurfaceInfo, pSurfaceCapabilities);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceInfo=" + ptrToString((void*)pSurfaceInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities=" + ptrToString((void*)pSurfaceCapabilities) + '!');
 #ifdef GETPHYSICALDEVICESURFACECAPABILITIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfaceCapabilities2KHR_after(physicalDevice, pSurfaceInfo, pSurfaceCapabilities);
@@ -2980,10 +2727,6 @@ layer_GetPhysicalDeviceSurfaceFormats2KHR_before(physicalDevice, pSurfaceInfo, p
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceFormats2KHR(physicalDevice, pSurfaceInfo, pSurfaceFormatCount, pSurfaceFormats);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceInfo=" + ptrToString((void*)pSurfaceInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceFormatCount=" + ptrToString((void*)pSurfaceFormatCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceFormats=" + ptrToString((void*)pSurfaceFormats) + '!');
 #ifdef GETPHYSICALDEVICESURFACEFORMATS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfaceFormats2KHR_after(physicalDevice, pSurfaceInfo, pSurfaceFormatCount, pSurfaceFormats);
@@ -3006,9 +2749,6 @@ layer_GetPhysicalDeviceDisplayProperties2KHR_before(physicalDevice, pPropertyCou
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDisplayProperties2KHR(physicalDevice, pPropertyCount, pProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void*)pPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETPHYSICALDEVICEDISPLAYPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceDisplayProperties2KHR_after(physicalDevice, pPropertyCount, pProperties);
@@ -3031,9 +2771,6 @@ layer_GetPhysicalDeviceDisplayPlaneProperties2KHR_before(physicalDevice, pProper
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDisplayPlaneProperties2KHR(physicalDevice, pPropertyCount, pProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void*)pPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETPHYSICALDEVICEDISPLAYPLANEPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceDisplayPlaneProperties2KHR_after(physicalDevice, pPropertyCount, pProperties);
@@ -3056,10 +2793,6 @@ layer_GetDisplayModeProperties2KHR_before(physicalDevice, display, pPropertyCoun
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayModeProperties2KHR(physicalDevice, display, pPropertyCount, pProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void*)display) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void*)pPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETDISPLAYMODEPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDisplayModeProperties2KHR_after(physicalDevice, display, pPropertyCount, pProperties);
@@ -3082,9 +2815,6 @@ layer_GetDisplayPlaneCapabilities2KHR_before(physicalDevice, pDisplayPlaneInfo, 
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayPlaneCapabilities2KHR(physicalDevice, pDisplayPlaneInfo, pCapabilities);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pDisplayPlaneInfo=" + ptrToString((void*)pDisplayPlaneInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities=" + ptrToString((void*)pCapabilities) + '!');
 #ifdef GETDISPLAYPLANECAPABILITIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDisplayPlaneCapabilities2KHR_after(physicalDevice, pDisplayPlaneInfo, pCapabilities);
@@ -3107,9 +2837,6 @@ layer_GetPhysicalDeviceCalibrateableTimeDomainsKHR_before(physicalDevice, pTimeD
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceCalibrateableTimeDomainsKHR(physicalDevice, pTimeDomainCount, pTimeDomains);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pTimeDomainCount=" + ptrToString((void*)pTimeDomainCount) + '!');
-winsockSendToUI(&ConnectSocket,"pTimeDomains=" + ptrToString((void*)pTimeDomains) + '!');
 #ifdef GETPHYSICALDEVICECALIBRATEABLETIMEDOMAINSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceCalibrateableTimeDomainsKHR_after(physicalDevice, pTimeDomainCount, pTimeDomains);
@@ -3132,10 +2859,6 @@ layer_CreateDebugUtilsMessengerEXT_before(instance, pCreateInfo, pAllocator, pMe
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateDebugUtilsMessengerEXT(instance, pCreateInfo, pAllocator, pMessenger);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pMessenger=" + ptrToString((void*)pMessenger) + '!');
 #ifdef CREATEDEBUGUTILSMESSENGEREXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDebugUtilsMessengerEXT_after(instance, pCreateInfo, pAllocator, pMessenger);
@@ -3158,9 +2881,6 @@ layer_DestroyDebugUtilsMessengerEXT_before(instance, messenger, pAllocator);
 }
 #endif 
 instance_dispatch[GetKey(instance)].DestroyDebugUtilsMessengerEXT(instance, messenger, pAllocator);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"messenger=" + ptrToString((void*)messenger) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYDEBUGUTILSMESSENGEREXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyDebugUtilsMessengerEXT_after(instance, messenger, pAllocator);
@@ -3182,10 +2902,6 @@ layer_SubmitDebugUtilsMessageEXT_before(instance, messageSeverity, messageTypes,
 }
 #endif 
 instance_dispatch[GetKey(instance)].SubmitDebugUtilsMessageEXT(instance, messageSeverity, messageTypes, pCallbackData);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"messageSeverity=" + std::to_string(messageSeverity) + '!');
-winsockSendToUI(&ConnectSocket,"messageTypes=" + ptrToString((void*)messageTypes) + '!');
-winsockSendToUI(&ConnectSocket,"pCallbackData=" + ptrToString((void*)pCallbackData) + '!');
 #ifdef SUBMITDEBUGUTILSMESSAGEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SubmitDebugUtilsMessageEXT_after(instance, messageSeverity, messageTypes, pCallbackData);
@@ -3207,9 +2923,6 @@ layer_GetPhysicalDeviceCooperativeMatrixPropertiesNV_before(physicalDevice, pPro
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceCooperativeMatrixPropertiesNV(physicalDevice, pPropertyCount, pProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void*)pPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETPHYSICALDEVICECOOPERATIVEMATRIXPROPERTIESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceCooperativeMatrixPropertiesNV_after(physicalDevice, pPropertyCount, pProperties);
@@ -3233,10 +2946,6 @@ layer_GetPhysicalDeviceSurfacePresentModes2EXT_before(physicalDevice, pSurfaceIn
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfacePresentModes2EXT(physicalDevice, pSurfaceInfo, pPresentModeCount, pPresentModes);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceInfo=" + ptrToString((void*)pSurfaceInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentModeCount=" + ptrToString((void*)pPresentModeCount) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentModes=" + ptrToString((void*)pPresentModes) + '!');
 #ifdef GETPHYSICALDEVICESURFACEPRESENTMODES2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfacePresentModes2EXT_after(physicalDevice, pSurfaceInfo, pPresentModeCount, pPresentModes);
@@ -3260,11 +2969,6 @@ layer_EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR_before(physi
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterCount=" + ptrToString((void*)pCounterCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCounters=" + ptrToString((void*)pCounters) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterDescriptions=" + ptrToString((void*)pCounterDescriptions) + '!');
 #ifdef ENUMERATEPHYSICALDEVICEQUEUEFAMILYPERFORMANCEQUERYCOUNTERSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR_after(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions);
@@ -3287,9 +2991,6 @@ layer_GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR_before(physicalDevic
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR(physicalDevice, pPerformanceQueryCreateInfo, pNumPasses);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pPerformanceQueryCreateInfo=" + ptrToString((void*)pPerformanceQueryCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pNumPasses=" + ptrToString((void*)pNumPasses) + '!');
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPERFORMANCEQUERYPASSESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR_after(physicalDevice, pPerformanceQueryCreateInfo, pNumPasses);
@@ -3311,10 +3012,6 @@ layer_CreateHeadlessSurfaceEXT_before(instance, pCreateInfo, pAllocator, pSurfac
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateHeadlessSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void*)pSurface) + '!');
 #ifdef CREATEHEADLESSSURFACEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateHeadlessSurfaceEXT_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -3337,9 +3034,6 @@ layer_GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV_before(phy
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(physicalDevice, pCombinationCount, pCombinations);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pCombinationCount=" + ptrToString((void*)pCombinationCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCombinations=" + ptrToString((void*)pCombinations) + '!');
 #ifdef GETPHYSICALDEVICESUPPORTEDFRAMEBUFFERMIXEDSAMPLESCOMBINATIONSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV_after(physicalDevice, pCombinationCount, pCombinations);
@@ -3362,9 +3056,6 @@ layer_GetPhysicalDeviceToolProperties_before(physicalDevice, pToolCount, pToolPr
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceToolProperties(physicalDevice, pToolCount, pToolProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pToolCount=" + ptrToString((void*)pToolCount) + '!');
-winsockSendToUI(&ConnectSocket,"pToolProperties=" + ptrToString((void*)pToolProperties) + '!');
 #ifdef GETPHYSICALDEVICETOOLPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceToolProperties_after(physicalDevice, pToolCount, pToolProperties);
@@ -3387,9 +3078,6 @@ layer_GetPhysicalDeviceFragmentShadingRatesKHR_before(physicalDevice, pFragmentS
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFragmentShadingRatesKHR(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pFragmentShadingRateCount=" + ptrToString((void*)pFragmentShadingRateCount) + '!');
-winsockSendToUI(&ConnectSocket,"pFragmentShadingRates=" + ptrToString((void*)pFragmentShadingRates) + '!');
 #ifdef GETPHYSICALDEVICEFRAGMENTSHADINGRATESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceFragmentShadingRatesKHR_after(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates);
@@ -3412,9 +3100,6 @@ layer_GetPhysicalDeviceVideoCapabilitiesKHR_before(physicalDevice, pVideoProfile
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceVideoCapabilitiesKHR(physicalDevice, pVideoProfile, pCapabilities);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoProfile=" + ptrToString((void*)pVideoProfile) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities=" + ptrToString((void*)pCapabilities) + '!');
 #ifdef GETPHYSICALDEVICEVIDEOCAPABILITIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceVideoCapabilitiesKHR_after(physicalDevice, pVideoProfile, pCapabilities);
@@ -3437,10 +3122,6 @@ layer_GetPhysicalDeviceVideoFormatPropertiesKHR_before(physicalDevice, pVideoFor
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceVideoFormatPropertiesKHR(physicalDevice, pVideoFormatInfo, pVideoFormatPropertyCount, pVideoFormatProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoFormatInfo=" + ptrToString((void*)pVideoFormatInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoFormatPropertyCount=" + ptrToString((void*)pVideoFormatPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoFormatProperties=" + ptrToString((void*)pVideoFormatProperties) + '!');
 #ifdef GETPHYSICALDEVICEVIDEOFORMATPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceVideoFormatPropertiesKHR_after(physicalDevice, pVideoFormatInfo, pVideoFormatPropertyCount, pVideoFormatProperties);
@@ -3463,9 +3144,6 @@ layer_GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR_before(physicalDevic
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(physicalDevice, pQualityLevelInfo, pQualityLevelProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pQualityLevelInfo=" + ptrToString((void*)pQualityLevelInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pQualityLevelProperties=" + ptrToString((void*)pQualityLevelProperties) + '!');
 #ifdef GETPHYSICALDEVICEVIDEOENCODEQUALITYLEVELPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR_after(physicalDevice, pQualityLevelInfo, pQualityLevelProperties);
@@ -3488,9 +3166,6 @@ layer_AcquireDrmDisplayEXT_before(physicalDevice, drmFd, display);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].AcquireDrmDisplayEXT(physicalDevice, drmFd, display);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"drmFd=" + std::to_string(drmFd) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void*)display) + '!');
 #ifdef ACQUIREDRMDISPLAYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireDrmDisplayEXT_after(physicalDevice, drmFd, display);
@@ -3513,10 +3188,6 @@ layer_GetDrmDisplayEXT_before(physicalDevice, drmFd, connectorId, display);
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDrmDisplayEXT(physicalDevice, drmFd, connectorId, display);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"drmFd=" + std::to_string(drmFd) + '!');
-winsockSendToUI(&ConnectSocket,"connectorId=" + std::to_string(connectorId) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void*)display) + '!');
 #ifdef GETDRMDISPLAYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDrmDisplayEXT_after(physicalDevice, drmFd, connectorId, display);
@@ -3539,10 +3210,6 @@ layer_GetPhysicalDeviceOpticalFlowImageFormatsNV_before(physicalDevice, pOptical
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceOpticalFlowImageFormatsNV(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pOpticalFlowImageFormatInfo=" + ptrToString((void*)pOpticalFlowImageFormatInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pFormatCount=" + ptrToString((void*)pFormatCount) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatProperties=" + ptrToString((void*)pImageFormatProperties) + '!');
 #ifdef GETPHYSICALDEVICEOPTICALFLOWIMAGEFORMATSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceOpticalFlowImageFormatsNV_after(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties);
@@ -3565,9 +3232,6 @@ layer_GetPhysicalDeviceCooperativeMatrixPropertiesKHR_before(physicalDevice, pPr
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceCooperativeMatrixPropertiesKHR(physicalDevice, pPropertyCount, pProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void*)pPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETPHYSICALDEVICECOOPERATIVEMATRIXPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceCooperativeMatrixPropertiesKHR_after(physicalDevice, pPropertyCount, pProperties);
@@ -3590,8 +3254,6 @@ layer_GetPhysicalDeviceFeatures2KHR_before(physicalDevice, pFeatures);
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures2KHR(physicalDevice, pFeatures);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures=" + ptrToString((void*)pFeatures) + '!');
 #ifdef GETPHYSICALDEVICEFEATURES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceFeatures2KHR_after(physicalDevice, pFeatures);
@@ -3613,8 +3275,6 @@ layer_GetPhysicalDeviceProperties2KHR_before(physicalDevice, pProperties);
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties2KHR(physicalDevice, pProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETPHYSICALDEVICEPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceProperties2KHR_after(physicalDevice, pProperties);
@@ -3636,9 +3296,6 @@ layer_GetPhysicalDeviceFormatProperties2KHR_before(physicalDevice, format, pForm
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties2KHR(physicalDevice, format, pFormatProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"format=" + std::to_string(format) + '!');
-winsockSendToUI(&ConnectSocket,"pFormatProperties=" + ptrToString((void*)pFormatProperties) + '!');
 #ifdef GETPHYSICALDEVICEFORMATPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceFormatProperties2KHR_after(physicalDevice, format, pFormatProperties);
@@ -3660,9 +3317,6 @@ layer_GetPhysicalDeviceImageFormatProperties2KHR_before(physicalDevice, pImageFo
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceImageFormatProperties2KHR(physicalDevice, pImageFormatInfo, pImageFormatProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatInfo=" + ptrToString((void*)pImageFormatInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatProperties=" + ptrToString((void*)pImageFormatProperties) + '!');
 #ifdef GETPHYSICALDEVICEIMAGEFORMATPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceImageFormatProperties2KHR_after(physicalDevice, pImageFormatInfo, pImageFormatProperties);
@@ -3685,9 +3339,6 @@ layer_GetPhysicalDeviceQueueFamilyProperties2KHR_before(physicalDevice, pQueueFa
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties2KHR(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueFamilyPropertyCount=" + ptrToString((void*)pQueueFamilyPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueFamilyProperties=" + ptrToString((void*)pQueueFamilyProperties) + '!');
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceQueueFamilyProperties2KHR_after(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
@@ -3709,8 +3360,6 @@ layer_GetPhysicalDeviceMemoryProperties2KHR_before(physicalDevice, pMemoryProper
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties2KHR(physicalDevice, pMemoryProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryProperties=" + ptrToString((void*)pMemoryProperties) + '!');
 #ifdef GETPHYSICALDEVICEMEMORYPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceMemoryProperties2KHR_after(physicalDevice, pMemoryProperties);
@@ -3732,10 +3381,6 @@ layer_GetPhysicalDeviceSparseImageFormatProperties2KHR_before(physicalDevice, pF
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProperties2KHR(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pFormatInfo=" + ptrToString((void*)pFormatInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void*)pPropertyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETPHYSICALDEVICESPARSEIMAGEFORMATPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSparseImageFormatProperties2KHR_after(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
@@ -3757,9 +3402,6 @@ layer_GetPhysicalDeviceExternalBufferPropertiesKHR_before(physicalDevice, pExter
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalBufferPropertiesKHR(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalBufferInfo=" + ptrToString((void*)pExternalBufferInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalBufferProperties=" + ptrToString((void*)pExternalBufferProperties) + '!');
 #ifdef GETPHYSICALDEVICEEXTERNALBUFFERPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalBufferPropertiesKHR_after(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
@@ -3781,9 +3423,6 @@ layer_GetPhysicalDeviceExternalSemaphorePropertiesKHR_before(physicalDevice, pEx
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalSemaphorePropertiesKHR(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalSemaphoreInfo=" + ptrToString((void*)pExternalSemaphoreInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalSemaphoreProperties=" + ptrToString((void*)pExternalSemaphoreProperties) + '!');
 #ifdef GETPHYSICALDEVICEEXTERNALSEMAPHOREPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalSemaphorePropertiesKHR_after(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
@@ -3805,9 +3444,6 @@ layer_GetPhysicalDeviceExternalFencePropertiesKHR_before(physicalDevice, pExtern
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalFencePropertiesKHR(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalFenceInfo=" + ptrToString((void*)pExternalFenceInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalFenceProperties=" + ptrToString((void*)pExternalFenceProperties) + '!');
 #ifdef GETPHYSICALDEVICEEXTERNALFENCEPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalFencePropertiesKHR_after(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
@@ -3829,9 +3465,6 @@ layer_EnumeratePhysicalDeviceGroupsKHR_before(instance, pPhysicalDeviceGroupCoun
 }
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].EnumeratePhysicalDeviceGroupsKHR(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void*)instance) + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceGroupCount=" + ptrToString((void*)pPhysicalDeviceGroupCount) + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceGroupProperties=" + ptrToString((void*)pPhysicalDeviceGroupProperties) + '!');
 #ifdef ENUMERATEPHYSICALDEVICEGROUPSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_EnumeratePhysicalDeviceGroupsKHR_after(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
@@ -3854,9 +3487,6 @@ layer_GetPhysicalDeviceCalibrateableTimeDomainsEXT_before(physicalDevice, pTimeD
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceCalibrateableTimeDomainsEXT(physicalDevice, pTimeDomainCount, pTimeDomains);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pTimeDomainCount=" + ptrToString((void*)pTimeDomainCount) + '!');
-winsockSendToUI(&ConnectSocket,"pTimeDomains=" + ptrToString((void*)pTimeDomains) + '!');
 #ifdef GETPHYSICALDEVICECALIBRATEABLETIMEDOMAINSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceCalibrateableTimeDomainsEXT_after(physicalDevice, pTimeDomainCount, pTimeDomains);
@@ -3879,9 +3509,6 @@ layer_GetPhysicalDeviceToolPropertiesEXT_before(physicalDevice, pToolCount, pToo
 }
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceToolPropertiesEXT(physicalDevice, pToolCount, pToolProperties);
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void*)physicalDevice) + '!');
-winsockSendToUI(&ConnectSocket,"pToolCount=" + ptrToString((void*)pToolCount) + '!');
-winsockSendToUI(&ConnectSocket,"pToolProperties=" + ptrToString((void*)pToolProperties) + '!');
 #ifdef GETPHYSICALDEVICETOOLPROPERTIESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceToolPropertiesEXT_after(physicalDevice, pToolCount, pToolProperties);
@@ -3904,10 +3531,6 @@ layer_GetDeviceQueue_before(device, queueFamilyIndex, queueIndex, pQueue);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceQueue(device, queueFamilyIndex, queueIndex, pQueue);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"queueIndex=" + std::to_string(queueIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pQueue=" + ptrToString((void*)pQueue) + '!');
 #ifdef GETDEVICEQUEUE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceQueue_after(device, queueFamilyIndex, queueIndex, pQueue);
@@ -3929,10 +3552,6 @@ layer_QueueSubmit_before(queue, submitCount, pSubmits, fence);
 }
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueueSubmit(queue, submitCount, pSubmits, fence);
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void*)queue) + '!');
-winsockSendToUI(&ConnectSocket,"submitCount=" + std::to_string(submitCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits=" + ptrToString((void*)pSubmits) + '!');
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void*)fence) + '!');
 #ifdef QUEUESUBMIT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueSubmit_after(queue, submitCount, pSubmits, fence);
@@ -3955,7 +3574,6 @@ layer_QueueWaitIdle_before(queue);
 }
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueueWaitIdle(queue);
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void*)queue) + '!');
 #ifdef QUEUEWAITIDLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueWaitIdle_after(queue);
@@ -3978,7 +3596,6 @@ layer_DeviceWaitIdle_before(device);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].DeviceWaitIdle(device);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
 #ifdef DEVICEWAITIDLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DeviceWaitIdle_after(device);
@@ -4001,10 +3618,6 @@ layer_AllocateMemory_before(device, pAllocateInfo, pAllocator, pMemory);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].AllocateMemory(device, pAllocateInfo, pAllocator, pMemory);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocateInfo=" + ptrToString((void*)pAllocateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pMemory=" + ptrToString((void*)pMemory) + '!');
 #ifdef ALLOCATEMEMORY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AllocateMemory_after(device, pAllocateInfo, pAllocator, pMemory);
@@ -4027,9 +3640,6 @@ layer_FreeMemory_before(device, memory, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].FreeMemory(device, memory, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void*)memory) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef FREEMEMORY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_FreeMemory_after(device, memory, pAllocator);
@@ -4051,12 +3661,6 @@ layer_MapMemory_before(device, memory, offset, size, flags, ppData);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].MapMemory(device, memory, offset, size, flags, ppData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void*)memory) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"size=" + ptrToString((void*)size) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void*)flags) + '!');
-winsockSendToUI(&ConnectSocket,"ppData=" + ptrToString((void*)ppData) + '!');
 #ifdef MAPMEMORY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_MapMemory_after(device, memory, offset, size, flags, ppData);
@@ -4079,8 +3683,6 @@ layer_UnmapMemory_before(device, memory);
 }
 #endif 
 device_dispatch[GetKey(device)].UnmapMemory(device, memory);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void*)memory) + '!');
 #ifdef UNMAPMEMORY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_UnmapMemory_after(device, memory);
@@ -4102,9 +3704,6 @@ layer_FlushMappedMemoryRanges_before(device, memoryRangeCount, pMemoryRanges);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].FlushMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"memoryRangeCount=" + std::to_string(memoryRangeCount) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRanges=" + ptrToString((void*)pMemoryRanges) + '!');
 #ifdef FLUSHMAPPEDMEMORYRANGES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_FlushMappedMemoryRanges_after(device, memoryRangeCount, pMemoryRanges);
@@ -4127,9 +3726,6 @@ layer_InvalidateMappedMemoryRanges_before(device, memoryRangeCount, pMemoryRange
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].InvalidateMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"memoryRangeCount=" + std::to_string(memoryRangeCount) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRanges=" + ptrToString((void*)pMemoryRanges) + '!');
 #ifdef INVALIDATEMAPPEDMEMORYRANGES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_InvalidateMappedMemoryRanges_after(device, memoryRangeCount, pMemoryRanges);
@@ -4152,9 +3748,6 @@ layer_GetDeviceMemoryCommitment_before(device, memory, pCommittedMemoryInBytes);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceMemoryCommitment(device, memory, pCommittedMemoryInBytes);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void*)memory) + '!');
-winsockSendToUI(&ConnectSocket,"pCommittedMemoryInBytes=" + ptrToString((void*)pCommittedMemoryInBytes) + '!');
 #ifdef GETDEVICEMEMORYCOMMITMENT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceMemoryCommitment_after(device, memory, pCommittedMemoryInBytes);
@@ -4176,9 +3769,6 @@ layer_GetBufferMemoryRequirements_before(device, buffer, pMemoryRequirements);
 }
 #endif 
 device_dispatch[GetKey(device)].GetBufferMemoryRequirements(device, buffer, pMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements=" + ptrToString((void*)pMemoryRequirements) + '!');
 #ifdef GETBUFFERMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferMemoryRequirements_after(device, buffer, pMemoryRequirements);
@@ -4200,10 +3790,6 @@ layer_BindBufferMemory_before(device, buffer, memory, memoryOffset);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindBufferMemory(device, buffer, memory, memoryOffset);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void*)memory) + '!');
-winsockSendToUI(&ConnectSocket,"memoryOffset=" + ptrToString((void*)memoryOffset) + '!');
 #ifdef BINDBUFFERMEMORY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindBufferMemory_after(device, buffer, memory, memoryOffset);
@@ -4226,9 +3812,6 @@ layer_GetImageMemoryRequirements_before(device, image, pMemoryRequirements);
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageMemoryRequirements(device, image, pMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void*)image) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements=" + ptrToString((void*)pMemoryRequirements) + '!');
 #ifdef GETIMAGEMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageMemoryRequirements_after(device, image, pMemoryRequirements);
@@ -4250,10 +3833,6 @@ layer_BindImageMemory_before(device, image, memory, memoryOffset);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindImageMemory(device, image, memory, memoryOffset);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void*)image) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void*)memory) + '!');
-winsockSendToUI(&ConnectSocket,"memoryOffset=" + ptrToString((void*)memoryOffset) + '!');
 #ifdef BINDIMAGEMEMORY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindImageMemory_after(device, image, memory, memoryOffset);
@@ -4276,10 +3855,6 @@ layer_GetImageSparseMemoryRequirements_before(device, image, pSparseMemoryRequir
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void*)image) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirementCount=" + ptrToString((void*)pSparseMemoryRequirementCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements=" + ptrToString((void*)pSparseMemoryRequirements) + '!');
 #ifdef GETIMAGESPARSEMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageSparseMemoryRequirements_after(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -4301,10 +3876,6 @@ layer_QueueBindSparse_before(queue, bindInfoCount, pBindInfo, fence);
 }
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueueBindSparse(queue, bindInfoCount, pBindInfo, fence);
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void*)queue) + '!');
-winsockSendToUI(&ConnectSocket,"bindInfoCount=" + std::to_string(bindInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo=" + ptrToString((void*)pBindInfo) + '!');
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void*)fence) + '!');
 #ifdef QUEUEBINDSPARSE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueBindSparse_after(queue, bindInfoCount, pBindInfo, fence);
@@ -4327,10 +3898,6 @@ layer_CreateFence_before(device, pCreateInfo, pAllocator, pFence);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateFence(device, pCreateInfo, pAllocator, pFence);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pFence=" + ptrToString((void*)pFence) + '!');
 #ifdef CREATEFENCE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateFence_after(device, pCreateInfo, pAllocator, pFence);
@@ -4353,9 +3920,6 @@ layer_DestroyFence_before(device, fence, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyFence(device, fence, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void*)fence) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYFENCE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyFence_after(device, fence, pAllocator);
@@ -4377,9 +3941,6 @@ layer_ResetFences_before(device, fenceCount, pFences);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ResetFences(device, fenceCount, pFences);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"fenceCount=" + std::to_string(fenceCount) + '!');
-winsockSendToUI(&ConnectSocket,"pFences=" + ptrToString((void*)pFences) + '!');
 #ifdef RESETFENCES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ResetFences_after(device, fenceCount, pFences);
@@ -4402,8 +3963,6 @@ layer_GetFenceStatus_before(device, fence);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetFenceStatus(device, fence);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void*)fence) + '!');
 #ifdef GETFENCESTATUS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetFenceStatus_after(device, fence);
@@ -4426,11 +3985,6 @@ layer_WaitForFences_before(device, fenceCount, pFences, waitAll, timeout);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].WaitForFences(device, fenceCount, pFences, waitAll, timeout);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"fenceCount=" + std::to_string(fenceCount) + '!');
-winsockSendToUI(&ConnectSocket,"pFences=" + ptrToString((void*)pFences) + '!');
-winsockSendToUI(&ConnectSocket,"waitAll=" + bool_as_text(waitAll) + '!');
-winsockSendToUI(&ConnectSocket,"timeout=" + std::to_string(timeout) + '!');
 #ifdef WAITFORFENCES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_WaitForFences_after(device, fenceCount, pFences, waitAll, timeout);
@@ -4453,10 +4007,6 @@ layer_CreateSemaphore_before(device, pCreateInfo, pAllocator, pSemaphore);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateSemaphore(device, pCreateInfo, pAllocator, pSemaphore);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSemaphore=" + ptrToString((void*)pSemaphore) + '!');
 #ifdef CREATESEMAPHORE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateSemaphore_after(device, pCreateInfo, pAllocator, pSemaphore);
@@ -4479,9 +4029,6 @@ layer_DestroySemaphore_before(device, semaphore, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroySemaphore(device, semaphore, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"semaphore=" + ptrToString((void*)semaphore) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYSEMAPHORE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroySemaphore_after(device, semaphore, pAllocator);
@@ -4503,10 +4050,6 @@ layer_CreateEvent_before(device, pCreateInfo, pAllocator, pEvent);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateEvent(device, pCreateInfo, pAllocator, pEvent);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pEvent=" + ptrToString((void*)pEvent) + '!');
 #ifdef CREATEEVENT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateEvent_after(device, pCreateInfo, pAllocator, pEvent);
@@ -4529,9 +4072,6 @@ layer_DestroyEvent_before(device, event, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyEvent(device, event, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void*)event) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYEVENT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyEvent_after(device, event, pAllocator);
@@ -4553,8 +4093,6 @@ layer_GetEventStatus_before(device, event);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetEventStatus(device, event);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void*)event) + '!');
 #ifdef GETEVENTSTATUS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetEventStatus_after(device, event);
@@ -4577,8 +4115,6 @@ layer_SetEvent_before(device, event);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetEvent(device, event);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void*)event) + '!');
 #ifdef SETEVENT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetEvent_after(device, event);
@@ -4601,8 +4137,6 @@ layer_ResetEvent_before(device, event);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ResetEvent(device, event);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void*)event) + '!');
 #ifdef RESETEVENT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ResetEvent_after(device, event);
@@ -4625,10 +4159,6 @@ layer_CreateQueryPool_before(device, pCreateInfo, pAllocator, pQueryPool);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateQueryPool(device, pCreateInfo, pAllocator, pQueryPool);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pQueryPool=" + ptrToString((void*)pQueryPool) + '!');
 #ifdef CREATEQUERYPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateQueryPool_after(device, pCreateInfo, pAllocator, pQueryPool);
@@ -4651,9 +4181,6 @@ layer_DestroyQueryPool_before(device, queryPool, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyQueryPool(device, queryPool, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYQUERYPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyQueryPool_after(device, queryPool, pAllocator);
@@ -4675,14 +4202,6 @@ layer_GetQueryPoolResults_before(device, queryPool, firstQuery, queryCount, data
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetQueryPoolResults(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
-winsockSendToUI(&ConnectSocket,"queryCount=" + std::to_string(queryCount) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + ptrToString((void*)stride) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void*)flags) + '!');
 #ifdef GETQUERYPOOLRESULTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetQueryPoolResults_after(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
@@ -4705,10 +4224,6 @@ layer_ResetQueryPool_before(device, queryPool, firstQuery, queryCount);
 }
 #endif 
 device_dispatch[GetKey(device)].ResetQueryPool(device, queryPool, firstQuery, queryCount);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
-winsockSendToUI(&ConnectSocket,"queryCount=" + std::to_string(queryCount) + '!');
 #ifdef RESETQUERYPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ResetQueryPool_after(device, queryPool, firstQuery, queryCount);
@@ -4730,10 +4245,6 @@ layer_CreateBuffer_before(device, pCreateInfo, pAllocator, pBuffer);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateBuffer(device, pCreateInfo, pAllocator, pBuffer);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pBuffer=" + ptrToString((void*)pBuffer) + '!');
 #ifdef CREATEBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateBuffer_after(device, pCreateInfo, pAllocator, pBuffer);
@@ -4756,9 +4267,6 @@ layer_DestroyBuffer_before(device, buffer, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyBuffer(device, buffer, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyBuffer_after(device, buffer, pAllocator);
@@ -4780,10 +4288,6 @@ layer_CreateBufferView_before(device, pCreateInfo, pAllocator, pView);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateBufferView(device, pCreateInfo, pAllocator, pView);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pView=" + ptrToString((void*)pView) + '!');
 #ifdef CREATEBUFFERVIEW_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateBufferView_after(device, pCreateInfo, pAllocator, pView);
@@ -4806,9 +4310,6 @@ layer_DestroyBufferView_before(device, bufferView, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyBufferView(device, bufferView, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"bufferView=" + ptrToString((void*)bufferView) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYBUFFERVIEW_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyBufferView_after(device, bufferView, pAllocator);
@@ -4830,10 +4331,6 @@ layer_CreateImage_before(device, pCreateInfo, pAllocator, pImage);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateImage(device, pCreateInfo, pAllocator, pImage);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pImage=" + ptrToString((void*)pImage) + '!');
 #ifdef CREATEIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateImage_after(device, pCreateInfo, pAllocator, pImage);
@@ -4856,9 +4353,6 @@ layer_DestroyImage_before(device, image, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyImage(device, image, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void*)image) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyImage_after(device, image, pAllocator);
@@ -4880,10 +4374,6 @@ layer_GetImageSubresourceLayout_before(device, image, pSubresource, pLayout);
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageSubresourceLayout(device, image, pSubresource, pLayout);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void*)image) + '!');
-winsockSendToUI(&ConnectSocket,"pSubresource=" + ptrToString((void*)pSubresource) + '!');
-winsockSendToUI(&ConnectSocket,"pLayout=" + ptrToString((void*)pLayout) + '!');
 #ifdef GETIMAGESUBRESOURCELAYOUT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageSubresourceLayout_after(device, image, pSubresource, pLayout);
@@ -4905,10 +4395,6 @@ layer_CreateImageView_before(device, pCreateInfo, pAllocator, pView);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateImageView(device, pCreateInfo, pAllocator, pView);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pView=" + ptrToString((void*)pView) + '!');
 #ifdef CREATEIMAGEVIEW_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateImageView_after(device, pCreateInfo, pAllocator, pView);
@@ -4931,9 +4417,6 @@ layer_DestroyImageView_before(device, imageView, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyImageView(device, imageView, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"imageView=" + ptrToString((void*)imageView) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYIMAGEVIEW_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyImageView_after(device, imageView, pAllocator);
@@ -4955,10 +4438,6 @@ layer_CreateShaderModule_before(device, pCreateInfo, pAllocator, pShaderModule);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateShaderModule(device, pCreateInfo, pAllocator, pShaderModule);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pShaderModule=" + ptrToString((void*)pShaderModule) + '!');
 #ifdef CREATESHADERMODULE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateShaderModule_after(device, pCreateInfo, pAllocator, pShaderModule);
@@ -4981,9 +4460,6 @@ layer_DestroyShaderModule_before(device, shaderModule, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyShaderModule(device, shaderModule, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"shaderModule=" + ptrToString((void*)shaderModule) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYSHADERMODULE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyShaderModule_after(device, shaderModule, pAllocator);
@@ -5005,10 +4481,6 @@ layer_CreatePipelineCache_before(device, pCreateInfo, pAllocator, pPipelineCache
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreatePipelineCache(device, pCreateInfo, pAllocator, pPipelineCache);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pPipelineCache=" + ptrToString((void*)pPipelineCache) + '!');
 #ifdef CREATEPIPELINECACHE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreatePipelineCache_after(device, pCreateInfo, pAllocator, pPipelineCache);
@@ -5031,9 +4503,6 @@ layer_DestroyPipelineCache_before(device, pipelineCache, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyPipelineCache(device, pipelineCache, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineCache=" + ptrToString((void*)pipelineCache) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYPIPELINECACHE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyPipelineCache_after(device, pipelineCache, pAllocator);
@@ -5055,10 +4524,6 @@ layer_GetPipelineCacheData_before(device, pipelineCache, pDataSize, pData);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPipelineCacheData(device, pipelineCache, pDataSize, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineCache=" + ptrToString((void*)pipelineCache) + '!');
-winsockSendToUI(&ConnectSocket,"pDataSize=" + ptrToString((void*)pDataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETPIPELINECACHEDATA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPipelineCacheData_after(device, pipelineCache, pDataSize, pData);
@@ -5081,10 +4546,6 @@ layer_MergePipelineCaches_before(device, dstCache, srcCacheCount, pSrcCaches);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].MergePipelineCaches(device, dstCache, srcCacheCount, pSrcCaches);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"dstCache=" + ptrToString((void*)dstCache) + '!');
-winsockSendToUI(&ConnectSocket,"srcCacheCount=" + std::to_string(srcCacheCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSrcCaches=" + ptrToString((void*)pSrcCaches) + '!');
 #ifdef MERGEPIPELINECACHES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_MergePipelineCaches_after(device, dstCache, srcCacheCount, pSrcCaches);
@@ -5107,12 +4568,6 @@ layer_CreateGraphicsPipelines_before(device, pipelineCache, createInfoCount, pCr
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateGraphicsPipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineCache=" + ptrToString((void*)pipelineCache) + '!');
-winsockSendToUI(&ConnectSocket,"createInfoCount=" + std::to_string(createInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos=" + ptrToString((void*)pCreateInfos) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pPipelines=" + ptrToString((void*)pPipelines) + '!');
 #ifdef CREATEGRAPHICSPIPELINES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateGraphicsPipelines_after(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
@@ -5135,12 +4590,6 @@ layer_CreateComputePipelines_before(device, pipelineCache, createInfoCount, pCre
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateComputePipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineCache=" + ptrToString((void*)pipelineCache) + '!');
-winsockSendToUI(&ConnectSocket,"createInfoCount=" + std::to_string(createInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos=" + ptrToString((void*)pCreateInfos) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pPipelines=" + ptrToString((void*)pPipelines) + '!');
 #ifdef CREATECOMPUTEPIPELINES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateComputePipelines_after(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
@@ -5163,9 +4612,6 @@ layer_GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI_before(device, renderpass, p
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(device, renderpass, pMaxWorkgroupSize);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"renderpass=" + ptrToString((void*)renderpass) + '!');
-winsockSendToUI(&ConnectSocket,"pMaxWorkgroupSize=" + ptrToString((void*)pMaxWorkgroupSize) + '!');
 #ifdef GETDEVICESUBPASSSHADINGMAXWORKGROUPSIZEHUAWEI_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI_after(device, renderpass, pMaxWorkgroupSize);
@@ -5188,9 +4634,6 @@ layer_DestroyPipeline_before(device, pipeline, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyPipeline(device, pipeline, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void*)pipeline) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYPIPELINE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyPipeline_after(device, pipeline, pAllocator);
@@ -5212,10 +4655,6 @@ layer_CreatePipelineLayout_before(device, pCreateInfo, pAllocator, pPipelineLayo
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreatePipelineLayout(device, pCreateInfo, pAllocator, pPipelineLayout);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pPipelineLayout=" + ptrToString((void*)pPipelineLayout) + '!');
 #ifdef CREATEPIPELINELAYOUT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreatePipelineLayout_after(device, pCreateInfo, pAllocator, pPipelineLayout);
@@ -5238,9 +4677,6 @@ layer_DestroyPipelineLayout_before(device, pipelineLayout, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyPipelineLayout(device, pipelineLayout, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineLayout=" + ptrToString((void*)pipelineLayout) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYPIPELINELAYOUT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyPipelineLayout_after(device, pipelineLayout, pAllocator);
@@ -5262,10 +4698,6 @@ layer_CreateSampler_before(device, pCreateInfo, pAllocator, pSampler);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateSampler(device, pCreateInfo, pAllocator, pSampler);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSampler=" + ptrToString((void*)pSampler) + '!');
 #ifdef CREATESAMPLER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateSampler_after(device, pCreateInfo, pAllocator, pSampler);
@@ -5288,9 +4720,6 @@ layer_DestroySampler_before(device, sampler, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroySampler(device, sampler, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"sampler=" + ptrToString((void*)sampler) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYSAMPLER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroySampler_after(device, sampler, pAllocator);
@@ -5312,10 +4741,6 @@ layer_CreateDescriptorSetLayout_before(device, pCreateInfo, pAllocator, pSetLayo
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateDescriptorSetLayout(device, pCreateInfo, pAllocator, pSetLayout);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSetLayout=" + ptrToString((void*)pSetLayout) + '!');
 #ifdef CREATEDESCRIPTORSETLAYOUT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDescriptorSetLayout_after(device, pCreateInfo, pAllocator, pSetLayout);
@@ -5338,9 +4763,6 @@ layer_DestroyDescriptorSetLayout_before(device, descriptorSetLayout, pAllocator)
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyDescriptorSetLayout(device, descriptorSetLayout, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorSetLayout=" + ptrToString((void*)descriptorSetLayout) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYDESCRIPTORSETLAYOUT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyDescriptorSetLayout_after(device, descriptorSetLayout, pAllocator);
@@ -5362,10 +4784,6 @@ layer_CreateDescriptorPool_before(device, pCreateInfo, pAllocator, pDescriptorPo
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateDescriptorPool(device, pCreateInfo, pAllocator, pDescriptorPool);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorPool=" + ptrToString((void*)pDescriptorPool) + '!');
 #ifdef CREATEDESCRIPTORPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDescriptorPool_after(device, pCreateInfo, pAllocator, pDescriptorPool);
@@ -5388,9 +4806,6 @@ layer_DestroyDescriptorPool_before(device, descriptorPool, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyDescriptorPool(device, descriptorPool, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorPool=" + ptrToString((void*)descriptorPool) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYDESCRIPTORPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyDescriptorPool_after(device, descriptorPool, pAllocator);
@@ -5412,9 +4827,6 @@ layer_ResetDescriptorPool_before(device, descriptorPool, flags);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ResetDescriptorPool(device, descriptorPool, flags);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorPool=" + ptrToString((void*)descriptorPool) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void*)flags) + '!');
 #ifdef RESETDESCRIPTORPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ResetDescriptorPool_after(device, descriptorPool, flags);
@@ -5437,9 +4849,6 @@ layer_AllocateDescriptorSets_before(device, pAllocateInfo, pDescriptorSets);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].AllocateDescriptorSets(device, pAllocateInfo, pDescriptorSets);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocateInfo=" + ptrToString((void*)pAllocateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorSets=" + ptrToString((void*)pDescriptorSets) + '!');
 #ifdef ALLOCATEDESCRIPTORSETS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AllocateDescriptorSets_after(device, pAllocateInfo, pDescriptorSets);
@@ -5462,10 +4871,6 @@ layer_FreeDescriptorSets_before(device, descriptorPool, descriptorSetCount, pDes
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].FreeDescriptorSets(device, descriptorPool, descriptorSetCount, pDescriptorSets);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorPool=" + ptrToString((void*)descriptorPool) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorSetCount=" + std::to_string(descriptorSetCount) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorSets=" + ptrToString((void*)pDescriptorSets) + '!');
 #ifdef FREEDESCRIPTORSETS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_FreeDescriptorSets_after(device, descriptorPool, descriptorSetCount, pDescriptorSets);
@@ -5488,11 +4893,6 @@ layer_UpdateDescriptorSets_before(device, descriptorWriteCount, pDescriptorWrite
 }
 #endif 
 device_dispatch[GetKey(device)].UpdateDescriptorSets(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorWriteCount=" + std::to_string(descriptorWriteCount) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites=" + ptrToString((void*)pDescriptorWrites) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorCopyCount=" + std::to_string(descriptorCopyCount) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorCopies=" + ptrToString((void*)pDescriptorCopies) + '!');
 #ifdef UPDATEDESCRIPTORSETS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_UpdateDescriptorSets_after(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies);
@@ -5514,10 +4914,6 @@ layer_CreateFramebuffer_before(device, pCreateInfo, pAllocator, pFramebuffer);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateFramebuffer(device, pCreateInfo, pAllocator, pFramebuffer);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pFramebuffer=" + ptrToString((void*)pFramebuffer) + '!');
 #ifdef CREATEFRAMEBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateFramebuffer_after(device, pCreateInfo, pAllocator, pFramebuffer);
@@ -5540,9 +4936,6 @@ layer_DestroyFramebuffer_before(device, framebuffer, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyFramebuffer(device, framebuffer, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"framebuffer=" + ptrToString((void*)framebuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYFRAMEBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyFramebuffer_after(device, framebuffer, pAllocator);
@@ -5564,10 +4957,6 @@ layer_CreateRenderPass_before(device, pCreateInfo, pAllocator, pRenderPass);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateRenderPass(device, pCreateInfo, pAllocator, pRenderPass);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPass=" + ptrToString((void*)pRenderPass) + '!');
 #ifdef CREATERENDERPASS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateRenderPass_after(device, pCreateInfo, pAllocator, pRenderPass);
@@ -5590,9 +4979,6 @@ layer_DestroyRenderPass_before(device, renderPass, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyRenderPass(device, renderPass, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"renderPass=" + ptrToString((void*)renderPass) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYRENDERPASS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyRenderPass_after(device, renderPass, pAllocator);
@@ -5614,9 +5000,6 @@ layer_GetRenderAreaGranularity_before(device, renderPass, pGranularity);
 }
 #endif 
 device_dispatch[GetKey(device)].GetRenderAreaGranularity(device, renderPass, pGranularity);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"renderPass=" + ptrToString((void*)renderPass) + '!');
-winsockSendToUI(&ConnectSocket,"pGranularity=" + ptrToString((void*)pGranularity) + '!');
 #ifdef GETRENDERAREAGRANULARITY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRenderAreaGranularity_after(device, renderPass, pGranularity);
@@ -5638,9 +5021,6 @@ layer_GetRenderingAreaGranularityKHR_before(device, pRenderingAreaInfo, pGranula
 }
 #endif 
 device_dispatch[GetKey(device)].GetRenderingAreaGranularityKHR(device, pRenderingAreaInfo, pGranularity);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingAreaInfo=" + ptrToString((void*)pRenderingAreaInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pGranularity=" + ptrToString((void*)pGranularity) + '!');
 #ifdef GETRENDERINGAREAGRANULARITYKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRenderingAreaGranularityKHR_after(device, pRenderingAreaInfo, pGranularity);
@@ -5662,10 +5042,6 @@ layer_CreateCommandPool_before(device, pCreateInfo, pAllocator, pCommandPool);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateCommandPool(device, pCreateInfo, pAllocator, pCommandPool);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pCommandPool=" + ptrToString((void*)pCommandPool) + '!');
 #ifdef CREATECOMMANDPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateCommandPool_after(device, pCreateInfo, pAllocator, pCommandPool);
@@ -5688,9 +5064,6 @@ layer_DestroyCommandPool_before(device, commandPool, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyCommandPool(device, commandPool, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"commandPool=" + ptrToString((void*)commandPool) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYCOMMANDPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyCommandPool_after(device, commandPool, pAllocator);
@@ -5712,9 +5085,6 @@ layer_ResetCommandPool_before(device, commandPool, flags);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ResetCommandPool(device, commandPool, flags);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"commandPool=" + ptrToString((void*)commandPool) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void*)flags) + '!');
 #ifdef RESETCOMMANDPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ResetCommandPool_after(device, commandPool, flags);
@@ -5737,9 +5107,6 @@ layer_AllocateCommandBuffers_before(device, pAllocateInfo, pCommandBuffers);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].AllocateCommandBuffers(device, pAllocateInfo, pCommandBuffers);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocateInfo=" + ptrToString((void*)pAllocateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pCommandBuffers=" + ptrToString((void*)pCommandBuffers) + '!');
 #ifdef ALLOCATECOMMANDBUFFERS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AllocateCommandBuffers_after(device, pAllocateInfo, pCommandBuffers);
@@ -5762,10 +5129,6 @@ layer_FreeCommandBuffers_before(device, commandPool, commandBufferCount, pComman
 }
 #endif 
 device_dispatch[GetKey(device)].FreeCommandBuffers(device, commandPool, commandBufferCount, pCommandBuffers);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"commandPool=" + ptrToString((void*)commandPool) + '!');
-winsockSendToUI(&ConnectSocket,"commandBufferCount=" + std::to_string(commandBufferCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCommandBuffers=" + ptrToString((void*)pCommandBuffers) + '!');
 #ifdef FREECOMMANDBUFFERS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_FreeCommandBuffers_after(device, commandPool, commandBufferCount, pCommandBuffers);
@@ -5787,8 +5150,6 @@ layer_BeginCommandBuffer_before(commandBuffer, pBeginInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(commandBuffer)].BeginCommandBuffer(commandBuffer, pBeginInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo=" + ptrToString((void*)pBeginInfo) + '!');
 #ifdef BEGINCOMMANDBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BeginCommandBuffer_after(commandBuffer, pBeginInfo);
@@ -5811,7 +5172,6 @@ layer_EndCommandBuffer_before(commandBuffer);
 }
 #endif 
 auto ret = device_dispatch[GetKey(commandBuffer)].EndCommandBuffer(commandBuffer);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
 #ifdef ENDCOMMANDBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_EndCommandBuffer_after(commandBuffer);
@@ -5834,8 +5194,6 @@ layer_ResetCommandBuffer_before(commandBuffer, flags);
 }
 #endif 
 auto ret = device_dispatch[GetKey(commandBuffer)].ResetCommandBuffer(commandBuffer, flags);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void*)flags) + '!');
 #ifdef RESETCOMMANDBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ResetCommandBuffer_after(commandBuffer, flags);
@@ -5858,9 +5216,6 @@ layer_CmdBindPipeline_before(commandBuffer, pipelineBindPoint, pipeline);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindPipeline(commandBuffer, pipelineBindPoint, pipeline);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineBindPoint=" + std::to_string(pipelineBindPoint) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void*)pipeline) + '!');
 #ifdef CMDBINDPIPELINE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindPipeline_after(commandBuffer, pipelineBindPoint, pipeline);
@@ -5882,8 +5237,6 @@ layer_CmdSetAttachmentFeedbackLoopEnableEXT_before(commandBuffer, aspectMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetAttachmentFeedbackLoopEnableEXT(commandBuffer, aspectMask);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"aspectMask=" + ptrToString((void*)aspectMask) + '!');
 #ifdef CMDSETATTACHMENTFEEDBACKLOOPENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetAttachmentFeedbackLoopEnableEXT_after(commandBuffer, aspectMask);
@@ -5905,10 +5258,6 @@ layer_CmdSetViewport_before(commandBuffer, firstViewport, viewportCount, pViewpo
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetViewport(commandBuffer, firstViewport, viewportCount, pViewports);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstViewport=" + std::to_string(firstViewport) + '!');
-winsockSendToUI(&ConnectSocket,"viewportCount=" + std::to_string(viewportCount) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports=" + ptrToString((void*)pViewports) + '!');
 #ifdef CMDSETVIEWPORT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetViewport_after(commandBuffer, firstViewport, viewportCount, pViewports);
@@ -5930,10 +5279,6 @@ layer_CmdSetScissor_before(commandBuffer, firstScissor, scissorCount, pScissors)
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetScissor(commandBuffer, firstScissor, scissorCount, pScissors);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstScissor=" + std::to_string(firstScissor) + '!');
-winsockSendToUI(&ConnectSocket,"scissorCount=" + std::to_string(scissorCount) + '!');
-winsockSendToUI(&ConnectSocket,"pScissors=" + ptrToString((void*)pScissors) + '!');
 #ifdef CMDSETSCISSOR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetScissor_after(commandBuffer, firstScissor, scissorCount, pScissors);
@@ -5955,8 +5300,6 @@ layer_CmdSetLineWidth_before(commandBuffer, lineWidth);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetLineWidth(commandBuffer, lineWidth);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"lineWidth=" + std::to_string(lineWidth) + '!');
 #ifdef CMDSETLINEWIDTH_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetLineWidth_after(commandBuffer, lineWidth);
@@ -5978,10 +5321,6 @@ layer_CmdSetDepthBias_before(commandBuffer, depthBiasConstantFactor, depthBiasCl
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBias(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"depthBiasConstantFactor=" + std::to_string(depthBiasConstantFactor) + '!');
-winsockSendToUI(&ConnectSocket,"depthBiasClamp=" + std::to_string(depthBiasClamp) + '!');
-winsockSendToUI(&ConnectSocket,"depthBiasSlopeFactor=" + std::to_string(depthBiasSlopeFactor) + '!');
 #ifdef CMDSETDEPTHBIAS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthBias_after(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
@@ -6003,8 +5342,6 @@ layer_CmdSetBlendConstants_before(commandBuffer, blendConstants);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetBlendConstants(commandBuffer, blendConstants);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"blendConstants=" + ptrToString((void*)blendConstants) + '!');
 #ifdef CMDSETBLENDCONSTANTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetBlendConstants_after(commandBuffer, blendConstants);
@@ -6026,9 +5363,6 @@ layer_CmdSetDepthBounds_before(commandBuffer, minDepthBounds, maxDepthBounds);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBounds(commandBuffer, minDepthBounds, maxDepthBounds);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"minDepthBounds=" + std::to_string(minDepthBounds) + '!');
-winsockSendToUI(&ConnectSocket,"maxDepthBounds=" + std::to_string(maxDepthBounds) + '!');
 #ifdef CMDSETDEPTHBOUNDS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthBounds_after(commandBuffer, minDepthBounds, maxDepthBounds);
@@ -6050,9 +5384,6 @@ layer_CmdSetStencilCompareMask_before(commandBuffer, faceMask, compareMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilCompareMask(commandBuffer, faceMask, compareMask);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"faceMask=" + ptrToString((void*)faceMask) + '!');
-winsockSendToUI(&ConnectSocket,"compareMask=" + std::to_string(compareMask) + '!');
 #ifdef CMDSETSTENCILCOMPAREMASK_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetStencilCompareMask_after(commandBuffer, faceMask, compareMask);
@@ -6074,9 +5405,6 @@ layer_CmdSetStencilWriteMask_before(commandBuffer, faceMask, writeMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilWriteMask(commandBuffer, faceMask, writeMask);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"faceMask=" + ptrToString((void*)faceMask) + '!');
-winsockSendToUI(&ConnectSocket,"writeMask=" + std::to_string(writeMask) + '!');
 #ifdef CMDSETSTENCILWRITEMASK_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetStencilWriteMask_after(commandBuffer, faceMask, writeMask);
@@ -6098,9 +5426,6 @@ layer_CmdSetStencilReference_before(commandBuffer, faceMask, reference);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilReference(commandBuffer, faceMask, reference);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"faceMask=" + ptrToString((void*)faceMask) + '!');
-winsockSendToUI(&ConnectSocket,"reference=" + std::to_string(reference) + '!');
 #ifdef CMDSETSTENCILREFERENCE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetStencilReference_after(commandBuffer, faceMask, reference);
@@ -6122,14 +5447,6 @@ layer_CmdBindDescriptorSets_before(commandBuffer, pipelineBindPoint, layout, fir
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorSets(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineBindPoint=" + std::to_string(pipelineBindPoint) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void*)layout) + '!');
-winsockSendToUI(&ConnectSocket,"firstSet=" + std::to_string(firstSet) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorSetCount=" + std::to_string(descriptorSetCount) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorSets=" + ptrToString((void*)pDescriptorSets) + '!');
-winsockSendToUI(&ConnectSocket,"dynamicOffsetCount=" + std::to_string(dynamicOffsetCount) + '!');
-winsockSendToUI(&ConnectSocket,"pDynamicOffsets=" + ptrToString((void*)pDynamicOffsets) + '!');
 #ifdef CMDBINDDESCRIPTORSETS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindDescriptorSets_after(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
@@ -6151,10 +5468,6 @@ layer_CmdBindIndexBuffer_before(commandBuffer, buffer, offset, indexType);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindIndexBuffer(commandBuffer, buffer, offset, indexType);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"indexType=" + std::to_string(indexType) + '!');
 #ifdef CMDBINDINDEXBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindIndexBuffer_after(commandBuffer, buffer, offset, indexType);
@@ -6176,11 +5489,6 @@ layer_CmdBindVertexBuffers_before(commandBuffer, firstBinding, bindingCount, pBu
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstBinding=" + std::to_string(firstBinding) + '!');
-winsockSendToUI(&ConnectSocket,"bindingCount=" + std::to_string(bindingCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBuffers=" + ptrToString((void*)pBuffers) + '!');
-winsockSendToUI(&ConnectSocket,"pOffsets=" + ptrToString((void*)pOffsets) + '!');
 #ifdef CMDBINDVERTEXBUFFERS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindVertexBuffers_after(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets);
@@ -6202,11 +5510,6 @@ layer_CmdDraw_before(commandBuffer, vertexCount, instanceCount, firstVertex, fir
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"vertexCount=" + std::to_string(vertexCount) + '!');
-winsockSendToUI(&ConnectSocket,"instanceCount=" + std::to_string(instanceCount) + '!');
-winsockSendToUI(&ConnectSocket,"firstVertex=" + std::to_string(firstVertex) + '!');
-winsockSendToUI(&ConnectSocket,"firstInstance=" + std::to_string(firstInstance) + '!');
 #ifdef CMDDRAW_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDraw_after(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
@@ -6228,12 +5531,6 @@ layer_CmdDrawIndexed_before(commandBuffer, indexCount, instanceCount, firstIndex
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"indexCount=" + std::to_string(indexCount) + '!');
-winsockSendToUI(&ConnectSocket,"instanceCount=" + std::to_string(instanceCount) + '!');
-winsockSendToUI(&ConnectSocket,"firstIndex=" + std::to_string(firstIndex) + '!');
-winsockSendToUI(&ConnectSocket,"vertexOffset=" + std::to_string(vertexOffset) + '!');
-winsockSendToUI(&ConnectSocket,"firstInstance=" + std::to_string(firstInstance) + '!');
 #ifdef CMDDRAWINDEXED_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndexed_after(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
@@ -6255,12 +5552,6 @@ layer_CmdDrawMultiEXT_before(commandBuffer, drawCount, pVertexInfo, instanceCoun
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMultiEXT(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"drawCount=" + std::to_string(drawCount) + '!');
-winsockSendToUI(&ConnectSocket,"pVertexInfo=" + ptrToString((void*)pVertexInfo) + '!');
-winsockSendToUI(&ConnectSocket,"instanceCount=" + std::to_string(instanceCount) + '!');
-winsockSendToUI(&ConnectSocket,"firstInstance=" + std::to_string(firstInstance) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDDRAWMULTIEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMultiEXT_after(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride);
@@ -6282,13 +5573,6 @@ layer_CmdDrawMultiIndexedEXT_before(commandBuffer, drawCount, pIndexInfo, instan
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMultiIndexedEXT(commandBuffer, drawCount, pIndexInfo, instanceCount, firstInstance, stride, pVertexOffset);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"drawCount=" + std::to_string(drawCount) + '!');
-winsockSendToUI(&ConnectSocket,"pIndexInfo=" + ptrToString((void*)pIndexInfo) + '!');
-winsockSendToUI(&ConnectSocket,"instanceCount=" + std::to_string(instanceCount) + '!');
-winsockSendToUI(&ConnectSocket,"firstInstance=" + std::to_string(firstInstance) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-winsockSendToUI(&ConnectSocket,"pVertexOffset=" + ptrToString((void*)pVertexOffset) + '!');
 #ifdef CMDDRAWMULTIINDEXEDEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMultiIndexedEXT_after(commandBuffer, drawCount, pIndexInfo, instanceCount, firstInstance, stride, pVertexOffset);
@@ -6310,11 +5594,6 @@ layer_CmdDrawIndirect_before(commandBuffer, buffer, offset, drawCount, stride);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirect(commandBuffer, buffer, offset, drawCount, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"drawCount=" + std::to_string(drawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDDRAWINDIRECT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndirect_after(commandBuffer, buffer, offset, drawCount, stride);
@@ -6336,11 +5615,6 @@ layer_CmdDrawIndexedIndirect_before(commandBuffer, buffer, offset, drawCount, st
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirect(commandBuffer, buffer, offset, drawCount, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"drawCount=" + std::to_string(drawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDDRAWINDEXEDINDIRECT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndexedIndirect_after(commandBuffer, buffer, offset, drawCount, stride);
@@ -6362,10 +5636,6 @@ layer_CmdDispatch_before(commandBuffer, groupCountX, groupCountY, groupCountZ);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountX=" + std::to_string(groupCountX) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountY=" + std::to_string(groupCountY) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountZ=" + std::to_string(groupCountZ) + '!');
 #ifdef CMDDISPATCH_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDispatch_after(commandBuffer, groupCountX, groupCountY, groupCountZ);
@@ -6387,9 +5657,6 @@ layer_CmdDispatchIndirect_before(commandBuffer, buffer, offset);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDispatchIndirect(commandBuffer, buffer, offset);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
 #ifdef CMDDISPATCHINDIRECT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDispatchIndirect_after(commandBuffer, buffer, offset);
@@ -6411,7 +5678,6 @@ layer_CmdSubpassShadingHUAWEI_before(commandBuffer);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSubpassShadingHUAWEI(commandBuffer);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
 #ifdef CMDSUBPASSSHADINGHUAWEI_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSubpassShadingHUAWEI_after(commandBuffer);
@@ -6433,10 +5699,6 @@ layer_CmdDrawClusterHUAWEI_before(commandBuffer, groupCountX, groupCountY, group
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawClusterHUAWEI(commandBuffer, groupCountX, groupCountY, groupCountZ);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountX=" + std::to_string(groupCountX) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountY=" + std::to_string(groupCountY) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountZ=" + std::to_string(groupCountZ) + '!');
 #ifdef CMDDRAWCLUSTERHUAWEI_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawClusterHUAWEI_after(commandBuffer, groupCountX, groupCountY, groupCountZ);
@@ -6458,9 +5720,6 @@ layer_CmdDrawClusterIndirectHUAWEI_before(commandBuffer, buffer, offset);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawClusterIndirectHUAWEI(commandBuffer, buffer, offset);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
 #ifdef CMDDRAWCLUSTERINDIRECTHUAWEI_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawClusterIndirectHUAWEI_after(commandBuffer, buffer, offset);
@@ -6482,9 +5741,6 @@ layer_CmdUpdatePipelineIndirectBufferNV_before(commandBuffer, pipelineBindPoint,
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdUpdatePipelineIndirectBufferNV(commandBuffer, pipelineBindPoint, pipeline);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineBindPoint=" + std::to_string(pipelineBindPoint) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void*)pipeline) + '!');
 #ifdef CMDUPDATEPIPELINEINDIRECTBUFFERNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdUpdatePipelineIndirectBufferNV_after(commandBuffer, pipelineBindPoint, pipeline);
@@ -6506,11 +5762,6 @@ layer_CmdCopyBuffer_before(commandBuffer, srcBuffer, dstBuffer, regionCount, pRe
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"srcBuffer=" + ptrToString((void*)srcBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"dstBuffer=" + ptrToString((void*)dstBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"regionCount=" + std::to_string(regionCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions=" + ptrToString((void*)pRegions) + '!');
 #ifdef CMDCOPYBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyBuffer_after(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
@@ -6532,13 +5783,6 @@ layer_CmdCopyImage_before(commandBuffer, srcImage, srcImageLayout, dstImage, dst
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"srcImage=" + ptrToString((void*)srcImage) + '!');
-winsockSendToUI(&ConnectSocket,"srcImageLayout=" + std::to_string(srcImageLayout) + '!');
-winsockSendToUI(&ConnectSocket,"dstImage=" + ptrToString((void*)dstImage) + '!');
-winsockSendToUI(&ConnectSocket,"dstImageLayout=" + std::to_string(dstImageLayout) + '!');
-winsockSendToUI(&ConnectSocket,"regionCount=" + std::to_string(regionCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions=" + ptrToString((void*)pRegions) + '!');
 #ifdef CMDCOPYIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyImage_after(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
@@ -6560,14 +5804,6 @@ layer_CmdBlitImage_before(commandBuffer, srcImage, srcImageLayout, dstImage, dst
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBlitImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"srcImage=" + ptrToString((void*)srcImage) + '!');
-winsockSendToUI(&ConnectSocket,"srcImageLayout=" + std::to_string(srcImageLayout) + '!');
-winsockSendToUI(&ConnectSocket,"dstImage=" + ptrToString((void*)dstImage) + '!');
-winsockSendToUI(&ConnectSocket,"dstImageLayout=" + std::to_string(dstImageLayout) + '!');
-winsockSendToUI(&ConnectSocket,"regionCount=" + std::to_string(regionCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions=" + ptrToString((void*)pRegions) + '!');
-winsockSendToUI(&ConnectSocket,"filter=" + std::to_string(filter) + '!');
 #ifdef CMDBLITIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBlitImage_after(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter);
@@ -6589,12 +5825,6 @@ layer_CmdCopyBufferToImage_before(commandBuffer, srcBuffer, dstImage, dstImageLa
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"srcBuffer=" + ptrToString((void*)srcBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"dstImage=" + ptrToString((void*)dstImage) + '!');
-winsockSendToUI(&ConnectSocket,"dstImageLayout=" + std::to_string(dstImageLayout) + '!');
-winsockSendToUI(&ConnectSocket,"regionCount=" + std::to_string(regionCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions=" + ptrToString((void*)pRegions) + '!');
 #ifdef CMDCOPYBUFFERTOIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyBufferToImage_after(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
@@ -6616,12 +5846,6 @@ layer_CmdCopyImageToBuffer_before(commandBuffer, srcImage, srcImageLayout, dstBu
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"srcImage=" + ptrToString((void*)srcImage) + '!');
-winsockSendToUI(&ConnectSocket,"srcImageLayout=" + std::to_string(srcImageLayout) + '!');
-winsockSendToUI(&ConnectSocket,"dstBuffer=" + ptrToString((void*)dstBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"regionCount=" + std::to_string(regionCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions=" + ptrToString((void*)pRegions) + '!');
 #ifdef CMDCOPYIMAGETOBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyImageToBuffer_after(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
@@ -6643,10 +5867,6 @@ layer_CmdCopyMemoryIndirectNV_before(commandBuffer, copyBufferAddress, copyCount
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"copyBufferAddress=" + ptrToString((void*)copyBufferAddress) + '!');
-winsockSendToUI(&ConnectSocket,"copyCount=" + std::to_string(copyCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDCOPYMEMORYINDIRECTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyMemoryIndirectNV_after(commandBuffer, copyBufferAddress, copyCount, stride);
@@ -6668,13 +5888,6 @@ layer_CmdCopyMemoryToImageIndirectNV_before(commandBuffer, copyBufferAddress, co
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToImageIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"copyBufferAddress=" + ptrToString((void*)copyBufferAddress) + '!');
-winsockSendToUI(&ConnectSocket,"copyCount=" + std::to_string(copyCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-winsockSendToUI(&ConnectSocket,"dstImage=" + ptrToString((void*)dstImage) + '!');
-winsockSendToUI(&ConnectSocket,"dstImageLayout=" + std::to_string(dstImageLayout) + '!');
-winsockSendToUI(&ConnectSocket,"pImageSubresources=" + ptrToString((void*)pImageSubresources) + '!');
 #ifdef CMDCOPYMEMORYTOIMAGEINDIRECTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyMemoryToImageIndirectNV_after(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources);
@@ -6696,11 +5909,6 @@ layer_CmdUpdateBuffer_before(commandBuffer, dstBuffer, dstOffset, dataSize, pDat
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, dataSize, pData);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"dstBuffer=" + ptrToString((void*)dstBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"dstOffset=" + ptrToString((void*)dstOffset) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + ptrToString((void*)dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef CMDUPDATEBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdUpdateBuffer_after(commandBuffer, dstBuffer, dstOffset, dataSize, pData);
@@ -6722,11 +5930,6 @@ layer_CmdFillBuffer_before(commandBuffer, dstBuffer, dstOffset, size, data);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdFillBuffer(commandBuffer, dstBuffer, dstOffset, size, data);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"dstBuffer=" + ptrToString((void*)dstBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"dstOffset=" + ptrToString((void*)dstOffset) + '!');
-winsockSendToUI(&ConnectSocket,"size=" + ptrToString((void*)size) + '!');
-winsockSendToUI(&ConnectSocket,"data=" + std::to_string(data) + '!');
 #ifdef CMDFILLBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdFillBuffer_after(commandBuffer, dstBuffer, dstOffset, size, data);
@@ -6748,12 +5951,6 @@ layer_CmdClearColorImage_before(commandBuffer, image, imageLayout, pColor, range
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdClearColorImage(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void*)image) + '!');
-winsockSendToUI(&ConnectSocket,"imageLayout=" + std::to_string(imageLayout) + '!');
-winsockSendToUI(&ConnectSocket,"pColor=" + ptrToString((void*)pColor) + '!');
-winsockSendToUI(&ConnectSocket,"rangeCount=" + std::to_string(rangeCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRanges=" + ptrToString((void*)pRanges) + '!');
 #ifdef CMDCLEARCOLORIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdClearColorImage_after(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges);
@@ -6775,12 +5972,6 @@ layer_CmdClearDepthStencilImage_before(commandBuffer, image, imageLayout, pDepth
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdClearDepthStencilImage(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void*)image) + '!');
-winsockSendToUI(&ConnectSocket,"imageLayout=" + std::to_string(imageLayout) + '!');
-winsockSendToUI(&ConnectSocket,"pDepthStencil=" + ptrToString((void*)pDepthStencil) + '!');
-winsockSendToUI(&ConnectSocket,"rangeCount=" + std::to_string(rangeCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRanges=" + ptrToString((void*)pRanges) + '!');
 #ifdef CMDCLEARDEPTHSTENCILIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdClearDepthStencilImage_after(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges);
@@ -6802,11 +5993,6 @@ layer_CmdClearAttachments_before(commandBuffer, attachmentCount, pAttachments, r
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdClearAttachments(commandBuffer, attachmentCount, pAttachments, rectCount, pRects);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"attachmentCount=" + std::to_string(attachmentCount) + '!');
-winsockSendToUI(&ConnectSocket,"pAttachments=" + ptrToString((void*)pAttachments) + '!');
-winsockSendToUI(&ConnectSocket,"rectCount=" + std::to_string(rectCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRects=" + ptrToString((void*)pRects) + '!');
 #ifdef CMDCLEARATTACHMENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdClearAttachments_after(commandBuffer, attachmentCount, pAttachments, rectCount, pRects);
@@ -6828,13 +6014,6 @@ layer_CmdResolveImage_before(commandBuffer, srcImage, srcImageLayout, dstImage, 
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdResolveImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"srcImage=" + ptrToString((void*)srcImage) + '!');
-winsockSendToUI(&ConnectSocket,"srcImageLayout=" + std::to_string(srcImageLayout) + '!');
-winsockSendToUI(&ConnectSocket,"dstImage=" + ptrToString((void*)dstImage) + '!');
-winsockSendToUI(&ConnectSocket,"dstImageLayout=" + std::to_string(dstImageLayout) + '!');
-winsockSendToUI(&ConnectSocket,"regionCount=" + std::to_string(regionCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions=" + ptrToString((void*)pRegions) + '!');
 #ifdef CMDRESOLVEIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdResolveImage_after(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
@@ -6856,9 +6035,6 @@ layer_CmdSetEvent_before(commandBuffer, event, stageMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetEvent(commandBuffer, event, stageMask);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void*)event) + '!');
-winsockSendToUI(&ConnectSocket,"stageMask=" + ptrToString((void*)stageMask) + '!');
 #ifdef CMDSETEVENT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetEvent_after(commandBuffer, event, stageMask);
@@ -6880,9 +6056,6 @@ layer_CmdResetEvent_before(commandBuffer, event, stageMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdResetEvent(commandBuffer, event, stageMask);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void*)event) + '!');
-winsockSendToUI(&ConnectSocket,"stageMask=" + ptrToString((void*)stageMask) + '!');
 #ifdef CMDRESETEVENT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdResetEvent_after(commandBuffer, event, stageMask);
@@ -6904,17 +6077,6 @@ layer_CmdWaitEvents_before(commandBuffer, eventCount, pEvents, srcStageMask, dst
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWaitEvents(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"eventCount=" + std::to_string(eventCount) + '!');
-winsockSendToUI(&ConnectSocket,"pEvents=" + ptrToString((void*)pEvents) + '!');
-winsockSendToUI(&ConnectSocket,"srcStageMask=" + ptrToString((void*)srcStageMask) + '!');
-winsockSendToUI(&ConnectSocket,"dstStageMask=" + ptrToString((void*)dstStageMask) + '!');
-winsockSendToUI(&ConnectSocket,"memoryBarrierCount=" + std::to_string(memoryBarrierCount) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryBarriers=" + ptrToString((void*)pMemoryBarriers) + '!');
-winsockSendToUI(&ConnectSocket,"bufferMemoryBarrierCount=" + std::to_string(bufferMemoryBarrierCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers=" + ptrToString((void*)pBufferMemoryBarriers) + '!');
-winsockSendToUI(&ConnectSocket,"imageMemoryBarrierCount=" + std::to_string(imageMemoryBarrierCount) + '!');
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers=" + ptrToString((void*)pImageMemoryBarriers) + '!');
 #ifdef CMDWAITEVENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWaitEvents_after(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
@@ -6936,16 +6098,6 @@ layer_CmdPipelineBarrier_before(commandBuffer, srcStageMask, dstStageMask, depen
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"srcStageMask=" + ptrToString((void*)srcStageMask) + '!');
-winsockSendToUI(&ConnectSocket,"dstStageMask=" + ptrToString((void*)dstStageMask) + '!');
-winsockSendToUI(&ConnectSocket,"dependencyFlags=" + ptrToString((void*)dependencyFlags) + '!');
-winsockSendToUI(&ConnectSocket,"memoryBarrierCount=" + std::to_string(memoryBarrierCount) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryBarriers=" + ptrToString((void*)pMemoryBarriers) + '!');
-winsockSendToUI(&ConnectSocket,"bufferMemoryBarrierCount=" + std::to_string(bufferMemoryBarrierCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers=" + ptrToString((void*)pBufferMemoryBarriers) + '!');
-winsockSendToUI(&ConnectSocket,"imageMemoryBarrierCount=" + std::to_string(imageMemoryBarrierCount) + '!');
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers=" + ptrToString((void*)pImageMemoryBarriers) + '!');
 #ifdef CMDPIPELINEBARRIER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPipelineBarrier_after(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
@@ -6967,10 +6119,6 @@ layer_CmdBeginQuery_before(commandBuffer, queryPool, query, flags);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginQuery(commandBuffer, queryPool, query, flags);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"query=" + std::to_string(query) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void*)flags) + '!');
 #ifdef CMDBEGINQUERY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginQuery_after(commandBuffer, queryPool, query, flags);
@@ -6992,9 +6140,6 @@ layer_CmdEndQuery_before(commandBuffer, queryPool, query);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndQuery(commandBuffer, queryPool, query);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"query=" + std::to_string(query) + '!');
 #ifdef CMDENDQUERY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndQuery_after(commandBuffer, queryPool, query);
@@ -7016,8 +6161,6 @@ layer_CmdBeginConditionalRenderingEXT_before(commandBuffer, pConditionalRenderin
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginConditionalRenderingEXT(commandBuffer, pConditionalRenderingBegin);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pConditionalRenderingBegin=" + ptrToString((void*)pConditionalRenderingBegin) + '!');
 #ifdef CMDBEGINCONDITIONALRENDERINGEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginConditionalRenderingEXT_after(commandBuffer, pConditionalRenderingBegin);
@@ -7039,7 +6182,6 @@ layer_CmdEndConditionalRenderingEXT_before(commandBuffer);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndConditionalRenderingEXT(commandBuffer);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
 #ifdef CMDENDCONDITIONALRENDERINGEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndConditionalRenderingEXT_after(commandBuffer);
@@ -7061,10 +6203,6 @@ layer_CmdResetQueryPool_before(commandBuffer, queryPool, firstQuery, queryCount)
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdResetQueryPool(commandBuffer, queryPool, firstQuery, queryCount);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
-winsockSendToUI(&ConnectSocket,"queryCount=" + std::to_string(queryCount) + '!');
 #ifdef CMDRESETQUERYPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdResetQueryPool_after(commandBuffer, queryPool, firstQuery, queryCount);
@@ -7086,10 +6224,6 @@ layer_CmdWriteTimestamp_before(commandBuffer, pipelineStage, queryPool, query);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp(commandBuffer, pipelineStage, queryPool, query);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineStage=" + std::to_string(pipelineStage) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"query=" + std::to_string(query) + '!');
 #ifdef CMDWRITETIMESTAMP_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteTimestamp_after(commandBuffer, pipelineStage, queryPool, query);
@@ -7111,14 +6245,6 @@ layer_CmdCopyQueryPoolResults_before(commandBuffer, queryPool, firstQuery, query
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyQueryPoolResults(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
-winsockSendToUI(&ConnectSocket,"queryCount=" + std::to_string(queryCount) + '!');
-winsockSendToUI(&ConnectSocket,"dstBuffer=" + ptrToString((void*)dstBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"dstOffset=" + ptrToString((void*)dstOffset) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + ptrToString((void*)stride) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void*)flags) + '!');
 #ifdef CMDCOPYQUERYPOOLRESULTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyQueryPoolResults_after(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags);
@@ -7140,12 +6266,6 @@ layer_CmdPushConstants_before(commandBuffer, layout, stageFlags, offset, size, p
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPushConstants(commandBuffer, layout, stageFlags, offset, size, pValues);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void*)layout) + '!');
-winsockSendToUI(&ConnectSocket,"stageFlags=" + ptrToString((void*)stageFlags) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"size=" + std::to_string(size) + '!');
-winsockSendToUI(&ConnectSocket,"pValues=" + ptrToString((void*)pValues) + '!');
 #ifdef CMDPUSHCONSTANTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPushConstants_after(commandBuffer, layout, stageFlags, offset, size, pValues);
@@ -7167,9 +6287,6 @@ layer_CmdBeginRenderPass_before(commandBuffer, pRenderPassBegin, contents);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass(commandBuffer, pRenderPassBegin, contents);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin=" + ptrToString((void*)pRenderPassBegin) + '!');
-winsockSendToUI(&ConnectSocket,"contents=" + std::to_string(contents) + '!');
 #ifdef CMDBEGINRENDERPASS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginRenderPass_after(commandBuffer, pRenderPassBegin, contents);
@@ -7191,8 +6308,6 @@ layer_CmdNextSubpass_before(commandBuffer, contents);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdNextSubpass(commandBuffer, contents);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"contents=" + std::to_string(contents) + '!');
 #ifdef CMDNEXTSUBPASS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdNextSubpass_after(commandBuffer, contents);
@@ -7214,7 +6329,6 @@ layer_CmdEndRenderPass_before(commandBuffer);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass(commandBuffer);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
 #ifdef CMDENDRENDERPASS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndRenderPass_after(commandBuffer);
@@ -7236,9 +6350,6 @@ layer_CmdExecuteCommands_before(commandBuffer, commandBufferCount, pCommandBuffe
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdExecuteCommands(commandBuffer, commandBufferCount, pCommandBuffers);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"commandBufferCount=" + std::to_string(commandBufferCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCommandBuffers=" + ptrToString((void*)pCommandBuffers) + '!');
 #ifdef CMDEXECUTECOMMANDS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdExecuteCommands_after(commandBuffer, commandBufferCount, pCommandBuffers);
@@ -7260,11 +6371,6 @@ layer_CreateSharedSwapchainsKHR_before(device, swapchainCount, pCreateInfos, pAl
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateSharedSwapchainsKHR(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchainCount=" + std::to_string(swapchainCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos=" + ptrToString((void*)pCreateInfos) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSwapchains=" + ptrToString((void*)pSwapchains) + '!');
 #ifdef CREATESHAREDSWAPCHAINSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateSharedSwapchainsKHR_after(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains);
@@ -7287,10 +6393,6 @@ layer_CreateSwapchainKHR_before(device, pCreateInfo, pAllocator, pSwapchain);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateSwapchainKHR(device, pCreateInfo, pAllocator, pSwapchain);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSwapchain=" + ptrToString((void*)pSwapchain) + '!');
 #ifdef CREATESWAPCHAINKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateSwapchainKHR_after(device, pCreateInfo, pAllocator, pSwapchain);
@@ -7313,9 +6415,6 @@ layer_DestroySwapchainKHR_before(device, swapchain, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroySwapchainKHR(device, swapchain, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void*)swapchain) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYSWAPCHAINKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroySwapchainKHR_after(device, swapchain, pAllocator);
@@ -7337,10 +6436,6 @@ layer_GetSwapchainImagesKHR_before(device, swapchain, pSwapchainImageCount, pSwa
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSwapchainImagesKHR(device, swapchain, pSwapchainImageCount, pSwapchainImages);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void*)swapchain) + '!');
-winsockSendToUI(&ConnectSocket,"pSwapchainImageCount=" + ptrToString((void*)pSwapchainImageCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSwapchainImages=" + ptrToString((void*)pSwapchainImages) + '!');
 #ifdef GETSWAPCHAINIMAGESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSwapchainImagesKHR_after(device, swapchain, pSwapchainImageCount, pSwapchainImages);
@@ -7363,12 +6458,6 @@ layer_AcquireNextImageKHR_before(device, swapchain, timeout, semaphore, fence, p
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].AcquireNextImageKHR(device, swapchain, timeout, semaphore, fence, pImageIndex);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void*)swapchain) + '!');
-winsockSendToUI(&ConnectSocket,"timeout=" + std::to_string(timeout) + '!');
-winsockSendToUI(&ConnectSocket,"semaphore=" + ptrToString((void*)semaphore) + '!');
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void*)fence) + '!');
-winsockSendToUI(&ConnectSocket,"pImageIndex=" + ptrToString((void*)pImageIndex) + '!');
 #ifdef ACQUIRENEXTIMAGEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireNextImageKHR_after(device, swapchain, timeout, semaphore, fence, pImageIndex);
@@ -7391,8 +6480,6 @@ layer_QueuePresentKHR_before(queue, pPresentInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueuePresentKHR(queue, pPresentInfo);
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void*)queue) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentInfo=" + ptrToString((void*)pPresentInfo) + '!');
 #ifdef QUEUEPRESENTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueuePresentKHR_after(queue, pPresentInfo);
@@ -7415,8 +6502,6 @@ layer_DebugMarkerSetObjectNameEXT_before(device, pNameInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].DebugMarkerSetObjectNameEXT(device, pNameInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pNameInfo=" + ptrToString((void*)pNameInfo) + '!');
 #ifdef DEBUGMARKERSETOBJECTNAMEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DebugMarkerSetObjectNameEXT_after(device, pNameInfo);
@@ -7439,8 +6524,6 @@ layer_DebugMarkerSetObjectTagEXT_before(device, pTagInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].DebugMarkerSetObjectTagEXT(device, pTagInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pTagInfo=" + ptrToString((void*)pTagInfo) + '!');
 #ifdef DEBUGMARKERSETOBJECTTAGEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DebugMarkerSetObjectTagEXT_after(device, pTagInfo);
@@ -7463,8 +6546,6 @@ layer_CmdDebugMarkerBeginEXT_before(commandBuffer, pMarkerInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerBeginEXT(commandBuffer, pMarkerInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pMarkerInfo=" + ptrToString((void*)pMarkerInfo) + '!');
 #ifdef CMDDEBUGMARKERBEGINEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDebugMarkerBeginEXT_after(commandBuffer, pMarkerInfo);
@@ -7486,7 +6567,6 @@ layer_CmdDebugMarkerEndEXT_before(commandBuffer);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerEndEXT(commandBuffer);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
 #ifdef CMDDEBUGMARKERENDEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDebugMarkerEndEXT_after(commandBuffer);
@@ -7508,8 +6588,6 @@ layer_CmdDebugMarkerInsertEXT_before(commandBuffer, pMarkerInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerInsertEXT(commandBuffer, pMarkerInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pMarkerInfo=" + ptrToString((void*)pMarkerInfo) + '!');
 #ifdef CMDDEBUGMARKERINSERTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDebugMarkerInsertEXT_after(commandBuffer, pMarkerInfo);
@@ -7532,10 +6610,6 @@ layer_GetMemoryWin32HandleNV_before(device, memory, handleType, pHandle);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryWin32HandleNV(device, memory, handleType, pHandle);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void*)memory) + '!');
-winsockSendToUI(&ConnectSocket,"handleType=" + ptrToString((void*)handleType) + '!');
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void*)pHandle) + '!');
 #ifdef GETMEMORYWIN32HANDLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryWin32HandleNV_after(device, memory, handleType, pHandle);
@@ -7559,9 +6633,6 @@ layer_CmdExecuteGeneratedCommandsNV_before(commandBuffer, isPreprocessed, pGener
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdExecuteGeneratedCommandsNV(commandBuffer, isPreprocessed, pGeneratedCommandsInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"isPreprocessed=" + bool_as_text(isPreprocessed) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo=" + ptrToString((void*)pGeneratedCommandsInfo) + '!');
 #ifdef CMDEXECUTEGENERATEDCOMMANDSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdExecuteGeneratedCommandsNV_after(commandBuffer, isPreprocessed, pGeneratedCommandsInfo);
@@ -7583,8 +6654,6 @@ layer_CmdPreprocessGeneratedCommandsNV_before(commandBuffer, pGeneratedCommandsI
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPreprocessGeneratedCommandsNV(commandBuffer, pGeneratedCommandsInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo=" + ptrToString((void*)pGeneratedCommandsInfo) + '!');
 #ifdef CMDPREPROCESSGENERATEDCOMMANDSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPreprocessGeneratedCommandsNV_after(commandBuffer, pGeneratedCommandsInfo);
@@ -7606,10 +6675,6 @@ layer_CmdBindPipelineShaderGroupNV_before(commandBuffer, pipelineBindPoint, pipe
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindPipelineShaderGroupNV(commandBuffer, pipelineBindPoint, pipeline, groupIndex);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineBindPoint=" + std::to_string(pipelineBindPoint) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void*)pipeline) + '!');
-winsockSendToUI(&ConnectSocket,"groupIndex=" + std::to_string(groupIndex) + '!');
 #ifdef CMDBINDPIPELINESHADERGROUPNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindPipelineShaderGroupNV_after(commandBuffer, pipelineBindPoint, pipeline, groupIndex);
@@ -7631,9 +6696,6 @@ layer_GetGeneratedCommandsMemoryRequirementsNV_before(device, pInfo, pMemoryRequ
 }
 #endif 
 device_dispatch[GetKey(device)].GetGeneratedCommandsMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements=" + ptrToString((void*)pMemoryRequirements) + '!');
 #ifdef GETGENERATEDCOMMANDSMEMORYREQUIREMENTSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetGeneratedCommandsMemoryRequirementsNV_after(device, pInfo, pMemoryRequirements);
@@ -7655,10 +6717,6 @@ layer_CreateIndirectCommandsLayoutNV_before(device, pCreateInfo, pAllocator, pIn
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateIndirectCommandsLayoutNV(device, pCreateInfo, pAllocator, pIndirectCommandsLayout);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pIndirectCommandsLayout=" + ptrToString((void*)pIndirectCommandsLayout) + '!');
 #ifdef CREATEINDIRECTCOMMANDSLAYOUTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateIndirectCommandsLayoutNV_after(device, pCreateInfo, pAllocator, pIndirectCommandsLayout);
@@ -7681,9 +6739,6 @@ layer_DestroyIndirectCommandsLayoutNV_before(device, indirectCommandsLayout, pAl
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyIndirectCommandsLayoutNV(device, indirectCommandsLayout, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"indirectCommandsLayout=" + ptrToString((void*)indirectCommandsLayout) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYINDIRECTCOMMANDSLAYOUTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyIndirectCommandsLayoutNV_after(device, indirectCommandsLayout, pAllocator);
@@ -7705,12 +6760,6 @@ layer_CmdPushDescriptorSetKHR_before(commandBuffer, pipelineBindPoint, layout, s
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetKHR(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineBindPoint=" + std::to_string(pipelineBindPoint) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void*)layout) + '!');
-winsockSendToUI(&ConnectSocket,"set=" + std::to_string(set) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorWriteCount=" + std::to_string(descriptorWriteCount) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites=" + ptrToString((void*)pDescriptorWrites) + '!');
 #ifdef CMDPUSHDESCRIPTORSETKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPushDescriptorSetKHR_after(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
@@ -7732,9 +6781,6 @@ layer_TrimCommandPool_before(device, commandPool, flags);
 }
 #endif 
 device_dispatch[GetKey(device)].TrimCommandPool(device, commandPool, flags);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"commandPool=" + ptrToString((void*)commandPool) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void*)flags) + '!');
 #ifdef TRIMCOMMANDPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_TrimCommandPool_after(device, commandPool, flags);
@@ -7757,9 +6803,6 @@ layer_GetMemoryWin32HandleKHR_before(device, pGetWin32HandleInfo, pHandle);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pGetWin32HandleInfo=" + ptrToString((void*)pGetWin32HandleInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void*)pHandle) + '!');
 #ifdef GETMEMORYWIN32HANDLEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryWin32HandleKHR_after(device, pGetWin32HandleInfo, pHandle);
@@ -7784,10 +6827,6 @@ layer_GetMemoryWin32HandlePropertiesKHR_before(device, handleType, handle, pMemo
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryWin32HandlePropertiesKHR(device, handleType, handle, pMemoryWin32HandleProperties);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"handleType=" + std::to_string(handleType) + '!');
-winsockSendToUI(&ConnectSocket,"handle=" + ptrToString((void*)handle) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryWin32HandleProperties=" + ptrToString((void*)pMemoryWin32HandleProperties) + '!');
 #ifdef GETMEMORYWIN32HANDLEPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryWin32HandlePropertiesKHR_after(device, handleType, handle, pMemoryWin32HandleProperties);
@@ -7811,9 +6850,6 @@ layer_GetMemoryFdKHR_before(device, pGetFdInfo, pFd);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryFdKHR(device, pGetFdInfo, pFd);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pGetFdInfo=" + ptrToString((void*)pGetFdInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pFd=" + ptrToString((void*)pFd) + '!');
 #ifdef GETMEMORYFDKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryFdKHR_after(device, pGetFdInfo, pFd);
@@ -7836,10 +6872,6 @@ layer_GetMemoryFdPropertiesKHR_before(device, handleType, fd, pMemoryFdPropertie
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryFdPropertiesKHR(device, handleType, fd, pMemoryFdProperties);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"handleType=" + std::to_string(handleType) + '!');
-winsockSendToUI(&ConnectSocket,"fd=" + std::to_string(fd) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryFdProperties=" + ptrToString((void*)pMemoryFdProperties) + '!');
 #ifdef GETMEMORYFDPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryFdPropertiesKHR_after(device, handleType, fd, pMemoryFdProperties);
@@ -7863,9 +6895,6 @@ layer_GetMemoryZirconHandleFUCHSIA_before(device, pGetZirconHandleInfo, pZirconH
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pGetZirconHandleInfo=" + ptrToString((void*)pGetZirconHandleInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pZirconHandle=" + ptrToString((void*)pZirconHandle) + '!');
 #ifdef GETMEMORYZIRCONHANDLEFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryZirconHandleFUCHSIA_after(device, pGetZirconHandleInfo, pZirconHandle);
@@ -7890,10 +6919,6 @@ layer_GetMemoryZirconHandlePropertiesFUCHSIA_before(device, handleType, zirconHa
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryZirconHandlePropertiesFUCHSIA(device, handleType, zirconHandle, pMemoryZirconHandleProperties);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"handleType=" + std::to_string(handleType) + '!');
-winsockSendToUI(&ConnectSocket,"zirconHandle=" + ptrToString((void*)zirconHandle) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryZirconHandleProperties=" + ptrToString((void*)pMemoryZirconHandleProperties) + '!');
 #ifdef GETMEMORYZIRCONHANDLEPROPERTIESFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryZirconHandlePropertiesFUCHSIA_after(device, handleType, zirconHandle, pMemoryZirconHandleProperties);
@@ -7917,9 +6942,6 @@ layer_GetMemoryRemoteAddressNV_before(device, pMemoryGetRemoteAddressInfo, pAddr
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryRemoteAddressNV(device, pMemoryGetRemoteAddressInfo, pAddress);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryGetRemoteAddressInfo=" + ptrToString((void*)pMemoryGetRemoteAddressInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAddress=" + ptrToString((void*)pAddress) + '!');
 #ifdef GETMEMORYREMOTEADDRESSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryRemoteAddressNV_after(device, pMemoryGetRemoteAddressInfo, pAddress);
@@ -7943,9 +6965,6 @@ layer_GetMemorySciBufNV_before(device, pGetSciBufInfo, pHandle);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemorySciBufNV(device, pGetSciBufInfo, pHandle);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pGetSciBufInfo=" + ptrToString((void*)pGetSciBufInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void*)pHandle) + '!');
 #ifdef GETMEMORYSCIBUFNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemorySciBufNV_after(device, pGetSciBufInfo, pHandle);
@@ -7970,9 +6989,6 @@ layer_GetSemaphoreWin32HandleKHR_before(device, pGetWin32HandleInfo, pHandle);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pGetWin32HandleInfo=" + ptrToString((void*)pGetWin32HandleInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void*)pHandle) + '!');
 #ifdef GETSEMAPHOREWIN32HANDLEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSemaphoreWin32HandleKHR_after(device, pGetWin32HandleInfo, pHandle);
@@ -7997,8 +7013,6 @@ layer_ImportSemaphoreWin32HandleKHR_before(device, pImportSemaphoreWin32HandleIn
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportSemaphoreWin32HandleKHR(device, pImportSemaphoreWin32HandleInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreWin32HandleInfo=" + ptrToString((void*)pImportSemaphoreWin32HandleInfo) + '!');
 #ifdef IMPORTSEMAPHOREWIN32HANDLEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportSemaphoreWin32HandleKHR_after(device, pImportSemaphoreWin32HandleInfo);
@@ -8022,9 +7036,6 @@ layer_GetSemaphoreFdKHR_before(device, pGetFdInfo, pFd);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreFdKHR(device, pGetFdInfo, pFd);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pGetFdInfo=" + ptrToString((void*)pGetFdInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pFd=" + ptrToString((void*)pFd) + '!');
 #ifdef GETSEMAPHOREFDKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSemaphoreFdKHR_after(device, pGetFdInfo, pFd);
@@ -8047,8 +7058,6 @@ layer_ImportSemaphoreFdKHR_before(device, pImportSemaphoreFdInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportSemaphoreFdKHR(device, pImportSemaphoreFdInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreFdInfo=" + ptrToString((void*)pImportSemaphoreFdInfo) + '!');
 #ifdef IMPORTSEMAPHOREFDKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportSemaphoreFdKHR_after(device, pImportSemaphoreFdInfo);
@@ -8072,9 +7081,6 @@ layer_GetSemaphoreZirconHandleFUCHSIA_before(device, pGetZirconHandleInfo, pZirc
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pGetZirconHandleInfo=" + ptrToString((void*)pGetZirconHandleInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pZirconHandle=" + ptrToString((void*)pZirconHandle) + '!');
 #ifdef GETSEMAPHOREZIRCONHANDLEFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSemaphoreZirconHandleFUCHSIA_after(device, pGetZirconHandleInfo, pZirconHandle);
@@ -8099,8 +7105,6 @@ layer_ImportSemaphoreZirconHandleFUCHSIA_before(device, pImportSemaphoreZirconHa
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportSemaphoreZirconHandleFUCHSIA(device, pImportSemaphoreZirconHandleInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreZirconHandleInfo=" + ptrToString((void*)pImportSemaphoreZirconHandleInfo) + '!');
 #ifdef IMPORTSEMAPHOREZIRCONHANDLEFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportSemaphoreZirconHandleFUCHSIA_after(device, pImportSemaphoreZirconHandleInfo);
@@ -8125,9 +7129,6 @@ layer_GetFenceWin32HandleKHR_before(device, pGetWin32HandleInfo, pHandle);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetFenceWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pGetWin32HandleInfo=" + ptrToString((void*)pGetWin32HandleInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void*)pHandle) + '!');
 #ifdef GETFENCEWIN32HANDLEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetFenceWin32HandleKHR_after(device, pGetWin32HandleInfo, pHandle);
@@ -8152,8 +7153,6 @@ layer_ImportFenceWin32HandleKHR_before(device, pImportFenceWin32HandleInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportFenceWin32HandleKHR(device, pImportFenceWin32HandleInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceWin32HandleInfo=" + ptrToString((void*)pImportFenceWin32HandleInfo) + '!');
 #ifdef IMPORTFENCEWIN32HANDLEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportFenceWin32HandleKHR_after(device, pImportFenceWin32HandleInfo);
@@ -8177,9 +7176,6 @@ layer_GetFenceFdKHR_before(device, pGetFdInfo, pFd);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetFenceFdKHR(device, pGetFdInfo, pFd);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pGetFdInfo=" + ptrToString((void*)pGetFdInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pFd=" + ptrToString((void*)pFd) + '!');
 #ifdef GETFENCEFDKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetFenceFdKHR_after(device, pGetFdInfo, pFd);
@@ -8202,8 +7198,6 @@ layer_ImportFenceFdKHR_before(device, pImportFenceFdInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportFenceFdKHR(device, pImportFenceFdInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceFdInfo=" + ptrToString((void*)pImportFenceFdInfo) + '!');
 #ifdef IMPORTFENCEFDKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportFenceFdKHR_after(device, pImportFenceFdInfo);
@@ -8227,9 +7221,6 @@ layer_GetFenceSciSyncFenceNV_before(device, pGetSciSyncHandleInfo, pHandle);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetFenceSciSyncFenceNV(device, pGetSciSyncHandleInfo, pHandle);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pGetSciSyncHandleInfo=" + ptrToString((void*)pGetSciSyncHandleInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void*)pHandle) + '!');
 #ifdef GETFENCESCISYNCFENCENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetFenceSciSyncFenceNV_after(device, pGetSciSyncHandleInfo, pHandle);
@@ -8254,9 +7245,6 @@ layer_GetFenceSciSyncObjNV_before(device, pGetSciSyncHandleInfo, pHandle);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetFenceSciSyncObjNV(device, pGetSciSyncHandleInfo, pHandle);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pGetSciSyncHandleInfo=" + ptrToString((void*)pGetSciSyncHandleInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void*)pHandle) + '!');
 #ifdef GETFENCESCISYNCOBJNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetFenceSciSyncObjNV_after(device, pGetSciSyncHandleInfo, pHandle);
@@ -8281,8 +7269,6 @@ layer_ImportFenceSciSyncFenceNV_before(device, pImportFenceSciSyncInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportFenceSciSyncFenceNV(device, pImportFenceSciSyncInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceSciSyncInfo=" + ptrToString((void*)pImportFenceSciSyncInfo) + '!');
 #ifdef IMPORTFENCESCISYNCFENCENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportFenceSciSyncFenceNV_after(device, pImportFenceSciSyncInfo);
@@ -8307,8 +7293,6 @@ layer_ImportFenceSciSyncObjNV_before(device, pImportFenceSciSyncInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportFenceSciSyncObjNV(device, pImportFenceSciSyncInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceSciSyncInfo=" + ptrToString((void*)pImportFenceSciSyncInfo) + '!');
 #ifdef IMPORTFENCESCISYNCOBJNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportFenceSciSyncObjNV_after(device, pImportFenceSciSyncInfo);
@@ -8333,9 +7317,6 @@ layer_GetSemaphoreSciSyncObjNV_before(device, pGetSciSyncInfo, pHandle);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreSciSyncObjNV(device, pGetSciSyncInfo, pHandle);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pGetSciSyncInfo=" + ptrToString((void*)pGetSciSyncInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void*)pHandle) + '!');
 #ifdef GETSEMAPHORESCISYNCOBJNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSemaphoreSciSyncObjNV_after(device, pGetSciSyncInfo, pHandle);
@@ -8360,8 +7341,6 @@ layer_ImportSemaphoreSciSyncObjNV_before(device, pImportSemaphoreSciSyncInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportSemaphoreSciSyncObjNV(device, pImportSemaphoreSciSyncInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreSciSyncInfo=" + ptrToString((void*)pImportSemaphoreSciSyncInfo) + '!');
 #ifdef IMPORTSEMAPHORESCISYNCOBJNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportSemaphoreSciSyncObjNV_after(device, pImportSemaphoreSciSyncInfo);
@@ -8386,10 +7365,6 @@ layer_CreateSemaphoreSciSyncPoolNV_before(device, pCreateInfo, pAllocator, pSema
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateSemaphoreSciSyncPoolNV(device, pCreateInfo, pAllocator, pSemaphorePool);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSemaphorePool=" + ptrToString((void*)pSemaphorePool) + '!');
 #ifdef CREATESEMAPHORESCISYNCPOOLNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateSemaphoreSciSyncPoolNV_after(device, pCreateInfo, pAllocator, pSemaphorePool);
@@ -8414,9 +7389,6 @@ layer_DestroySemaphoreSciSyncPoolNV_before(device, semaphorePool, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroySemaphoreSciSyncPoolNV(device, semaphorePool, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"semaphorePool=" + ptrToString((void*)semaphorePool) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYSEMAPHORESCISYNCPOOLNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroySemaphoreSciSyncPoolNV_after(device, semaphorePool, pAllocator);
@@ -8439,9 +7411,6 @@ layer_DisplayPowerControlEXT_before(device, display, pDisplayPowerInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].DisplayPowerControlEXT(device, display, pDisplayPowerInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void*)display) + '!');
-winsockSendToUI(&ConnectSocket,"pDisplayPowerInfo=" + ptrToString((void*)pDisplayPowerInfo) + '!');
 #ifdef DISPLAYPOWERCONTROLEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DisplayPowerControlEXT_after(device, display, pDisplayPowerInfo);
@@ -8464,10 +7433,6 @@ layer_RegisterDeviceEventEXT_before(device, pDeviceEventInfo, pAllocator, pFence
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].RegisterDeviceEventEXT(device, pDeviceEventInfo, pAllocator, pFence);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pDeviceEventInfo=" + ptrToString((void*)pDeviceEventInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pFence=" + ptrToString((void*)pFence) + '!');
 #ifdef REGISTERDEVICEEVENTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_RegisterDeviceEventEXT_after(device, pDeviceEventInfo, pAllocator, pFence);
@@ -8490,11 +7455,6 @@ layer_RegisterDisplayEventEXT_before(device, display, pDisplayEventInfo, pAlloca
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].RegisterDisplayEventEXT(device, display, pDisplayEventInfo, pAllocator, pFence);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void*)display) + '!');
-winsockSendToUI(&ConnectSocket,"pDisplayEventInfo=" + ptrToString((void*)pDisplayEventInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pFence=" + ptrToString((void*)pFence) + '!');
 #ifdef REGISTERDISPLAYEVENTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_RegisterDisplayEventEXT_after(device, display, pDisplayEventInfo, pAllocator, pFence);
@@ -8517,10 +7477,6 @@ layer_GetSwapchainCounterEXT_before(device, swapchain, counter, pCounterValue);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSwapchainCounterEXT(device, swapchain, counter, pCounterValue);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void*)swapchain) + '!');
-winsockSendToUI(&ConnectSocket,"counter=" + std::to_string(counter) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterValue=" + ptrToString((void*)pCounterValue) + '!');
 #ifdef GETSWAPCHAINCOUNTEREXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSwapchainCounterEXT_after(device, swapchain, counter, pCounterValue);
@@ -8543,11 +7499,6 @@ layer_GetDeviceGroupPeerMemoryFeatures_before(device, heapIndex, localDeviceInde
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceGroupPeerMemoryFeatures(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"heapIndex=" + std::to_string(heapIndex) + '!');
-winsockSendToUI(&ConnectSocket,"localDeviceIndex=" + std::to_string(localDeviceIndex) + '!');
-winsockSendToUI(&ConnectSocket,"remoteDeviceIndex=" + std::to_string(remoteDeviceIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pPeerMemoryFeatures=" + ptrToString((void*)pPeerMemoryFeatures) + '!');
 #ifdef GETDEVICEGROUPPEERMEMORYFEATURES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceGroupPeerMemoryFeatures_after(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
@@ -8569,9 +7520,6 @@ layer_BindBufferMemory2_before(device, bindInfoCount, pBindInfos);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindBufferMemory2(device, bindInfoCount, pBindInfos);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"bindInfoCount=" + std::to_string(bindInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos=" + ptrToString((void*)pBindInfos) + '!');
 #ifdef BINDBUFFERMEMORY2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindBufferMemory2_after(device, bindInfoCount, pBindInfos);
@@ -8594,9 +7542,6 @@ layer_BindImageMemory2_before(device, bindInfoCount, pBindInfos);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindImageMemory2(device, bindInfoCount, pBindInfos);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"bindInfoCount=" + std::to_string(bindInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos=" + ptrToString((void*)pBindInfos) + '!');
 #ifdef BINDIMAGEMEMORY2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindImageMemory2_after(device, bindInfoCount, pBindInfos);
@@ -8619,8 +7564,6 @@ layer_CmdSetDeviceMask_before(commandBuffer, deviceMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDeviceMask(commandBuffer, deviceMask);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"deviceMask=" + std::to_string(deviceMask) + '!');
 #ifdef CMDSETDEVICEMASK_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDeviceMask_after(commandBuffer, deviceMask);
@@ -8642,8 +7585,6 @@ layer_GetDeviceGroupPresentCapabilitiesKHR_before(device, pDeviceGroupPresentCap
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeviceGroupPresentCapabilitiesKHR(device, pDeviceGroupPresentCapabilities);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pDeviceGroupPresentCapabilities=" + ptrToString((void*)pDeviceGroupPresentCapabilities) + '!');
 #ifdef GETDEVICEGROUPPRESENTCAPABILITIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceGroupPresentCapabilitiesKHR_after(device, pDeviceGroupPresentCapabilities);
@@ -8666,9 +7607,6 @@ layer_GetDeviceGroupSurfacePresentModesKHR_before(device, surface, pModes);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeviceGroupSurfacePresentModesKHR(device, surface, pModes);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void*)surface) + '!');
-winsockSendToUI(&ConnectSocket,"pModes=" + ptrToString((void*)pModes) + '!');
 #ifdef GETDEVICEGROUPSURFACEPRESENTMODESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceGroupSurfacePresentModesKHR_after(device, surface, pModes);
@@ -8691,9 +7629,6 @@ layer_AcquireNextImage2KHR_before(device, pAcquireInfo, pImageIndex);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].AcquireNextImage2KHR(device, pAcquireInfo, pImageIndex);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pAcquireInfo=" + ptrToString((void*)pAcquireInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pImageIndex=" + ptrToString((void*)pImageIndex) + '!');
 #ifdef ACQUIRENEXTIMAGE2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireNextImage2KHR_after(device, pAcquireInfo, pImageIndex);
@@ -8716,13 +7651,6 @@ layer_CmdDispatchBase_before(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, 
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDispatchBase(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"baseGroupX=" + std::to_string(baseGroupX) + '!');
-winsockSendToUI(&ConnectSocket,"baseGroupY=" + std::to_string(baseGroupY) + '!');
-winsockSendToUI(&ConnectSocket,"baseGroupZ=" + std::to_string(baseGroupZ) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountX=" + std::to_string(groupCountX) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountY=" + std::to_string(groupCountY) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountZ=" + std::to_string(groupCountZ) + '!');
 #ifdef CMDDISPATCHBASE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDispatchBase_after(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
@@ -8744,10 +7672,6 @@ layer_CreateDescriptorUpdateTemplate_before(device, pCreateInfo, pAllocator, pDe
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateDescriptorUpdateTemplate(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorUpdateTemplate=" + ptrToString((void*)pDescriptorUpdateTemplate) + '!');
 #ifdef CREATEDESCRIPTORUPDATETEMPLATE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDescriptorUpdateTemplate_after(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
@@ -8770,9 +7694,6 @@ layer_DestroyDescriptorUpdateTemplate_before(device, descriptorUpdateTemplate, p
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyDescriptorUpdateTemplate(device, descriptorUpdateTemplate, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorUpdateTemplate=" + ptrToString((void*)descriptorUpdateTemplate) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYDESCRIPTORUPDATETEMPLATE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyDescriptorUpdateTemplate_after(device, descriptorUpdateTemplate, pAllocator);
@@ -8794,10 +7715,6 @@ layer_UpdateDescriptorSetWithTemplate_before(device, descriptorSet, descriptorUp
 }
 #endif 
 device_dispatch[GetKey(device)].UpdateDescriptorSetWithTemplate(device, descriptorSet, descriptorUpdateTemplate, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorSet=" + ptrToString((void*)descriptorSet) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorUpdateTemplate=" + ptrToString((void*)descriptorUpdateTemplate) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef UPDATEDESCRIPTORSETWITHTEMPLATE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_UpdateDescriptorSetWithTemplate_after(device, descriptorSet, descriptorUpdateTemplate, pData);
@@ -8819,11 +7736,6 @@ layer_CmdPushDescriptorSetWithTemplateKHR_before(commandBuffer, descriptorUpdate
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetWithTemplateKHR(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorUpdateTemplate=" + ptrToString((void*)descriptorUpdateTemplate) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void*)layout) + '!');
-winsockSendToUI(&ConnectSocket,"set=" + std::to_string(set) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef CMDPUSHDESCRIPTORSETWITHTEMPLATEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPushDescriptorSetWithTemplateKHR_after(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
@@ -8845,10 +7757,6 @@ layer_SetHdrMetadataEXT_before(device, swapchainCount, pSwapchains, pMetadata);
 }
 #endif 
 device_dispatch[GetKey(device)].SetHdrMetadataEXT(device, swapchainCount, pSwapchains, pMetadata);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchainCount=" + std::to_string(swapchainCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSwapchains=" + ptrToString((void*)pSwapchains) + '!');
-winsockSendToUI(&ConnectSocket,"pMetadata=" + ptrToString((void*)pMetadata) + '!');
 #ifdef SETHDRMETADATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetHdrMetadataEXT_after(device, swapchainCount, pSwapchains, pMetadata);
@@ -8870,8 +7778,6 @@ layer_GetSwapchainStatusKHR_before(device, swapchain);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSwapchainStatusKHR(device, swapchain);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void*)swapchain) + '!');
 #ifdef GETSWAPCHAINSTATUSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSwapchainStatusKHR_after(device, swapchain);
@@ -8894,9 +7800,6 @@ layer_GetRefreshCycleDurationGOOGLE_before(device, swapchain, pDisplayTimingProp
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetRefreshCycleDurationGOOGLE(device, swapchain, pDisplayTimingProperties);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void*)swapchain) + '!');
-winsockSendToUI(&ConnectSocket,"pDisplayTimingProperties=" + ptrToString((void*)pDisplayTimingProperties) + '!');
 #ifdef GETREFRESHCYCLEDURATIONGOOGLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRefreshCycleDurationGOOGLE_after(device, swapchain, pDisplayTimingProperties);
@@ -8919,10 +7822,6 @@ layer_GetPastPresentationTimingGOOGLE_before(device, swapchain, pPresentationTim
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPastPresentationTimingGOOGLE(device, swapchain, pPresentationTimingCount, pPresentationTimings);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void*)swapchain) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentationTimingCount=" + ptrToString((void*)pPresentationTimingCount) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentationTimings=" + ptrToString((void*)pPresentationTimings) + '!');
 #ifdef GETPASTPRESENTATIONTIMINGGOOGLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPastPresentationTimingGOOGLE_after(device, swapchain, pPresentationTimingCount, pPresentationTimings);
@@ -8945,10 +7844,6 @@ layer_CmdSetViewportWScalingNV_before(commandBuffer, firstViewport, viewportCoun
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWScalingNV(commandBuffer, firstViewport, viewportCount, pViewportWScalings);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstViewport=" + std::to_string(firstViewport) + '!');
-winsockSendToUI(&ConnectSocket,"viewportCount=" + std::to_string(viewportCount) + '!');
-winsockSendToUI(&ConnectSocket,"pViewportWScalings=" + ptrToString((void*)pViewportWScalings) + '!');
 #ifdef CMDSETVIEWPORTWSCALINGNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetViewportWScalingNV_after(commandBuffer, firstViewport, viewportCount, pViewportWScalings);
@@ -8970,10 +7865,6 @@ layer_CmdSetDiscardRectangleEXT_before(commandBuffer, firstDiscardRectangle, dis
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleEXT(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstDiscardRectangle=" + std::to_string(firstDiscardRectangle) + '!');
-winsockSendToUI(&ConnectSocket,"discardRectangleCount=" + std::to_string(discardRectangleCount) + '!');
-winsockSendToUI(&ConnectSocket,"pDiscardRectangles=" + ptrToString((void*)pDiscardRectangles) + '!');
 #ifdef CMDSETDISCARDRECTANGLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDiscardRectangleEXT_after(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles);
@@ -8995,8 +7886,6 @@ layer_CmdSetDiscardRectangleEnableEXT_before(commandBuffer, discardRectangleEnab
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleEnableEXT(commandBuffer, discardRectangleEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"discardRectangleEnable=" + bool_as_text(discardRectangleEnable) + '!');
 #ifdef CMDSETDISCARDRECTANGLEENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDiscardRectangleEnableEXT_after(commandBuffer, discardRectangleEnable);
@@ -9018,8 +7907,6 @@ layer_CmdSetDiscardRectangleModeEXT_before(commandBuffer, discardRectangleMode);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleModeEXT(commandBuffer, discardRectangleMode);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"discardRectangleMode=" + std::to_string(discardRectangleMode) + '!');
 #ifdef CMDSETDISCARDRECTANGLEMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDiscardRectangleModeEXT_after(commandBuffer, discardRectangleMode);
@@ -9041,8 +7928,6 @@ layer_CmdSetSampleLocationsEXT_before(commandBuffer, pSampleLocationsInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetSampleLocationsEXT(commandBuffer, pSampleLocationsInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pSampleLocationsInfo=" + ptrToString((void*)pSampleLocationsInfo) + '!');
 #ifdef CMDSETSAMPLELOCATIONSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetSampleLocationsEXT_after(commandBuffer, pSampleLocationsInfo);
@@ -9064,9 +7949,6 @@ layer_GetBufferMemoryRequirements2_before(device, pInfo, pMemoryRequirements);
 }
 #endif 
 device_dispatch[GetKey(device)].GetBufferMemoryRequirements2(device, pInfo, pMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements=" + ptrToString((void*)pMemoryRequirements) + '!');
 #ifdef GETBUFFERMEMORYREQUIREMENTS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferMemoryRequirements2_after(device, pInfo, pMemoryRequirements);
@@ -9088,9 +7970,6 @@ layer_GetImageMemoryRequirements2_before(device, pInfo, pMemoryRequirements);
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageMemoryRequirements2(device, pInfo, pMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements=" + ptrToString((void*)pMemoryRequirements) + '!');
 #ifdef GETIMAGEMEMORYREQUIREMENTS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageMemoryRequirements2_after(device, pInfo, pMemoryRequirements);
@@ -9112,10 +7991,6 @@ layer_GetImageSparseMemoryRequirements2_before(device, pInfo, pSparseMemoryRequi
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements2(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirementCount=" + ptrToString((void*)pSparseMemoryRequirementCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements=" + ptrToString((void*)pSparseMemoryRequirements) + '!');
 #ifdef GETIMAGESPARSEMEMORYREQUIREMENTS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageSparseMemoryRequirements2_after(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -9137,9 +8012,6 @@ layer_GetDeviceBufferMemoryRequirements_before(device, pInfo, pMemoryRequirement
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceBufferMemoryRequirements(device, pInfo, pMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements=" + ptrToString((void*)pMemoryRequirements) + '!');
 #ifdef GETDEVICEBUFFERMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceBufferMemoryRequirements_after(device, pInfo, pMemoryRequirements);
@@ -9161,9 +8033,6 @@ layer_GetDeviceImageMemoryRequirements_before(device, pInfo, pMemoryRequirements
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceImageMemoryRequirements(device, pInfo, pMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements=" + ptrToString((void*)pMemoryRequirements) + '!');
 #ifdef GETDEVICEIMAGEMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceImageMemoryRequirements_after(device, pInfo, pMemoryRequirements);
@@ -9185,10 +8054,6 @@ layer_GetDeviceImageSparseMemoryRequirements_before(device, pInfo, pSparseMemory
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceImageSparseMemoryRequirements(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirementCount=" + ptrToString((void*)pSparseMemoryRequirementCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements=" + ptrToString((void*)pSparseMemoryRequirements) + '!');
 #ifdef GETDEVICEIMAGESPARSEMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceImageSparseMemoryRequirements_after(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -9210,10 +8075,6 @@ layer_CreateSamplerYcbcrConversion_before(device, pCreateInfo, pAllocator, pYcbc
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateSamplerYcbcrConversion(device, pCreateInfo, pAllocator, pYcbcrConversion);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pYcbcrConversion=" + ptrToString((void*)pYcbcrConversion) + '!');
 #ifdef CREATESAMPLERYCBCRCONVERSION_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateSamplerYcbcrConversion_after(device, pCreateInfo, pAllocator, pYcbcrConversion);
@@ -9236,9 +8097,6 @@ layer_DestroySamplerYcbcrConversion_before(device, ycbcrConversion, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroySamplerYcbcrConversion(device, ycbcrConversion, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"ycbcrConversion=" + ptrToString((void*)ycbcrConversion) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYSAMPLERYCBCRCONVERSION_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroySamplerYcbcrConversion_after(device, ycbcrConversion, pAllocator);
@@ -9260,9 +8118,6 @@ layer_GetDeviceQueue2_before(device, pQueueInfo, pQueue);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceQueue2(device, pQueueInfo, pQueue);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueInfo=" + ptrToString((void*)pQueueInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pQueue=" + ptrToString((void*)pQueue) + '!');
 #ifdef GETDEVICEQUEUE2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceQueue2_after(device, pQueueInfo, pQueue);
@@ -9284,10 +8139,6 @@ layer_CreateValidationCacheEXT_before(device, pCreateInfo, pAllocator, pValidati
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateValidationCacheEXT(device, pCreateInfo, pAllocator, pValidationCache);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pValidationCache=" + ptrToString((void*)pValidationCache) + '!');
 #ifdef CREATEVALIDATIONCACHEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateValidationCacheEXT_after(device, pCreateInfo, pAllocator, pValidationCache);
@@ -9310,9 +8161,6 @@ layer_DestroyValidationCacheEXT_before(device, validationCache, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyValidationCacheEXT(device, validationCache, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"validationCache=" + ptrToString((void*)validationCache) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYVALIDATIONCACHEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyValidationCacheEXT_after(device, validationCache, pAllocator);
@@ -9334,10 +8182,6 @@ layer_GetValidationCacheDataEXT_before(device, validationCache, pDataSize, pData
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetValidationCacheDataEXT(device, validationCache, pDataSize, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"validationCache=" + ptrToString((void*)validationCache) + '!');
-winsockSendToUI(&ConnectSocket,"pDataSize=" + ptrToString((void*)pDataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETVALIDATIONCACHEDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetValidationCacheDataEXT_after(device, validationCache, pDataSize, pData);
@@ -9360,10 +8204,6 @@ layer_MergeValidationCachesEXT_before(device, dstCache, srcCacheCount, pSrcCache
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].MergeValidationCachesEXT(device, dstCache, srcCacheCount, pSrcCaches);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"dstCache=" + ptrToString((void*)dstCache) + '!');
-winsockSendToUI(&ConnectSocket,"srcCacheCount=" + std::to_string(srcCacheCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSrcCaches=" + ptrToString((void*)pSrcCaches) + '!');
 #ifdef MERGEVALIDATIONCACHESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_MergeValidationCachesEXT_after(device, dstCache, srcCacheCount, pSrcCaches);
@@ -9386,9 +8226,6 @@ layer_GetDescriptorSetLayoutSupport_before(device, pCreateInfo, pSupport);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutSupport(device, pCreateInfo, pSupport);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pSupport=" + ptrToString((void*)pSupport) + '!');
 #ifdef GETDESCRIPTORSETLAYOUTSUPPORT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDescriptorSetLayoutSupport_after(device, pCreateInfo, pSupport);
@@ -9411,10 +8248,6 @@ layer_GetSwapchainGrallocUsageANDROID_before(device, format, imageUsage, gralloc
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSwapchainGrallocUsageANDROID(device, format, imageUsage, grallocUsage);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"format=" + std::to_string(format) + '!');
-winsockSendToUI(&ConnectSocket,"imageUsage=" + ptrToString((void*)imageUsage) + '!');
-winsockSendToUI(&ConnectSocket,"grallocUsage=" + ptrToString((void*)grallocUsage) + '!');
 #ifdef GETSWAPCHAINGRALLOCUSAGEANDROID_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSwapchainGrallocUsageANDROID_after(device, format, imageUsage, grallocUsage);
@@ -9439,12 +8272,6 @@ layer_GetSwapchainGrallocUsage2ANDROID_before(device, format, imageUsage, swapch
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSwapchainGrallocUsage2ANDROID(device, format, imageUsage, swapchainImageUsage, grallocConsumerUsage, grallocProducerUsage);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"format=" + std::to_string(format) + '!');
-winsockSendToUI(&ConnectSocket,"imageUsage=" + ptrToString((void*)imageUsage) + '!');
-winsockSendToUI(&ConnectSocket,"swapchainImageUsage=" + ptrToString((void*)swapchainImageUsage) + '!');
-winsockSendToUI(&ConnectSocket,"grallocConsumerUsage=" + ptrToString((void*)grallocConsumerUsage) + '!');
-winsockSendToUI(&ConnectSocket,"grallocProducerUsage=" + ptrToString((void*)grallocProducerUsage) + '!');
 #ifdef GETSWAPCHAINGRALLOCUSAGE2ANDROID_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSwapchainGrallocUsage2ANDROID_after(device, format, imageUsage, swapchainImageUsage, grallocConsumerUsage, grallocProducerUsage);
@@ -9469,11 +8296,6 @@ layer_AcquireImageANDROID_before(device, image, nativeFenceFd, semaphore, fence)
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].AcquireImageANDROID(device, image, nativeFenceFd, semaphore, fence);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void*)image) + '!');
-winsockSendToUI(&ConnectSocket,"nativeFenceFd=" + std::to_string(nativeFenceFd) + '!');
-winsockSendToUI(&ConnectSocket,"semaphore=" + ptrToString((void*)semaphore) + '!');
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void*)fence) + '!');
 #ifdef ACQUIREIMAGEANDROID_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireImageANDROID_after(device, image, nativeFenceFd, semaphore, fence);
@@ -9498,11 +8320,6 @@ layer_QueueSignalReleaseImageANDROID_before(queue, waitSemaphoreCount, pWaitSema
 }
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueueSignalReleaseImageANDROID(queue, waitSemaphoreCount, pWaitSemaphores, image, pNativeFenceFd);
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void*)queue) + '!');
-winsockSendToUI(&ConnectSocket,"waitSemaphoreCount=" + std::to_string(waitSemaphoreCount) + '!');
-winsockSendToUI(&ConnectSocket,"pWaitSemaphores=" + ptrToString((void*)pWaitSemaphores) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void*)image) + '!');
-winsockSendToUI(&ConnectSocket,"pNativeFenceFd=" + ptrToString((void*)pNativeFenceFd) + '!');
 #ifdef QUEUESIGNALRELEASEIMAGEANDROID_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueSignalReleaseImageANDROID_after(queue, waitSemaphoreCount, pWaitSemaphores, image, pNativeFenceFd);
@@ -9526,12 +8343,6 @@ layer_GetShaderInfoAMD_before(device, pipeline, shaderStage, infoType, pInfoSize
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetShaderInfoAMD(device, pipeline, shaderStage, infoType, pInfoSize, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void*)pipeline) + '!');
-winsockSendToUI(&ConnectSocket,"shaderStage=" + std::to_string(shaderStage) + '!');
-winsockSendToUI(&ConnectSocket,"infoType=" + std::to_string(infoType) + '!');
-winsockSendToUI(&ConnectSocket,"pInfoSize=" + ptrToString((void*)pInfoSize) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef GETSHADERINFOAMD_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetShaderInfoAMD_after(device, pipeline, shaderStage, infoType, pInfoSize, pInfo);
@@ -9554,9 +8365,6 @@ layer_SetLocalDimmingAMD_before(device, swapChain, localDimmingEnable);
 }
 #endif 
 device_dispatch[GetKey(device)].SetLocalDimmingAMD(device, swapChain, localDimmingEnable);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapChain=" + ptrToString((void*)swapChain) + '!');
-winsockSendToUI(&ConnectSocket,"localDimmingEnable=" + bool_as_text(localDimmingEnable) + '!');
 #ifdef SETLOCALDIMMINGAMD_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetLocalDimmingAMD_after(device, swapChain, localDimmingEnable);
@@ -9578,11 +8386,6 @@ layer_GetCalibratedTimestampsKHR_before(device, timestampCount, pTimestampInfos,
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetCalibratedTimestampsKHR(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"timestampCount=" + std::to_string(timestampCount) + '!');
-winsockSendToUI(&ConnectSocket,"pTimestampInfos=" + ptrToString((void*)pTimestampInfos) + '!');
-winsockSendToUI(&ConnectSocket,"pTimestamps=" + ptrToString((void*)pTimestamps) + '!');
-winsockSendToUI(&ConnectSocket,"pMaxDeviation=" + ptrToString((void*)pMaxDeviation) + '!');
 #ifdef GETCALIBRATEDTIMESTAMPSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetCalibratedTimestampsKHR_after(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
@@ -9605,8 +8408,6 @@ layer_SetDebugUtilsObjectNameEXT_before(device, pNameInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetDebugUtilsObjectNameEXT(device, pNameInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pNameInfo=" + ptrToString((void*)pNameInfo) + '!');
 #ifdef SETDEBUGUTILSOBJECTNAMEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetDebugUtilsObjectNameEXT_after(device, pNameInfo);
@@ -9629,8 +8430,6 @@ layer_SetDebugUtilsObjectTagEXT_before(device, pTagInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetDebugUtilsObjectTagEXT(device, pTagInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pTagInfo=" + ptrToString((void*)pTagInfo) + '!');
 #ifdef SETDEBUGUTILSOBJECTTAGEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetDebugUtilsObjectTagEXT_after(device, pTagInfo);
@@ -9653,8 +8452,6 @@ layer_QueueBeginDebugUtilsLabelEXT_before(queue, pLabelInfo);
 }
 #endif 
 device_dispatch[GetKey(queue)].QueueBeginDebugUtilsLabelEXT(queue, pLabelInfo);
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void*)queue) + '!');
-winsockSendToUI(&ConnectSocket,"pLabelInfo=" + ptrToString((void*)pLabelInfo) + '!');
 #ifdef QUEUEBEGINDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueBeginDebugUtilsLabelEXT_after(queue, pLabelInfo);
@@ -9676,7 +8473,6 @@ layer_QueueEndDebugUtilsLabelEXT_before(queue);
 }
 #endif 
 device_dispatch[GetKey(queue)].QueueEndDebugUtilsLabelEXT(queue);
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void*)queue) + '!');
 #ifdef QUEUEENDDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueEndDebugUtilsLabelEXT_after(queue);
@@ -9698,8 +8494,6 @@ layer_QueueInsertDebugUtilsLabelEXT_before(queue, pLabelInfo);
 }
 #endif 
 device_dispatch[GetKey(queue)].QueueInsertDebugUtilsLabelEXT(queue, pLabelInfo);
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void*)queue) + '!');
-winsockSendToUI(&ConnectSocket,"pLabelInfo=" + ptrToString((void*)pLabelInfo) + '!');
 #ifdef QUEUEINSERTDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueInsertDebugUtilsLabelEXT_after(queue, pLabelInfo);
@@ -9721,8 +8515,6 @@ layer_CmdBeginDebugUtilsLabelEXT_before(commandBuffer, pLabelInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pLabelInfo=" + ptrToString((void*)pLabelInfo) + '!');
 #ifdef CMDBEGINDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginDebugUtilsLabelEXT_after(commandBuffer, pLabelInfo);
@@ -9744,7 +8536,6 @@ layer_CmdEndDebugUtilsLabelEXT_before(commandBuffer);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndDebugUtilsLabelEXT(commandBuffer);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
 #ifdef CMDENDDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndDebugUtilsLabelEXT_after(commandBuffer);
@@ -9766,8 +8557,6 @@ layer_CmdInsertDebugUtilsLabelEXT_before(commandBuffer, pLabelInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdInsertDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pLabelInfo=" + ptrToString((void*)pLabelInfo) + '!');
 #ifdef CMDINSERTDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdInsertDebugUtilsLabelEXT_after(commandBuffer, pLabelInfo);
@@ -9789,10 +8578,6 @@ layer_GetMemoryHostPointerPropertiesEXT_before(device, handleType, pHostPointer,
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryHostPointerPropertiesEXT(device, handleType, pHostPointer, pMemoryHostPointerProperties);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"handleType=" + std::to_string(handleType) + '!');
-winsockSendToUI(&ConnectSocket,"pHostPointer=" + ptrToString((void*)pHostPointer) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryHostPointerProperties=" + ptrToString((void*)pMemoryHostPointerProperties) + '!');
 #ifdef GETMEMORYHOSTPOINTERPROPERTIESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryHostPointerPropertiesEXT_after(device, handleType, pHostPointer, pMemoryHostPointerProperties);
@@ -9815,11 +8600,6 @@ layer_CmdWriteBufferMarkerAMD_before(commandBuffer, pipelineStage, dstBuffer, ds
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteBufferMarkerAMD(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineStage=" + std::to_string(pipelineStage) + '!');
-winsockSendToUI(&ConnectSocket,"dstBuffer=" + ptrToString((void*)dstBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"dstOffset=" + ptrToString((void*)dstOffset) + '!');
-winsockSendToUI(&ConnectSocket,"marker=" + std::to_string(marker) + '!');
 #ifdef CMDWRITEBUFFERMARKERAMD_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteBufferMarkerAMD_after(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker);
@@ -9841,10 +8621,6 @@ layer_CreateRenderPass2_before(device, pCreateInfo, pAllocator, pRenderPass);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateRenderPass2(device, pCreateInfo, pAllocator, pRenderPass);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPass=" + ptrToString((void*)pRenderPass) + '!');
 #ifdef CREATERENDERPASS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateRenderPass2_after(device, pCreateInfo, pAllocator, pRenderPass);
@@ -9867,9 +8643,6 @@ layer_CmdBeginRenderPass2_before(commandBuffer, pRenderPassBegin, pSubpassBeginI
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass2(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin=" + ptrToString((void*)pRenderPassBegin) + '!');
-winsockSendToUI(&ConnectSocket,"pSubpassBeginInfo=" + ptrToString((void*)pSubpassBeginInfo) + '!');
 #ifdef CMDBEGINRENDERPASS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginRenderPass2_after(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
@@ -9891,9 +8664,6 @@ layer_CmdNextSubpass2_before(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdNextSubpass2(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pSubpassBeginInfo=" + ptrToString((void*)pSubpassBeginInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pSubpassEndInfo=" + ptrToString((void*)pSubpassEndInfo) + '!');
 #ifdef CMDNEXTSUBPASS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdNextSubpass2_after(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
@@ -9915,8 +8685,6 @@ layer_CmdEndRenderPass2_before(commandBuffer, pSubpassEndInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass2(commandBuffer, pSubpassEndInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pSubpassEndInfo=" + ptrToString((void*)pSubpassEndInfo) + '!');
 #ifdef CMDENDRENDERPASS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndRenderPass2_after(commandBuffer, pSubpassEndInfo);
@@ -9938,9 +8706,6 @@ layer_GetSemaphoreCounterValue_before(device, semaphore, pValue);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreCounterValue(device, semaphore, pValue);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"semaphore=" + ptrToString((void*)semaphore) + '!');
-winsockSendToUI(&ConnectSocket,"pValue=" + ptrToString((void*)pValue) + '!');
 #ifdef GETSEMAPHORECOUNTERVALUE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSemaphoreCounterValue_after(device, semaphore, pValue);
@@ -9963,9 +8728,6 @@ layer_WaitSemaphores_before(device, pWaitInfo, timeout);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].WaitSemaphores(device, pWaitInfo, timeout);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pWaitInfo=" + ptrToString((void*)pWaitInfo) + '!');
-winsockSendToUI(&ConnectSocket,"timeout=" + std::to_string(timeout) + '!');
 #ifdef WAITSEMAPHORES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_WaitSemaphores_after(device, pWaitInfo, timeout);
@@ -9988,8 +8750,6 @@ layer_SignalSemaphore_before(device, pSignalInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].SignalSemaphore(device, pSignalInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pSignalInfo=" + ptrToString((void*)pSignalInfo) + '!');
 #ifdef SIGNALSEMAPHORE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SignalSemaphore_after(device, pSignalInfo);
@@ -10013,9 +8773,6 @@ layer_GetAndroidHardwareBufferPropertiesANDROID_before(device, buffer, pProperti
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetAndroidHardwareBufferPropertiesANDROID(device, buffer, pProperties);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETANDROIDHARDWAREBUFFERPROPERTIESANDROID_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetAndroidHardwareBufferPropertiesANDROID_after(device, buffer, pProperties);
@@ -10040,9 +8797,6 @@ layer_GetMemoryAndroidHardwareBufferANDROID_before(device, pInfo, pBuffer);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryAndroidHardwareBufferANDROID(device, pInfo, pBuffer);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pBuffer=" + ptrToString((void*)pBuffer) + '!');
 #ifdef GETMEMORYANDROIDHARDWAREBUFFERANDROID_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryAndroidHardwareBufferANDROID_after(device, pInfo, pBuffer);
@@ -10066,13 +8820,6 @@ layer_CmdDrawIndirectCount_before(commandBuffer, buffer, offset, countBuffer, co
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void*)countBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + ptrToString((void*)countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDDRAWINDIRECTCOUNT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndirectCount_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -10094,13 +8841,6 @@ layer_CmdDrawIndexedIndirectCount_before(commandBuffer, buffer, offset, countBuf
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void*)countBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + ptrToString((void*)countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDDRAWINDEXEDINDIRECTCOUNT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndexedIndirectCount_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -10122,8 +8862,6 @@ layer_CmdSetCheckpointNV_before(commandBuffer, pCheckpointMarker);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCheckpointNV(commandBuffer, pCheckpointMarker);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pCheckpointMarker=" + ptrToString((void*)pCheckpointMarker) + '!');
 #ifdef CMDSETCHECKPOINTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCheckpointNV_after(commandBuffer, pCheckpointMarker);
@@ -10145,9 +8883,6 @@ layer_GetQueueCheckpointDataNV_before(queue, pCheckpointDataCount, pCheckpointDa
 }
 #endif 
 device_dispatch[GetKey(queue)].GetQueueCheckpointDataNV(queue, pCheckpointDataCount, pCheckpointData);
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void*)queue) + '!');
-winsockSendToUI(&ConnectSocket,"pCheckpointDataCount=" + ptrToString((void*)pCheckpointDataCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCheckpointData=" + ptrToString((void*)pCheckpointData) + '!');
 #ifdef GETQUEUECHECKPOINTDATANV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetQueueCheckpointDataNV_after(queue, pCheckpointDataCount, pCheckpointData);
@@ -10169,12 +8904,6 @@ layer_CmdBindTransformFeedbackBuffersEXT_before(commandBuffer, firstBinding, bin
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindTransformFeedbackBuffersEXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstBinding=" + std::to_string(firstBinding) + '!');
-winsockSendToUI(&ConnectSocket,"bindingCount=" + std::to_string(bindingCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBuffers=" + ptrToString((void*)pBuffers) + '!');
-winsockSendToUI(&ConnectSocket,"pOffsets=" + ptrToString((void*)pOffsets) + '!');
-winsockSendToUI(&ConnectSocket,"pSizes=" + ptrToString((void*)pSizes) + '!');
 #ifdef CMDBINDTRANSFORMFEEDBACKBUFFERSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindTransformFeedbackBuffersEXT_after(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes);
@@ -10196,11 +8925,6 @@ layer_CmdBeginTransformFeedbackEXT_before(commandBuffer, firstCounterBuffer, cou
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstCounterBuffer=" + std::to_string(firstCounterBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"counterBufferCount=" + std::to_string(counterBufferCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterBuffers=" + ptrToString((void*)pCounterBuffers) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterBufferOffsets=" + ptrToString((void*)pCounterBufferOffsets) + '!');
 #ifdef CMDBEGINTRANSFORMFEEDBACKEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginTransformFeedbackEXT_after(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
@@ -10222,11 +8946,6 @@ layer_CmdEndTransformFeedbackEXT_before(commandBuffer, firstCounterBuffer, count
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstCounterBuffer=" + std::to_string(firstCounterBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"counterBufferCount=" + std::to_string(counterBufferCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterBuffers=" + ptrToString((void*)pCounterBuffers) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterBufferOffsets=" + ptrToString((void*)pCounterBufferOffsets) + '!');
 #ifdef CMDENDTRANSFORMFEEDBACKEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndTransformFeedbackEXT_after(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
@@ -10248,11 +8967,6 @@ layer_CmdBeginQueryIndexedEXT_before(commandBuffer, queryPool, query, flags, ind
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginQueryIndexedEXT(commandBuffer, queryPool, query, flags, index);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"query=" + std::to_string(query) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void*)flags) + '!');
-winsockSendToUI(&ConnectSocket,"index=" + std::to_string(index) + '!');
 #ifdef CMDBEGINQUERYINDEXEDEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginQueryIndexedEXT_after(commandBuffer, queryPool, query, flags, index);
@@ -10274,10 +8988,6 @@ layer_CmdEndQueryIndexedEXT_before(commandBuffer, queryPool, query, index);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndQueryIndexedEXT(commandBuffer, queryPool, query, index);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"query=" + std::to_string(query) + '!');
-winsockSendToUI(&ConnectSocket,"index=" + std::to_string(index) + '!');
 #ifdef CMDENDQUERYINDEXEDEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndQueryIndexedEXT_after(commandBuffer, queryPool, query, index);
@@ -10299,13 +9009,6 @@ layer_CmdDrawIndirectByteCountEXT_before(commandBuffer, instanceCount, firstInst
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectByteCountEXT(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"instanceCount=" + std::to_string(instanceCount) + '!');
-winsockSendToUI(&ConnectSocket,"firstInstance=" + std::to_string(firstInstance) + '!');
-winsockSendToUI(&ConnectSocket,"counterBuffer=" + ptrToString((void*)counterBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"counterBufferOffset=" + ptrToString((void*)counterBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"counterOffset=" + std::to_string(counterOffset) + '!');
-winsockSendToUI(&ConnectSocket,"vertexStride=" + std::to_string(vertexStride) + '!');
 #ifdef CMDDRAWINDIRECTBYTECOUNTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndirectByteCountEXT_after(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride);
@@ -10327,10 +9030,6 @@ layer_CmdSetExclusiveScissorNV_before(commandBuffer, firstExclusiveScissor, excl
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetExclusiveScissorNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstExclusiveScissor=" + std::to_string(firstExclusiveScissor) + '!');
-winsockSendToUI(&ConnectSocket,"exclusiveScissorCount=" + std::to_string(exclusiveScissorCount) + '!');
-winsockSendToUI(&ConnectSocket,"pExclusiveScissors=" + ptrToString((void*)pExclusiveScissors) + '!');
 #ifdef CMDSETEXCLUSIVESCISSORNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetExclusiveScissorNV_after(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors);
@@ -10352,10 +9051,6 @@ layer_CmdSetExclusiveScissorEnableNV_before(commandBuffer, firstExclusiveScissor
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetExclusiveScissorEnableNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstExclusiveScissor=" + std::to_string(firstExclusiveScissor) + '!');
-winsockSendToUI(&ConnectSocket,"exclusiveScissorCount=" + std::to_string(exclusiveScissorCount) + '!');
-winsockSendToUI(&ConnectSocket,"pExclusiveScissorEnables=" + ptrToString((void*)pExclusiveScissorEnables) + '!');
 #ifdef CMDSETEXCLUSIVESCISSORENABLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetExclusiveScissorEnableNV_after(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables);
@@ -10377,9 +9072,6 @@ layer_CmdBindShadingRateImageNV_before(commandBuffer, imageView, imageLayout);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindShadingRateImageNV(commandBuffer, imageView, imageLayout);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"imageView=" + ptrToString((void*)imageView) + '!');
-winsockSendToUI(&ConnectSocket,"imageLayout=" + std::to_string(imageLayout) + '!');
 #ifdef CMDBINDSHADINGRATEIMAGENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindShadingRateImageNV_after(commandBuffer, imageView, imageLayout);
@@ -10401,10 +9093,6 @@ layer_CmdSetViewportShadingRatePaletteNV_before(commandBuffer, firstViewport, vi
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportShadingRatePaletteNV(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstViewport=" + std::to_string(firstViewport) + '!');
-winsockSendToUI(&ConnectSocket,"viewportCount=" + std::to_string(viewportCount) + '!');
-winsockSendToUI(&ConnectSocket,"pShadingRatePalettes=" + ptrToString((void*)pShadingRatePalettes) + '!');
 #ifdef CMDSETVIEWPORTSHADINGRATEPALETTENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetViewportShadingRatePaletteNV_after(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes);
@@ -10426,10 +9114,6 @@ layer_CmdSetCoarseSampleOrderNV_before(commandBuffer, sampleOrderType, customSam
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCoarseSampleOrderNV(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"sampleOrderType=" + std::to_string(sampleOrderType) + '!');
-winsockSendToUI(&ConnectSocket,"customSampleOrderCount=" + std::to_string(customSampleOrderCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCustomSampleOrders=" + ptrToString((void*)pCustomSampleOrders) + '!');
 #ifdef CMDSETCOARSESAMPLEORDERNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCoarseSampleOrderNV_after(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders);
@@ -10451,9 +9135,6 @@ layer_CmdDrawMeshTasksNV_before(commandBuffer, taskCount, firstTask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksNV(commandBuffer, taskCount, firstTask);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"taskCount=" + std::to_string(taskCount) + '!');
-winsockSendToUI(&ConnectSocket,"firstTask=" + std::to_string(firstTask) + '!');
 #ifdef CMDDRAWMESHTASKSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMeshTasksNV_after(commandBuffer, taskCount, firstTask);
@@ -10475,11 +9156,6 @@ layer_CmdDrawMeshTasksIndirectNV_before(commandBuffer, buffer, offset, drawCount
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectNV(commandBuffer, buffer, offset, drawCount, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"drawCount=" + std::to_string(drawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDDRAWMESHTASKSINDIRECTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMeshTasksIndirectNV_after(commandBuffer, buffer, offset, drawCount, stride);
@@ -10501,13 +9177,6 @@ layer_CmdDrawMeshTasksIndirectCountNV_before(commandBuffer, buffer, offset, coun
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectCountNV(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void*)countBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + ptrToString((void*)countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDDRAWMESHTASKSINDIRECTCOUNTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMeshTasksIndirectCountNV_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -10529,10 +9198,6 @@ layer_CmdDrawMeshTasksEXT_before(commandBuffer, groupCountX, groupCountY, groupC
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksEXT(commandBuffer, groupCountX, groupCountY, groupCountZ);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountX=" + std::to_string(groupCountX) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountY=" + std::to_string(groupCountY) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountZ=" + std::to_string(groupCountZ) + '!');
 #ifdef CMDDRAWMESHTASKSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMeshTasksEXT_after(commandBuffer, groupCountX, groupCountY, groupCountZ);
@@ -10554,11 +9219,6 @@ layer_CmdDrawMeshTasksIndirectEXT_before(commandBuffer, buffer, offset, drawCoun
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectEXT(commandBuffer, buffer, offset, drawCount, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"drawCount=" + std::to_string(drawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDDRAWMESHTASKSINDIRECTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMeshTasksIndirectEXT_after(commandBuffer, buffer, offset, drawCount, stride);
@@ -10580,13 +9240,6 @@ layer_CmdDrawMeshTasksIndirectCountEXT_before(commandBuffer, buffer, offset, cou
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectCountEXT(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void*)countBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + ptrToString((void*)countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDDRAWMESHTASKSINDIRECTCOUNTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMeshTasksIndirectCountEXT_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -10608,9 +9261,6 @@ layer_CompileDeferredNV_before(device, pipeline, shader);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CompileDeferredNV(device, pipeline, shader);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void*)pipeline) + '!');
-winsockSendToUI(&ConnectSocket,"shader=" + std::to_string(shader) + '!');
 #ifdef COMPILEDEFERREDNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CompileDeferredNV_after(device, pipeline, shader);
@@ -10633,10 +9283,6 @@ layer_CreateAccelerationStructureNV_before(device, pCreateInfo, pAllocator, pAcc
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateAccelerationStructureNV(device, pCreateInfo, pAllocator, pAccelerationStructure);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pAccelerationStructure=" + ptrToString((void*)pAccelerationStructure) + '!');
 #ifdef CREATEACCELERATIONSTRUCTURENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateAccelerationStructureNV_after(device, pCreateInfo, pAllocator, pAccelerationStructure);
@@ -10659,9 +9305,6 @@ layer_CmdBindInvocationMaskHUAWEI_before(commandBuffer, imageView, imageLayout);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindInvocationMaskHUAWEI(commandBuffer, imageView, imageLayout);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"imageView=" + ptrToString((void*)imageView) + '!');
-winsockSendToUI(&ConnectSocket,"imageLayout=" + std::to_string(imageLayout) + '!');
 #ifdef CMDBINDINVOCATIONMASKHUAWEI_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindInvocationMaskHUAWEI_after(commandBuffer, imageView, imageLayout);
@@ -10683,9 +9326,6 @@ layer_DestroyAccelerationStructureKHR_before(device, accelerationStructure, pAll
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyAccelerationStructureKHR(device, accelerationStructure, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"accelerationStructure=" + ptrToString((void*)accelerationStructure) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyAccelerationStructureKHR_after(device, accelerationStructure, pAllocator);
@@ -10707,9 +9347,6 @@ layer_DestroyAccelerationStructureNV_before(device, accelerationStructure, pAllo
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyAccelerationStructureNV(device, accelerationStructure, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"accelerationStructure=" + ptrToString((void*)accelerationStructure) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYACCELERATIONSTRUCTURENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyAccelerationStructureNV_after(device, accelerationStructure, pAllocator);
@@ -10731,9 +9368,6 @@ layer_GetAccelerationStructureMemoryRequirementsNV_before(device, pInfo, pMemory
 }
 #endif 
 device_dispatch[GetKey(device)].GetAccelerationStructureMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements=" + ptrToString((void*)pMemoryRequirements) + '!');
 #ifdef GETACCELERATIONSTRUCTUREMEMORYREQUIREMENTSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetAccelerationStructureMemoryRequirementsNV_after(device, pInfo, pMemoryRequirements);
@@ -10755,9 +9389,6 @@ layer_BindAccelerationStructureMemoryNV_before(device, bindInfoCount, pBindInfos
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindAccelerationStructureMemoryNV(device, bindInfoCount, pBindInfos);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"bindInfoCount=" + std::to_string(bindInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos=" + ptrToString((void*)pBindInfos) + '!');
 #ifdef BINDACCELERATIONSTRUCTUREMEMORYNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindAccelerationStructureMemoryNV_after(device, bindInfoCount, pBindInfos);
@@ -10780,10 +9411,6 @@ layer_CmdCopyAccelerationStructureNV_before(commandBuffer, dst, src, mode);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureNV(commandBuffer, dst, src, mode);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"dst=" + ptrToString((void*)dst) + '!');
-winsockSendToUI(&ConnectSocket,"src=" + ptrToString((void*)src) + '!');
-winsockSendToUI(&ConnectSocket,"mode=" + std::to_string(mode) + '!');
 #ifdef CMDCOPYACCELERATIONSTRUCTURENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyAccelerationStructureNV_after(commandBuffer, dst, src, mode);
@@ -10805,8 +9432,6 @@ layer_CmdCopyAccelerationStructureKHR_before(commandBuffer, pInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureKHR(commandBuffer, pInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef CMDCOPYACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyAccelerationStructureKHR_after(commandBuffer, pInfo);
@@ -10828,9 +9453,6 @@ layer_CopyAccelerationStructureKHR_before(device, deferredOperation, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyAccelerationStructureKHR(device, deferredOperation, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void*)deferredOperation) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef COPYACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyAccelerationStructureKHR_after(device, deferredOperation, pInfo);
@@ -10853,8 +9475,6 @@ layer_CmdCopyAccelerationStructureToMemoryKHR_before(commandBuffer, pInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureToMemoryKHR(commandBuffer, pInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef CMDCOPYACCELERATIONSTRUCTURETOMEMORYKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyAccelerationStructureToMemoryKHR_after(commandBuffer, pInfo);
@@ -10876,9 +9496,6 @@ layer_CopyAccelerationStructureToMemoryKHR_before(device, deferredOperation, pIn
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyAccelerationStructureToMemoryKHR(device, deferredOperation, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void*)deferredOperation) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef COPYACCELERATIONSTRUCTURETOMEMORYKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyAccelerationStructureToMemoryKHR_after(device, deferredOperation, pInfo);
@@ -10901,8 +9518,6 @@ layer_CmdCopyMemoryToAccelerationStructureKHR_before(commandBuffer, pInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToAccelerationStructureKHR(commandBuffer, pInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef CMDCOPYMEMORYTOACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyMemoryToAccelerationStructureKHR_after(commandBuffer, pInfo);
@@ -10924,9 +9539,6 @@ layer_CopyMemoryToAccelerationStructureKHR_before(device, deferredOperation, pIn
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyMemoryToAccelerationStructureKHR(device, deferredOperation, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void*)deferredOperation) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef COPYMEMORYTOACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyMemoryToAccelerationStructureKHR_after(device, deferredOperation, pInfo);
@@ -10949,12 +9561,6 @@ layer_CmdWriteAccelerationStructuresPropertiesKHR_before(commandBuffer, accelera
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteAccelerationStructuresPropertiesKHR(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"accelerationStructureCount=" + std::to_string(accelerationStructureCount) + '!');
-winsockSendToUI(&ConnectSocket,"pAccelerationStructures=" + ptrToString((void*)pAccelerationStructures) + '!');
-winsockSendToUI(&ConnectSocket,"queryType=" + std::to_string(queryType) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
 #ifdef CMDWRITEACCELERATIONSTRUCTURESPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteAccelerationStructuresPropertiesKHR_after(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
@@ -10976,12 +9582,6 @@ layer_CmdWriteAccelerationStructuresPropertiesNV_before(commandBuffer, accelerat
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteAccelerationStructuresPropertiesNV(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"accelerationStructureCount=" + std::to_string(accelerationStructureCount) + '!');
-winsockSendToUI(&ConnectSocket,"pAccelerationStructures=" + ptrToString((void*)pAccelerationStructures) + '!');
-winsockSendToUI(&ConnectSocket,"queryType=" + std::to_string(queryType) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
 #ifdef CMDWRITEACCELERATIONSTRUCTURESPROPERTIESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteAccelerationStructuresPropertiesNV_after(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
@@ -11003,15 +9603,6 @@ layer_CmdBuildAccelerationStructureNV_before(commandBuffer, pInfo, instanceData,
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructureNV(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"instanceData=" + ptrToString((void*)instanceData) + '!');
-winsockSendToUI(&ConnectSocket,"instanceOffset=" + ptrToString((void*)instanceOffset) + '!');
-winsockSendToUI(&ConnectSocket,"update=" + bool_as_text(update) + '!');
-winsockSendToUI(&ConnectSocket,"dst=" + ptrToString((void*)dst) + '!');
-winsockSendToUI(&ConnectSocket,"src=" + ptrToString((void*)src) + '!');
-winsockSendToUI(&ConnectSocket,"scratch=" + ptrToString((void*)scratch) + '!');
-winsockSendToUI(&ConnectSocket,"scratchOffset=" + ptrToString((void*)scratchOffset) + '!');
 #ifdef CMDBUILDACCELERATIONSTRUCTURENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBuildAccelerationStructureNV_after(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset);
@@ -11033,13 +9624,6 @@ layer_WriteAccelerationStructuresPropertiesKHR_before(device, accelerationStruct
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].WriteAccelerationStructuresPropertiesKHR(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"accelerationStructureCount=" + std::to_string(accelerationStructureCount) + '!');
-winsockSendToUI(&ConnectSocket,"pAccelerationStructures=" + ptrToString((void*)pAccelerationStructures) + '!');
-winsockSendToUI(&ConnectSocket,"queryType=" + std::to_string(queryType) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef WRITEACCELERATIONSTRUCTURESPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_WriteAccelerationStructuresPropertiesKHR_after(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride);
@@ -11062,14 +9646,6 @@ layer_CmdTraceRaysKHR_before(commandBuffer, pRaygenShaderBindingTable, pMissShad
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pRaygenShaderBindingTable=" + ptrToString((void*)pRaygenShaderBindingTable) + '!');
-winsockSendToUI(&ConnectSocket,"pMissShaderBindingTable=" + ptrToString((void*)pMissShaderBindingTable) + '!');
-winsockSendToUI(&ConnectSocket,"pHitShaderBindingTable=" + ptrToString((void*)pHitShaderBindingTable) + '!');
-winsockSendToUI(&ConnectSocket,"pCallableShaderBindingTable=" + ptrToString((void*)pCallableShaderBindingTable) + '!');
-winsockSendToUI(&ConnectSocket,"width=" + std::to_string(width) + '!');
-winsockSendToUI(&ConnectSocket,"height=" + std::to_string(height) + '!');
-winsockSendToUI(&ConnectSocket,"depth=" + std::to_string(depth) + '!');
 #ifdef CMDTRACERAYSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdTraceRaysKHR_after(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth);
@@ -11091,21 +9667,6 @@ layer_CmdTraceRaysNV_before(commandBuffer, raygenShaderBindingTableBuffer, rayge
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysNV(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"raygenShaderBindingTableBuffer=" + ptrToString((void*)raygenShaderBindingTableBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"raygenShaderBindingOffset=" + ptrToString((void*)raygenShaderBindingOffset) + '!');
-winsockSendToUI(&ConnectSocket,"missShaderBindingTableBuffer=" + ptrToString((void*)missShaderBindingTableBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"missShaderBindingOffset=" + ptrToString((void*)missShaderBindingOffset) + '!');
-winsockSendToUI(&ConnectSocket,"missShaderBindingStride=" + ptrToString((void*)missShaderBindingStride) + '!');
-winsockSendToUI(&ConnectSocket,"hitShaderBindingTableBuffer=" + ptrToString((void*)hitShaderBindingTableBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"hitShaderBindingOffset=" + ptrToString((void*)hitShaderBindingOffset) + '!');
-winsockSendToUI(&ConnectSocket,"hitShaderBindingStride=" + ptrToString((void*)hitShaderBindingStride) + '!');
-winsockSendToUI(&ConnectSocket,"callableShaderBindingTableBuffer=" + ptrToString((void*)callableShaderBindingTableBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"callableShaderBindingOffset=" + ptrToString((void*)callableShaderBindingOffset) + '!');
-winsockSendToUI(&ConnectSocket,"callableShaderBindingStride=" + ptrToString((void*)callableShaderBindingStride) + '!');
-winsockSendToUI(&ConnectSocket,"width=" + std::to_string(width) + '!');
-winsockSendToUI(&ConnectSocket,"height=" + std::to_string(height) + '!');
-winsockSendToUI(&ConnectSocket,"depth=" + std::to_string(depth) + '!');
 #ifdef CMDTRACERAYSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdTraceRaysNV_after(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth);
@@ -11127,12 +9688,6 @@ layer_GetRayTracingShaderGroupHandlesKHR_before(device, pipeline, firstGroup, gr
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetRayTracingShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void*)pipeline) + '!');
-winsockSendToUI(&ConnectSocket,"firstGroup=" + std::to_string(firstGroup) + '!');
-winsockSendToUI(&ConnectSocket,"groupCount=" + std::to_string(groupCount) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETRAYTRACINGSHADERGROUPHANDLESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRayTracingShaderGroupHandlesKHR_after(device, pipeline, firstGroup, groupCount, dataSize, pData);
@@ -11155,12 +9710,6 @@ layer_GetRayTracingCaptureReplayShaderGroupHandlesKHR_before(device, pipeline, f
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetRayTracingCaptureReplayShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void*)pipeline) + '!');
-winsockSendToUI(&ConnectSocket,"firstGroup=" + std::to_string(firstGroup) + '!');
-winsockSendToUI(&ConnectSocket,"groupCount=" + std::to_string(groupCount) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETRAYTRACINGCAPTUREREPLAYSHADERGROUPHANDLESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRayTracingCaptureReplayShaderGroupHandlesKHR_after(device, pipeline, firstGroup, groupCount, dataSize, pData);
@@ -11183,10 +9732,6 @@ layer_GetAccelerationStructureHandleNV_before(device, accelerationStructure, dat
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetAccelerationStructureHandleNV(device, accelerationStructure, dataSize, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"accelerationStructure=" + ptrToString((void*)accelerationStructure) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETACCELERATIONSTRUCTUREHANDLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetAccelerationStructureHandleNV_after(device, accelerationStructure, dataSize, pData);
@@ -11209,12 +9754,6 @@ layer_CreateRayTracingPipelinesNV_before(device, pipelineCache, createInfoCount,
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateRayTracingPipelinesNV(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineCache=" + ptrToString((void*)pipelineCache) + '!');
-winsockSendToUI(&ConnectSocket,"createInfoCount=" + std::to_string(createInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos=" + ptrToString((void*)pCreateInfos) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pPipelines=" + ptrToString((void*)pPipelines) + '!');
 #ifdef CREATERAYTRACINGPIPELINESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateRayTracingPipelinesNV_after(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
@@ -11237,13 +9776,6 @@ layer_CreateRayTracingPipelinesKHR_before(device, deferredOperation, pipelineCac
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateRayTracingPipelinesKHR(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void*)deferredOperation) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineCache=" + ptrToString((void*)pipelineCache) + '!');
-winsockSendToUI(&ConnectSocket,"createInfoCount=" + std::to_string(createInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos=" + ptrToString((void*)pCreateInfos) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pPipelines=" + ptrToString((void*)pPipelines) + '!');
 #ifdef CREATERAYTRACINGPIPELINESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateRayTracingPipelinesKHR_after(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
@@ -11266,12 +9798,6 @@ layer_CmdTraceRaysIndirectKHR_before(commandBuffer, pRaygenShaderBindingTable, p
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysIndirectKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pRaygenShaderBindingTable=" + ptrToString((void*)pRaygenShaderBindingTable) + '!');
-winsockSendToUI(&ConnectSocket,"pMissShaderBindingTable=" + ptrToString((void*)pMissShaderBindingTable) + '!');
-winsockSendToUI(&ConnectSocket,"pHitShaderBindingTable=" + ptrToString((void*)pHitShaderBindingTable) + '!');
-winsockSendToUI(&ConnectSocket,"pCallableShaderBindingTable=" + ptrToString((void*)pCallableShaderBindingTable) + '!');
-winsockSendToUI(&ConnectSocket,"indirectDeviceAddress=" + ptrToString((void*)indirectDeviceAddress) + '!');
 #ifdef CMDTRACERAYSINDIRECTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdTraceRaysIndirectKHR_after(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress);
@@ -11293,8 +9819,6 @@ layer_CmdTraceRaysIndirect2KHR_before(commandBuffer, indirectDeviceAddress);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysIndirect2KHR(commandBuffer, indirectDeviceAddress);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"indirectDeviceAddress=" + ptrToString((void*)indirectDeviceAddress) + '!');
 #ifdef CMDTRACERAYSINDIRECT2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdTraceRaysIndirect2KHR_after(commandBuffer, indirectDeviceAddress);
@@ -11316,9 +9840,6 @@ layer_GetDeviceAccelerationStructureCompatibilityKHR_before(device, pVersionInfo
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceAccelerationStructureCompatibilityKHR(device, pVersionInfo, pCompatibility);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pVersionInfo=" + ptrToString((void*)pVersionInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pCompatibility=" + ptrToString((void*)pCompatibility) + '!');
 #ifdef GETDEVICEACCELERATIONSTRUCTURECOMPATIBILITYKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceAccelerationStructureCompatibilityKHR_after(device, pVersionInfo, pCompatibility);
@@ -11340,10 +9861,6 @@ layer_GetRayTracingShaderGroupStackSizeKHR_before(device, pipeline, group, group
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetRayTracingShaderGroupStackSizeKHR(device, pipeline, group, groupShader);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void*)pipeline) + '!');
-winsockSendToUI(&ConnectSocket,"group=" + std::to_string(group) + '!');
-winsockSendToUI(&ConnectSocket,"groupShader=" + std::to_string(groupShader) + '!');
 #ifdef GETRAYTRACINGSHADERGROUPSTACKSIZEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRayTracingShaderGroupStackSizeKHR_after(device, pipeline, group, groupShader);
@@ -11366,8 +9883,6 @@ layer_CmdSetRayTracingPipelineStackSizeKHR_before(commandBuffer, pipelineStackSi
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetRayTracingPipelineStackSizeKHR(commandBuffer, pipelineStackSize);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineStackSize=" + std::to_string(pipelineStackSize) + '!');
 #ifdef CMDSETRAYTRACINGPIPELINESTACKSIZEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetRayTracingPipelineStackSizeKHR_after(commandBuffer, pipelineStackSize);
@@ -11389,8 +9904,6 @@ layer_GetImageViewHandleNVX_before(device, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetImageViewHandleNVX(device, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef GETIMAGEVIEWHANDLENVX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageViewHandleNVX_after(device, pInfo);
@@ -11413,9 +9926,6 @@ layer_GetImageViewAddressNVX_before(device, imageView, pProperties);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetImageViewAddressNVX(device, imageView, pProperties);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"imageView=" + ptrToString((void*)imageView) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETIMAGEVIEWADDRESSNVX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageViewAddressNVX_after(device, imageView, pProperties);
@@ -11439,9 +9949,6 @@ layer_GetDeviceGroupSurfacePresentModes2EXT_before(device, pSurfaceInfo, pModes)
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeviceGroupSurfacePresentModes2EXT(device, pSurfaceInfo, pModes);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceInfo=" + ptrToString((void*)pSurfaceInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pModes=" + ptrToString((void*)pModes) + '!');
 #ifdef GETDEVICEGROUPSURFACEPRESENTMODES2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceGroupSurfacePresentModes2EXT_after(device, pSurfaceInfo, pModes);
@@ -11466,8 +9973,6 @@ layer_AcquireFullScreenExclusiveModeEXT_before(device, swapchain);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].AcquireFullScreenExclusiveModeEXT(device, swapchain);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void*)swapchain) + '!');
 #ifdef ACQUIREFULLSCREENEXCLUSIVEMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireFullScreenExclusiveModeEXT_after(device, swapchain);
@@ -11492,8 +9997,6 @@ layer_ReleaseFullScreenExclusiveModeEXT_before(device, swapchain);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ReleaseFullScreenExclusiveModeEXT(device, swapchain);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void*)swapchain) + '!');
 #ifdef RELEASEFULLSCREENEXCLUSIVEMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ReleaseFullScreenExclusiveModeEXT_after(device, swapchain);
@@ -11517,8 +10020,6 @@ layer_AcquireProfilingLockKHR_before(device, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].AcquireProfilingLockKHR(device, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef ACQUIREPROFILINGLOCKKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireProfilingLockKHR_after(device, pInfo);
@@ -11541,7 +10042,6 @@ layer_ReleaseProfilingLockKHR_before(device);
 }
 #endif 
 device_dispatch[GetKey(device)].ReleaseProfilingLockKHR(device);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
 #ifdef RELEASEPROFILINGLOCKKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ReleaseProfilingLockKHR_after(device);
@@ -11563,9 +10063,6 @@ layer_GetImageDrmFormatModifierPropertiesEXT_before(device, image, pProperties);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetImageDrmFormatModifierPropertiesEXT(device, image, pProperties);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void*)image) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETIMAGEDRMFORMATMODIFIERPROPERTIESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageDrmFormatModifierPropertiesEXT_after(device, image, pProperties);
@@ -11588,8 +10085,6 @@ layer_GetBufferOpaqueCaptureAddress_before(device, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetBufferOpaqueCaptureAddress(device, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef GETBUFFEROPAQUECAPTUREADDRESS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferOpaqueCaptureAddress_after(device, pInfo);
@@ -11612,8 +10107,6 @@ layer_GetBufferDeviceAddress_before(device, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetBufferDeviceAddress(device, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef GETBUFFERDEVICEADDRESS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferDeviceAddress_after(device, pInfo);
@@ -11636,8 +10129,6 @@ layer_InitializePerformanceApiINTEL_before(device, pInitializeInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].InitializePerformanceApiINTEL(device, pInitializeInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInitializeInfo=" + ptrToString((void*)pInitializeInfo) + '!');
 #ifdef INITIALIZEPERFORMANCEAPIINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_InitializePerformanceApiINTEL_after(device, pInitializeInfo);
@@ -11660,7 +10151,6 @@ layer_UninitializePerformanceApiINTEL_before(device);
 }
 #endif 
 device_dispatch[GetKey(device)].UninitializePerformanceApiINTEL(device);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
 #ifdef UNINITIALIZEPERFORMANCEAPIINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_UninitializePerformanceApiINTEL_after(device);
@@ -11682,8 +10172,6 @@ layer_CmdSetPerformanceMarkerINTEL_before(commandBuffer, pMarkerInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(commandBuffer)].CmdSetPerformanceMarkerINTEL(commandBuffer, pMarkerInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pMarkerInfo=" + ptrToString((void*)pMarkerInfo) + '!');
 #ifdef CMDSETPERFORMANCEMARKERINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPerformanceMarkerINTEL_after(commandBuffer, pMarkerInfo);
@@ -11706,8 +10194,6 @@ layer_CmdSetPerformanceStreamMarkerINTEL_before(commandBuffer, pMarkerInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(commandBuffer)].CmdSetPerformanceStreamMarkerINTEL(commandBuffer, pMarkerInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pMarkerInfo=" + ptrToString((void*)pMarkerInfo) + '!');
 #ifdef CMDSETPERFORMANCESTREAMMARKERINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPerformanceStreamMarkerINTEL_after(commandBuffer, pMarkerInfo);
@@ -11730,8 +10216,6 @@ layer_CmdSetPerformanceOverrideINTEL_before(commandBuffer, pOverrideInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(commandBuffer)].CmdSetPerformanceOverrideINTEL(commandBuffer, pOverrideInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pOverrideInfo=" + ptrToString((void*)pOverrideInfo) + '!');
 #ifdef CMDSETPERFORMANCEOVERRIDEINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPerformanceOverrideINTEL_after(commandBuffer, pOverrideInfo);
@@ -11754,9 +10238,6 @@ layer_AcquirePerformanceConfigurationINTEL_before(device, pAcquireInfo, pConfigu
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].AcquirePerformanceConfigurationINTEL(device, pAcquireInfo, pConfiguration);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pAcquireInfo=" + ptrToString((void*)pAcquireInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pConfiguration=" + ptrToString((void*)pConfiguration) + '!');
 #ifdef ACQUIREPERFORMANCECONFIGURATIONINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquirePerformanceConfigurationINTEL_after(device, pAcquireInfo, pConfiguration);
@@ -11779,8 +10260,6 @@ layer_ReleasePerformanceConfigurationINTEL_before(device, configuration);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ReleasePerformanceConfigurationINTEL(device, configuration);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"configuration=" + ptrToString((void*)configuration) + '!');
 #ifdef RELEASEPERFORMANCECONFIGURATIONINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ReleasePerformanceConfigurationINTEL_after(device, configuration);
@@ -11803,8 +10282,6 @@ layer_QueueSetPerformanceConfigurationINTEL_before(queue, configuration);
 }
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueueSetPerformanceConfigurationINTEL(queue, configuration);
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void*)queue) + '!');
-winsockSendToUI(&ConnectSocket,"configuration=" + ptrToString((void*)configuration) + '!');
 #ifdef QUEUESETPERFORMANCECONFIGURATIONINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueSetPerformanceConfigurationINTEL_after(queue, configuration);
@@ -11827,9 +10304,6 @@ layer_GetPerformanceParameterINTEL_before(device, parameter, pValue);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPerformanceParameterINTEL(device, parameter, pValue);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"parameter=" + std::to_string(parameter) + '!');
-winsockSendToUI(&ConnectSocket,"pValue=" + ptrToString((void*)pValue) + '!');
 #ifdef GETPERFORMANCEPARAMETERINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPerformanceParameterINTEL_after(device, parameter, pValue);
@@ -11852,8 +10326,6 @@ layer_GetDeviceMemoryOpaqueCaptureAddress_before(device, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeviceMemoryOpaqueCaptureAddress(device, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef GETDEVICEMEMORYOPAQUECAPTUREADDRESS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceMemoryOpaqueCaptureAddress_after(device, pInfo);
@@ -11876,10 +10348,6 @@ layer_GetPipelineExecutablePropertiesKHR_before(device, pPipelineInfo, pExecutab
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPipelineExecutablePropertiesKHR(device, pPipelineInfo, pExecutableCount, pProperties);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pPipelineInfo=" + ptrToString((void*)pPipelineInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pExecutableCount=" + ptrToString((void*)pExecutableCount) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETPIPELINEEXECUTABLEPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPipelineExecutablePropertiesKHR_after(device, pPipelineInfo, pExecutableCount, pProperties);
@@ -11902,10 +10370,6 @@ layer_GetPipelineExecutableStatisticsKHR_before(device, pExecutableInfo, pStatis
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPipelineExecutableStatisticsKHR(device, pExecutableInfo, pStatisticCount, pStatistics);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pExecutableInfo=" + ptrToString((void*)pExecutableInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pStatisticCount=" + ptrToString((void*)pStatisticCount) + '!');
-winsockSendToUI(&ConnectSocket,"pStatistics=" + ptrToString((void*)pStatistics) + '!');
 #ifdef GETPIPELINEEXECUTABLESTATISTICSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPipelineExecutableStatisticsKHR_after(device, pExecutableInfo, pStatisticCount, pStatistics);
@@ -11928,10 +10392,6 @@ layer_GetPipelineExecutableInternalRepresentationsKHR_before(device, pExecutable
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPipelineExecutableInternalRepresentationsKHR(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pExecutableInfo=" + ptrToString((void*)pExecutableInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pInternalRepresentationCount=" + ptrToString((void*)pInternalRepresentationCount) + '!');
-winsockSendToUI(&ConnectSocket,"pInternalRepresentations=" + ptrToString((void*)pInternalRepresentations) + '!');
 #ifdef GETPIPELINEEXECUTABLEINTERNALREPRESENTATIONSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPipelineExecutableInternalRepresentationsKHR_after(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations);
@@ -11954,10 +10414,6 @@ layer_CreateAccelerationStructureKHR_before(device, pCreateInfo, pAllocator, pAc
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateAccelerationStructureKHR(device, pCreateInfo, pAllocator, pAccelerationStructure);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pAccelerationStructure=" + ptrToString((void*)pAccelerationStructure) + '!');
 #ifdef CREATEACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateAccelerationStructureKHR_after(device, pCreateInfo, pAllocator, pAccelerationStructure);
@@ -11980,10 +10436,6 @@ layer_CmdBuildAccelerationStructuresKHR_before(commandBuffer, infoCount, pInfos,
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructuresKHR(commandBuffer, infoCount, pInfos, ppBuildRangeInfos);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"infoCount=" + std::to_string(infoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos=" + ptrToString((void*)pInfos) + '!');
-winsockSendToUI(&ConnectSocket,"ppBuildRangeInfos=" + ptrToString((void*)ppBuildRangeInfos) + '!');
 #ifdef CMDBUILDACCELERATIONSTRUCTURESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBuildAccelerationStructuresKHR_after(commandBuffer, infoCount, pInfos, ppBuildRangeInfos);
@@ -12005,12 +10457,6 @@ layer_CmdBuildAccelerationStructuresIndirectKHR_before(commandBuffer, infoCount,
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructuresIndirectKHR(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"infoCount=" + std::to_string(infoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos=" + ptrToString((void*)pInfos) + '!');
-winsockSendToUI(&ConnectSocket,"pIndirectDeviceAddresses=" + ptrToString((void*)pIndirectDeviceAddresses) + '!');
-winsockSendToUI(&ConnectSocket,"pIndirectStrides=" + ptrToString((void*)pIndirectStrides) + '!');
-winsockSendToUI(&ConnectSocket,"ppMaxPrimitiveCounts=" + ptrToString((void*)ppMaxPrimitiveCounts) + '!');
 #ifdef CMDBUILDACCELERATIONSTRUCTURESINDIRECTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBuildAccelerationStructuresIndirectKHR_after(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts);
@@ -12032,11 +10478,6 @@ layer_BuildAccelerationStructuresKHR_before(device, deferredOperation, infoCount
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].BuildAccelerationStructuresKHR(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void*)deferredOperation) + '!');
-winsockSendToUI(&ConnectSocket,"infoCount=" + std::to_string(infoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos=" + ptrToString((void*)pInfos) + '!');
-winsockSendToUI(&ConnectSocket,"ppBuildRangeInfos=" + ptrToString((void*)ppBuildRangeInfos) + '!');
 #ifdef BUILDACCELERATIONSTRUCTURESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BuildAccelerationStructuresKHR_after(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos);
@@ -12059,8 +10500,6 @@ layer_GetAccelerationStructureDeviceAddressKHR_before(device, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetAccelerationStructureDeviceAddressKHR(device, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef GETACCELERATIONSTRUCTUREDEVICEADDRESSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetAccelerationStructureDeviceAddressKHR_after(device, pInfo);
@@ -12083,9 +10522,6 @@ layer_CreateDeferredOperationKHR_before(device, pAllocator, pDeferredOperation);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateDeferredOperationKHR(device, pAllocator, pDeferredOperation);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pDeferredOperation=" + ptrToString((void*)pDeferredOperation) + '!');
 #ifdef CREATEDEFERREDOPERATIONKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDeferredOperationKHR_after(device, pAllocator, pDeferredOperation);
@@ -12108,9 +10544,6 @@ layer_DestroyDeferredOperationKHR_before(device, operation, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyDeferredOperationKHR(device, operation, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"operation=" + ptrToString((void*)operation) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYDEFERREDOPERATIONKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyDeferredOperationKHR_after(device, operation, pAllocator);
@@ -12132,8 +10565,6 @@ layer_GetDeferredOperationMaxConcurrencyKHR_before(device, operation);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeferredOperationMaxConcurrencyKHR(device, operation);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"operation=" + ptrToString((void*)operation) + '!');
 #ifdef GETDEFERREDOPERATIONMAXCONCURRENCYKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeferredOperationMaxConcurrencyKHR_after(device, operation);
@@ -12156,8 +10587,6 @@ layer_GetDeferredOperationResultKHR_before(device, operation);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeferredOperationResultKHR(device, operation);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"operation=" + ptrToString((void*)operation) + '!');
 #ifdef GETDEFERREDOPERATIONRESULTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeferredOperationResultKHR_after(device, operation);
@@ -12180,8 +10609,6 @@ layer_DeferredOperationJoinKHR_before(device, operation);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].DeferredOperationJoinKHR(device, operation);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"operation=" + ptrToString((void*)operation) + '!');
 #ifdef DEFERREDOPERATIONJOINKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DeferredOperationJoinKHR_after(device, operation);
@@ -12204,9 +10631,6 @@ layer_GetPipelineIndirectMemoryRequirementsNV_before(device, pCreateInfo, pMemor
 }
 #endif 
 device_dispatch[GetKey(device)].GetPipelineIndirectMemoryRequirementsNV(device, pCreateInfo, pMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements=" + ptrToString((void*)pMemoryRequirements) + '!');
 #ifdef GETPIPELINEINDIRECTMEMORYREQUIREMENTSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPipelineIndirectMemoryRequirementsNV_after(device, pCreateInfo, pMemoryRequirements);
@@ -12228,8 +10652,6 @@ layer_GetPipelineIndirectDeviceAddressNV_before(device, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPipelineIndirectDeviceAddressNV(device, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef GETPIPELINEINDIRECTDEVICEADDRESSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPipelineIndirectDeviceAddressNV_after(device, pInfo);
@@ -12252,8 +10674,6 @@ layer_CmdSetCullMode_before(commandBuffer, cullMode);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCullMode(commandBuffer, cullMode);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"cullMode=" + ptrToString((void*)cullMode) + '!');
 #ifdef CMDSETCULLMODE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCullMode_after(commandBuffer, cullMode);
@@ -12275,8 +10695,6 @@ layer_CmdSetFrontFace_before(commandBuffer, frontFace);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetFrontFace(commandBuffer, frontFace);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"frontFace=" + std::to_string(frontFace) + '!');
 #ifdef CMDSETFRONTFACE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetFrontFace_after(commandBuffer, frontFace);
@@ -12298,8 +10716,6 @@ layer_CmdSetPrimitiveTopology_before(commandBuffer, primitiveTopology);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveTopology(commandBuffer, primitiveTopology);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"primitiveTopology=" + std::to_string(primitiveTopology) + '!');
 #ifdef CMDSETPRIMITIVETOPOLOGY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPrimitiveTopology_after(commandBuffer, primitiveTopology);
@@ -12321,9 +10737,6 @@ layer_CmdSetViewportWithCount_before(commandBuffer, viewportCount, pViewports);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWithCount(commandBuffer, viewportCount, pViewports);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"viewportCount=" + std::to_string(viewportCount) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports=" + ptrToString((void*)pViewports) + '!');
 #ifdef CMDSETVIEWPORTWITHCOUNT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetViewportWithCount_after(commandBuffer, viewportCount, pViewports);
@@ -12345,9 +10758,6 @@ layer_CmdSetScissorWithCount_before(commandBuffer, scissorCount, pScissors);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetScissorWithCount(commandBuffer, scissorCount, pScissors);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"scissorCount=" + std::to_string(scissorCount) + '!');
-winsockSendToUI(&ConnectSocket,"pScissors=" + ptrToString((void*)pScissors) + '!');
 #ifdef CMDSETSCISSORWITHCOUNT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetScissorWithCount_after(commandBuffer, scissorCount, pScissors);
@@ -12369,11 +10779,6 @@ layer_CmdBindIndexBuffer2KHR_before(commandBuffer, buffer, offset, size, indexTy
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindIndexBuffer2KHR(commandBuffer, buffer, offset, size, indexType);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"size=" + ptrToString((void*)size) + '!');
-winsockSendToUI(&ConnectSocket,"indexType=" + std::to_string(indexType) + '!');
 #ifdef CMDBINDINDEXBUFFER2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindIndexBuffer2KHR_after(commandBuffer, buffer, offset, size, indexType);
@@ -12395,13 +10800,6 @@ layer_CmdBindVertexBuffers2_before(commandBuffer, firstBinding, bindingCount, pB
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers2(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstBinding=" + std::to_string(firstBinding) + '!');
-winsockSendToUI(&ConnectSocket,"bindingCount=" + std::to_string(bindingCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBuffers=" + ptrToString((void*)pBuffers) + '!');
-winsockSendToUI(&ConnectSocket,"pOffsets=" + ptrToString((void*)pOffsets) + '!');
-winsockSendToUI(&ConnectSocket,"pSizes=" + ptrToString((void*)pSizes) + '!');
-winsockSendToUI(&ConnectSocket,"pStrides=" + ptrToString((void*)pStrides) + '!');
 #ifdef CMDBINDVERTEXBUFFERS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindVertexBuffers2_after(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
@@ -12423,8 +10821,6 @@ layer_CmdSetDepthTestEnable_before(commandBuffer, depthTestEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthTestEnable(commandBuffer, depthTestEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"depthTestEnable=" + bool_as_text(depthTestEnable) + '!');
 #ifdef CMDSETDEPTHTESTENABLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthTestEnable_after(commandBuffer, depthTestEnable);
@@ -12446,8 +10842,6 @@ layer_CmdSetDepthWriteEnable_before(commandBuffer, depthWriteEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthWriteEnable(commandBuffer, depthWriteEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"depthWriteEnable=" + bool_as_text(depthWriteEnable) + '!');
 #ifdef CMDSETDEPTHWRITEENABLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthWriteEnable_after(commandBuffer, depthWriteEnable);
@@ -12469,8 +10863,6 @@ layer_CmdSetDepthCompareOp_before(commandBuffer, depthCompareOp);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthCompareOp(commandBuffer, depthCompareOp);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"depthCompareOp=" + std::to_string(depthCompareOp) + '!');
 #ifdef CMDSETDEPTHCOMPAREOP_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthCompareOp_after(commandBuffer, depthCompareOp);
@@ -12492,8 +10884,6 @@ layer_CmdSetDepthBoundsTestEnable_before(commandBuffer, depthBoundsTestEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBoundsTestEnable(commandBuffer, depthBoundsTestEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"depthBoundsTestEnable=" + bool_as_text(depthBoundsTestEnable) + '!');
 #ifdef CMDSETDEPTHBOUNDSTESTENABLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthBoundsTestEnable_after(commandBuffer, depthBoundsTestEnable);
@@ -12515,8 +10905,6 @@ layer_CmdSetStencilTestEnable_before(commandBuffer, stencilTestEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilTestEnable(commandBuffer, stencilTestEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"stencilTestEnable=" + bool_as_text(stencilTestEnable) + '!');
 #ifdef CMDSETSTENCILTESTENABLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetStencilTestEnable_after(commandBuffer, stencilTestEnable);
@@ -12538,12 +10926,6 @@ layer_CmdSetStencilOp_before(commandBuffer, faceMask, failOp, passOp, depthFailO
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilOp(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"faceMask=" + ptrToString((void*)faceMask) + '!');
-winsockSendToUI(&ConnectSocket,"failOp=" + std::to_string(failOp) + '!');
-winsockSendToUI(&ConnectSocket,"passOp=" + std::to_string(passOp) + '!');
-winsockSendToUI(&ConnectSocket,"depthFailOp=" + std::to_string(depthFailOp) + '!');
-winsockSendToUI(&ConnectSocket,"compareOp=" + std::to_string(compareOp) + '!');
 #ifdef CMDSETSTENCILOP_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetStencilOp_after(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
@@ -12565,8 +10947,6 @@ layer_CmdSetPatchControlPointsEXT_before(commandBuffer, patchControlPoints);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetPatchControlPointsEXT(commandBuffer, patchControlPoints);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"patchControlPoints=" + std::to_string(patchControlPoints) + '!');
 #ifdef CMDSETPATCHCONTROLPOINTSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPatchControlPointsEXT_after(commandBuffer, patchControlPoints);
@@ -12588,8 +10968,6 @@ layer_CmdSetRasterizerDiscardEnable_before(commandBuffer, rasterizerDiscardEnabl
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizerDiscardEnable(commandBuffer, rasterizerDiscardEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"rasterizerDiscardEnable=" + bool_as_text(rasterizerDiscardEnable) + '!');
 #ifdef CMDSETRASTERIZERDISCARDENABLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetRasterizerDiscardEnable_after(commandBuffer, rasterizerDiscardEnable);
@@ -12611,8 +10989,6 @@ layer_CmdSetDepthBiasEnable_before(commandBuffer, depthBiasEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBiasEnable(commandBuffer, depthBiasEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"depthBiasEnable=" + bool_as_text(depthBiasEnable) + '!');
 #ifdef CMDSETDEPTHBIASENABLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthBiasEnable_after(commandBuffer, depthBiasEnable);
@@ -12634,8 +11010,6 @@ layer_CmdSetLogicOpEXT_before(commandBuffer, logicOp);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetLogicOpEXT(commandBuffer, logicOp);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"logicOp=" + std::to_string(logicOp) + '!');
 #ifdef CMDSETLOGICOPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetLogicOpEXT_after(commandBuffer, logicOp);
@@ -12657,8 +11031,6 @@ layer_CmdSetPrimitiveRestartEnable_before(commandBuffer, primitiveRestartEnable)
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveRestartEnable(commandBuffer, primitiveRestartEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"primitiveRestartEnable=" + bool_as_text(primitiveRestartEnable) + '!');
 #ifdef CMDSETPRIMITIVERESTARTENABLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPrimitiveRestartEnable_after(commandBuffer, primitiveRestartEnable);
@@ -12680,8 +11052,6 @@ layer_CmdSetTessellationDomainOriginEXT_before(commandBuffer, domainOrigin);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetTessellationDomainOriginEXT(commandBuffer, domainOrigin);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"domainOrigin=" + std::to_string(domainOrigin) + '!');
 #ifdef CMDSETTESSELLATIONDOMAINORIGINEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetTessellationDomainOriginEXT_after(commandBuffer, domainOrigin);
@@ -12703,8 +11073,6 @@ layer_CmdSetDepthClampEnableEXT_before(commandBuffer, depthClampEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthClampEnableEXT(commandBuffer, depthClampEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"depthClampEnable=" + bool_as_text(depthClampEnable) + '!');
 #ifdef CMDSETDEPTHCLAMPENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthClampEnableEXT_after(commandBuffer, depthClampEnable);
@@ -12726,8 +11094,6 @@ layer_CmdSetPolygonModeEXT_before(commandBuffer, polygonMode);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetPolygonModeEXT(commandBuffer, polygonMode);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"polygonMode=" + std::to_string(polygonMode) + '!');
 #ifdef CMDSETPOLYGONMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPolygonModeEXT_after(commandBuffer, polygonMode);
@@ -12749,8 +11115,6 @@ layer_CmdSetRasterizationSamplesEXT_before(commandBuffer, rasterizationSamples);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizationSamplesEXT(commandBuffer, rasterizationSamples);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"rasterizationSamples=" + std::to_string(rasterizationSamples) + '!');
 #ifdef CMDSETRASTERIZATIONSAMPLESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetRasterizationSamplesEXT_after(commandBuffer, rasterizationSamples);
@@ -12772,9 +11136,6 @@ layer_CmdSetSampleMaskEXT_before(commandBuffer, samples, pSampleMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetSampleMaskEXT(commandBuffer, samples, pSampleMask);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"samples=" + std::to_string(samples) + '!');
-winsockSendToUI(&ConnectSocket,"pSampleMask=" + ptrToString((void*)pSampleMask) + '!');
 #ifdef CMDSETSAMPLEMASKEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetSampleMaskEXT_after(commandBuffer, samples, pSampleMask);
@@ -12796,8 +11157,6 @@ layer_CmdSetAlphaToCoverageEnableEXT_before(commandBuffer, alphaToCoverageEnable
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetAlphaToCoverageEnableEXT(commandBuffer, alphaToCoverageEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"alphaToCoverageEnable=" + bool_as_text(alphaToCoverageEnable) + '!');
 #ifdef CMDSETALPHATOCOVERAGEENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetAlphaToCoverageEnableEXT_after(commandBuffer, alphaToCoverageEnable);
@@ -12819,8 +11178,6 @@ layer_CmdSetAlphaToOneEnableEXT_before(commandBuffer, alphaToOneEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetAlphaToOneEnableEXT(commandBuffer, alphaToOneEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"alphaToOneEnable=" + bool_as_text(alphaToOneEnable) + '!');
 #ifdef CMDSETALPHATOONEENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetAlphaToOneEnableEXT_after(commandBuffer, alphaToOneEnable);
@@ -12842,8 +11199,6 @@ layer_CmdSetLogicOpEnableEXT_before(commandBuffer, logicOpEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetLogicOpEnableEXT(commandBuffer, logicOpEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"logicOpEnable=" + bool_as_text(logicOpEnable) + '!');
 #ifdef CMDSETLOGICOPENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetLogicOpEnableEXT_after(commandBuffer, logicOpEnable);
@@ -12865,10 +11220,6 @@ layer_CmdSetColorBlendEnableEXT_before(commandBuffer, firstAttachment, attachmen
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendEnableEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstAttachment=" + std::to_string(firstAttachment) + '!');
-winsockSendToUI(&ConnectSocket,"attachmentCount=" + std::to_string(attachmentCount) + '!');
-winsockSendToUI(&ConnectSocket,"pColorBlendEnables=" + ptrToString((void*)pColorBlendEnables) + '!');
 #ifdef CMDSETCOLORBLENDENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetColorBlendEnableEXT_after(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables);
@@ -12890,10 +11241,6 @@ layer_CmdSetColorBlendEquationEXT_before(commandBuffer, firstAttachment, attachm
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendEquationEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstAttachment=" + std::to_string(firstAttachment) + '!');
-winsockSendToUI(&ConnectSocket,"attachmentCount=" + std::to_string(attachmentCount) + '!');
-winsockSendToUI(&ConnectSocket,"pColorBlendEquations=" + ptrToString((void*)pColorBlendEquations) + '!');
 #ifdef CMDSETCOLORBLENDEQUATIONEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetColorBlendEquationEXT_after(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations);
@@ -12915,10 +11262,6 @@ layer_CmdSetColorWriteMaskEXT_before(commandBuffer, firstAttachment, attachmentC
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetColorWriteMaskEXT(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstAttachment=" + std::to_string(firstAttachment) + '!');
-winsockSendToUI(&ConnectSocket,"attachmentCount=" + std::to_string(attachmentCount) + '!');
-winsockSendToUI(&ConnectSocket,"pColorWriteMasks=" + ptrToString((void*)pColorWriteMasks) + '!');
 #ifdef CMDSETCOLORWRITEMASKEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetColorWriteMaskEXT_after(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks);
@@ -12940,8 +11283,6 @@ layer_CmdSetRasterizationStreamEXT_before(commandBuffer, rasterizationStream);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizationStreamEXT(commandBuffer, rasterizationStream);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"rasterizationStream=" + std::to_string(rasterizationStream) + '!');
 #ifdef CMDSETRASTERIZATIONSTREAMEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetRasterizationStreamEXT_after(commandBuffer, rasterizationStream);
@@ -12963,8 +11304,6 @@ layer_CmdSetConservativeRasterizationModeEXT_before(commandBuffer, conservativeR
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetConservativeRasterizationModeEXT(commandBuffer, conservativeRasterizationMode);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"conservativeRasterizationMode=" + std::to_string(conservativeRasterizationMode) + '!');
 #ifdef CMDSETCONSERVATIVERASTERIZATIONMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetConservativeRasterizationModeEXT_after(commandBuffer, conservativeRasterizationMode);
@@ -12986,8 +11325,6 @@ layer_CmdSetExtraPrimitiveOverestimationSizeEXT_before(commandBuffer, extraPrimi
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetExtraPrimitiveOverestimationSizeEXT(commandBuffer, extraPrimitiveOverestimationSize);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"extraPrimitiveOverestimationSize=" + std::to_string(extraPrimitiveOverestimationSize) + '!');
 #ifdef CMDSETEXTRAPRIMITIVEOVERESTIMATIONSIZEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetExtraPrimitiveOverestimationSizeEXT_after(commandBuffer, extraPrimitiveOverestimationSize);
@@ -13009,8 +11346,6 @@ layer_CmdSetDepthClipEnableEXT_before(commandBuffer, depthClipEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthClipEnableEXT(commandBuffer, depthClipEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"depthClipEnable=" + bool_as_text(depthClipEnable) + '!');
 #ifdef CMDSETDEPTHCLIPENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthClipEnableEXT_after(commandBuffer, depthClipEnable);
@@ -13032,8 +11367,6 @@ layer_CmdSetSampleLocationsEnableEXT_before(commandBuffer, sampleLocationsEnable
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetSampleLocationsEnableEXT(commandBuffer, sampleLocationsEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"sampleLocationsEnable=" + bool_as_text(sampleLocationsEnable) + '!');
 #ifdef CMDSETSAMPLELOCATIONSENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetSampleLocationsEnableEXT_after(commandBuffer, sampleLocationsEnable);
@@ -13055,10 +11388,6 @@ layer_CmdSetColorBlendAdvancedEXT_before(commandBuffer, firstAttachment, attachm
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendAdvancedEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendAdvanced);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstAttachment=" + std::to_string(firstAttachment) + '!');
-winsockSendToUI(&ConnectSocket,"attachmentCount=" + std::to_string(attachmentCount) + '!');
-winsockSendToUI(&ConnectSocket,"pColorBlendAdvanced=" + ptrToString((void*)pColorBlendAdvanced) + '!');
 #ifdef CMDSETCOLORBLENDADVANCEDEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetColorBlendAdvancedEXT_after(commandBuffer, firstAttachment, attachmentCount, pColorBlendAdvanced);
@@ -13080,8 +11409,6 @@ layer_CmdSetProvokingVertexModeEXT_before(commandBuffer, provokingVertexMode);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetProvokingVertexModeEXT(commandBuffer, provokingVertexMode);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"provokingVertexMode=" + std::to_string(provokingVertexMode) + '!');
 #ifdef CMDSETPROVOKINGVERTEXMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetProvokingVertexModeEXT_after(commandBuffer, provokingVertexMode);
@@ -13103,8 +11430,6 @@ layer_CmdSetLineRasterizationModeEXT_before(commandBuffer, lineRasterizationMode
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetLineRasterizationModeEXT(commandBuffer, lineRasterizationMode);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"lineRasterizationMode=" + ptrToString((void*)lineRasterizationMode) + '!');
 #ifdef CMDSETLINERASTERIZATIONMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetLineRasterizationModeEXT_after(commandBuffer, lineRasterizationMode);
@@ -13126,8 +11451,6 @@ layer_CmdSetLineStippleEnableEXT_before(commandBuffer, stippledLineEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetLineStippleEnableEXT(commandBuffer, stippledLineEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"stippledLineEnable=" + bool_as_text(stippledLineEnable) + '!');
 #ifdef CMDSETLINESTIPPLEENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetLineStippleEnableEXT_after(commandBuffer, stippledLineEnable);
@@ -13149,8 +11472,6 @@ layer_CmdSetDepthClipNegativeOneToOneEXT_before(commandBuffer, negativeOneToOne)
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthClipNegativeOneToOneEXT(commandBuffer, negativeOneToOne);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"negativeOneToOne=" + bool_as_text(negativeOneToOne) + '!');
 #ifdef CMDSETDEPTHCLIPNEGATIVEONETOONEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthClipNegativeOneToOneEXT_after(commandBuffer, negativeOneToOne);
@@ -13172,8 +11493,6 @@ layer_CmdSetViewportWScalingEnableNV_before(commandBuffer, viewportWScalingEnabl
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWScalingEnableNV(commandBuffer, viewportWScalingEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"viewportWScalingEnable=" + bool_as_text(viewportWScalingEnable) + '!');
 #ifdef CMDSETVIEWPORTWSCALINGENABLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetViewportWScalingEnableNV_after(commandBuffer, viewportWScalingEnable);
@@ -13195,10 +11514,6 @@ layer_CmdSetViewportSwizzleNV_before(commandBuffer, firstViewport, viewportCount
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportSwizzleNV(commandBuffer, firstViewport, viewportCount, pViewportSwizzles);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstViewport=" + std::to_string(firstViewport) + '!');
-winsockSendToUI(&ConnectSocket,"viewportCount=" + std::to_string(viewportCount) + '!');
-winsockSendToUI(&ConnectSocket,"pViewportSwizzles=" + ptrToString((void*)pViewportSwizzles) + '!');
 #ifdef CMDSETVIEWPORTSWIZZLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetViewportSwizzleNV_after(commandBuffer, firstViewport, viewportCount, pViewportSwizzles);
@@ -13220,8 +11535,6 @@ layer_CmdSetCoverageToColorEnableNV_before(commandBuffer, coverageToColorEnable)
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageToColorEnableNV(commandBuffer, coverageToColorEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"coverageToColorEnable=" + bool_as_text(coverageToColorEnable) + '!');
 #ifdef CMDSETCOVERAGETOCOLORENABLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCoverageToColorEnableNV_after(commandBuffer, coverageToColorEnable);
@@ -13243,8 +11556,6 @@ layer_CmdSetCoverageToColorLocationNV_before(commandBuffer, coverageToColorLocat
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageToColorLocationNV(commandBuffer, coverageToColorLocation);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"coverageToColorLocation=" + std::to_string(coverageToColorLocation) + '!');
 #ifdef CMDSETCOVERAGETOCOLORLOCATIONNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCoverageToColorLocationNV_after(commandBuffer, coverageToColorLocation);
@@ -13266,8 +11577,6 @@ layer_CmdSetCoverageModulationModeNV_before(commandBuffer, coverageModulationMod
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationModeNV(commandBuffer, coverageModulationMode);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"coverageModulationMode=" + std::to_string(coverageModulationMode) + '!');
 #ifdef CMDSETCOVERAGEMODULATIONMODENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCoverageModulationModeNV_after(commandBuffer, coverageModulationMode);
@@ -13289,8 +11598,6 @@ layer_CmdSetCoverageModulationTableEnableNV_before(commandBuffer, coverageModula
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationTableEnableNV(commandBuffer, coverageModulationTableEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"coverageModulationTableEnable=" + bool_as_text(coverageModulationTableEnable) + '!');
 #ifdef CMDSETCOVERAGEMODULATIONTABLEENABLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCoverageModulationTableEnableNV_after(commandBuffer, coverageModulationTableEnable);
@@ -13312,9 +11619,6 @@ layer_CmdSetCoverageModulationTableNV_before(commandBuffer, coverageModulationTa
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationTableNV(commandBuffer, coverageModulationTableCount, pCoverageModulationTable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"coverageModulationTableCount=" + std::to_string(coverageModulationTableCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCoverageModulationTable=" + ptrToString((void*)pCoverageModulationTable) + '!');
 #ifdef CMDSETCOVERAGEMODULATIONTABLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCoverageModulationTableNV_after(commandBuffer, coverageModulationTableCount, pCoverageModulationTable);
@@ -13336,8 +11640,6 @@ layer_CmdSetShadingRateImageEnableNV_before(commandBuffer, shadingRateImageEnabl
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetShadingRateImageEnableNV(commandBuffer, shadingRateImageEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"shadingRateImageEnable=" + bool_as_text(shadingRateImageEnable) + '!');
 #ifdef CMDSETSHADINGRATEIMAGEENABLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetShadingRateImageEnableNV_after(commandBuffer, shadingRateImageEnable);
@@ -13359,8 +11661,6 @@ layer_CmdSetCoverageReductionModeNV_before(commandBuffer, coverageReductionMode)
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageReductionModeNV(commandBuffer, coverageReductionMode);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"coverageReductionMode=" + std::to_string(coverageReductionMode) + '!');
 #ifdef CMDSETCOVERAGEREDUCTIONMODENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCoverageReductionModeNV_after(commandBuffer, coverageReductionMode);
@@ -13382,8 +11682,6 @@ layer_CmdSetRepresentativeFragmentTestEnableNV_before(commandBuffer, representat
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetRepresentativeFragmentTestEnableNV(commandBuffer, representativeFragmentTestEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"representativeFragmentTestEnable=" + bool_as_text(representativeFragmentTestEnable) + '!');
 #ifdef CMDSETREPRESENTATIVEFRAGMENTTESTENABLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetRepresentativeFragmentTestEnableNV_after(commandBuffer, representativeFragmentTestEnable);
@@ -13405,10 +11703,6 @@ layer_CreatePrivateDataSlot_before(device, pCreateInfo, pAllocator, pPrivateData
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreatePrivateDataSlot(device, pCreateInfo, pAllocator, pPrivateDataSlot);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pPrivateDataSlot=" + ptrToString((void*)pPrivateDataSlot) + '!');
 #ifdef CREATEPRIVATEDATASLOT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreatePrivateDataSlot_after(device, pCreateInfo, pAllocator, pPrivateDataSlot);
@@ -13431,9 +11725,6 @@ layer_DestroyPrivateDataSlot_before(device, privateDataSlot, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyPrivateDataSlot(device, privateDataSlot, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"privateDataSlot=" + ptrToString((void*)privateDataSlot) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYPRIVATEDATASLOT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyPrivateDataSlot_after(device, privateDataSlot, pAllocator);
@@ -13455,11 +11746,6 @@ layer_SetPrivateData_before(device, objectType, objectHandle, privateDataSlot, d
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetPrivateData(device, objectType, objectHandle, privateDataSlot, data);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"objectType=" + std::to_string(objectType) + '!');
-winsockSendToUI(&ConnectSocket,"objectHandle=" + std::to_string(objectHandle) + '!');
-winsockSendToUI(&ConnectSocket,"privateDataSlot=" + ptrToString((void*)privateDataSlot) + '!');
-winsockSendToUI(&ConnectSocket,"data=" + std::to_string(data) + '!');
 #ifdef SETPRIVATEDATA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetPrivateData_after(device, objectType, objectHandle, privateDataSlot, data);
@@ -13482,11 +11768,6 @@ layer_GetPrivateData_before(device, objectType, objectHandle, privateDataSlot, p
 }
 #endif 
 device_dispatch[GetKey(device)].GetPrivateData(device, objectType, objectHandle, privateDataSlot, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"objectType=" + std::to_string(objectType) + '!');
-winsockSendToUI(&ConnectSocket,"objectHandle=" + std::to_string(objectHandle) + '!');
-winsockSendToUI(&ConnectSocket,"privateDataSlot=" + ptrToString((void*)privateDataSlot) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETPRIVATEDATA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPrivateData_after(device, objectType, objectHandle, privateDataSlot, pData);
@@ -13508,8 +11789,6 @@ layer_CmdCopyBuffer2_before(commandBuffer, pCopyBufferInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer2(commandBuffer, pCopyBufferInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo=" + ptrToString((void*)pCopyBufferInfo) + '!');
 #ifdef CMDCOPYBUFFER2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyBuffer2_after(commandBuffer, pCopyBufferInfo);
@@ -13531,8 +11810,6 @@ layer_CmdCopyImage2_before(commandBuffer, pCopyImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyImage2(commandBuffer, pCopyImageInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo=" + ptrToString((void*)pCopyImageInfo) + '!');
 #ifdef CMDCOPYIMAGE2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyImage2_after(commandBuffer, pCopyImageInfo);
@@ -13554,8 +11831,6 @@ layer_CmdBlitImage2_before(commandBuffer, pBlitImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBlitImage2(commandBuffer, pBlitImageInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo=" + ptrToString((void*)pBlitImageInfo) + '!');
 #ifdef CMDBLITIMAGE2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBlitImage2_after(commandBuffer, pBlitImageInfo);
@@ -13577,8 +11852,6 @@ layer_CmdCopyBufferToImage2_before(commandBuffer, pCopyBufferToImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage2(commandBuffer, pCopyBufferToImageInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo=" + ptrToString((void*)pCopyBufferToImageInfo) + '!');
 #ifdef CMDCOPYBUFFERTOIMAGE2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyBufferToImage2_after(commandBuffer, pCopyBufferToImageInfo);
@@ -13600,8 +11873,6 @@ layer_CmdCopyImageToBuffer2_before(commandBuffer, pCopyImageToBufferInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer2(commandBuffer, pCopyImageToBufferInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo=" + ptrToString((void*)pCopyImageToBufferInfo) + '!');
 #ifdef CMDCOPYIMAGETOBUFFER2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyImageToBuffer2_after(commandBuffer, pCopyImageToBufferInfo);
@@ -13623,8 +11894,6 @@ layer_CmdResolveImage2_before(commandBuffer, pResolveImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdResolveImage2(commandBuffer, pResolveImageInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo=" + ptrToString((void*)pResolveImageInfo) + '!');
 #ifdef CMDRESOLVEIMAGE2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdResolveImage2_after(commandBuffer, pResolveImageInfo);
@@ -13646,9 +11915,6 @@ layer_CmdSetFragmentShadingRateKHR_before(commandBuffer, pFragmentSize, combiner
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetFragmentShadingRateKHR(commandBuffer, pFragmentSize, combinerOps);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pFragmentSize=" + ptrToString((void*)pFragmentSize) + '!');
-winsockSendToUI(&ConnectSocket,"combinerOps=" + ptrToString((void*)combinerOps) + '!');
 #ifdef CMDSETFRAGMENTSHADINGRATEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetFragmentShadingRateKHR_after(commandBuffer, pFragmentSize, combinerOps);
@@ -13670,9 +11936,6 @@ layer_CmdSetFragmentShadingRateEnumNV_before(commandBuffer, shadingRate, combine
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetFragmentShadingRateEnumNV(commandBuffer, shadingRate, combinerOps);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"shadingRate=" + std::to_string(shadingRate) + '!');
-winsockSendToUI(&ConnectSocket,"combinerOps=" + ptrToString((void*)combinerOps) + '!');
 #ifdef CMDSETFRAGMENTSHADINGRATEENUMNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetFragmentShadingRateEnumNV_after(commandBuffer, shadingRate, combinerOps);
@@ -13694,11 +11957,6 @@ layer_GetAccelerationStructureBuildSizesKHR_before(device, buildType, pBuildInfo
 }
 #endif 
 device_dispatch[GetKey(device)].GetAccelerationStructureBuildSizesKHR(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"buildType=" + std::to_string(buildType) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo=" + ptrToString((void*)pBuildInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pMaxPrimitiveCounts=" + ptrToString((void*)pMaxPrimitiveCounts) + '!');
-winsockSendToUI(&ConnectSocket,"pSizeInfo=" + ptrToString((void*)pSizeInfo) + '!');
 #ifdef GETACCELERATIONSTRUCTUREBUILDSIZESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetAccelerationStructureBuildSizesKHR_after(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo);
@@ -13720,11 +11978,6 @@ layer_CmdSetVertexInputEXT_before(commandBuffer, vertexBindingDescriptionCount, 
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetVertexInputEXT(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"vertexBindingDescriptionCount=" + std::to_string(vertexBindingDescriptionCount) + '!');
-winsockSendToUI(&ConnectSocket,"pVertexBindingDescriptions=" + ptrToString((void*)pVertexBindingDescriptions) + '!');
-winsockSendToUI(&ConnectSocket,"vertexAttributeDescriptionCount=" + std::to_string(vertexAttributeDescriptionCount) + '!');
-winsockSendToUI(&ConnectSocket,"pVertexAttributeDescriptions=" + ptrToString((void*)pVertexAttributeDescriptions) + '!');
 #ifdef CMDSETVERTEXINPUTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetVertexInputEXT_after(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions);
@@ -13746,9 +11999,6 @@ layer_CmdSetColorWriteEnableEXT_before(commandBuffer, attachmentCount, pColorWri
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetColorWriteEnableEXT(commandBuffer, attachmentCount, pColorWriteEnables);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"attachmentCount=" + std::to_string(attachmentCount) + '!');
-winsockSendToUI(&ConnectSocket,"pColorWriteEnables=" + ptrToString((void*)pColorWriteEnables) + '!');
 #ifdef CMDSETCOLORWRITEENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetColorWriteEnableEXT_after(commandBuffer, attachmentCount, pColorWriteEnables);
@@ -13770,9 +12020,6 @@ layer_CmdSetEvent2_before(commandBuffer, event, pDependencyInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetEvent2(commandBuffer, event, pDependencyInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void*)event) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo=" + ptrToString((void*)pDependencyInfo) + '!');
 #ifdef CMDSETEVENT2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetEvent2_after(commandBuffer, event, pDependencyInfo);
@@ -13794,9 +12041,6 @@ layer_CmdResetEvent2_before(commandBuffer, event, stageMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdResetEvent2(commandBuffer, event, stageMask);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void*)event) + '!');
-winsockSendToUI(&ConnectSocket,"stageMask=" + ptrToString((void*)stageMask) + '!');
 #ifdef CMDRESETEVENT2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdResetEvent2_after(commandBuffer, event, stageMask);
@@ -13818,10 +12062,6 @@ layer_CmdWaitEvents2_before(commandBuffer, eventCount, pEvents, pDependencyInfos
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWaitEvents2(commandBuffer, eventCount, pEvents, pDependencyInfos);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"eventCount=" + std::to_string(eventCount) + '!');
-winsockSendToUI(&ConnectSocket,"pEvents=" + ptrToString((void*)pEvents) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos=" + ptrToString((void*)pDependencyInfos) + '!');
 #ifdef CMDWAITEVENTS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWaitEvents2_after(commandBuffer, eventCount, pEvents, pDependencyInfos);
@@ -13843,8 +12083,6 @@ layer_CmdPipelineBarrier2_before(commandBuffer, pDependencyInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier2(commandBuffer, pDependencyInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo=" + ptrToString((void*)pDependencyInfo) + '!');
 #ifdef CMDPIPELINEBARRIER2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPipelineBarrier2_after(commandBuffer, pDependencyInfo);
@@ -13866,10 +12104,6 @@ layer_QueueSubmit2_before(queue, submitCount, pSubmits, fence);
 }
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueueSubmit2(queue, submitCount, pSubmits, fence);
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void*)queue) + '!');
-winsockSendToUI(&ConnectSocket,"submitCount=" + std::to_string(submitCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits=" + ptrToString((void*)pSubmits) + '!');
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void*)fence) + '!');
 #ifdef QUEUESUBMIT2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueSubmit2_after(queue, submitCount, pSubmits, fence);
@@ -13892,10 +12126,6 @@ layer_CmdWriteTimestamp2_before(commandBuffer, stage, queryPool, query);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp2(commandBuffer, stage, queryPool, query);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"stage=" + ptrToString((void*)stage) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"query=" + std::to_string(query) + '!');
 #ifdef CMDWRITETIMESTAMP2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteTimestamp2_after(commandBuffer, stage, queryPool, query);
@@ -13917,11 +12147,6 @@ layer_CmdWriteBufferMarker2AMD_before(commandBuffer, stage, dstBuffer, dstOffset
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteBufferMarker2AMD(commandBuffer, stage, dstBuffer, dstOffset, marker);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"stage=" + ptrToString((void*)stage) + '!');
-winsockSendToUI(&ConnectSocket,"dstBuffer=" + ptrToString((void*)dstBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"dstOffset=" + ptrToString((void*)dstOffset) + '!');
-winsockSendToUI(&ConnectSocket,"marker=" + std::to_string(marker) + '!');
 #ifdef CMDWRITEBUFFERMARKER2AMD_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteBufferMarker2AMD_after(commandBuffer, stage, dstBuffer, dstOffset, marker);
@@ -13943,9 +12168,6 @@ layer_GetQueueCheckpointData2NV_before(queue, pCheckpointDataCount, pCheckpointD
 }
 #endif 
 device_dispatch[GetKey(queue)].GetQueueCheckpointData2NV(queue, pCheckpointDataCount, pCheckpointData);
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void*)queue) + '!');
-winsockSendToUI(&ConnectSocket,"pCheckpointDataCount=" + ptrToString((void*)pCheckpointDataCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCheckpointData=" + ptrToString((void*)pCheckpointData) + '!');
 #ifdef GETQUEUECHECKPOINTDATA2NV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetQueueCheckpointData2NV_after(queue, pCheckpointDataCount, pCheckpointData);
@@ -13967,8 +12189,6 @@ layer_CopyMemoryToImageEXT_before(device, pCopyMemoryToImageInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyMemoryToImageEXT(device, pCopyMemoryToImageInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyMemoryToImageInfo=" + ptrToString((void*)pCopyMemoryToImageInfo) + '!');
 #ifdef COPYMEMORYTOIMAGEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyMemoryToImageEXT_after(device, pCopyMemoryToImageInfo);
@@ -13991,8 +12211,6 @@ layer_CopyImageToMemoryEXT_before(device, pCopyImageToMemoryInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyImageToMemoryEXT(device, pCopyImageToMemoryInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToMemoryInfo=" + ptrToString((void*)pCopyImageToMemoryInfo) + '!');
 #ifdef COPYIMAGETOMEMORYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyImageToMemoryEXT_after(device, pCopyImageToMemoryInfo);
@@ -14015,8 +12233,6 @@ layer_CopyImageToImageEXT_before(device, pCopyImageToImageInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyImageToImageEXT(device, pCopyImageToImageInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToImageInfo=" + ptrToString((void*)pCopyImageToImageInfo) + '!');
 #ifdef COPYIMAGETOIMAGEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyImageToImageEXT_after(device, pCopyImageToImageInfo);
@@ -14039,9 +12255,6 @@ layer_TransitionImageLayoutEXT_before(device, transitionCount, pTransitions);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].TransitionImageLayoutEXT(device, transitionCount, pTransitions);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"transitionCount=" + std::to_string(transitionCount) + '!');
-winsockSendToUI(&ConnectSocket,"pTransitions=" + ptrToString((void*)pTransitions) + '!');
 #ifdef TRANSITIONIMAGELAYOUTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_TransitionImageLayoutEXT_after(device, transitionCount, pTransitions);
@@ -14064,10 +12277,6 @@ layer_CreateVideoSessionKHR_before(device, pCreateInfo, pAllocator, pVideoSessio
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateVideoSessionKHR(device, pCreateInfo, pAllocator, pVideoSession);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoSession=" + ptrToString((void*)pVideoSession) + '!');
 #ifdef CREATEVIDEOSESSIONKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateVideoSessionKHR_after(device, pCreateInfo, pAllocator, pVideoSession);
@@ -14090,9 +12299,6 @@ layer_DestroyVideoSessionKHR_before(device, videoSession, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyVideoSessionKHR(device, videoSession, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"videoSession=" + ptrToString((void*)videoSession) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYVIDEOSESSIONKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyVideoSessionKHR_after(device, videoSession, pAllocator);
@@ -14114,10 +12320,6 @@ layer_CreateVideoSessionParametersKHR_before(device, pCreateInfo, pAllocator, pV
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateVideoSessionParametersKHR(device, pCreateInfo, pAllocator, pVideoSessionParameters);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoSessionParameters=" + ptrToString((void*)pVideoSessionParameters) + '!');
 #ifdef CREATEVIDEOSESSIONPARAMETERSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateVideoSessionParametersKHR_after(device, pCreateInfo, pAllocator, pVideoSessionParameters);
@@ -14140,9 +12342,6 @@ layer_UpdateVideoSessionParametersKHR_before(device, videoSessionParameters, pUp
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].UpdateVideoSessionParametersKHR(device, videoSessionParameters, pUpdateInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"videoSessionParameters=" + ptrToString((void*)videoSessionParameters) + '!');
-winsockSendToUI(&ConnectSocket,"pUpdateInfo=" + ptrToString((void*)pUpdateInfo) + '!');
 #ifdef UPDATEVIDEOSESSIONPARAMETERSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_UpdateVideoSessionParametersKHR_after(device, videoSessionParameters, pUpdateInfo);
@@ -14165,11 +12364,6 @@ layer_GetEncodedVideoSessionParametersKHR_before(device, pVideoSessionParameters
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetEncodedVideoSessionParametersKHR(device, pVideoSessionParametersInfo, pFeedbackInfo, pDataSize, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoSessionParametersInfo=" + ptrToString((void*)pVideoSessionParametersInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pFeedbackInfo=" + ptrToString((void*)pFeedbackInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pDataSize=" + ptrToString((void*)pDataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETENCODEDVIDEOSESSIONPARAMETERSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetEncodedVideoSessionParametersKHR_after(device, pVideoSessionParametersInfo, pFeedbackInfo, pDataSize, pData);
@@ -14192,9 +12386,6 @@ layer_DestroyVideoSessionParametersKHR_before(device, videoSessionParameters, pA
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyVideoSessionParametersKHR(device, videoSessionParameters, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"videoSessionParameters=" + ptrToString((void*)videoSessionParameters) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYVIDEOSESSIONPARAMETERSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyVideoSessionParametersKHR_after(device, videoSessionParameters, pAllocator);
@@ -14216,10 +12407,6 @@ layer_GetVideoSessionMemoryRequirementsKHR_before(device, videoSession, pMemoryR
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetVideoSessionMemoryRequirementsKHR(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"videoSession=" + ptrToString((void*)videoSession) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirementsCount=" + ptrToString((void*)pMemoryRequirementsCount) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements=" + ptrToString((void*)pMemoryRequirements) + '!');
 #ifdef GETVIDEOSESSIONMEMORYREQUIREMENTSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetVideoSessionMemoryRequirementsKHR_after(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements);
@@ -14242,10 +12429,6 @@ layer_BindVideoSessionMemoryKHR_before(device, videoSession, bindSessionMemoryIn
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindVideoSessionMemoryKHR(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"videoSession=" + ptrToString((void*)videoSession) + '!');
-winsockSendToUI(&ConnectSocket,"bindSessionMemoryInfoCount=" + std::to_string(bindSessionMemoryInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBindSessionMemoryInfos=" + ptrToString((void*)pBindSessionMemoryInfos) + '!');
 #ifdef BINDVIDEOSESSIONMEMORYKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindVideoSessionMemoryKHR_after(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos);
@@ -14268,8 +12451,6 @@ layer_CmdDecodeVideoKHR_before(commandBuffer, pDecodeInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDecodeVideoKHR(commandBuffer, pDecodeInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo=" + ptrToString((void*)pDecodeInfo) + '!');
 #ifdef CMDDECODEVIDEOKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDecodeVideoKHR_after(commandBuffer, pDecodeInfo);
@@ -14291,8 +12472,6 @@ layer_CmdBeginVideoCodingKHR_before(commandBuffer, pBeginInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginVideoCodingKHR(commandBuffer, pBeginInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo=" + ptrToString((void*)pBeginInfo) + '!');
 #ifdef CMDBEGINVIDEOCODINGKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginVideoCodingKHR_after(commandBuffer, pBeginInfo);
@@ -14314,8 +12493,6 @@ layer_CmdControlVideoCodingKHR_before(commandBuffer, pCodingControlInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdControlVideoCodingKHR(commandBuffer, pCodingControlInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pCodingControlInfo=" + ptrToString((void*)pCodingControlInfo) + '!');
 #ifdef CMDCONTROLVIDEOCODINGKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdControlVideoCodingKHR_after(commandBuffer, pCodingControlInfo);
@@ -14337,8 +12514,6 @@ layer_CmdEndVideoCodingKHR_before(commandBuffer, pEndCodingInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndVideoCodingKHR(commandBuffer, pEndCodingInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pEndCodingInfo=" + ptrToString((void*)pEndCodingInfo) + '!');
 #ifdef CMDENDVIDEOCODINGKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndVideoCodingKHR_after(commandBuffer, pEndCodingInfo);
@@ -14360,8 +12535,6 @@ layer_CmdEncodeVideoKHR_before(commandBuffer, pEncodeInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEncodeVideoKHR(commandBuffer, pEncodeInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo=" + ptrToString((void*)pEncodeInfo) + '!');
 #ifdef CMDENCODEVIDEOKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEncodeVideoKHR_after(commandBuffer, pEncodeInfo);
@@ -14383,9 +12556,6 @@ layer_CmdDecompressMemoryNV_before(commandBuffer, decompressRegionCount, pDecomp
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDecompressMemoryNV(commandBuffer, decompressRegionCount, pDecompressMemoryRegions);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"decompressRegionCount=" + std::to_string(decompressRegionCount) + '!');
-winsockSendToUI(&ConnectSocket,"pDecompressMemoryRegions=" + ptrToString((void*)pDecompressMemoryRegions) + '!');
 #ifdef CMDDECOMPRESSMEMORYNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDecompressMemoryNV_after(commandBuffer, decompressRegionCount, pDecompressMemoryRegions);
@@ -14407,10 +12577,6 @@ layer_CmdDecompressMemoryIndirectCountNV_before(commandBuffer, indirectCommandsA
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDecompressMemoryIndirectCountNV(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"indirectCommandsAddress=" + ptrToString((void*)indirectCommandsAddress) + '!');
-winsockSendToUI(&ConnectSocket,"indirectCommandsCountAddress=" + ptrToString((void*)indirectCommandsCountAddress) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDDECOMPRESSMEMORYINDIRECTCOUNTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDecompressMemoryIndirectCountNV_after(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride);
@@ -14432,10 +12598,6 @@ layer_CreateCuModuleNVX_before(device, pCreateInfo, pAllocator, pModule);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateCuModuleNVX(device, pCreateInfo, pAllocator, pModule);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pModule=" + ptrToString((void*)pModule) + '!');
 #ifdef CREATECUMODULENVX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateCuModuleNVX_after(device, pCreateInfo, pAllocator, pModule);
@@ -14458,10 +12620,6 @@ layer_CreateCuFunctionNVX_before(device, pCreateInfo, pAllocator, pFunction);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateCuFunctionNVX(device, pCreateInfo, pAllocator, pFunction);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pFunction=" + ptrToString((void*)pFunction) + '!');
 #ifdef CREATECUFUNCTIONNVX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateCuFunctionNVX_after(device, pCreateInfo, pAllocator, pFunction);
@@ -14484,9 +12642,6 @@ layer_DestroyCuModuleNVX_before(device, module, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyCuModuleNVX(device, module, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"module=" + ptrToString((void*)module) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYCUMODULENVX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyCuModuleNVX_after(device, module, pAllocator);
@@ -14508,9 +12663,6 @@ layer_DestroyCuFunctionNVX_before(device, function, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyCuFunctionNVX(device, function, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"function=" + ptrToString((void*)function) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYCUFUNCTIONNVX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyCuFunctionNVX_after(device, function, pAllocator);
@@ -14532,8 +12684,6 @@ layer_CmdCuLaunchKernelNVX_before(commandBuffer, pLaunchInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCuLaunchKernelNVX(commandBuffer, pLaunchInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo=" + ptrToString((void*)pLaunchInfo) + '!');
 #ifdef CMDCULAUNCHKERNELNVX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCuLaunchKernelNVX_after(commandBuffer, pLaunchInfo);
@@ -14555,9 +12705,6 @@ layer_GetDescriptorSetLayoutSizeEXT_before(device, layout, pLayoutSizeInBytes);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutSizeEXT(device, layout, pLayoutSizeInBytes);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void*)layout) + '!');
-winsockSendToUI(&ConnectSocket,"pLayoutSizeInBytes=" + ptrToString((void*)pLayoutSizeInBytes) + '!');
 #ifdef GETDESCRIPTORSETLAYOUTSIZEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDescriptorSetLayoutSizeEXT_after(device, layout, pLayoutSizeInBytes);
@@ -14579,10 +12726,6 @@ layer_GetDescriptorSetLayoutBindingOffsetEXT_before(device, layout, binding, pOf
 }
 #endif 
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutBindingOffsetEXT(device, layout, binding, pOffset);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void*)layout) + '!');
-winsockSendToUI(&ConnectSocket,"binding=" + std::to_string(binding) + '!');
-winsockSendToUI(&ConnectSocket,"pOffset=" + ptrToString((void*)pOffset) + '!');
 #ifdef GETDESCRIPTORSETLAYOUTBINDINGOFFSETEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDescriptorSetLayoutBindingOffsetEXT_after(device, layout, binding, pOffset);
@@ -14604,10 +12747,6 @@ layer_GetDescriptorEXT_before(device, pDescriptorInfo, dataSize, pDescriptor);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDescriptorEXT(device, pDescriptorInfo, dataSize, pDescriptor);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorInfo=" + ptrToString((void*)pDescriptorInfo) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptor=" + ptrToString((void*)pDescriptor) + '!');
 #ifdef GETDESCRIPTOREXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDescriptorEXT_after(device, pDescriptorInfo, dataSize, pDescriptor);
@@ -14629,9 +12768,6 @@ layer_CmdBindDescriptorBuffersEXT_before(commandBuffer, bufferCount, pBindingInf
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBuffersEXT(commandBuffer, bufferCount, pBindingInfos);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"bufferCount=" + std::to_string(bufferCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBindingInfos=" + ptrToString((void*)pBindingInfos) + '!');
 #ifdef CMDBINDDESCRIPTORBUFFERSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindDescriptorBuffersEXT_after(commandBuffer, bufferCount, pBindingInfos);
@@ -14653,13 +12789,6 @@ layer_CmdSetDescriptorBufferOffsetsEXT_before(commandBuffer, pipelineBindPoint, 
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDescriptorBufferOffsetsEXT(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineBindPoint=" + std::to_string(pipelineBindPoint) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void*)layout) + '!');
-winsockSendToUI(&ConnectSocket,"firstSet=" + std::to_string(firstSet) + '!');
-winsockSendToUI(&ConnectSocket,"setCount=" + std::to_string(setCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferIndices=" + ptrToString((void*)pBufferIndices) + '!');
-winsockSendToUI(&ConnectSocket,"pOffsets=" + ptrToString((void*)pOffsets) + '!');
 #ifdef CMDSETDESCRIPTORBUFFEROFFSETSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDescriptorBufferOffsetsEXT_after(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets);
@@ -14681,10 +12810,6 @@ layer_CmdBindDescriptorBufferEmbeddedSamplersEXT_before(commandBuffer, pipelineB
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBufferEmbeddedSamplersEXT(commandBuffer, pipelineBindPoint, layout, set);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineBindPoint=" + std::to_string(pipelineBindPoint) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void*)layout) + '!');
-winsockSendToUI(&ConnectSocket,"set=" + std::to_string(set) + '!');
 #ifdef CMDBINDDESCRIPTORBUFFEREMBEDDEDSAMPLERSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindDescriptorBufferEmbeddedSamplersEXT_after(commandBuffer, pipelineBindPoint, layout, set);
@@ -14706,9 +12831,6 @@ layer_GetBufferOpaqueCaptureDescriptorDataEXT_before(device, pInfo, pData);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetBufferOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETBUFFEROPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
@@ -14731,9 +12853,6 @@ layer_GetImageOpaqueCaptureDescriptorDataEXT_before(device, pInfo, pData);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetImageOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETIMAGEOPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
@@ -14756,9 +12875,6 @@ layer_GetImageViewOpaqueCaptureDescriptorDataEXT_before(device, pInfo, pData);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetImageViewOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETIMAGEVIEWOPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageViewOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
@@ -14781,9 +12897,6 @@ layer_GetSamplerOpaqueCaptureDescriptorDataEXT_before(device, pInfo, pData);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSamplerOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETSAMPLEROPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSamplerOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
@@ -14806,9 +12919,6 @@ layer_GetAccelerationStructureOpaqueCaptureDescriptorDataEXT_before(device, pInf
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetAccelerationStructureOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETACCELERATIONSTRUCTUREOPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetAccelerationStructureOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
@@ -14831,9 +12941,6 @@ layer_SetDeviceMemoryPriorityEXT_before(device, memory, priority);
 }
 #endif 
 device_dispatch[GetKey(device)].SetDeviceMemoryPriorityEXT(device, memory, priority);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void*)memory) + '!');
-winsockSendToUI(&ConnectSocket,"priority=" + std::to_string(priority) + '!');
 #ifdef SETDEVICEMEMORYPRIORITYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetDeviceMemoryPriorityEXT_after(device, memory, priority);
@@ -14855,10 +12962,6 @@ layer_WaitForPresentKHR_before(device, swapchain, presentId, timeout);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].WaitForPresentKHR(device, swapchain, presentId, timeout);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void*)swapchain) + '!');
-winsockSendToUI(&ConnectSocket,"presentId=" + std::to_string(presentId) + '!');
-winsockSendToUI(&ConnectSocket,"timeout=" + std::to_string(timeout) + '!');
 #ifdef WAITFORPRESENTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_WaitForPresentKHR_after(device, swapchain, presentId, timeout);
@@ -14882,10 +12985,6 @@ layer_CreateBufferCollectionFUCHSIA_before(device, pCreateInfo, pAllocator, pCol
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateBufferCollectionFUCHSIA(device, pCreateInfo, pAllocator, pCollection);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pCollection=" + ptrToString((void*)pCollection) + '!');
 #ifdef CREATEBUFFERCOLLECTIONFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateBufferCollectionFUCHSIA_after(device, pCreateInfo, pAllocator, pCollection);
@@ -14910,9 +13009,6 @@ layer_SetBufferCollectionBufferConstraintsFUCHSIA_before(device, collection, pBu
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetBufferCollectionBufferConstraintsFUCHSIA(device, collection, pBufferConstraintsInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"collection=" + ptrToString((void*)collection) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferConstraintsInfo=" + ptrToString((void*)pBufferConstraintsInfo) + '!');
 #ifdef SETBUFFERCOLLECTIONBUFFERCONSTRAINTSFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetBufferCollectionBufferConstraintsFUCHSIA_after(device, collection, pBufferConstraintsInfo);
@@ -14937,9 +13033,6 @@ layer_SetBufferCollectionImageConstraintsFUCHSIA_before(device, collection, pIma
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetBufferCollectionImageConstraintsFUCHSIA(device, collection, pImageConstraintsInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"collection=" + ptrToString((void*)collection) + '!');
-winsockSendToUI(&ConnectSocket,"pImageConstraintsInfo=" + ptrToString((void*)pImageConstraintsInfo) + '!');
 #ifdef SETBUFFERCOLLECTIONIMAGECONSTRAINTSFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetBufferCollectionImageConstraintsFUCHSIA_after(device, collection, pImageConstraintsInfo);
@@ -14964,9 +13057,6 @@ layer_DestroyBufferCollectionFUCHSIA_before(device, collection, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyBufferCollectionFUCHSIA(device, collection, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"collection=" + ptrToString((void*)collection) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYBUFFERCOLLECTIONFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyBufferCollectionFUCHSIA_after(device, collection, pAllocator);
@@ -14990,9 +13080,6 @@ layer_GetBufferCollectionPropertiesFUCHSIA_before(device, collection, pPropertie
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetBufferCollectionPropertiesFUCHSIA(device, collection, pProperties);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"collection=" + ptrToString((void*)collection) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETBUFFERCOLLECTIONPROPERTIESFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferCollectionPropertiesFUCHSIA_after(device, collection, pProperties);
@@ -15016,10 +13103,6 @@ layer_CreateCudaModuleNV_before(device, pCreateInfo, pAllocator, pModule);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateCudaModuleNV(device, pCreateInfo, pAllocator, pModule);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pModule=" + ptrToString((void*)pModule) + '!');
 #ifdef CREATECUDAMODULENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateCudaModuleNV_after(device, pCreateInfo, pAllocator, pModule);
@@ -15042,10 +13125,6 @@ layer_GetCudaModuleCacheNV_before(device, module, pCacheSize, pCacheData);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetCudaModuleCacheNV(device, module, pCacheSize, pCacheData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"module=" + ptrToString((void*)module) + '!');
-winsockSendToUI(&ConnectSocket,"pCacheSize=" + ptrToString((void*)pCacheSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCacheData=" + ptrToString((void*)pCacheData) + '!');
 #ifdef GETCUDAMODULECACHENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetCudaModuleCacheNV_after(device, module, pCacheSize, pCacheData);
@@ -15068,10 +13147,6 @@ layer_CreateCudaFunctionNV_before(device, pCreateInfo, pAllocator, pFunction);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateCudaFunctionNV(device, pCreateInfo, pAllocator, pFunction);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pFunction=" + ptrToString((void*)pFunction) + '!');
 #ifdef CREATECUDAFUNCTIONNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateCudaFunctionNV_after(device, pCreateInfo, pAllocator, pFunction);
@@ -15094,9 +13169,6 @@ layer_DestroyCudaModuleNV_before(device, module, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyCudaModuleNV(device, module, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"module=" + ptrToString((void*)module) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYCUDAMODULENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyCudaModuleNV_after(device, module, pAllocator);
@@ -15118,9 +13190,6 @@ layer_DestroyCudaFunctionNV_before(device, function, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyCudaFunctionNV(device, function, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"function=" + ptrToString((void*)function) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYCUDAFUNCTIONNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyCudaFunctionNV_after(device, function, pAllocator);
@@ -15142,8 +13211,6 @@ layer_CmdCudaLaunchKernelNV_before(commandBuffer, pLaunchInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCudaLaunchKernelNV(commandBuffer, pLaunchInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo=" + ptrToString((void*)pLaunchInfo) + '!');
 #ifdef CMDCUDALAUNCHKERNELNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCudaLaunchKernelNV_after(commandBuffer, pLaunchInfo);
@@ -15165,8 +13232,6 @@ layer_CmdBeginRendering_before(commandBuffer, pRenderingInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginRendering(commandBuffer, pRenderingInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo=" + ptrToString((void*)pRenderingInfo) + '!');
 #ifdef CMDBEGINRENDERING_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginRendering_after(commandBuffer, pRenderingInfo);
@@ -15188,7 +13253,6 @@ layer_CmdEndRendering_before(commandBuffer);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndRendering(commandBuffer);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
 #ifdef CMDENDRENDERING_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndRendering_after(commandBuffer);
@@ -15210,9 +13274,6 @@ layer_GetDescriptorSetLayoutHostMappingInfoVALVE_before(device, pBindingReferenc
 }
 #endif 
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutHostMappingInfoVALVE(device, pBindingReference, pHostMapping);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pBindingReference=" + ptrToString((void*)pBindingReference) + '!');
-winsockSendToUI(&ConnectSocket,"pHostMapping=" + ptrToString((void*)pHostMapping) + '!');
 #ifdef GETDESCRIPTORSETLAYOUTHOSTMAPPINGINFOVALVE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDescriptorSetLayoutHostMappingInfoVALVE_after(device, pBindingReference, pHostMapping);
@@ -15234,9 +13295,6 @@ layer_GetDescriptorSetHostMappingVALVE_before(device, descriptorSet, ppData);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDescriptorSetHostMappingVALVE(device, descriptorSet, ppData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorSet=" + ptrToString((void*)descriptorSet) + '!');
-winsockSendToUI(&ConnectSocket,"ppData=" + ptrToString((void*)ppData) + '!');
 #ifdef GETDESCRIPTORSETHOSTMAPPINGVALVE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDescriptorSetHostMappingVALVE_after(device, descriptorSet, ppData);
@@ -15258,10 +13316,6 @@ layer_CreateMicromapEXT_before(device, pCreateInfo, pAllocator, pMicromap);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateMicromapEXT(device, pCreateInfo, pAllocator, pMicromap);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pMicromap=" + ptrToString((void*)pMicromap) + '!');
 #ifdef CREATEMICROMAPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateMicromapEXT_after(device, pCreateInfo, pAllocator, pMicromap);
@@ -15284,9 +13338,6 @@ layer_CmdBuildMicromapsEXT_before(commandBuffer, infoCount, pInfos);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBuildMicromapsEXT(commandBuffer, infoCount, pInfos);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"infoCount=" + std::to_string(infoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos=" + ptrToString((void*)pInfos) + '!');
 #ifdef CMDBUILDMICROMAPSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBuildMicromapsEXT_after(commandBuffer, infoCount, pInfos);
@@ -15308,10 +13359,6 @@ layer_BuildMicromapsEXT_before(device, deferredOperation, infoCount, pInfos);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].BuildMicromapsEXT(device, deferredOperation, infoCount, pInfos);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void*)deferredOperation) + '!');
-winsockSendToUI(&ConnectSocket,"infoCount=" + std::to_string(infoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos=" + ptrToString((void*)pInfos) + '!');
 #ifdef BUILDMICROMAPSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BuildMicromapsEXT_after(device, deferredOperation, infoCount, pInfos);
@@ -15334,9 +13381,6 @@ layer_DestroyMicromapEXT_before(device, micromap, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyMicromapEXT(device, micromap, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"micromap=" + ptrToString((void*)micromap) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYMICROMAPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyMicromapEXT_after(device, micromap, pAllocator);
@@ -15358,8 +13402,6 @@ layer_CmdCopyMicromapEXT_before(commandBuffer, pInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyMicromapEXT(commandBuffer, pInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef CMDCOPYMICROMAPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyMicromapEXT_after(commandBuffer, pInfo);
@@ -15381,9 +13423,6 @@ layer_CopyMicromapEXT_before(device, deferredOperation, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyMicromapEXT(device, deferredOperation, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void*)deferredOperation) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef COPYMICROMAPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyMicromapEXT_after(device, deferredOperation, pInfo);
@@ -15406,8 +13445,6 @@ layer_CmdCopyMicromapToMemoryEXT_before(commandBuffer, pInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyMicromapToMemoryEXT(commandBuffer, pInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef CMDCOPYMICROMAPTOMEMORYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyMicromapToMemoryEXT_after(commandBuffer, pInfo);
@@ -15429,9 +13466,6 @@ layer_CopyMicromapToMemoryEXT_before(device, deferredOperation, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyMicromapToMemoryEXT(device, deferredOperation, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void*)deferredOperation) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef COPYMICROMAPTOMEMORYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyMicromapToMemoryEXT_after(device, deferredOperation, pInfo);
@@ -15454,8 +13488,6 @@ layer_CmdCopyMemoryToMicromapEXT_before(commandBuffer, pInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToMicromapEXT(commandBuffer, pInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef CMDCOPYMEMORYTOMICROMAPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyMemoryToMicromapEXT_after(commandBuffer, pInfo);
@@ -15477,9 +13509,6 @@ layer_CopyMemoryToMicromapEXT_before(device, deferredOperation, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyMemoryToMicromapEXT(device, deferredOperation, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void*)deferredOperation) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef COPYMEMORYTOMICROMAPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyMemoryToMicromapEXT_after(device, deferredOperation, pInfo);
@@ -15502,12 +13531,6 @@ layer_CmdWriteMicromapsPropertiesEXT_before(commandBuffer, micromapCount, pMicro
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteMicromapsPropertiesEXT(commandBuffer, micromapCount, pMicromaps, queryType, queryPool, firstQuery);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"micromapCount=" + std::to_string(micromapCount) + '!');
-winsockSendToUI(&ConnectSocket,"pMicromaps=" + ptrToString((void*)pMicromaps) + '!');
-winsockSendToUI(&ConnectSocket,"queryType=" + std::to_string(queryType) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
 #ifdef CMDWRITEMICROMAPSPROPERTIESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteMicromapsPropertiesEXT_after(commandBuffer, micromapCount, pMicromaps, queryType, queryPool, firstQuery);
@@ -15529,13 +13552,6 @@ layer_WriteMicromapsPropertiesEXT_before(device, micromapCount, pMicromaps, quer
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].WriteMicromapsPropertiesEXT(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"micromapCount=" + std::to_string(micromapCount) + '!');
-winsockSendToUI(&ConnectSocket,"pMicromaps=" + ptrToString((void*)pMicromaps) + '!');
-winsockSendToUI(&ConnectSocket,"queryType=" + std::to_string(queryType) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef WRITEMICROMAPSPROPERTIESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_WriteMicromapsPropertiesEXT_after(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride);
@@ -15558,9 +13574,6 @@ layer_GetDeviceMicromapCompatibilityEXT_before(device, pVersionInfo, pCompatibil
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceMicromapCompatibilityEXT(device, pVersionInfo, pCompatibility);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pVersionInfo=" + ptrToString((void*)pVersionInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pCompatibility=" + ptrToString((void*)pCompatibility) + '!');
 #ifdef GETDEVICEMICROMAPCOMPATIBILITYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceMicromapCompatibilityEXT_after(device, pVersionInfo, pCompatibility);
@@ -15582,10 +13595,6 @@ layer_GetMicromapBuildSizesEXT_before(device, buildType, pBuildInfo, pSizeInfo);
 }
 #endif 
 device_dispatch[GetKey(device)].GetMicromapBuildSizesEXT(device, buildType, pBuildInfo, pSizeInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"buildType=" + std::to_string(buildType) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo=" + ptrToString((void*)pBuildInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pSizeInfo=" + ptrToString((void*)pSizeInfo) + '!');
 #ifdef GETMICROMAPBUILDSIZESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMicromapBuildSizesEXT_after(device, buildType, pBuildInfo, pSizeInfo);
@@ -15607,9 +13616,6 @@ layer_GetShaderModuleIdentifierEXT_before(device, shaderModule, pIdentifier);
 }
 #endif 
 device_dispatch[GetKey(device)].GetShaderModuleIdentifierEXT(device, shaderModule, pIdentifier);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"shaderModule=" + ptrToString((void*)shaderModule) + '!');
-winsockSendToUI(&ConnectSocket,"pIdentifier=" + ptrToString((void*)pIdentifier) + '!');
 #ifdef GETSHADERMODULEIDENTIFIEREXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetShaderModuleIdentifierEXT_after(device, shaderModule, pIdentifier);
@@ -15631,9 +13637,6 @@ layer_GetShaderModuleCreateInfoIdentifierEXT_before(device, pCreateInfo, pIdenti
 }
 #endif 
 device_dispatch[GetKey(device)].GetShaderModuleCreateInfoIdentifierEXT(device, pCreateInfo, pIdentifier);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pIdentifier=" + ptrToString((void*)pIdentifier) + '!');
 #ifdef GETSHADERMODULECREATEINFOIDENTIFIEREXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetShaderModuleCreateInfoIdentifierEXT_after(device, pCreateInfo, pIdentifier);
@@ -15655,10 +13658,6 @@ layer_GetImageSubresourceLayout2KHR_before(device, image, pSubresource, pLayout)
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageSubresourceLayout2KHR(device, image, pSubresource, pLayout);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void*)image) + '!');
-winsockSendToUI(&ConnectSocket,"pSubresource=" + ptrToString((void*)pSubresource) + '!');
-winsockSendToUI(&ConnectSocket,"pLayout=" + ptrToString((void*)pLayout) + '!');
 #ifdef GETIMAGESUBRESOURCELAYOUT2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageSubresourceLayout2KHR_after(device, image, pSubresource, pLayout);
@@ -15680,9 +13679,6 @@ layer_GetPipelinePropertiesEXT_before(device, pPipelineInfo, pPipelineProperties
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPipelinePropertiesEXT(device, pPipelineInfo, pPipelineProperties);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pPipelineInfo=" + ptrToString((void*)pPipelineInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pPipelineProperties=" + ptrToString((void*)pPipelineProperties) + '!');
 #ifdef GETPIPELINEPROPERTIESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPipelinePropertiesEXT_after(device, pPipelineInfo, pPipelineProperties);
@@ -15706,8 +13702,6 @@ layer_ExportMetalObjectsEXT_before(device, pMetalObjectsInfo);
 }
 #endif 
 device_dispatch[GetKey(device)].ExportMetalObjectsEXT(device, pMetalObjectsInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pMetalObjectsInfo=" + ptrToString((void*)pMetalObjectsInfo) + '!');
 #ifdef EXPORTMETALOBJECTSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ExportMetalObjectsEXT_after(device, pMetalObjectsInfo);
@@ -15730,10 +13724,6 @@ layer_GetFramebufferTilePropertiesQCOM_before(device, framebuffer, pPropertiesCo
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetFramebufferTilePropertiesQCOM(device, framebuffer, pPropertiesCount, pProperties);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"framebuffer=" + ptrToString((void*)framebuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertiesCount=" + ptrToString((void*)pPropertiesCount) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETFRAMEBUFFERTILEPROPERTIESQCOM_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetFramebufferTilePropertiesQCOM_after(device, framebuffer, pPropertiesCount, pProperties);
@@ -15756,9 +13746,6 @@ layer_GetDynamicRenderingTilePropertiesQCOM_before(device, pRenderingInfo, pProp
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDynamicRenderingTilePropertiesQCOM(device, pRenderingInfo, pProperties);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo=" + ptrToString((void*)pRenderingInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETDYNAMICRENDERINGTILEPROPERTIESQCOM_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDynamicRenderingTilePropertiesQCOM_after(device, pRenderingInfo, pProperties);
@@ -15781,10 +13768,6 @@ layer_CreateOpticalFlowSessionNV_before(device, pCreateInfo, pAllocator, pSessio
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateOpticalFlowSessionNV(device, pCreateInfo, pAllocator, pSession);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pSession=" + ptrToString((void*)pSession) + '!');
 #ifdef CREATEOPTICALFLOWSESSIONNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateOpticalFlowSessionNV_after(device, pCreateInfo, pAllocator, pSession);
@@ -15807,9 +13790,6 @@ layer_DestroyOpticalFlowSessionNV_before(device, session, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyOpticalFlowSessionNV(device, session, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"session=" + ptrToString((void*)session) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYOPTICALFLOWSESSIONNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyOpticalFlowSessionNV_after(device, session, pAllocator);
@@ -15831,11 +13811,6 @@ layer_BindOpticalFlowSessionImageNV_before(device, session, bindingPoint, view, 
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindOpticalFlowSessionImageNV(device, session, bindingPoint, view, layout);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"session=" + ptrToString((void*)session) + '!');
-winsockSendToUI(&ConnectSocket,"bindingPoint=" + std::to_string(bindingPoint) + '!');
-winsockSendToUI(&ConnectSocket,"view=" + ptrToString((void*)view) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + std::to_string(layout) + '!');
 #ifdef BINDOPTICALFLOWSESSIONIMAGENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindOpticalFlowSessionImageNV_after(device, session, bindingPoint, view, layout);
@@ -15858,9 +13833,6 @@ layer_CmdOpticalFlowExecuteNV_before(commandBuffer, session, pExecuteInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdOpticalFlowExecuteNV(commandBuffer, session, pExecuteInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"session=" + ptrToString((void*)session) + '!');
-winsockSendToUI(&ConnectSocket,"pExecuteInfo=" + ptrToString((void*)pExecuteInfo) + '!');
 #ifdef CMDOPTICALFLOWEXECUTENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdOpticalFlowExecuteNV_after(commandBuffer, session, pExecuteInfo);
@@ -15882,9 +13854,6 @@ layer_GetDeviceFaultInfoEXT_before(device, pFaultCounts, pFaultInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeviceFaultInfoEXT(device, pFaultCounts, pFaultInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pFaultCounts=" + ptrToString((void*)pFaultCounts) + '!');
-winsockSendToUI(&ConnectSocket,"pFaultInfo=" + ptrToString((void*)pFaultInfo) + '!');
 #ifdef GETDEVICEFAULTINFOEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceFaultInfoEXT_after(device, pFaultCounts, pFaultInfo);
@@ -15907,8 +13876,6 @@ layer_CmdSetDepthBias2EXT_before(commandBuffer, pDepthBiasInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBias2EXT(commandBuffer, pDepthBiasInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pDepthBiasInfo=" + ptrToString((void*)pDepthBiasInfo) + '!');
 #ifdef CMDSETDEPTHBIAS2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthBias2EXT_after(commandBuffer, pDepthBiasInfo);
@@ -15930,8 +13897,6 @@ layer_ReleaseSwapchainImagesEXT_before(device, pReleaseInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].ReleaseSwapchainImagesEXT(device, pReleaseInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pReleaseInfo=" + ptrToString((void*)pReleaseInfo) + '!');
 #ifdef RELEASESWAPCHAINIMAGESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ReleaseSwapchainImagesEXT_after(device, pReleaseInfo);
@@ -15954,9 +13919,6 @@ layer_GetDeviceImageSubresourceLayoutKHR_before(device, pInfo, pLayout);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceImageSubresourceLayoutKHR(device, pInfo, pLayout);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pLayout=" + ptrToString((void*)pLayout) + '!');
 #ifdef GETDEVICEIMAGESUBRESOURCELAYOUTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceImageSubresourceLayoutKHR_after(device, pInfo, pLayout);
@@ -15978,9 +13940,6 @@ layer_MapMemory2KHR_before(device, pMemoryMapInfo, ppData);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].MapMemory2KHR(device, pMemoryMapInfo, ppData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryMapInfo=" + ptrToString((void*)pMemoryMapInfo) + '!');
-winsockSendToUI(&ConnectSocket,"ppData=" + ptrToString((void*)ppData) + '!');
 #ifdef MAPMEMORY2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_MapMemory2KHR_after(device, pMemoryMapInfo, ppData);
@@ -16003,8 +13962,6 @@ layer_UnmapMemory2KHR_before(device, pMemoryUnmapInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].UnmapMemory2KHR(device, pMemoryUnmapInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryUnmapInfo=" + ptrToString((void*)pMemoryUnmapInfo) + '!');
 #ifdef UNMAPMEMORY2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_UnmapMemory2KHR_after(device, pMemoryUnmapInfo);
@@ -16027,11 +13984,6 @@ layer_CreateShadersEXT_before(device, createInfoCount, pCreateInfos, pAllocator,
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateShadersEXT(device, createInfoCount, pCreateInfos, pAllocator, pShaders);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"createInfoCount=" + std::to_string(createInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos=" + ptrToString((void*)pCreateInfos) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pShaders=" + ptrToString((void*)pShaders) + '!');
 #ifdef CREATESHADERSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateShadersEXT_after(device, createInfoCount, pCreateInfos, pAllocator, pShaders);
@@ -16054,9 +14006,6 @@ layer_DestroyShaderEXT_before(device, shader, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyShaderEXT(device, shader, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"shader=" + ptrToString((void*)shader) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYSHADEREXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyShaderEXT_after(device, shader, pAllocator);
@@ -16078,10 +14027,6 @@ layer_GetShaderBinaryDataEXT_before(device, shader, pDataSize, pData);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetShaderBinaryDataEXT(device, shader, pDataSize, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"shader=" + ptrToString((void*)shader) + '!');
-winsockSendToUI(&ConnectSocket,"pDataSize=" + ptrToString((void*)pDataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETSHADERBINARYDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetShaderBinaryDataEXT_after(device, shader, pDataSize, pData);
@@ -16104,10 +14049,6 @@ layer_CmdBindShadersEXT_before(commandBuffer, stageCount, pStages, pShaders);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindShadersEXT(commandBuffer, stageCount, pStages, pShaders);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"stageCount=" + std::to_string(stageCount) + '!');
-winsockSendToUI(&ConnectSocket,"pStages=" + ptrToString((void*)pStages) + '!');
-winsockSendToUI(&ConnectSocket,"pShaders=" + ptrToString((void*)pShaders) + '!');
 #ifdef CMDBINDSHADERSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindShadersEXT_after(commandBuffer, stageCount, pStages, pShaders);
@@ -16130,9 +14071,6 @@ layer_GetScreenBufferPropertiesQNX_before(device, buffer, pProperties);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetScreenBufferPropertiesQNX(device, buffer, pProperties);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties=" + ptrToString((void*)pProperties) + '!');
 #ifdef GETSCREENBUFFERPROPERTIESQNX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetScreenBufferPropertiesQNX_after(device, buffer, pProperties);
@@ -16157,9 +14095,6 @@ layer_GetExecutionGraphPipelineScratchSizeAMDX_before(device, executionGraph, pS
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetExecutionGraphPipelineScratchSizeAMDX(device, executionGraph, pSizeInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"executionGraph=" + ptrToString((void*)executionGraph) + '!');
-winsockSendToUI(&ConnectSocket,"pSizeInfo=" + ptrToString((void*)pSizeInfo) + '!');
 #ifdef GETEXECUTIONGRAPHPIPELINESCRATCHSIZEAMDX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetExecutionGraphPipelineScratchSizeAMDX_after(device, executionGraph, pSizeInfo);
@@ -16184,10 +14119,6 @@ layer_GetExecutionGraphPipelineNodeIndexAMDX_before(device, executionGraph, pNod
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetExecutionGraphPipelineNodeIndexAMDX(device, executionGraph, pNodeInfo, pNodeIndex);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"executionGraph=" + ptrToString((void*)executionGraph) + '!');
-winsockSendToUI(&ConnectSocket,"pNodeInfo=" + ptrToString((void*)pNodeInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pNodeIndex=" + ptrToString((void*)pNodeIndex) + '!');
 #ifdef GETEXECUTIONGRAPHPIPELINENODEINDEXAMDX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetExecutionGraphPipelineNodeIndexAMDX_after(device, executionGraph, pNodeInfo, pNodeIndex);
@@ -16212,12 +14143,6 @@ layer_CreateExecutionGraphPipelinesAMDX_before(device, pipelineCache, createInfo
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateExecutionGraphPipelinesAMDX(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineCache=" + ptrToString((void*)pipelineCache) + '!');
-winsockSendToUI(&ConnectSocket,"createInfoCount=" + std::to_string(createInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos=" + ptrToString((void*)pCreateInfos) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pPipelines=" + ptrToString((void*)pPipelines) + '!');
 #ifdef CREATEEXECUTIONGRAPHPIPELINESAMDX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateExecutionGraphPipelinesAMDX_after(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
@@ -16242,8 +14167,6 @@ layer_CmdInitializeGraphScratchMemoryAMDX_before(commandBuffer, scratch);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdInitializeGraphScratchMemoryAMDX(commandBuffer, scratch);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"scratch=" + ptrToString((void*)scratch) + '!');
 #ifdef CMDINITIALIZEGRAPHSCRATCHMEMORYAMDX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdInitializeGraphScratchMemoryAMDX_after(commandBuffer, scratch);
@@ -16267,9 +14190,6 @@ layer_CmdDispatchGraphAMDX_before(commandBuffer, scratch, pCountInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphAMDX(commandBuffer, scratch, pCountInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"scratch=" + ptrToString((void*)scratch) + '!');
-winsockSendToUI(&ConnectSocket,"pCountInfo=" + ptrToString((void*)pCountInfo) + '!');
 #ifdef CMDDISPATCHGRAPHAMDX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDispatchGraphAMDX_after(commandBuffer, scratch, pCountInfo);
@@ -16293,9 +14213,6 @@ layer_CmdDispatchGraphIndirectAMDX_before(commandBuffer, scratch, pCountInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphIndirectAMDX(commandBuffer, scratch, pCountInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"scratch=" + ptrToString((void*)scratch) + '!');
-winsockSendToUI(&ConnectSocket,"pCountInfo=" + ptrToString((void*)pCountInfo) + '!');
 #ifdef CMDDISPATCHGRAPHINDIRECTAMDX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDispatchGraphIndirectAMDX_after(commandBuffer, scratch, pCountInfo);
@@ -16319,9 +14236,6 @@ layer_CmdDispatchGraphIndirectCountAMDX_before(commandBuffer, scratch, countInfo
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphIndirectCountAMDX(commandBuffer, scratch, countInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"scratch=" + ptrToString((void*)scratch) + '!');
-winsockSendToUI(&ConnectSocket,"countInfo=" + ptrToString((void*)countInfo) + '!');
 #ifdef CMDDISPATCHGRAPHINDIRECTCOUNTAMDX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDispatchGraphIndirectCountAMDX_after(commandBuffer, scratch, countInfo);
@@ -16344,8 +14258,6 @@ layer_CmdBindDescriptorSets2KHR_before(commandBuffer, pBindDescriptorSetsInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorSets2KHR(commandBuffer, pBindDescriptorSetsInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pBindDescriptorSetsInfo=" + ptrToString((void*)pBindDescriptorSetsInfo) + '!');
 #ifdef CMDBINDDESCRIPTORSETS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindDescriptorSets2KHR_after(commandBuffer, pBindDescriptorSetsInfo);
@@ -16367,8 +14279,6 @@ layer_CmdPushConstants2KHR_before(commandBuffer, pPushConstantsInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPushConstants2KHR(commandBuffer, pPushConstantsInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pPushConstantsInfo=" + ptrToString((void*)pPushConstantsInfo) + '!');
 #ifdef CMDPUSHCONSTANTS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPushConstants2KHR_after(commandBuffer, pPushConstantsInfo);
@@ -16390,8 +14300,6 @@ layer_CmdPushDescriptorSet2KHR_before(commandBuffer, pPushDescriptorSetInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSet2KHR(commandBuffer, pPushDescriptorSetInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo=" + ptrToString((void*)pPushDescriptorSetInfo) + '!');
 #ifdef CMDPUSHDESCRIPTORSET2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPushDescriptorSet2KHR_after(commandBuffer, pPushDescriptorSetInfo);
@@ -16413,8 +14321,6 @@ layer_CmdPushDescriptorSetWithTemplate2KHR_before(commandBuffer, pPushDescriptor
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetWithTemplate2KHR(commandBuffer, pPushDescriptorSetWithTemplateInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetWithTemplateInfo=" + ptrToString((void*)pPushDescriptorSetWithTemplateInfo) + '!');
 #ifdef CMDPUSHDESCRIPTORSETWITHTEMPLATE2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPushDescriptorSetWithTemplate2KHR_after(commandBuffer, pPushDescriptorSetWithTemplateInfo);
@@ -16436,8 +14342,6 @@ layer_CmdSetDescriptorBufferOffsets2EXT_before(commandBuffer, pSetDescriptorBuff
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDescriptorBufferOffsets2EXT(commandBuffer, pSetDescriptorBufferOffsetsInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pSetDescriptorBufferOffsetsInfo=" + ptrToString((void*)pSetDescriptorBufferOffsetsInfo) + '!');
 #ifdef CMDSETDESCRIPTORBUFFEROFFSETS2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDescriptorBufferOffsets2EXT_after(commandBuffer, pSetDescriptorBufferOffsetsInfo);
@@ -16459,8 +14363,6 @@ layer_CmdBindDescriptorBufferEmbeddedSamplers2EXT_before(commandBuffer, pBindDes
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBufferEmbeddedSamplers2EXT(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pBindDescriptorBufferEmbeddedSamplersInfo=" + ptrToString((void*)pBindDescriptorBufferEmbeddedSamplersInfo) + '!');
 #ifdef CMDBINDDESCRIPTORBUFFEREMBEDDEDSAMPLERS2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindDescriptorBufferEmbeddedSamplers2EXT_after(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo);
@@ -16482,9 +14384,6 @@ layer_SetLatencySleepModeNV_before(device, swapchain, pSleepModeInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetLatencySleepModeNV(device, swapchain, pSleepModeInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void*)swapchain) + '!');
-winsockSendToUI(&ConnectSocket,"pSleepModeInfo=" + ptrToString((void*)pSleepModeInfo) + '!');
 #ifdef SETLATENCYSLEEPMODENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetLatencySleepModeNV_after(device, swapchain, pSleepModeInfo);
@@ -16507,9 +14406,6 @@ layer_LatencySleepNV_before(device, swapchain, pSleepInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].LatencySleepNV(device, swapchain, pSleepInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void*)swapchain) + '!');
-winsockSendToUI(&ConnectSocket,"pSleepInfo=" + ptrToString((void*)pSleepInfo) + '!');
 #ifdef LATENCYSLEEPNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_LatencySleepNV_after(device, swapchain, pSleepInfo);
@@ -16532,9 +14428,6 @@ layer_SetLatencyMarkerNV_before(device, swapchain, pLatencyMarkerInfo);
 }
 #endif 
 device_dispatch[GetKey(device)].SetLatencyMarkerNV(device, swapchain, pLatencyMarkerInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void*)swapchain) + '!');
-winsockSendToUI(&ConnectSocket,"pLatencyMarkerInfo=" + ptrToString((void*)pLatencyMarkerInfo) + '!');
 #ifdef SETLATENCYMARKERNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetLatencyMarkerNV_after(device, swapchain, pLatencyMarkerInfo);
@@ -16556,9 +14449,6 @@ layer_GetLatencyTimingsNV_before(device, swapchain, pLatencyMarkerInfo);
 }
 #endif 
 device_dispatch[GetKey(device)].GetLatencyTimingsNV(device, swapchain, pLatencyMarkerInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void*)swapchain) + '!');
-winsockSendToUI(&ConnectSocket,"pLatencyMarkerInfo=" + ptrToString((void*)pLatencyMarkerInfo) + '!');
 #ifdef GETLATENCYTIMINGSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetLatencyTimingsNV_after(device, swapchain, pLatencyMarkerInfo);
@@ -16580,8 +14470,6 @@ layer_QueueNotifyOutOfBandNV_before(queue, pQueueTypeInfo);
 }
 #endif 
 device_dispatch[GetKey(queue)].QueueNotifyOutOfBandNV(queue, pQueueTypeInfo);
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void*)queue) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueTypeInfo=" + ptrToString((void*)pQueueTypeInfo) + '!');
 #ifdef QUEUENOTIFYOUTOFBANDNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueNotifyOutOfBandNV_after(queue, pQueueTypeInfo);
@@ -16603,10 +14491,6 @@ layer_ResetQueryPoolEXT_before(device, queryPool, firstQuery, queryCount);
 }
 #endif 
 device_dispatch[GetKey(device)].ResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
-winsockSendToUI(&ConnectSocket,"queryCount=" + std::to_string(queryCount) + '!');
 #ifdef RESETQUERYPOOLEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ResetQueryPoolEXT_after(device, queryPool, firstQuery, queryCount);
@@ -16628,9 +14512,6 @@ layer_TrimCommandPoolKHR_before(device, commandPool, flags);
 }
 #endif 
 device_dispatch[GetKey(device)].TrimCommandPoolKHR(device, commandPool, flags);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"commandPool=" + ptrToString((void*)commandPool) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void*)flags) + '!');
 #ifdef TRIMCOMMANDPOOLKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_TrimCommandPoolKHR_after(device, commandPool, flags);
@@ -16652,11 +14533,6 @@ layer_GetDeviceGroupPeerMemoryFeaturesKHR_before(device, heapIndex, localDeviceI
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceGroupPeerMemoryFeaturesKHR(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"heapIndex=" + std::to_string(heapIndex) + '!');
-winsockSendToUI(&ConnectSocket,"localDeviceIndex=" + std::to_string(localDeviceIndex) + '!');
-winsockSendToUI(&ConnectSocket,"remoteDeviceIndex=" + std::to_string(remoteDeviceIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pPeerMemoryFeatures=" + ptrToString((void*)pPeerMemoryFeatures) + '!');
 #ifdef GETDEVICEGROUPPEERMEMORYFEATURESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceGroupPeerMemoryFeaturesKHR_after(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
@@ -16678,9 +14554,6 @@ layer_BindBufferMemory2KHR_before(device, bindInfoCount, pBindInfos);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindBufferMemory2KHR(device, bindInfoCount, pBindInfos);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"bindInfoCount=" + std::to_string(bindInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos=" + ptrToString((void*)pBindInfos) + '!');
 #ifdef BINDBUFFERMEMORY2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindBufferMemory2KHR_after(device, bindInfoCount, pBindInfos);
@@ -16703,9 +14576,6 @@ layer_BindImageMemory2KHR_before(device, bindInfoCount, pBindInfos);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindImageMemory2KHR(device, bindInfoCount, pBindInfos);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"bindInfoCount=" + std::to_string(bindInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos=" + ptrToString((void*)pBindInfos) + '!');
 #ifdef BINDIMAGEMEMORY2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindImageMemory2KHR_after(device, bindInfoCount, pBindInfos);
@@ -16728,8 +14598,6 @@ layer_CmdSetDeviceMaskKHR_before(commandBuffer, deviceMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDeviceMaskKHR(commandBuffer, deviceMask);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"deviceMask=" + std::to_string(deviceMask) + '!');
 #ifdef CMDSETDEVICEMASKKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDeviceMaskKHR_after(commandBuffer, deviceMask);
@@ -16751,13 +14619,6 @@ layer_CmdDispatchBaseKHR_before(commandBuffer, baseGroupX, baseGroupY, baseGroup
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDispatchBaseKHR(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"baseGroupX=" + std::to_string(baseGroupX) + '!');
-winsockSendToUI(&ConnectSocket,"baseGroupY=" + std::to_string(baseGroupY) + '!');
-winsockSendToUI(&ConnectSocket,"baseGroupZ=" + std::to_string(baseGroupZ) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountX=" + std::to_string(groupCountX) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountY=" + std::to_string(groupCountY) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountZ=" + std::to_string(groupCountZ) + '!');
 #ifdef CMDDISPATCHBASEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDispatchBaseKHR_after(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
@@ -16779,10 +14640,6 @@ layer_CreateDescriptorUpdateTemplateKHR_before(device, pCreateInfo, pAllocator, 
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateDescriptorUpdateTemplateKHR(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorUpdateTemplate=" + ptrToString((void*)pDescriptorUpdateTemplate) + '!');
 #ifdef CREATEDESCRIPTORUPDATETEMPLATEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDescriptorUpdateTemplateKHR_after(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
@@ -16805,9 +14662,6 @@ layer_DestroyDescriptorUpdateTemplateKHR_before(device, descriptorUpdateTemplate
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyDescriptorUpdateTemplateKHR(device, descriptorUpdateTemplate, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorUpdateTemplate=" + ptrToString((void*)descriptorUpdateTemplate) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYDESCRIPTORUPDATETEMPLATEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyDescriptorUpdateTemplateKHR_after(device, descriptorUpdateTemplate, pAllocator);
@@ -16829,10 +14683,6 @@ layer_UpdateDescriptorSetWithTemplateKHR_before(device, descriptorSet, descripto
 }
 #endif 
 device_dispatch[GetKey(device)].UpdateDescriptorSetWithTemplateKHR(device, descriptorSet, descriptorUpdateTemplate, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorSet=" + ptrToString((void*)descriptorSet) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorUpdateTemplate=" + ptrToString((void*)descriptorUpdateTemplate) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef UPDATEDESCRIPTORSETWITHTEMPLATEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_UpdateDescriptorSetWithTemplateKHR_after(device, descriptorSet, descriptorUpdateTemplate, pData);
@@ -16854,9 +14704,6 @@ layer_GetBufferMemoryRequirements2KHR_before(device, pInfo, pMemoryRequirements)
 }
 #endif 
 device_dispatch[GetKey(device)].GetBufferMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements=" + ptrToString((void*)pMemoryRequirements) + '!');
 #ifdef GETBUFFERMEMORYREQUIREMENTS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferMemoryRequirements2KHR_after(device, pInfo, pMemoryRequirements);
@@ -16878,9 +14725,6 @@ layer_GetImageMemoryRequirements2KHR_before(device, pInfo, pMemoryRequirements);
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements=" + ptrToString((void*)pMemoryRequirements) + '!');
 #ifdef GETIMAGEMEMORYREQUIREMENTS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageMemoryRequirements2KHR_after(device, pInfo, pMemoryRequirements);
@@ -16902,10 +14746,6 @@ layer_GetImageSparseMemoryRequirements2KHR_before(device, pInfo, pSparseMemoryRe
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements2KHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirementCount=" + ptrToString((void*)pSparseMemoryRequirementCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements=" + ptrToString((void*)pSparseMemoryRequirements) + '!');
 #ifdef GETIMAGESPARSEMEMORYREQUIREMENTS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageSparseMemoryRequirements2KHR_after(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -16927,9 +14767,6 @@ layer_GetDeviceBufferMemoryRequirementsKHR_before(device, pInfo, pMemoryRequirem
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceBufferMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements=" + ptrToString((void*)pMemoryRequirements) + '!');
 #ifdef GETDEVICEBUFFERMEMORYREQUIREMENTSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceBufferMemoryRequirementsKHR_after(device, pInfo, pMemoryRequirements);
@@ -16951,9 +14788,6 @@ layer_GetDeviceImageMemoryRequirementsKHR_before(device, pInfo, pMemoryRequireme
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceImageMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements=" + ptrToString((void*)pMemoryRequirements) + '!');
 #ifdef GETDEVICEIMAGEMEMORYREQUIREMENTSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceImageMemoryRequirementsKHR_after(device, pInfo, pMemoryRequirements);
@@ -16975,10 +14809,6 @@ layer_GetDeviceImageSparseMemoryRequirementsKHR_before(device, pInfo, pSparseMem
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceImageSparseMemoryRequirementsKHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirementCount=" + ptrToString((void*)pSparseMemoryRequirementCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements=" + ptrToString((void*)pSparseMemoryRequirements) + '!');
 #ifdef GETDEVICEIMAGESPARSEMEMORYREQUIREMENTSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceImageSparseMemoryRequirementsKHR_after(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -17000,10 +14830,6 @@ layer_CreateSamplerYcbcrConversionKHR_before(device, pCreateInfo, pAllocator, pY
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateSamplerYcbcrConversionKHR(device, pCreateInfo, pAllocator, pYcbcrConversion);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pYcbcrConversion=" + ptrToString((void*)pYcbcrConversion) + '!');
 #ifdef CREATESAMPLERYCBCRCONVERSIONKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateSamplerYcbcrConversionKHR_after(device, pCreateInfo, pAllocator, pYcbcrConversion);
@@ -17026,9 +14852,6 @@ layer_DestroySamplerYcbcrConversionKHR_before(device, ycbcrConversion, pAllocato
 }
 #endif 
 device_dispatch[GetKey(device)].DestroySamplerYcbcrConversionKHR(device, ycbcrConversion, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"ycbcrConversion=" + ptrToString((void*)ycbcrConversion) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYSAMPLERYCBCRCONVERSIONKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroySamplerYcbcrConversionKHR_after(device, ycbcrConversion, pAllocator);
@@ -17050,9 +14873,6 @@ layer_GetDescriptorSetLayoutSupportKHR_before(device, pCreateInfo, pSupport);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutSupportKHR(device, pCreateInfo, pSupport);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pSupport=" + ptrToString((void*)pSupport) + '!');
 #ifdef GETDESCRIPTORSETLAYOUTSUPPORTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDescriptorSetLayoutSupportKHR_after(device, pCreateInfo, pSupport);
@@ -17074,11 +14894,6 @@ layer_GetCalibratedTimestampsEXT_before(device, timestampCount, pTimestampInfos,
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetCalibratedTimestampsEXT(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"timestampCount=" + std::to_string(timestampCount) + '!');
-winsockSendToUI(&ConnectSocket,"pTimestampInfos=" + ptrToString((void*)pTimestampInfos) + '!');
-winsockSendToUI(&ConnectSocket,"pTimestamps=" + ptrToString((void*)pTimestamps) + '!');
-winsockSendToUI(&ConnectSocket,"pMaxDeviation=" + ptrToString((void*)pMaxDeviation) + '!');
 #ifdef GETCALIBRATEDTIMESTAMPSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetCalibratedTimestampsEXT_after(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
@@ -17101,10 +14916,6 @@ layer_CreateRenderPass2KHR_before(device, pCreateInfo, pAllocator, pRenderPass);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateRenderPass2KHR(device, pCreateInfo, pAllocator, pRenderPass);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPass=" + ptrToString((void*)pRenderPass) + '!');
 #ifdef CREATERENDERPASS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateRenderPass2KHR_after(device, pCreateInfo, pAllocator, pRenderPass);
@@ -17127,9 +14938,6 @@ layer_CmdBeginRenderPass2KHR_before(commandBuffer, pRenderPassBegin, pSubpassBeg
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass2KHR(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin=" + ptrToString((void*)pRenderPassBegin) + '!');
-winsockSendToUI(&ConnectSocket,"pSubpassBeginInfo=" + ptrToString((void*)pSubpassBeginInfo) + '!');
 #ifdef CMDBEGINRENDERPASS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginRenderPass2KHR_after(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
@@ -17151,9 +14959,6 @@ layer_CmdNextSubpass2KHR_before(commandBuffer, pSubpassBeginInfo, pSubpassEndInf
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdNextSubpass2KHR(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pSubpassBeginInfo=" + ptrToString((void*)pSubpassBeginInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pSubpassEndInfo=" + ptrToString((void*)pSubpassEndInfo) + '!');
 #ifdef CMDNEXTSUBPASS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdNextSubpass2KHR_after(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
@@ -17175,8 +14980,6 @@ layer_CmdEndRenderPass2KHR_before(commandBuffer, pSubpassEndInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass2KHR(commandBuffer, pSubpassEndInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pSubpassEndInfo=" + ptrToString((void*)pSubpassEndInfo) + '!');
 #ifdef CMDENDRENDERPASS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndRenderPass2KHR_after(commandBuffer, pSubpassEndInfo);
@@ -17198,9 +15001,6 @@ layer_GetSemaphoreCounterValueKHR_before(device, semaphore, pValue);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreCounterValueKHR(device, semaphore, pValue);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"semaphore=" + ptrToString((void*)semaphore) + '!');
-winsockSendToUI(&ConnectSocket,"pValue=" + ptrToString((void*)pValue) + '!');
 #ifdef GETSEMAPHORECOUNTERVALUEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSemaphoreCounterValueKHR_after(device, semaphore, pValue);
@@ -17223,9 +15023,6 @@ layer_WaitSemaphoresKHR_before(device, pWaitInfo, timeout);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].WaitSemaphoresKHR(device, pWaitInfo, timeout);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pWaitInfo=" + ptrToString((void*)pWaitInfo) + '!');
-winsockSendToUI(&ConnectSocket,"timeout=" + std::to_string(timeout) + '!');
 #ifdef WAITSEMAPHORESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_WaitSemaphoresKHR_after(device, pWaitInfo, timeout);
@@ -17248,8 +15045,6 @@ layer_SignalSemaphoreKHR_before(device, pSignalInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].SignalSemaphoreKHR(device, pSignalInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pSignalInfo=" + ptrToString((void*)pSignalInfo) + '!');
 #ifdef SIGNALSEMAPHOREKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SignalSemaphoreKHR_after(device, pSignalInfo);
@@ -17272,13 +15067,6 @@ layer_CmdDrawIndirectCountKHR_before(commandBuffer, buffer, offset, countBuffer,
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCountKHR(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void*)countBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + ptrToString((void*)countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDDRAWINDIRECTCOUNTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndirectCountKHR_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -17300,13 +15088,6 @@ layer_CmdDrawIndirectCountAMD_before(commandBuffer, buffer, offset, countBuffer,
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void*)countBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + ptrToString((void*)countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDDRAWINDIRECTCOUNTAMD_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndirectCountAMD_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -17328,13 +15109,6 @@ layer_CmdDrawIndexedIndirectCountKHR_before(commandBuffer, buffer, offset, count
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCountKHR(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void*)countBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + ptrToString((void*)countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDDRAWINDEXEDINDIRECTCOUNTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndexedIndirectCountKHR_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -17356,13 +15130,6 @@ layer_CmdDrawIndexedIndirectCountAMD_before(commandBuffer, buffer, offset, count
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void*)buffer) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + ptrToString((void*)offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void*)countBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + ptrToString((void*)countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
 #ifdef CMDDRAWINDEXEDINDIRECTCOUNTAMD_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndexedIndirectCountAMD_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -17384,12 +15151,6 @@ layer_GetRayTracingShaderGroupHandlesNV_before(device, pipeline, firstGroup, gro
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetRayTracingShaderGroupHandlesNV(device, pipeline, firstGroup, groupCount, dataSize, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void*)pipeline) + '!');
-winsockSendToUI(&ConnectSocket,"firstGroup=" + std::to_string(firstGroup) + '!');
-winsockSendToUI(&ConnectSocket,"groupCount=" + std::to_string(groupCount) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETRAYTRACINGSHADERGROUPHANDLESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRayTracingShaderGroupHandlesNV_after(device, pipeline, firstGroup, groupCount, dataSize, pData);
@@ -17412,8 +15173,6 @@ layer_GetBufferOpaqueCaptureAddressKHR_before(device, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetBufferOpaqueCaptureAddressKHR(device, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef GETBUFFEROPAQUECAPTUREADDRESSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferOpaqueCaptureAddressKHR_after(device, pInfo);
@@ -17436,8 +15195,6 @@ layer_GetBufferDeviceAddressKHR_before(device, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetBufferDeviceAddressKHR(device, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef GETBUFFERDEVICEADDRESSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferDeviceAddressKHR_after(device, pInfo);
@@ -17460,8 +15217,6 @@ layer_GetBufferDeviceAddressEXT_before(device, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetBufferDeviceAddressEXT(device, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef GETBUFFERDEVICEADDRESSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferDeviceAddressEXT_after(device, pInfo);
@@ -17484,8 +15239,6 @@ layer_GetDeviceMemoryOpaqueCaptureAddressKHR_before(device, pInfo);
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeviceMemoryOpaqueCaptureAddressKHR(device, pInfo);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void*)pInfo) + '!');
 #ifdef GETDEVICEMEMORYOPAQUECAPTUREADDRESSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceMemoryOpaqueCaptureAddressKHR_after(device, pInfo);
@@ -17508,9 +15261,6 @@ layer_CmdSetLineStippleEXT_before(commandBuffer, lineStippleFactor, lineStippleP
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetLineStippleEXT(commandBuffer, lineStippleFactor, lineStipplePattern);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"lineStippleFactor=" + std::to_string(lineStippleFactor) + '!');
-winsockSendToUI(&ConnectSocket,"lineStipplePattern=" + ptrToString((void*)lineStipplePattern) + '!');
 #ifdef CMDSETLINESTIPPLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetLineStippleEXT_after(commandBuffer, lineStippleFactor, lineStipplePattern);
@@ -17532,8 +15282,6 @@ layer_CmdSetCullModeEXT_before(commandBuffer, cullMode);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCullModeEXT(commandBuffer, cullMode);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"cullMode=" + ptrToString((void*)cullMode) + '!');
 #ifdef CMDSETCULLMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCullModeEXT_after(commandBuffer, cullMode);
@@ -17555,8 +15303,6 @@ layer_CmdSetFrontFaceEXT_before(commandBuffer, frontFace);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetFrontFaceEXT(commandBuffer, frontFace);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"frontFace=" + std::to_string(frontFace) + '!');
 #ifdef CMDSETFRONTFACEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetFrontFaceEXT_after(commandBuffer, frontFace);
@@ -17578,8 +15324,6 @@ layer_CmdSetPrimitiveTopologyEXT_before(commandBuffer, primitiveTopology);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveTopologyEXT(commandBuffer, primitiveTopology);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"primitiveTopology=" + std::to_string(primitiveTopology) + '!');
 #ifdef CMDSETPRIMITIVETOPOLOGYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPrimitiveTopologyEXT_after(commandBuffer, primitiveTopology);
@@ -17601,9 +15345,6 @@ layer_CmdSetViewportWithCountEXT_before(commandBuffer, viewportCount, pViewports
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWithCountEXT(commandBuffer, viewportCount, pViewports);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"viewportCount=" + std::to_string(viewportCount) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports=" + ptrToString((void*)pViewports) + '!');
 #ifdef CMDSETVIEWPORTWITHCOUNTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetViewportWithCountEXT_after(commandBuffer, viewportCount, pViewports);
@@ -17625,9 +15366,6 @@ layer_CmdSetScissorWithCountEXT_before(commandBuffer, scissorCount, pScissors);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetScissorWithCountEXT(commandBuffer, scissorCount, pScissors);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"scissorCount=" + std::to_string(scissorCount) + '!');
-winsockSendToUI(&ConnectSocket,"pScissors=" + ptrToString((void*)pScissors) + '!');
 #ifdef CMDSETSCISSORWITHCOUNTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetScissorWithCountEXT_after(commandBuffer, scissorCount, pScissors);
@@ -17649,13 +15387,6 @@ layer_CmdBindVertexBuffers2EXT_before(commandBuffer, firstBinding, bindingCount,
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers2EXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"firstBinding=" + std::to_string(firstBinding) + '!');
-winsockSendToUI(&ConnectSocket,"bindingCount=" + std::to_string(bindingCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBuffers=" + ptrToString((void*)pBuffers) + '!');
-winsockSendToUI(&ConnectSocket,"pOffsets=" + ptrToString((void*)pOffsets) + '!');
-winsockSendToUI(&ConnectSocket,"pSizes=" + ptrToString((void*)pSizes) + '!');
-winsockSendToUI(&ConnectSocket,"pStrides=" + ptrToString((void*)pStrides) + '!');
 #ifdef CMDBINDVERTEXBUFFERS2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindVertexBuffers2EXT_after(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
@@ -17677,8 +15408,6 @@ layer_CmdSetDepthTestEnableEXT_before(commandBuffer, depthTestEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthTestEnableEXT(commandBuffer, depthTestEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"depthTestEnable=" + bool_as_text(depthTestEnable) + '!');
 #ifdef CMDSETDEPTHTESTENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthTestEnableEXT_after(commandBuffer, depthTestEnable);
@@ -17700,8 +15429,6 @@ layer_CmdSetDepthWriteEnableEXT_before(commandBuffer, depthWriteEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthWriteEnableEXT(commandBuffer, depthWriteEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"depthWriteEnable=" + bool_as_text(depthWriteEnable) + '!');
 #ifdef CMDSETDEPTHWRITEENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthWriteEnableEXT_after(commandBuffer, depthWriteEnable);
@@ -17723,8 +15450,6 @@ layer_CmdSetDepthCompareOpEXT_before(commandBuffer, depthCompareOp);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthCompareOpEXT(commandBuffer, depthCompareOp);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"depthCompareOp=" + std::to_string(depthCompareOp) + '!');
 #ifdef CMDSETDEPTHCOMPAREOPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthCompareOpEXT_after(commandBuffer, depthCompareOp);
@@ -17746,8 +15471,6 @@ layer_CmdSetDepthBoundsTestEnableEXT_before(commandBuffer, depthBoundsTestEnable
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBoundsTestEnableEXT(commandBuffer, depthBoundsTestEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"depthBoundsTestEnable=" + bool_as_text(depthBoundsTestEnable) + '!');
 #ifdef CMDSETDEPTHBOUNDSTESTENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthBoundsTestEnableEXT_after(commandBuffer, depthBoundsTestEnable);
@@ -17769,8 +15492,6 @@ layer_CmdSetStencilTestEnableEXT_before(commandBuffer, stencilTestEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilTestEnableEXT(commandBuffer, stencilTestEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"stencilTestEnable=" + bool_as_text(stencilTestEnable) + '!');
 #ifdef CMDSETSTENCILTESTENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetStencilTestEnableEXT_after(commandBuffer, stencilTestEnable);
@@ -17792,12 +15513,6 @@ layer_CmdSetStencilOpEXT_before(commandBuffer, faceMask, failOp, passOp, depthFa
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilOpEXT(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"faceMask=" + ptrToString((void*)faceMask) + '!');
-winsockSendToUI(&ConnectSocket,"failOp=" + std::to_string(failOp) + '!');
-winsockSendToUI(&ConnectSocket,"passOp=" + std::to_string(passOp) + '!');
-winsockSendToUI(&ConnectSocket,"depthFailOp=" + std::to_string(depthFailOp) + '!');
-winsockSendToUI(&ConnectSocket,"compareOp=" + std::to_string(compareOp) + '!');
 #ifdef CMDSETSTENCILOPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetStencilOpEXT_after(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
@@ -17819,8 +15534,6 @@ layer_CmdSetRasterizerDiscardEnableEXT_before(commandBuffer, rasterizerDiscardEn
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizerDiscardEnableEXT(commandBuffer, rasterizerDiscardEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"rasterizerDiscardEnable=" + bool_as_text(rasterizerDiscardEnable) + '!');
 #ifdef CMDSETRASTERIZERDISCARDENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetRasterizerDiscardEnableEXT_after(commandBuffer, rasterizerDiscardEnable);
@@ -17842,8 +15555,6 @@ layer_CmdSetDepthBiasEnableEXT_before(commandBuffer, depthBiasEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBiasEnableEXT(commandBuffer, depthBiasEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"depthBiasEnable=" + bool_as_text(depthBiasEnable) + '!');
 #ifdef CMDSETDEPTHBIASENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthBiasEnableEXT_after(commandBuffer, depthBiasEnable);
@@ -17865,8 +15576,6 @@ layer_CmdSetPrimitiveRestartEnableEXT_before(commandBuffer, primitiveRestartEnab
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveRestartEnableEXT(commandBuffer, primitiveRestartEnable);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"primitiveRestartEnable=" + bool_as_text(primitiveRestartEnable) + '!');
 #ifdef CMDSETPRIMITIVERESTARTENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPrimitiveRestartEnableEXT_after(commandBuffer, primitiveRestartEnable);
@@ -17888,10 +15597,6 @@ layer_CreatePrivateDataSlotEXT_before(device, pCreateInfo, pAllocator, pPrivateD
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreatePrivateDataSlotEXT(device, pCreateInfo, pAllocator, pPrivateDataSlot);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo=" + ptrToString((void*)pCreateInfo) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
-winsockSendToUI(&ConnectSocket,"pPrivateDataSlot=" + ptrToString((void*)pPrivateDataSlot) + '!');
 #ifdef CREATEPRIVATEDATASLOTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreatePrivateDataSlotEXT_after(device, pCreateInfo, pAllocator, pPrivateDataSlot);
@@ -17914,9 +15619,6 @@ layer_DestroyPrivateDataSlotEXT_before(device, privateDataSlot, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyPrivateDataSlotEXT(device, privateDataSlot, pAllocator);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"privateDataSlot=" + ptrToString((void*)privateDataSlot) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator=" + ptrToString((void*)pAllocator) + '!');
 #ifdef DESTROYPRIVATEDATASLOTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyPrivateDataSlotEXT_after(device, privateDataSlot, pAllocator);
@@ -17938,11 +15640,6 @@ layer_SetPrivateDataEXT_before(device, objectType, objectHandle, privateDataSlot
 }
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, data);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"objectType=" + std::to_string(objectType) + '!');
-winsockSendToUI(&ConnectSocket,"objectHandle=" + std::to_string(objectHandle) + '!');
-winsockSendToUI(&ConnectSocket,"privateDataSlot=" + ptrToString((void*)privateDataSlot) + '!');
-winsockSendToUI(&ConnectSocket,"data=" + std::to_string(data) + '!');
 #ifdef SETPRIVATEDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetPrivateDataEXT_after(device, objectType, objectHandle, privateDataSlot, data);
@@ -17965,11 +15662,6 @@ layer_GetPrivateDataEXT_before(device, objectType, objectHandle, privateDataSlot
 }
 #endif 
 device_dispatch[GetKey(device)].GetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, pData);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"objectType=" + std::to_string(objectType) + '!');
-winsockSendToUI(&ConnectSocket,"objectHandle=" + std::to_string(objectHandle) + '!');
-winsockSendToUI(&ConnectSocket,"privateDataSlot=" + ptrToString((void*)privateDataSlot) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void*)pData) + '!');
 #ifdef GETPRIVATEDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPrivateDataEXT_after(device, objectType, objectHandle, privateDataSlot, pData);
@@ -17991,8 +15683,6 @@ layer_CmdCopyBuffer2KHR_before(commandBuffer, pCopyBufferInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer2KHR(commandBuffer, pCopyBufferInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo=" + ptrToString((void*)pCopyBufferInfo) + '!');
 #ifdef CMDCOPYBUFFER2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyBuffer2KHR_after(commandBuffer, pCopyBufferInfo);
@@ -18014,8 +15704,6 @@ layer_CmdCopyImage2KHR_before(commandBuffer, pCopyImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyImage2KHR(commandBuffer, pCopyImageInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo=" + ptrToString((void*)pCopyImageInfo) + '!');
 #ifdef CMDCOPYIMAGE2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyImage2KHR_after(commandBuffer, pCopyImageInfo);
@@ -18037,8 +15725,6 @@ layer_CmdBlitImage2KHR_before(commandBuffer, pBlitImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBlitImage2KHR(commandBuffer, pBlitImageInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo=" + ptrToString((void*)pBlitImageInfo) + '!');
 #ifdef CMDBLITIMAGE2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBlitImage2KHR_after(commandBuffer, pBlitImageInfo);
@@ -18060,8 +15746,6 @@ layer_CmdCopyBufferToImage2KHR_before(commandBuffer, pCopyBufferToImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage2KHR(commandBuffer, pCopyBufferToImageInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo=" + ptrToString((void*)pCopyBufferToImageInfo) + '!');
 #ifdef CMDCOPYBUFFERTOIMAGE2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyBufferToImage2KHR_after(commandBuffer, pCopyBufferToImageInfo);
@@ -18083,8 +15767,6 @@ layer_CmdCopyImageToBuffer2KHR_before(commandBuffer, pCopyImageToBufferInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer2KHR(commandBuffer, pCopyImageToBufferInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo=" + ptrToString((void*)pCopyImageToBufferInfo) + '!');
 #ifdef CMDCOPYIMAGETOBUFFER2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyImageToBuffer2KHR_after(commandBuffer, pCopyImageToBufferInfo);
@@ -18106,8 +15788,6 @@ layer_CmdResolveImage2KHR_before(commandBuffer, pResolveImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdResolveImage2KHR(commandBuffer, pResolveImageInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo=" + ptrToString((void*)pResolveImageInfo) + '!');
 #ifdef CMDRESOLVEIMAGE2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdResolveImage2KHR_after(commandBuffer, pResolveImageInfo);
@@ -18129,9 +15809,6 @@ layer_CmdSetEvent2KHR_before(commandBuffer, event, pDependencyInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetEvent2KHR(commandBuffer, event, pDependencyInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void*)event) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo=" + ptrToString((void*)pDependencyInfo) + '!');
 #ifdef CMDSETEVENT2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetEvent2KHR_after(commandBuffer, event, pDependencyInfo);
@@ -18153,9 +15830,6 @@ layer_CmdResetEvent2KHR_before(commandBuffer, event, stageMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdResetEvent2KHR(commandBuffer, event, stageMask);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void*)event) + '!');
-winsockSendToUI(&ConnectSocket,"stageMask=" + ptrToString((void*)stageMask) + '!');
 #ifdef CMDRESETEVENT2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdResetEvent2KHR_after(commandBuffer, event, stageMask);
@@ -18177,10 +15851,6 @@ layer_CmdWaitEvents2KHR_before(commandBuffer, eventCount, pEvents, pDependencyIn
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWaitEvents2KHR(commandBuffer, eventCount, pEvents, pDependencyInfos);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"eventCount=" + std::to_string(eventCount) + '!');
-winsockSendToUI(&ConnectSocket,"pEvents=" + ptrToString((void*)pEvents) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos=" + ptrToString((void*)pDependencyInfos) + '!');
 #ifdef CMDWAITEVENTS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWaitEvents2KHR_after(commandBuffer, eventCount, pEvents, pDependencyInfos);
@@ -18202,8 +15872,6 @@ layer_CmdPipelineBarrier2KHR_before(commandBuffer, pDependencyInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier2KHR(commandBuffer, pDependencyInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo=" + ptrToString((void*)pDependencyInfo) + '!');
 #ifdef CMDPIPELINEBARRIER2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPipelineBarrier2KHR_after(commandBuffer, pDependencyInfo);
@@ -18225,10 +15893,6 @@ layer_QueueSubmit2KHR_before(queue, submitCount, pSubmits, fence);
 }
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueueSubmit2KHR(queue, submitCount, pSubmits, fence);
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void*)queue) + '!');
-winsockSendToUI(&ConnectSocket,"submitCount=" + std::to_string(submitCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits=" + ptrToString((void*)pSubmits) + '!');
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void*)fence) + '!');
 #ifdef QUEUESUBMIT2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueSubmit2KHR_after(queue, submitCount, pSubmits, fence);
@@ -18251,10 +15915,6 @@ layer_CmdWriteTimestamp2KHR_before(commandBuffer, stage, queryPool, query);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp2KHR(commandBuffer, stage, queryPool, query);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"stage=" + ptrToString((void*)stage) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void*)queryPool) + '!');
-winsockSendToUI(&ConnectSocket,"query=" + std::to_string(query) + '!');
 #ifdef CMDWRITETIMESTAMP2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteTimestamp2KHR_after(commandBuffer, stage, queryPool, query);
@@ -18276,8 +15936,6 @@ layer_CmdBeginRenderingKHR_before(commandBuffer, pRenderingInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderingKHR(commandBuffer, pRenderingInfo);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo=" + ptrToString((void*)pRenderingInfo) + '!');
 #ifdef CMDBEGINRENDERINGKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginRenderingKHR_after(commandBuffer, pRenderingInfo);
@@ -18299,7 +15957,6 @@ layer_CmdEndRenderingKHR_before(commandBuffer);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderingKHR(commandBuffer);
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void*)commandBuffer) + '!');
 #ifdef CMDENDRENDERINGKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndRenderingKHR_after(commandBuffer);
@@ -18321,10 +15978,6 @@ layer_GetImageSubresourceLayout2EXT_before(device, image, pSubresource, pLayout)
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageSubresourceLayout2EXT(device, image, pSubresource, pLayout);
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void*)device) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void*)image) + '!');
-winsockSendToUI(&ConnectSocket,"pSubresource=" + ptrToString((void*)pSubresource) + '!');
-winsockSendToUI(&ConnectSocket,"pLayout=" + ptrToString((void*)pLayout) + '!');
 #ifdef GETIMAGESUBRESOURCELAYOUT2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageSubresourceLayout2EXT_after(device, image, pSubresource, pLayout);

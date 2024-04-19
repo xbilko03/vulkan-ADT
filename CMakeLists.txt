@@ -66,7 +66,7 @@ set(Glfw_LIBRARY "C:/GLFW/glfw-3.4.bin.WIN64/lib/glfw3.lib")
 target_link_libraries(${project_name} ${Glfw_LIBRARY} wsock32 ws2_32)
 
 # layer
-include_directories("libs/vklayer/" "layergen/")
+include_directories("libs/vklayer/" "layergen/" "layer/")
 
 # generator
 add_executable(${generator_name} 
@@ -81,11 +81,13 @@ include_directories("libs/pugixml/")
 # layer
 option(BUILD_SHARED_LIBS ON)
 add_library(dbgrvlayer SHARED 
-"layer/layer.cpp" 
-"layer/layer.hpp"
-"layer/layer_generated.cpp" 
 ${Glfw_LIBRARY}
 ${Vulkan_LIBRARIES}
+"layer/layer.hpp"
+"layer/layer.cpp"
+"layer/layer_messages.h"
+"layer/layer_messages.cpp"
+"layer/layer_generated.cpp"
  "appUI/winsock.h"
  "appUI/winsock.cpp")
 target_link_libraries(dbgrvlayer wsock32 ws2_32 ${Vulkan_LIBRARIES})
