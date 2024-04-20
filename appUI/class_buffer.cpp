@@ -1,6 +1,7 @@
 #include "class_buffer.hpp"
 
 #include <iostream>
+#include <sstream>
 
 namespace details {
     unsigned long long vkBufferManager::GetFromPointerID(std::string message)

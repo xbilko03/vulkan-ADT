@@ -235,8 +235,14 @@ namespace details {
         return true;
     }
 
-    bool appWindow::LoadImageTexture(int width, int height, int channels, void* imageData)
+    bool appWindow::LoadImageTexture(unsigned long long ID, int width, int height, int channels, void* imageData)
     {
+        /* free last texture if exists */
+        if (loadedImages.count(ID))
+        {
+            RemoveTexture(&loadedImages[ID]);
+        }
+
         my_texture.Channels = channels;
         //unsigned char* image_data = stbi_load(filename, &tex_data->Width, &tex_data->Height, 0, tex_data->Channels);
         my_texture.Height = height;
@@ -440,8 +446,9 @@ namespace details {
             check_vk_result(err);
         }
 
-        return true;
 
+        loadedImages[ID] = my_texture;
+        return true;
     }
 
     /* [Texture] Helper function to cleanup an image loaded with LoadTextureFromFile */
@@ -461,16 +468,6 @@ namespace details {
     {
         //bool ret = LoadTextureFromFile("C:\\Users\\jozef\\Desktop\\viking_room.png", &my_texture);
         //IM_ASSERT(ret);
-    }
-
-    /* [Texture] texture test */
-    void appWindow::ShowTexture()
-    {
-        ImGui::Begin("Vulkan Texture Test");
-        ImGui::Text("pointer = %p", my_texture.DS);
-        ImGui::Text("size = %d x %d", my_texture.Width, my_texture.Height);
-        ImGui::Image((ImTextureID)my_texture.DS, ImVec2(my_texture.Width, my_texture.Height));
-        ImGui::End();
     }
 
     /* render frame */

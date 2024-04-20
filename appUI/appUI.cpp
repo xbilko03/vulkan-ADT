@@ -27,11 +27,7 @@ namespace details {
             {
                 output = (*dataObject).getMemoryPointer(i);
                 ImGui::Text(output.c_str());
-                char* data = (*dataObject).getMemoryData(i);
-                if(data == NULL)
-                    ImGui::Text("No data.");
-                else
-                    ImGui::Text(data);
+                ImGui::Text((*dataObject).getMemoryData(i).c_str());
             }
         }
 
@@ -51,14 +47,12 @@ namespace details {
             {
                 output = (*dataObject).getImagePointer(i);
                 ImGui::Text(output.c_str());
-                char* data = (*dataObject).getImageData(i);
-                if (data == NULL)
-                    ImGui::Text("No data.");
-                else
-                    ImGui::Text(data);
+                ImGui::Text((*dataObject).getImageData(i).c_str());
+                ImGui::Text("pointer = %p", (*window).getImageDS(i));
+                ImGui::Text("size = %d x %d", (*window).getImageWidth(i), (*window).getImageHeight(i));
+                ImGui::Image((ImTextureID)(*window).getImageDS(i), ImVec2((*window).getImageWidth(i), (*window).getImageHeight(i)));
             }
         }
-
         ImGui::End();
     }
     void appUI::ShowBuffers(details::appWindow* window, details::events* dataObject)
@@ -75,11 +69,7 @@ namespace details {
             {
                 output = (*dataObject).getBufferPointer(i);
                 ImGui::Text(output.c_str());
-                char* data = (*dataObject).getBufferData(i);
-                if (data == NULL)
-                    ImGui::Text("No data.");
-                else
-                    ImGui::Text(data);
+                ImGui::Text((*dataObject).getBufferData(i).c_str());
             }
         }
 
@@ -88,11 +78,20 @@ namespace details {
     void appUI::ShowAppInfo(details::appWindow* window, details::events* dataObject)
     {
         ImGui::Begin("Vulkan Info");
-        /*
-        auto appInfo = (*dataObject).getAppInfo();
-        for (auto item : appInfo.parameters)
-            ImGui::Text((item).c_str());
-        */
+
+        if (ImGui::CollapsingHeader("appInfo"))
+        {
+            auto appInfo = (*dataObject).getAppInfo();
+            for (auto item : appInfo)
+                ImGui::Text((item).c_str());
+        }
+
+        if (ImGui::CollapsingHeader("vkInfo"))
+        {
+            auto vkInfo = (*dataObject).getVkInfo();
+            for (auto item : vkInfo)
+                ImGui::Text((item).c_str());
+        }
         ImGui::End();
     }
     void appUI::ShowVulkanInfo(details::appWindow* window, details::events* dataObject)
@@ -297,7 +296,6 @@ namespace details {
                 ImGui::Checkbox("Api_Calls", &apiCalls);
                 ImGui::Checkbox("Vk_Buffers", &buffers);
                 ImGui::Checkbox("Demo_Window", &demo);
-                ImGui::Checkbox("Texture_Test", &texture);
                 ImGui::Checkbox("App_Info", &appInfo);
                 ImGui::Checkbox("Vk_Images", &images);
                 ImGui::Checkbox("Vk_Memory", &memories);
@@ -312,8 +310,6 @@ namespace details {
                 ShowBuffers(&window, &eventManager);
             if(demo == true)
                 ImGui::ShowDemoWindow(&demo);
-            if(texture == true)
-                window.ShowTexture();
             if (appInfo == true)
                 ShowAppInfo(&window, &eventManager);
             if (images == true)

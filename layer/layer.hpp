@@ -56,6 +56,8 @@ void layer_CmdCopyBuffer_before(VkCommandBuffer commandBuffer, VkBuffer srcBuffe
 #define CMDCOPYIMAGE_BEFORE_EXEC_EXISTS
 void layer_CmdCopyImage_before(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageCopy* pRegions);
 
+#define CREATEINSTANCE_AFTER_EXEC_EXISTS
+void layer_CreateInstance_after(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance);
 
 //#pragma comment(lib, "Ws2_32.lib")
 #define WINDOW_NAME "VK_DEBUGGER"

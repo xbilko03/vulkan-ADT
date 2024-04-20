@@ -13,6 +13,7 @@
 #include "class_memory.hpp"
 #include "class_buffer.hpp"
 #include "class_image.hpp"
+#include "class_system.hpp"
 #include "class_apiCall.hpp"
 #include "appWindow.hpp"
 #include <map>
@@ -28,17 +29,20 @@ namespace details {
 		unsigned long long getMemoriesCount() { return memMan->GetMemoryCount(); }
 		std::string getMemoryPointer(unsigned long long ID) { return memMan->GetPointer(ID); }
 		std::string getMemoryState(unsigned long long ID) { return memMan->GetState(ID); }
-		char* getMemoryData(unsigned long long ID) { return memMan->GetData(ID); }
+		std::string getMemoryData(unsigned long long ID) { return memMan->GetDataReadable(ID); }
 
 		unsigned long long getBufferCount() { return bufMan->GetBufferCount(); }
 		std::string getBufferPointer(unsigned long long ID) { return bufMan->GetPointer(ID); }
 		std::string getBufferState(unsigned long long ID) { return bufMan->GetState(ID); }
-		char* getBufferData(unsigned long long ID) { return bufMan->GetData(ID); }
+		std::string getBufferData(unsigned long long ID) { return bufMan->GetDataReadable(ID); }
 
 		unsigned long long getImagesCount() { return imgMan->GetBufferCount(); }
 		std::string getImagePointer(unsigned long long ID) { return imgMan->GetPointer(ID); }
 		std::string getImageState(unsigned long long ID) { return imgMan->GetState(ID); }
-		char* getImageData(unsigned long long ID) { return imgMan->GetData(ID); }
+		std::string getImageData(unsigned long long ID) { return imgMan->GetDataReadable(ID); }
+
+		std::list<std::string> getAppInfo() { return sysMan->getAppInfo(); }
+		std::list<std::string> getVkInfo() { return sysMan->getVkInfo(); }
 	private:
 		SOCKET ConnectSocket = INVALID_SOCKET;
 		#define DEFAULT_BUFLEN 500
@@ -48,6 +52,7 @@ namespace details {
 		void newInfo(const char* input, size_t index);
 		void parseMessage(const char* inputChar);
 		void createDataManagers();
+		void fillSysman();
 		std::string omitMessage(std::string input);
 		std::string omitValue(std::string input);
 
@@ -55,5 +60,6 @@ namespace details {
 		vkMemoryManager* memMan;
 		vkBufferManager* bufMan;
 		vkImageManager* imgMan;
+		vkSystemManager* sysMan;
 	};
 }

@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <string>
 #include <list>
+#include <map>
 
 #include "winsock.h"
 
@@ -21,10 +22,6 @@
 namespace details {
 	class appWindow {
 	public:
-        appWindow()
-        {
-
-        }
         /* some of these might be just private */
         void imGuiInit();   
         void framebufferInit();
@@ -57,15 +54,20 @@ namespace details {
         std::list<VkPhysicalDeviceProperties> GetPhysicalDeviceProperties() { return physicalDevicePropertiesList; }
         ImVector<VkExtensionProperties> GetInstanceExtensions() { return instanceExtensions; }
         ImVector<VkExtensionProperties> GetDeviceExtensions() { return deviceExtensions; }
-        bool LoadImageTexture(int width, int height, int channels, void* imageData);
+        bool LoadImageTexture(unsigned long long ID, int width, int height, int channels, void* imageData);
+
+        VkDescriptorSet getImageDS(unsigned long long ID) { return loadedImages[ID].DS; }
+        unsigned long long getImageWidth(unsigned long long ID) { return loadedImages[ID].Width; }
+        unsigned long long getImageHeight(unsigned long long ID) { return loadedImages[ID].Height; }
+        unsigned long long getImageChannels(unsigned long long ID) { return loadedImages[ID].Channels; }
 	private:
         // A struct to manage data related to one image in vulkan
         struct MyTextureData
         {
             VkDescriptorSet DS;         // Descriptor set: this is what you'll pass to Image()
-            int             Width;
-            int             Height;
-            int             Channels;
+            unsigned long long Width;
+            unsigned long long Height;
+            unsigned long long Channels;
 
             // Need to keep track of these to properly cleanup
             VkImageView     ImageView;
@@ -78,6 +80,7 @@ namespace details {
             MyTextureData() { memset(this, 0, sizeof(*this)); }
         };
         MyTextureData my_texture;
+        std::map<unsigned long long, MyTextureData> loadedImages;
 
         uint32_t findMemoryType(uint32_t type_filter, VkMemoryPropertyFlags properties);
         bool LoadTextureFromFile(const char* filename, MyTextureData* tex_data);
@@ -101,7 +104,6 @@ namespace details {
         bool g_SwapChainRebuild;
         VkSurfaceKHR surface;
         ImGui_ImplVulkanH_Window* wd;
-
 
         /* Physical devices */
         uint32_t physicalDeviceCount;

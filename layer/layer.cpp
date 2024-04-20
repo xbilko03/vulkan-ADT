@@ -41,6 +41,16 @@ void layer_FreeMemory_before(VkDevice device, VkDeviceMemory memory, VkAllocatio
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", addrToString((void*)memory)));
 }
 
+void layer_CreateInstance_after(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
+{
+    char wnd_title[256];
+    HWND hwnd = GetForegroundWindow();
+    GetWindowText(hwnd, wnd_title, sizeof(wnd_title));
+
+    winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "appName=", wnd_title));
+    winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "proccessID=", std::to_string(GetCurrentProcessId())));
+}
+
 void layer_BindBufferMemory_after(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset)
 {
     auto tarObject = memoryMap[memory];
@@ -71,6 +81,7 @@ void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
 {    
     auto tarObject = memoryMap[memory];
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", addrToString((void*)memory)));
+    winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "size=", std::to_string(tarObject.size)));
     
     std::string dataMessage = "data";
     dataMessage += std::to_string(tarObject.size);
@@ -83,6 +94,8 @@ void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
 void layer_CreateImage_after(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage)
 {
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", ptrToString((void**)pImage)));
+    winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "width=", std::to_string(pCreateInfo->extent.width)));
+    winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "height=", std::to_string(pCreateInfo->extent.height)));
 }
 /* Create buffer object */
 void layer_CreateBuffer_after(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer)

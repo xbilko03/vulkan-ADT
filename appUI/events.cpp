@@ -31,6 +31,7 @@ namespace details {
     unsigned long long imageID = 0;
     /* Memory ID in case we need to backtrack it after the memory allocation */
     unsigned long long modifiedMemoryID;
+    unsigned long long lastMemorySize;
     unsigned long long modifiedBufferID;
     unsigned long long modifiedImageID;
     /* Window for image rendering */
@@ -42,6 +43,7 @@ namespace details {
         memMan = new vkMemoryManager();
         bufMan = new vkBufferManager();
         imgMan = new vkImageManager();
+        sysMan = new vkSystemManager(winMan);
     }
     /* Remove the message prefix before = */
     std::string events::omitMessage(std::string input)
@@ -69,21 +71,18 @@ namespace details {
         /* handle data input */
         if (receptionState == "data_loadMemory")
         {
-            memMan->AssignData(modifiedMemoryID, (char*)inputChar);
+            memMan->AssignData(modifiedMemoryID, (char*)inputChar, lastMemorySize);
             modifiedBufferID = bufMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID));
             modifiedImageID = imgMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID));
 
-
             if (modifiedBufferID != -1)
             {
-                bufMan->AssignData(modifiedBufferID, (char*)inputChar);
-                bufMan->AssignDataSize(modifiedBufferID, dataSize);
+                bufMan->AssignMemory(modifiedBufferID, memMan->GetMemory(modifiedMemoryID));
             }
             if (modifiedImageID != -1)
             {
-                imgMan->AssignData(modifiedImageID, (char*)inputChar);
-                imgMan->AssignDataSize(modifiedImageID, dataSize);
-                //winMan->LoadImageTexture(modifiedImageID,1024,1024,4,(char*)inputChar);
+                imgMan->AssignMemory(modifiedBufferID, memMan->GetMemory(modifiedMemoryID));
+                winMan->LoadImageTexture(modifiedImageID,1024,1024,4,(char*)inputChar);
             }
             receptionState = "begin_vkUnmapMemory";
             return;
@@ -103,6 +102,7 @@ namespace details {
             }
             else if (receptionState == "begin_vkAllocateMemory")
             {
+                std::cout << "new memory " << memoryID << std::endl;
                 memMan->newMemory(memoryID);
             }
             else if (receptionState == "begin_vkCreateImage")
@@ -121,8 +121,13 @@ namespace details {
             /* finish reading and save call */
             currentCallList.push_back(*currentCall);
             frames[frameID] = currentCallList;
+
+            if(receptionState == "end_vkUnmapMemory")
+                std::cout << "end memory." << std::endl;
+
             if (receptionState == "end_vkAllocateMemory")
             {
+                std::cout << "end memory " << memoryID << std::endl;
                 memoryID++;
             }
             else if (receptionState == "end_vkCreateImage")
@@ -139,13 +144,18 @@ namespace details {
             /* instructions sent by layer.cpp */
             if (receptionState == "begin_vkUnmapMemory")
             {
+                std::cout << "begin memory." << inputChar << std::endl;
                 if (input.substr(0, 11) == "layer_data=")
                 {
                     receptionState = "data_loadMemory";
                 }
-                else
+                else if (omitValue(input) == "layer_ptr")
                 {
                     modifiedMemoryID = memMan->GetFromPointerID(omitMessage(input));
+                }
+                else if (omitValue(input) == "layer_size")
+                {
+                    lastMemorySize = stoul(omitMessage(input));
                 }
             }
             else if (receptionState == "begin_vkAllocateMemory")
@@ -158,13 +168,26 @@ namespace details {
             }
             else if (receptionState == "begin_vkCreateImage")
             {
-                imgMan->AssignPointer(imageID, omitMessage(input));
+                if (omitValue(input) == "layer_ptr")
+                {
+                    imgMan->AssignPointer(imageID, omitMessage(input));
+                }
+                else if (omitValue(input) == "layer_width")
+                {
+                    imgMan->SetWidth(imageID, omitMessage(input));
+                }
+                else if (omitValue(input) == "layer_height")
+                {
+                    imgMan->SetHeight(imageID, omitMessage(input));
+                }
             }
             else if (receptionState == "begin_vkDestroyImage")
             {
                 modifiedImageID = imgMan->GetFromPointerID(omitMessage(input));
                 if (modifiedImageID != -1)
+                {
                     imgMan->FreeBuffer(modifiedImageID);
+                }
             }
             else if (receptionState == "begin_vkCreateBuffer")
             {
@@ -190,7 +213,9 @@ namespace details {
                     if (modifiedMemoryID != -1)
                         memMan->AssignBoundObj(modifiedMemoryID, omitMessage(input));
                     if (modifiedBufferID != -1)
-                        bufMan->AssignData(modifiedBufferID, memMan->GetData(modifiedMemoryID));
+                    {
+                        bufMan->AssignMemory(modifiedBufferID, memMan->GetMemory(modifiedMemoryID));
+                    }
                 }
             }
             else if (receptionState == "begin_vkBindImageMemory")
@@ -208,8 +233,8 @@ namespace details {
                         memMan->AssignBoundObj(modifiedMemoryID, omitMessage(input));
                     if (modifiedImageID != -1)
                     {
-                        imgMan->AssignData(modifiedImageID, memMan->GetData(modifiedMemoryID));
-                        winMan->LoadImageTexture(1024, 1024, 4, memMan->GetData(modifiedMemoryID));
+                        imgMan->AssignMemory(modifiedImageID, memMan->GetMemory(modifiedMemoryID));
+                        winMan->LoadImageTexture(modifiedImageID,1024, 1024, 4, memMan->GetData(modifiedMemoryID));
                     }
                 }
             }
@@ -218,7 +243,10 @@ namespace details {
                 if (omitValue(input) == "layer_dstBuf")
                 {
                     if (modifiedImageID != -1)
-                        bufMan->AssignData(modifiedImageID, imgMan->GetData(modifiedImageID));
+                    {
+                        modifiedBufferID =  bufMan->GetFromPointerID(omitMessage(input));
+                        bufMan->AssignMemory(modifiedBufferID, imgMan->GetMemory(modifiedImageID));
+                    }
                 }
                 else if (omitValue(input) == "layer_srcImg")
                 {
@@ -236,8 +264,8 @@ namespace details {
                     modifiedImageID = imgMan->GetFromPointerID(omitMessage(input));
                     if (modifiedImageID != -1)
                     {
-                        imgMan->AssignData(modifiedImageID, bufMan->GetData(modifiedBufferID));
-                        winMan->LoadImageTexture(1024, 1024, 4, bufMan->GetData(modifiedBufferID));
+                        imgMan->AssignMemory(modifiedImageID, imgMan->GetMemory(modifiedBufferID));
+                        winMan->LoadImageTexture(modifiedImageID,1024, 1024, 4, bufMan->GetData(modifiedBufferID));
                     }
                 }
             }
@@ -252,7 +280,9 @@ namespace details {
                 {
                     modifiedMemoryID = imgMan->GetFromPointerID(omitMessage(input));
                     if (modifiedMemoryID != -1)
-                        bufMan->AssignData(modifiedMemoryID, imgMan->GetData(modifiedImageID));
+                    {
+                        imgMan->AssignMemory(modifiedMemoryID, imgMan->GetMemory(modifiedImageID));
+                    }
                 }
             }
             else if (receptionState == "begin_vkCmdCopyBuffer")
@@ -266,9 +296,19 @@ namespace details {
                     modifiedMemoryID = bufMan->GetFromPointerID(omitMessage(input));
                     if (modifiedMemoryID != -1)
                     {
-                        imgMan->AssignData(modifiedMemoryID, imgMan->GetData(modifiedBufferID));
-                        winMan->LoadImageTexture(1024, 1024, 4, imgMan->GetData(modifiedBufferID));
+                        bufMan->AssignMemory(modifiedMemoryID, imgMan->GetMemory(modifiedBufferID));
                     }
+                }
+            }
+            else if (receptionState == "begin_vkCreateInstance")
+            {
+                if (omitValue(input) == "layer_proccessID")
+                {
+                    sysMan->newAppInfo(input);
+                }
+                else if (omitValue(input) == "layer_appName")
+                {
+                    sysMan->newAppInfo(input);
                 }
             }
         }
@@ -301,11 +341,11 @@ namespace details {
                 * which will be handled in the next call of the function
                 */
                 memcpy(allocatedData + currentDataSize - index, input, remainderIndex);
-                char* temp = (char*)malloc(remainderIndex);
-                memcpy(temp, input + remainderIndex, remainderIndex);
+                char* temp = (char*)malloc(currentDataSize - dataSize);
+                memcpy(temp, input + remainderIndex, currentDataSize - dataSize);
 
                 remainder = temp;
-                remainder = remainder.substr(0, index - remainderIndex);
+                remainder = remainder.substr(0, currentDataSize - dataSize);
 
                 std::string invokeData = "layer_data=" + std::to_string(dataSize);
                 parseMessage(invokeData.c_str());
@@ -326,6 +366,7 @@ namespace details {
         while ((pos = s.find("!")) != std::string::npos) {
             token = s.substr(0, pos);
             s.erase(0, pos + 1);
+
             if (token.substr(0, 4) == "data")
             {
                 /* Get size */
