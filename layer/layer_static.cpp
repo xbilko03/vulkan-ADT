@@ -8,6 +8,7 @@
 std::map<VkCommandBuffer, CommandStats> commandbuffer_stats;
 */
 bool connected = false;
+#include <memory>
 
 std::string bool_as_text(VkBool32 b)
 {
@@ -100,7 +101,6 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateInstance(const VkInstance
 
     /* send call after loader */
     if (connected) {
-
         winsockSendToUI(&ConnectSocket, "pCreateInfo->sType=" + std::to_string(pCreateInfo->sType) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->pNext=" + ptrToString((void**)pCreateInfo->pNext) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->flags=" + std::to_string(pCreateInfo->flags) + '!');
@@ -209,13 +209,13 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDevice(VkPhysicalDevice p
         winsockSendToUI(&ConnectSocket, "pCreateInfo->pNext=" + ptrToString((void**)pCreateInfo->pNext) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->flags=" + std::to_string(pCreateInfo->flags) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->queueCreateInfoCount=" + std::to_string(pCreateInfo->queueCreateInfoCount) + '!');
-        for (int i = 0; i < pCreateInfo->queueCreateInfoCount; i++)
+        for (unsigned int i = 0; i < pCreateInfo->queueCreateInfoCount; i++)
         {
             winsockSendToUI(&ConnectSocket, "pCreateInfo->pQueueCreateInfos" + std::to_string(i) + "->sType=" + std::to_string(pCreateInfo->pQueueCreateInfos[i].sType) + '!');
             winsockSendToUI(&ConnectSocket, "pCreateInfo->pQueueCreateInfos" + std::to_string(i) + "->flags=" + std::to_string(pCreateInfo->pQueueCreateInfos[i].flags) + '!');
             winsockSendToUI(&ConnectSocket, "pCreateInfo->pQueueCreateInfos" + std::to_string(i) + "->queueFamilyIndex=" + std::to_string(pCreateInfo->pQueueCreateInfos[i].queueFamilyIndex) + '!');
             winsockSendToUI(&ConnectSocket, "pCreateInfo->pQueueCreateInfos" + std::to_string(i) + "->queueCount=" + std::to_string(pCreateInfo->pQueueCreateInfos[i].queueCount) + '!');
-            for (int a = 0; a < pCreateInfo->pQueueCreateInfos[i].queueCount; a++)
+            for (unsigned int a = 0; a < pCreateInfo->pQueueCreateInfos[i].queueCount; a++)
                 winsockSendToUI(&ConnectSocket, "pCreateInfo->pQueueCreateInfos" + std::to_string(i) + "->pQueuePriorities" + std::to_string(a) + "=" + std::to_string(pCreateInfo->pQueueCreateInfos[i].pQueuePriorities[a]) + '!');
         }
         winsockSendToUI(&ConnectSocket, "pCreateInfo->enabledLayerCount=" + std::to_string(pCreateInfo->enabledLayerCount) + '!');

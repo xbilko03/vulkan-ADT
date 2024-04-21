@@ -24,7 +24,7 @@ namespace details {
 		void connectToLayer(details::appWindow* windowManager);
 		unsigned long long getFrameCount() { return frames.size(); }
 		unsigned long long getFrameCallsCount(unsigned long long frameID) { return frames[frameID].size(); }
-		std::list<apiCall> getFrameCalls(unsigned long long frameID) { return frames[frameID]; }
+		std::list<apiCall*> getFrameCalls(unsigned long long frameID) { return frames[frameID]; }
 
 		unsigned long long getMemoriesCount() { return memMan->GetMemoryCount(); }
 		std::string getMemoryPointer(unsigned long long ID) { return memMan->GetPointer(ID); }
@@ -41,6 +41,15 @@ namespace details {
 		std::string getImageState(unsigned long long ID) { return imgMan->GetState(ID); }
 		std::string getImageData(unsigned long long ID) { return imgMan->GetDataReadable(ID); }
 
+		std::string getMemoryCulpritName(unsigned long long ID) { return memMan->GetCulprit(ID)->getName(); }
+		unsigned long long getMemoryCulpritID(unsigned long long ID) { return memMan->GetCulprit(ID)->getID(); }
+
+		std::string getBufferCulpritName(unsigned long long ID) { return bufMan->GetCulprit(ID)->getName(); }
+		unsigned long long getBufferCulpritID(unsigned long long ID) { return bufMan->GetCulprit(ID)->getID(); }
+
+		std::string getImageCulpritName(unsigned long long ID) { return imgMan->GetCulprit(ID)->getName(); }
+		unsigned long long getImageCulpritID(unsigned long long ID) { return imgMan->GetCulprit(ID)->getID(); }
+
 		std::list<std::string> getAppInfo() { return sysMan->getAppInfo(); }
 		std::list<std::string> getVkInfo() { return sysMan->getVkInfo(); }
 	private:
@@ -52,11 +61,10 @@ namespace details {
 		void newInfo(const char* input, size_t index);
 		void parseMessage(const char* inputChar);
 		void createDataManagers();
-		void fillSysman();
 		std::string omitMessage(std::string input);
 		std::string omitValue(std::string input);
 
-		std::map<unsigned long long, std::list<apiCall>> frames;
+		std::map<unsigned long long, std::list<apiCall*>> frames;
 		vkMemoryManager* memMan;
 		vkBufferManager* bufMan;
 		vkImageManager* imgMan;

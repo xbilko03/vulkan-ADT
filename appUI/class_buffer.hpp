@@ -25,11 +25,15 @@ namespace details {
         void AssignPointer(unsigned long long inputID, std::string ptr) { BOUNDARYCHECK; bufferMap[inputID].localPointer = ptr; this->bufferMap[inputID].bufferState = "created"; }
         void AssignBoundObj(unsigned long long inputID, std::string inputData) { BOUNDARYCHECK; bufferMap[inputID].attachedMemoryPtr = inputData; }
         void AssignMemory(unsigned long long inputID, vkMemoryManager::vkMemory* ptr) { BOUNDARYCHECK; bufferMap[inputID].attachedMemory = ptr; }
+        void AssignCulprit(unsigned long long inputID, details::apiCall* inputCulprit) { BOUNDARYCHECK; bufferMap[inputID].culprit = inputCulprit; }
 
         char* GetData(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return NULL; else return bufferMap[inputID].attachedMemory->memoryData; }
         unsigned long long GetDataSize(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return NULL; else return bufferMap[inputID].attachedMemory->dataSize; };
         std::string GetDataReadable(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return ""; else return bufferMap[inputID].attachedMemory->readableMemoryData; }
         vkMemoryManager::vkMemory* GetMemory(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return NULL; else return bufferMap[inputID].attachedMemory; }
+        details::apiCall* GetCulprit(unsigned long long inputID) { return bufferMap[inputID].culprit; }
+
+        
 
         /* saved data */
         struct vkBuffer {
@@ -38,6 +42,7 @@ namespace details {
             std::string attachedMemoryPtr;
 
             vkMemoryManager::vkMemory* attachedMemory;
+            details::apiCall* culprit;
         };
         std::map<unsigned long long, vkBuffer> bufferMap;
     private:

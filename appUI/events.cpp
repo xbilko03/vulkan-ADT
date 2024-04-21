@@ -22,7 +22,7 @@ namespace details {
     /* Keep track of the current Api Call in the single command iteration */
     apiCall* currentCall;
     /* List to save all the Api Calls data */
-    std::list<apiCall> currentCallList;
+    std::list<apiCall*> currentCallList;
     /* IDs to assign them to the corresponding objects */
     unsigned long long callID = 0;
     unsigned long long frameID = 0;
@@ -94,7 +94,7 @@ namespace details {
             receptionState = input;
             currentCall = new apiCall(callID++);
             /* api command begin message */
-            (*currentCall).assignName(input);
+            currentCall->assignName(input);
             if (receptionState == "begin_vkAcquireNextImageKHR")
             {
                 frameID++;
@@ -102,7 +102,6 @@ namespace details {
             }
             else if (receptionState == "begin_vkAllocateMemory")
             {
-                std::cout << "new memory " << memoryID << std::endl;
                 memMan->newMemory(memoryID);
             }
             else if (receptionState == "begin_vkCreateImage")
@@ -119,23 +118,22 @@ namespace details {
         {
             receptionState = input;
             /* finish reading and save call */
-            currentCallList.push_back(*currentCall);
+            currentCallList.push_back(currentCall);
             frames[frameID] = currentCallList;
-
-            if(receptionState == "end_vkUnmapMemory")
-                std::cout << "end memory." << std::endl;
 
             if (receptionState == "end_vkAllocateMemory")
             {
-                std::cout << "end memory " << memoryID << std::endl;
+                memMan->AssignCulprit(memoryID,currentCall);
                 memoryID++;
             }
             else if (receptionState == "end_vkCreateImage")
             {
+                imgMan->AssignCulprit(imageID, currentCall);
                 imageID++;
             }
             else if (receptionState == "end_vkCreateBuffer")
             {
+                bufMan->AssignCulprit(bufferID, currentCall);
                 bufferID++;
             }
         }
@@ -144,7 +142,6 @@ namespace details {
             /* instructions sent by layer.cpp */
             if (receptionState == "begin_vkUnmapMemory")
             {
-                std::cout << "begin memory." << inputChar << std::endl;
                 if (input.substr(0, 11) == "layer_data=")
                 {
                     receptionState = "data_loadMemory";
@@ -314,7 +311,9 @@ namespace details {
         }
         else
         {
-            (*currentCall).assignParameter(input);
+            if (omitValue(input) == "result")
+                currentCall->assignRetVal(omitMessage(input));
+            currentCall->assignParameter(input);
         }
     }
 

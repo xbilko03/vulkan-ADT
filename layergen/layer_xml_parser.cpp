@@ -7,7 +7,7 @@ namespace laygen {
     
     bool XmlParser::existsByName(std::list<XmlParser::Command> inputList, std::string inputName)
     {
-        for (auto item : inputList)
+        for (auto& item : inputList)
         {
 
             if (strcmp(item.functName.c_str(), inputName.c_str()) == 0)
@@ -17,7 +17,7 @@ namespace laygen {
     }
     XmlParser::Command XmlParser::findByName(std::list<XmlParser::Command> inputList, std::string inputName)
     {
-        for (auto item : inputList)
+        for (auto& item : inputList)
         {
 
             if (strcmp(item.functName.c_str(), inputName.c_str()) == 0)
@@ -27,7 +27,7 @@ namespace laygen {
     }
     bool XmlParser::existsByNameCmd(std::list<Parameter> inputList, std::string inputName)
     {
-        for (auto item : inputList)
+        for (auto& item : inputList)
         {
 
             if (strcmp(item.name.c_str(), inputName.c_str()) == 0)
@@ -38,7 +38,7 @@ namespace laygen {
     std::list<std::string> XmlParser::findCommands(std::string platformName, pugi::xml_document* doc)
     {
         std::list<std::string> resultList;
-        for (auto point : (*doc).select_nodes("//extensions/extension"))
+        for (auto& point : (*doc).select_nodes("//extensions/extension"))
         {
             auto pName = point.node().attribute("platform").value();
             if (strcmp(pName, platformName.c_str()) == 0)
@@ -55,7 +55,7 @@ namespace laygen {
     }
     bool XmlParser::containsCommands()
     {
-        for (auto point : doc.select_nodes("//commands")) {
+        for (auto& point : doc.select_nodes("//commands")) {
             auto tmpNode = point.node().attribute("comment");
             if (strcmp(tmpNode.value(), "Vulkan command definitions") == 0)
             {
@@ -68,7 +68,7 @@ namespace laygen {
     }
     bool XmlParser::containsPlatformProtection()
     {
-        for (auto point : doc.select_nodes("//platforms")) {
+        for (auto& point : doc.select_nodes("//platforms")) {
             auto tmpNode = point.node().attribute("comment");
             if (strcmp(tmpNode.value(), "Vulkan platform names, reserved for use with platform- and window system-specific extensions") == 0)
             {
@@ -81,7 +81,7 @@ namespace laygen {
     }
     void XmlParser::getProtectionGuards()
     {
-        for (auto node : platformProtectionRootNode)
+        for (auto& node : platformProtectionRootNode)
         {
             auto platformName = node.attribute("name").value();
             auto guard = node.attribute("protect").value();
@@ -102,7 +102,7 @@ namespace laygen {
     }
     void XmlParser::assignCmdsToTables()
     {
-        for (auto point : commandRootNode.select_nodes(".//command")) {
+        for (auto& point : commandRootNode.select_nodes(".//command")) {
 
             auto functNamePoint = point.node().select_node("./proto/name/text()").node();
             auto functRetType = point.node().select_node("./proto/type/text()").node().value();

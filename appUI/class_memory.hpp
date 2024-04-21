@@ -2,6 +2,7 @@
 #include <list>
 #include <string>
 #include <map>
+#include "class_apiCall.hpp"
 
 namespace details {
 
@@ -16,6 +17,7 @@ namespace details {
         void AssignPointer(unsigned long long inputID, std::string inputPtr) { BOUNDARYCHECK; memoryMap[inputID].localPointer = inputPtr; }
         std::string GetPointer(unsigned long long inputID) { return memoryMap[inputID].localPointer; }
 
+        void AssignCulprit(unsigned long long inputID, details::apiCall* inputCulprit) { BOUNDARYCHECK; memoryMap[inputID].culprit = inputCulprit; }
         void AssignData(unsigned long long inputID, char* inputData, unsigned long long size) { BOUNDARYCHECK; memoryMap[inputID].memoryData = inputData; memoryMap[inputID].dataSize = size;ConvertToReadable(inputID, inputData, size); }
         char* GetData(unsigned long long inputID) { return memoryMap[inputID].memoryData; }
         std::string GetDataReadable(unsigned long long inputID) { return memoryMap[inputID].readableMemoryData; }
@@ -23,6 +25,7 @@ namespace details {
 
         void AssignBoundObj(unsigned long long inputID, std::string inputData) { BOUNDARYCHECK; memoryMap[inputID].boundObjPtr = inputData; }
         std::string GetBoundObj(unsigned long long inputID) { return memoryMap[inputID].boundObjPtr; }
+        details::apiCall* GetCulprit(unsigned long long inputID){ return memoryMap[inputID].culprit; }
 
         unsigned long long GetFromPointerID(std::string message);
 
@@ -40,6 +43,8 @@ namespace details {
             std::string readableMemoryData;
             char* memoryData;
             unsigned long long dataSize;
+
+            details::apiCall* culprit;
         };
     private:
         std::map<unsigned long long, vkMemory> memoryMap;

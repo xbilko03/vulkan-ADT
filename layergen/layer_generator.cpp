@@ -12,6 +12,7 @@ namespace laygen
     bool LayerGenerator::IsEnum(std::string input)
     {
         auto mapped = xmlp.enumList;
+
         auto item = mapped.find(input);
         if (item == mapped.end())
         {
@@ -19,19 +20,34 @@ namespace laygen
         }
         return true;
     }
-    bool LayerGenerator::PrintParameterSendStruct(std::ofstream* output, std::string type, std::string name, std::map<std::string,XmlParser::Struct>* structs, std::string prefix, int* attempts)
+    bool LayerGenerator::IsStruct(std::string type)
     {
-        if (*attempts <= 0)
+        auto* mapped = &xmlp.structList;
+
+        auto item = mapped->find(type.substr(0,type.size() - 1));
+        if(item == mapped->end())
+        {
             return false;
+        }
         else
-            *attempts -= 1;
+        {
+            return true;
+        }
+    }
+    bool LayerGenerator::PrintParameterSendStruct(std::ofstream* output, std::string type, std::string name, std::string prefix, int attempts)
+    {
+        attempts--;
+        if (attempts < 0)
+            return false;
+        auto* structs = &xmlp.structList;
         std::string ptrlessType = type.substr(0, type.size() - 1);
         auto selectedStruct = (*structs)[ptrlessType];
         if (selectedStruct.structType == ptrlessType)
         {
-            for (auto item : selectedStruct.parameterList)
+            *output << "if(" << prefix + name << " != VK_NULL_HANDLE" << " && " << prefix + name << " != NULL" << ") {" << std::endl;
+            prefix += name + "->";
+            for (auto& item : selectedStruct.parameterList)
             {
-                prefix = name + "->";
                 std::string outputType = item.type;
                 /* if there is enum, it is an array */
                 if (item.enumType != "" || item.name == "color")
@@ -39,16 +55,25 @@ namespace laygen
                     outputType = "array";
                 }
 
-                if (PrintParameterSend(output, outputType, item.name, prefix) == false)
+                if (IsStruct(item.type))
                 {
-                    /* try again */
-                    if (PrintParameterSendStruct(output, outputType, item.name, structs, prefix, attempts) == false)
+                    /* struct inside struct */
+                    if (item.name == "ppGeometries" || item.name == "ppUsageCounts")
                     {
-                        /* cannot identify type, print as other type */
-                        PrintParameterSend(output, "other", item.name, prefix);
+                        item.name += "[array]";
+                        item.type = "other";
                     }
+                    PrintParameterSendStruct(output, item.type, item.name, prefix, attempts);
                 }
+                else
+                {
+                    /* not a struct anymore */
+                    PrintParameterSend(output, outputType, item.name, prefix);
+                }
+
             }
+            *output << "}";
+            *output << "else winsockSendToUI(&ConnectSocket, \"" << name << "=" << "VK_NULL_HANDLE!\");" << std::endl;
             return true;
         }
         return false;
@@ -60,20 +85,24 @@ namespace laygen
 
         outputStr += "\"" + prefix + name + "=\" + ";
         /* imperfect xml parsing consequence exception */
-        if (type == "uint32_t*" || type == "void*" || type == "void" || name == "presentMask")
+        if (name == "blendConstants" || name == "pResults")
+        {   
+            name += "[0]";
+        }
+
+        if (name == "sType")
         {
-            outputStr += "ptrToString((void**)";
+            ret = false;
+        }
+        else if (type == "uint32_t*" || type == "void*" || type == "void" || name == "presentMask")
+        {
+            outputStr += "ptrToString((void**)std::addressof(";
             outputStr += prefix + name;
-            outputStr += ")";
+            outputStr += "))";
             ret = true;
         }
-        else if (type == "uint32_t" || type == "int32_t" || type == "float" || IsEnum(type) || type == "int" || type == "size_t" || type == "uint64_t" || type == "uint8_t")
+        else if (type == "uint32_t" || type == "int32_t" || type == "float" || type == "int" || type == "size_t" || type == "uint64_t" || type == "uint8_t" || type == "VkDeviceSize")
         {
-            /* imperfect xml parsing consequence exception */
-            if (name == "pResults")
-            {
-                name = '*' + name;
-            }
             outputStr += "std::to_string(";
             outputStr += prefix + name;
             outputStr += ")";
@@ -101,12 +130,25 @@ namespace laygen
             outputStr += "=[array]\"";
             ret = true;
         }
+        else if (IsEnum(type))
+        {
+            ret = false;
+        }
         else
         {
-            outputStr += "ptrToString((void**)";
-            outputStr += prefix + name;
-            outputStr += ")";
-            ret = true;
+            /* try a struct */
+            if (IsStruct(type))
+            {
+                PrintParameterSendStruct(output, type, name, prefix,3);
+            }
+            else
+            {
+                /* most likely a handle */
+                outputStr += "ptrToString((void**)std::addressof(";
+                outputStr += prefix + name;
+                outputStr += "))";
+                ret = true;
+            }
         }
         
         outputStr += " + '!');";
@@ -118,27 +160,18 @@ namespace laygen
     }
     void LayerGenerator::PrintParemeterSends(std::ofstream* output, std::map<std::string, XmlParser::Struct>* structs, auto* parameterList)
     {
-        //if (connected) {}
-        int defaultAttempts = 3;
-
         std::list<XmlParser::Parameter>::iterator it;
-        for (it = (*parameterList).begin(); it != (*parameterList).end(); ++it) {
-            //std::cout << it->type << " " << it->name << std::endl;
-            if (PrintParameterSend(output, it->type, it->name, "") == false)
-            {
-                if (PrintParameterSendStruct(output, it->type, it->name, structs, "", &defaultAttempts) == false)
-                {
-                    //std::cout << "could not print sendung parameter = " << it->type << " " << it->name << std::endl;
-                }
-
-            }
+        *output << "if(connected){" << std::endl;
+        for (it = (*parameterList).begin(); it != (*parameterList).end(); ++it) 
+        {
+            PrintParameterSend(output, it->type, it->name, "");
         }
-        //generatedLayerFile << "\n#if defined(" << GetGuardString(item.functName, xmlp.cmdGuard) << ")";
+        *output << "}" << std::endl;
     }
     void LayerGenerator::PrintParameters(std::ofstream* output, auto* parameterList, bool typesIncluded)
     {
         uint32_t i = 0;
-        for (auto param : *parameterList)
+        for (auto& param : *parameterList)
         {
             i++;
             if (typesIncluded)
@@ -157,7 +190,7 @@ namespace laygen
     void LayerGenerator::PrintParameter(std::ofstream* output, auto* parameterList, uint32_t index, bool typesIncluded)
     {
         uint32_t i = 0;
-        for (auto param : *parameterList)
+        for (auto& param : *parameterList)
         {
             if (index == i)
             {
@@ -201,12 +234,14 @@ namespace laygen
     }
     void LayerGenerator::PrintExecuteCall(std::ofstream* output, std::string* functType, std::string* functName, auto* parameterList, std::string cmdListType)
     {
-        if ((*parameterList).size() > 0)
+        if (parameterList->size() > 0)
         {
             /* return applies only to non void types*/
+            bool voidType = true;
             if (strcmp((*functType).c_str(), "void") != 0)
             {
                 *output << "auto ret = ";
+                voidType = false;
             }
             *output << cmdListType << "_dispatch[GetKey(";
             PrintParameter(output, parameterList, 0, false);
@@ -214,6 +249,9 @@ namespace laygen
             *output << (*functName).substr(2, (*functName).size()) << "(";
             PrintParameters(output, parameterList, false);
             *output << ");" << std::endl;
+
+            if (voidType == false)
+                *output << "winsockSendToUI(&ConnectSocket, \"vkResult=\" + std::to_string(ret) + '!');" << std::endl;
         }
     }
     void LayerGenerator::PrintSendToUI(std::ofstream* output, std::string input)
@@ -222,9 +260,9 @@ namespace laygen
     }
     std::string LayerGenerator::GetGuardString(std::string commandName, std::list<XmlParser::cGuard> cmdGuard)
     {
-        for (auto guard : cmdGuard)
+        for (auto& guard : cmdGuard)
         {
-            for (auto cmd : guard.commandList)
+            for (auto& cmd : guard.commandList)
             {
                 if (strcmp(commandName.c_str(), cmd.c_str()) == 0)
                 {
@@ -240,7 +278,7 @@ namespace laygen
         /* Instance commands */
         dispatchTableFile << INSTANCE_TABLE_HEADER;
 
-        for (auto item : xmlp.commandListInstances)
+        for (auto& item : xmlp.commandListInstances)
         {
             /* if there is a specific command user wants to ignore, skip it */
             if (std::find(ignoreCmdList.begin(), ignoreCmdList.end(), item.functName) != ignoreCmdList.end())
@@ -272,7 +310,7 @@ namespace laygen
 
         dispatchTableFile << DEVICE_TABLE_HEADER;
 
-        for (auto item : xmlp.commandListDevices)
+        for (auto& item : xmlp.commandListDevices)
         {
             /* if there is a specific command user wants to ignore, skip it */
             if (std::find(ignoreCmdList.begin(), ignoreCmdList.end(), item.functName) != ignoreCmdList.end())
@@ -317,7 +355,7 @@ namespace laygen
     void LayerGenerator::generateCmdDeclaration(std::list<XmlParser::Command> inputCmdList, std::string cmdListType)
     {
         /* list of instance inputCmdList cmd names */
-        for (auto item : inputCmdList)
+        for (auto& item : inputCmdList)
         {
             /* ignores */
             if (std::find(ignoreCmdList.begin(), ignoreCmdList.end(), item.functName) != ignoreCmdList.end())
@@ -360,7 +398,7 @@ namespace laygen
     void LayerGenerator::generateCmdProcCalls(std::list<XmlParser::Command> inputCmdList)
     {
         /* list of instance inputCmdList cmd names */
-        for (auto item : inputCmdList)
+        for (auto& item : inputCmdList)
         {
             /* ignores */
             if (std::find(ignoreCmdList.begin(), ignoreCmdList.end(), item.functName) != ignoreCmdList.end())
@@ -415,7 +453,7 @@ namespace laygen
     }
     void LayerGenerator::generateForCmdList(std::list<XmlParser::Command> inputCmdList, std::string cmdListType)
     {
-        for (auto item : inputCmdList)
+        for (auto& item : inputCmdList)
         {
             /* ignores */
             if (std::find(ignoreCmdList.begin(), ignoreCmdList.end(), item.functName) != ignoreCmdList.end())
@@ -488,7 +526,7 @@ namespace laygen
             * print parameters that can be sent
             */
 
-            //PrintParemeterSends(&generatedLayerFile, &(xmlp.structList), &(item.parameterList));
+            PrintParemeterSends(&generatedLayerFile, &(xmlp.structList), &(item.parameterList));
 
             /*
             * additional functionality (if) defined in layer.cpp

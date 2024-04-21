@@ -86,10 +86,11 @@ namespace laygen {
 		void generateGeneratedLayer();
 		void generateForCmdList(std::list<XmlParser::Command> inputCmdList, std::string cmdListType);
 		bool PrintParameterSend(std::ofstream* output, std::string type, std::string name, std::string prefix);
-		bool PrintParameterSendStruct(std::ofstream* output, std::string type, std::string name, std::map<std::string, XmlParser::Struct>* structs, std::string prefix, int* attempts);
+		bool PrintParameterSendStruct(std::ofstream* output, std::string type, std::string name, std::string prefix, int attempts);
 		void generateGenLayerFooter(std::string cmdListType);
 		void generateCmdProcCalls(std::list<XmlParser::Command> inputCmdList);
 		void generateCmdDeclarations(std::string cmdListType);
+		bool IsStruct(std::string type);
 		void generateCmdDeclaration(std::list<XmlParser::Command> inputCmdList, std::string cmdListType);
 		void generateHeaders();
 

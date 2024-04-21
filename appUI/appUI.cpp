@@ -27,6 +27,12 @@ namespace details {
             {
                 output = (*dataObject).getMemoryPointer(i);
                 ImGui::Text(output.c_str());
+
+                output = std::to_string((*dataObject).getMemoryCulpritID(i));
+                output += ":";
+                output += (*dataObject).getMemoryCulpritName(i);
+                ImGui::Text(output.c_str());
+
                 ImGui::Text((*dataObject).getMemoryData(i).c_str());
             }
         }
@@ -47,6 +53,12 @@ namespace details {
             {
                 output = (*dataObject).getImagePointer(i);
                 ImGui::Text(output.c_str());
+
+                output = std::to_string((*dataObject).getImageCulpritID(i));
+                output += ":";
+                output += (*dataObject).getImageCulpritName(i);
+                ImGui::Text(output.c_str());
+
                 ImGui::Text((*dataObject).getImageData(i).c_str());
                 ImGui::Text("pointer = %p", (*window).getImageDS(i));
                 ImGui::Text("size = %d x %d", (*window).getImageWidth(i), (*window).getImageHeight(i));
@@ -69,6 +81,12 @@ namespace details {
             {
                 output = (*dataObject).getBufferPointer(i);
                 ImGui::Text(output.c_str());
+
+                output = std::to_string((*dataObject).getBufferCulpritID(i));
+                output += ":";
+                output += (*dataObject).getBufferCulpritName(i);
+                ImGui::Text(output.c_str());
+
                 ImGui::Text((*dataObject).getBufferData(i).c_str());
             }
         }
@@ -92,52 +110,6 @@ namespace details {
             for (auto item : vkInfo)
                 ImGui::Text((item).c_str());
         }
-        ImGui::End();
-    }
-    void appUI::ShowVulkanInfo(details::appWindow* window, details::events* dataObject)
-    {
-        ImGui::Begin("Vulkan Info");
-        /*
-        if (ImGui::CollapsingHeader("Available Physical Devices"))
-        {
-            uint32_t test = (*window).GetPhysicalDeviceCount();
-            ImGui::Text(("Available physical devices: " + std::to_string(test)).c_str());
-
-            auto devices = (*window).GetPhysicalDeviceProperties();
-
-            for (auto& dev : devices)
-            {
-                if (ImGui::CollapsingHeader(dev.deviceName))
-                {
-                    ImGui::Text(("apiVersion: " + std::to_string(dev.apiVersion)).c_str());
-                    ImGui::Text(("driverVersion: " + std::to_string(dev.driverVersion)).c_str());
-                    ImGui::Text(("vendorID: " + std::to_string(dev.vendorID)).c_str());
-                    ImGui::Text(("deviceID: " + std::to_string(dev.deviceID)).c_str());
-                    ImGui::Text(("deviceType: " + std::to_string(dev.deviceType)).c_str());
-                }
-            }
-        }
-        if (ImGui::CollapsingHeader("Available Instance Extensions"))
-        {
-            auto instanceExtensions = (*window).GetInstanceExtensions();
-            uint32_t i = 0;
-            for (auto item : instanceExtensions)
-            {
-                ImGui::Text((std::to_string(++i) + " extension: " + item.extensionName).c_str());
-            }
-        }
-
-        if (ImGui::CollapsingHeader("Available Device Extensions"))
-        {
-            auto deviceExtensions = (*window).GetDeviceExtensions();
-            uint32_t i = 0;
-            for (auto item : deviceExtensions)
-            {
-                ImGui::Text((std::to_string(++i) + " extension: " + item.extensionName).c_str());
-            }
-        }
-        
-        */
         ImGui::End();
     }
     void appUI::ShowApiCalls(details::appWindow *window, details::events *dataObject)
@@ -192,10 +164,11 @@ namespace details {
                         int tableSize = frame.size();
                         if (MAX_TABLE_SIZE < tableSize)
                             tableSize = MAX_TABLE_SIZE;
-                        if (ImGui::BeginTable("table_sorting", 3, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * tableSize), 0.0f))
+                        if (ImGui::BeginTable("table_sorting", 4, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * tableSize), 0.0f))
                         {
                             ImGui::TableSetupColumn("Call_ID", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, 0);
                             ImGui::TableSetupColumn("Vk_Call", ImGuiTableColumnFlags_WidthFixed, 0.0f, 1);
+                            ImGui::TableSetupColumn("vkResult", ImGuiTableColumnFlags_WidthFixed, 0.0f, 2);
                             ImGui::TableSetupColumn("Parameters", ImGuiTableColumnFlags_NoSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, 2);
                             ImGui::TableHeadersRow();
 
@@ -216,12 +189,21 @@ namespace details {
                                 ImGui::PushID(tableItemID++);
                                 ImGui::TableNextRow();
                                 ImGui::TableNextColumn();
-                                ImGui::Text("%llu", item.getID());
+                                ImGui::Text("%llu", item->getID());
                                 ImGui::TableNextColumn();
-                                ImGui::TextUnformatted(item.getName().c_str());
+                                ImGui::TextUnformatted(item->getName().c_str());
+                                ImGui::TableNextColumn();
+                                if (item->getRetVal())
+                                {
+                                    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "VK_SUCCESS");
+                                }
+                                else
+                                {
+                                    ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "NOT SUCCESS");
+                                }
                                 ImGui::TableNextColumn();
 
-                                std::string IdStr = ("vk_Call [ID=" + std::to_string(item.getID()) + "]");
+                                std::string IdStr = ("vk_Call [ID=" + std::to_string(item->getID()) + "]");
                                 ImGui::Checkbox("Detail", &(apiDetails[IdStr]));
                                 if(apiDetails[IdStr])
                                 {
@@ -234,7 +216,7 @@ namespace details {
                                         ImGui::TableSetupColumn("Parameter_Name", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, 0);
                                         ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthFixed, 0.0f, 1);
                                         ImGui::TableHeadersRow();
-                                        for (auto itm : item.getParameters())
+                                        for (auto itm : item->getParameters())
                                         {
                                             ImGui::TableNextRow();
                                             ImGui::TableNextColumn();
@@ -278,7 +260,6 @@ namespace details {
         bool buffers = false;
         bool demo = false;
         bool texture = false;
-        bool vulkanInfo = false;
         bool appInfo = false;
         bool images = false;
         bool memories = false;
@@ -292,18 +273,17 @@ namespace details {
             /* imGui menu */            
             {
                 ImGui::Begin("Menu");
-                ImGui::Checkbox("Vulkan_Info", &vulkanInfo);
                 ImGui::Checkbox("Api_Calls", &apiCalls);
                 ImGui::Checkbox("Vk_Buffers", &buffers);
-                ImGui::Checkbox("Demo_Window", &demo);
-                ImGui::Checkbox("App_Info", &appInfo);
                 ImGui::Checkbox("Vk_Images", &images);
                 ImGui::Checkbox("Vk_Memory", &memories);
+
+                ImGui::Checkbox("App_Info", &appInfo);
+
+                ImGui::Checkbox("Demo_Window", &demo);
                 ImGui::End();
             }
 
-            if (vulkanInfo == true)
-                ShowVulkanInfo(&window, &eventManager);
             if(apiCalls == true)
                 ShowApiCalls(&window, &eventManager);
             if(buffers == true)
