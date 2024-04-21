@@ -15,6 +15,7 @@ extern SOCKET ConnectSocket;
 extern bool connected;
 
 std::string GetWindowName();
+void SetMemoryVariables(std::string configContent);
 
 #define FREEMEMORY_BEFORE_EXEC_EXISTS
 void layer_FreeMemory_before(VkDevice device, VkDeviceMemory memory, VkAllocationCallbacks* pAllocator);
@@ -58,6 +59,9 @@ void layer_CmdCopyImage_before(VkCommandBuffer commandBuffer, VkImage srcImage, 
 
 #define CREATEINSTANCE_AFTER_EXEC_EXISTS
 void layer_CreateInstance_after(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance);
+
+#define ACQUIRENEXTIMAGEKHR_BEFORE_EXEC_EXISTS
+void layer_AcquireNextImageKHR_before(VkDevice device, VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex);
 
 //#pragma comment(lib, "Ws2_32.lib")
 #define WINDOW_NAME "VK_DEBUGGER"

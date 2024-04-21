@@ -16,6 +16,69 @@ SOCKET ConnectSocket = INVALID_SOCKET;
 void* map;
 uint64_t image_size;
 
+
+#include <iostream>
+/* Enviroment Variables */
+
+std::map <std::string, std::string> envVar;
+
+bool warnings = false;
+bool frameEveryOption = false;
+unsigned long long frameEveryValue;
+void SetMemoryVariables(std::string configContent)
+{
+    std::string token;
+    std::string s = configContent;
+
+    int pos;
+    while ((pos = s.find("\n")) != std::string::npos) {
+        token = s.substr(0, pos);
+        s.erase(0, pos + 1);
+
+        if (token[0] == '#' || token[0] == '\0')
+            continue;
+
+        
+        auto pos1 = token.find(".");
+        auto pos2 = token.substr(pos1 + 1, token.size()).find("=");
+        std::string t1 = token.substr(pos1 + 1, pos2 - 1);
+
+
+        pos2 = token.find("=");
+        std::string t2 = token.substr(pos2 + 2, token.size());
+
+        envVar[t1] = t2;
+    }
+
+    /*
+    * default variables settings
+    * 
+    * vut_detailslayer.app_path = default
+    * vut_detailslayer.enable_message_logging = false
+    * vut_detailslayer.output_path = none
+    * vut_detailslayer.enable_warnings = false
+    * vut_detailslayer.frame_every = 0
+    * vut_detailslayer.frame_at = 0
+    * vut_detailslayer.fps_below = 0
+    * vut_detailslayer.fps_every = 0
+    * vut_detailslayer.triangles_over = 0
+    * vut_detailslayer.triangles_every = 0
+    */
+
+    /*
+    * for example, envVar["app_path"] is 'detault' - correspondes to vut_detailslayer.app_path = default
+    */
+    if (envVar["enable_warnings"] == "true")
+    {
+        warnings = true;
+    }
+    if (std::stol(envVar["frame_every"]) > 0 && warnings == true)
+    {
+        frameEveryOption = true;
+        frameEveryValue = std::stol(envVar["frame_every"]);
+    }
+}
+
 /* VkMemory */
 typedef struct memoryObj {
     VkDeviceSize size;
@@ -43,11 +106,7 @@ void layer_FreeMemory_before(VkDevice device, VkDeviceMemory memory, VkAllocatio
 
 void layer_CreateInstance_after(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
 {
-    char wnd_title[256];
-    HWND hwnd = GetForegroundWindow();
-    GetWindowText(hwnd, wnd_title, sizeof(wnd_title));
-
-    winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "appName=", wnd_title));
+    winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "appName=", GetWindowName()));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "proccessID=", std::to_string(GetCurrentProcessId())));
 }
 
@@ -135,4 +194,17 @@ void layer_CmdCopyImage_before(VkCommandBuffer commandBuffer, VkImage srcImage, 
 {
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "srcImg=", addrToString((void*)srcImage)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "dstImg=", addrToString((void*)dstImage)));
+}
+
+/* before new frame hits */
+unsigned long long frameCount = 0;
+void layer_AcquireNextImageKHR_before(VkDevice device, VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex)
+{
+    frameCount++;
+
+    if (frameEveryOption)
+    {
+        if (frameCount % frameEveryValue == 0)
+            std::cout << "count warning! " << frameCount << std::endl;
+    }
 }

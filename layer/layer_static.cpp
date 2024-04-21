@@ -9,6 +9,7 @@ std::map<VkCommandBuffer, CommandStats> commandbuffer_stats;
 */
 bool connected = false;
 #include <memory>
+#include <fstream>
 
 std::string bool_as_text(VkBool32 b)
 {
@@ -34,12 +35,6 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateInstance(const VkInstance
     STARTUPINFO info = { sizeof(info) };
     PROCESS_INFORMATION processInfo;
 
-    /* get the name of the program the layer is on [windows only] */
-    char buf[MAX_PATH];
-    GetModuleFileNameA(nullptr, buf, MAX_PATH);
-    std::filesystem::path progPath(buf);
-    std::string filename = progPath.filename().string();
-
     /* prevent opening vkDetails on appUI startup */
     if (GetWindowName() != "vkDetails.exe")
     {
@@ -52,6 +47,35 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateInstance(const VkInstance
         if (layerWinsockInit(&ConnectSocket) == 0)
         {
             connected = true;
+        }
+        if (connected)
+        {
+            /* fetch enviroment variables */
+            try
+            {
+                char* appdata = getenv("APPDATA");
+                std::string configPath = appdata;
+
+                /* WINDOWS vk_layer_settings.txt path */
+                configPath += "\\..\\Local\\LunarG\\vkconfig\\override\\vk_layer_settings.txt";
+
+                std::ifstream configFile(configPath);
+                if (configFile.is_open())
+                {
+                    std::stringstream buffer;
+                    buffer << configFile.rdbuf();
+                    SetMemoryVariables(buffer.str());
+                }
+                else
+                {
+                    //could not find settings, vkDetails layer will use default settings
+                }
+
+            }
+            catch (std::exception e)
+            {
+                //do nothing, vkDetails layer will use default settings
+            }
         }
     }
 
