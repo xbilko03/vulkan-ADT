@@ -140,6 +140,12 @@ namespace details {
         else if (input.substr(0, 6) == "layer_")
         {
             /* instructions sent by layer.cpp */
+
+            if (input.substr(0, 14) == "layer_warning_")
+            {
+                warningsList.push_back(input);
+            }
+
             if (receptionState == "begin_vkUnmapMemory")
             {
                 if (input.substr(0, 11) == "layer_data=")

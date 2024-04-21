@@ -50,6 +50,8 @@ namespace details {
 		std::string getImageCulpritName(unsigned long long ID) { return imgMan->GetCulprit(ID)->getName(); }
 		unsigned long long getImageCulpritID(unsigned long long ID) { return imgMan->GetCulprit(ID)->getID(); }
 
+		std::list<std::string>* getWarningsList() { return &warningsList; }
+
 		std::list<std::string> getAppInfo() { return sysMan->getAppInfo(); }
 		std::list<std::string> getVkInfo() { return sysMan->getVkInfo(); }
 	private:
@@ -64,6 +66,7 @@ namespace details {
 		std::string omitMessage(std::string input);
 		std::string omitValue(std::string input);
 
+		std::list<std::string> warningsList;
 		std::map<unsigned long long, std::list<apiCall*>> frames;
 		vkMemoryManager* memMan;
 		vkBufferManager* bufMan;

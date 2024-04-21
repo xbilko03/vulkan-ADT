@@ -205,6 +205,8 @@ void layer_AcquireNextImageKHR_before(VkDevice device, VkSwapchainKHR swapchain,
     if (frameEveryOption)
     {
         if (frameCount % frameEveryValue == 0)
-            std::cout << "count warning! " << frameCount << std::endl;
+        {
+            winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "warning_frameCount=", std::to_string(frameCount)));
+        }
     }
 }
