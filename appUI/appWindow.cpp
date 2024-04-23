@@ -237,6 +237,7 @@ namespace details {
 
     bool appWindow::LoadImageTexture(unsigned long long ID, int width, int height, int channels, void* imageData)
     {
+        return false;
         /* free last texture if exists */
         if (loadedImages.count(ID))
         {
@@ -247,21 +248,14 @@ namespace details {
         //unsigned char* image_data = stbi_load(filename, &tex_data->Width, &tex_data->Height, 0, tex_data->Channels);
         my_texture.Height = height;
         my_texture.Width = width;
-        /*
-        std::ifstream file;
 
-        file.open("C:\\Users\\jozef\\Desktop\\binary2", std::ios_base::binary);
-        assert(file.is_open());
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-        //char* image_data = (char*)malloc(4194304);
-        std::string str = buffer.str();
-        */
         void* image_data = imageData;
 
         if (image_data == NULL)
+        {
+            std::cout << "image_data NULL" <<  std::endl;
             return false;
-
+        }
         // Calculate allocation size (in number of bytes)
         size_t image_size = my_texture.Width * my_texture.Height * my_texture.Channels;
 

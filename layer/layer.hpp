@@ -63,6 +63,9 @@ void layer_CreateInstance_after(const VkInstanceCreateInfo* pCreateInfo, const V
 #define ACQUIRENEXTIMAGEKHR_BEFORE_EXEC_EXISTS
 void layer_AcquireNextImageKHR_before(VkDevice device, VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex);
 
+#define QUEUESUBMIT_AFTER_EXEC_EXISTS
+void layer_QueueSubmit_after(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence);
+
 //#pragma comment(lib, "Ws2_32.lib")
 #define WINDOW_NAME "VK_DEBUGGER"
 #define DEFAULT_BUFLEN 512

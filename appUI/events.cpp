@@ -17,8 +17,8 @@ namespace details {
     std::string remainder = "";
     std::string newData;
     char* allocatedData;
-    unsigned long dataSize = 0;
-    unsigned long currentDataSize = 0;
+    size_t dataSize = 0;
+    size_t currentDataSize = 0;
     /* Keep track of the current Api Call in the single command iteration */
     apiCall* currentCall;
     /* List to save all the Api Calls data */
@@ -30,12 +30,14 @@ namespace details {
     unsigned long long bufferID = 0;
     unsigned long long imageID = 0;
     /* Memory ID in case we need to backtrack it after the memory allocation */
-    unsigned long long modifiedMemoryID;
+    /* index 0 for source, 1 for destination */
+    unsigned long long modifiedMemoryID[2];
     unsigned long long lastMemorySize;
-    unsigned long long modifiedBufferID;
-    unsigned long long modifiedImageID;
+    unsigned long long modifiedBufferID[2];
+    unsigned long long modifiedImageID[2];
     /* Window for image rendering */
     details::appWindow* winMan;
+    bool dataLoad = false;
 
     /* Init objects that hold the data */
     void events::createDataManagers()
@@ -69,22 +71,27 @@ namespace details {
         /* refresh window */
         //glfwPostEmptyEvent();
         /* handle data input */
-        if (receptionState == "data_loadMemory")
+        if (dataLoad)
         {
-            memMan->AssignData(modifiedMemoryID, (char*)inputChar, lastMemorySize);
-            modifiedBufferID = bufMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID));
-            modifiedImageID = imgMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID));
+            /* if destination memory already has data, free them and attempt to replace them with the new data */
+            
+            if (memMan->GetData(modifiedMemoryID[0]) != NULL)
+                free(memMan->GetData(modifiedMemoryID[0]));
 
-            if (modifiedBufferID != -1)
+            memMan->AssignData(modifiedMemoryID[0], (char*)inputChar, lastMemorySize);
+            modifiedBufferID[1] = bufMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID[0]));
+            modifiedImageID[1] = imgMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID[0]));
+
+            if (modifiedBufferID[1] != -1)
             {
-                bufMan->AssignMemory(modifiedBufferID, memMan->GetMemory(modifiedMemoryID));
+                //bufMan->AssignMemory(modifiedBufferID[1], memMan->GetMemory(modifiedMemoryID[0]));
             }
-            if (modifiedImageID != -1)
+            if (modifiedImageID[1] != -1)
             {
-                imgMan->AssignMemory(modifiedBufferID, memMan->GetMemory(modifiedMemoryID));
-                winMan->LoadImageTexture(modifiedImageID,1024,1024,4,(char*)inputChar);
+                //imgMan->AssignMemory(modifiedImageID[1], memMan->GetMemory(modifiedMemoryID[0]));
+                winMan->LoadImageTexture(modifiedImageID[1], imgMan->GetWidth(modifiedImageID[1]), imgMan->GetHeight(modifiedImageID[1]), 4, imgMan->GetMemory(modifiedImageID[1])->memoryData);
             }
-            receptionState = "begin_vkUnmapMemory";
+            dataLoad = false;
             return;
         }
 
@@ -150,11 +157,26 @@ namespace details {
             {
                 if (input.substr(0, 11) == "layer_data=")
                 {
-                    receptionState = "data_loadMemory";
+                    dataLoad = true;
                 }
                 else if (omitValue(input) == "layer_ptr")
                 {
-                    modifiedMemoryID = memMan->GetFromPointerID(omitMessage(input));
+                    modifiedMemoryID[0] = memMan->GetFromPointerID(omitMessage(input));
+                }
+                else if (omitValue(input) == "layer_size")
+                {
+                    lastMemorySize = stoul(omitMessage(input));
+                }
+            }
+            else if (receptionState == "begin_vkQueueSubmit")
+            {
+                if (input.substr(0, 11) == "layer_data=")
+                {
+                    dataLoad = true;
+                }
+                else if (omitValue(input) == "layer_ptr")
+                {
+                    modifiedMemoryID[0] = memMan->GetFromPointerID(omitMessage(input));
                 }
                 else if (omitValue(input) == "layer_size")
                 {
@@ -186,11 +208,9 @@ namespace details {
             }
             else if (receptionState == "begin_vkDestroyImage")
             {
-                modifiedImageID = imgMan->GetFromPointerID(omitMessage(input));
-                if (modifiedImageID != -1)
-                {
-                    imgMan->FreeBuffer(modifiedImageID);
-                }
+                modifiedImageID[1] = imgMan->GetFromPointerID(omitMessage(input));
+                if (modifiedImageID[1] != -1)
+                    imgMan->FreeBuffer(modifiedImageID[1]);
             }
             else if (receptionState == "begin_vkCreateBuffer")
             {
@@ -198,26 +218,33 @@ namespace details {
             }
             else if (receptionState == "begin_vkDestroyBuffer")
             {
-                modifiedBufferID = bufMan->GetFromPointerID(omitMessage(input));
-                if (modifiedBufferID != -1)
-                    bufMan->FreeBuffer(modifiedBufferID);
+                modifiedBufferID[1] = bufMan->GetFromPointerID(omitMessage(input));
+                if (modifiedBufferID[1] != -1)
+                    bufMan->FreeBuffer(modifiedBufferID[1]);
             }
             else if (receptionState == "begin_vkBindBufferMemory")
             {
                 if (omitValue(input) == "layer_memPtr")
                 {
-                    modifiedMemoryID = memMan->GetFromPointerID(omitMessage(input));
+                    /* get source memory ID */
+                    modifiedMemoryID[0] = memMan->GetFromPointerID(omitMessage(input));
                 }
                 else if (omitValue(input) == "layer_bufPtr")
                 {
-                    modifiedBufferID = bufMan->GetFromPointerID(omitMessage(input));
-                    if (modifiedBufferID != -1)
-                        bufMan->AssignBoundObj(modifiedBufferID, memMan->GetPointer(modifiedMemoryID));
-                    if (modifiedMemoryID != -1)
-                        memMan->AssignBoundObj(modifiedMemoryID, omitMessage(input));
-                    if (modifiedBufferID != -1)
+                    /* if source memory exists, attempt to bind it to the destination buffer */
+                    if (modifiedMemoryID[0] != -1)
                     {
-                        bufMan->AssignMemory(modifiedBufferID, memMan->GetMemory(modifiedMemoryID));
+                        /* get destination buffer ID */
+                        modifiedBufferID[1] = bufMan->GetFromPointerID(omitMessage(input));
+
+                        /* bind memoryPtr to bufferPtr */
+                        bufMan->AssignBoundObj(modifiedBufferID[1], memMan->GetPointer(modifiedMemoryID[0]));
+
+                        /* bind bufferPtr to memoryPtr */
+                        memMan->AssignBoundObj(modifiedMemoryID[0], omitMessage(input));
+
+                        /* assign memoryObj to bufferObj */
+                        bufMan->AssignMemory(modifiedBufferID[1], memMan->GetMemory(modifiedMemoryID[0]));
                     }
                 }
             }
@@ -225,66 +252,106 @@ namespace details {
             {
                 if (omitValue(input) == "layer_memPtr")
                 {
-                    modifiedMemoryID = memMan->GetFromPointerID(omitMessage(input));
+                    /* get source memory ID */
+                    modifiedMemoryID[0] = memMan->GetFromPointerID(omitMessage(input));
                 }
                 else if (omitValue(input) == "layer_imgPtr")
                 {
-                    modifiedImageID = imgMan->GetFromPointerID(omitMessage(input));
-                    if (modifiedImageID != -1)
-                        imgMan->AssignBoundObj(modifiedImageID, memMan->GetPointer(modifiedMemoryID));
-                    if (modifiedMemoryID != -1)
-                        memMan->AssignBoundObj(modifiedMemoryID, omitMessage(input));
-                    if (modifiedImageID != -1)
+                    /* if source memory exists, attempt to bind it to the destination image */
+                    if (modifiedMemoryID[0] != -1)
                     {
-                        imgMan->AssignMemory(modifiedImageID, memMan->GetMemory(modifiedMemoryID));
-                        winMan->LoadImageTexture(modifiedImageID,1024, 1024, 4, memMan->GetData(modifiedMemoryID));
+                        /* get destination image ID */
+                        modifiedImageID[1] = imgMan->GetFromPointerID(omitMessage(input));
+
+                        /* bind memoryPtr to imagePtr */
+                        imgMan->AssignBoundObj(modifiedImageID[1], memMan->GetPointer(modifiedMemoryID[0]));
+
+                        /* bind imagePtr to memoryPtr */
+                        memMan->AssignBoundObj(modifiedMemoryID[0], omitMessage(input));
+
+                        /* assign memoryObj to imageObj */
+                        imgMan->AssignMemory(modifiedImageID[1], memMan->GetMemory(modifiedMemoryID[0]));
+                        winMan->LoadImageTexture(modifiedImageID[1], imgMan->GetWidth(modifiedImageID[1]), imgMan->GetHeight(modifiedImageID[1]), 4, imgMan->GetMemory(modifiedImageID[1])->memoryData);
                     }
                 }
             }
             else if (receptionState == "begin_vkCmdCopyImageToBuffer")
             {
-                if (omitValue(input) == "layer_dstBuf")
+                if (omitValue(input) == "layer_srcImg")
                 {
-                    if (modifiedImageID != -1)
-                    {
-                        modifiedBufferID =  bufMan->GetFromPointerID(omitMessage(input));
-                        bufMan->AssignMemory(modifiedBufferID, imgMan->GetMemory(modifiedImageID));
-                    }
+                    modifiedImageID[0] = imgMan->GetFromPointerID(omitMessage(input));
                 }
-                else if (omitValue(input) == "layer_srcImg")
+                else if (omitValue(input) == "layer_dstBuf")
                 {
-                    modifiedImageID = imgMan->GetFromPointerID(omitMessage(input));
+                    /* if source image exists, attempt to copy the data */
+                    if (modifiedImageID[0] != -1)
+                    {
+                        /* get destination buffer ID */
+                        modifiedBufferID[1] = bufMan->GetFromPointerID(omitMessage(input));
+
+                        /* get source memory ID */
+                        modifiedMemoryID[0] = memMan->GetFromPointerID(imgMan->GetBoundObj(modifiedImageID[0]));
+
+                        /* get destination memory ID */
+                        modifiedMemoryID[1] = memMan->GetFromPointerID(bufMan->GetBoundObj(modifiedBufferID[1]));
+
+                        /* copy data between bound memory objects */
+                        memMan->AssignData(modifiedMemoryID[1], memMan->GetData(modifiedMemoryID[0]), memMan->GetDataSize(modifiedMemoryID[0]));
+                    }
                 }
             }
             else if (receptionState == "begin_vkCmdCopyBufferToImage")
             {
                 if (omitValue(input) == "layer_srcBuf")
                 {
-                    modifiedBufferID = bufMan->GetFromPointerID(omitMessage(input));
+                    /* get source buffer ID */
+                    modifiedBufferID[0] = bufMan->GetFromPointerID(omitMessage(input));
                 }
                 else if (omitValue(input) == "layer_dstImg")
                 {
-                    modifiedImageID = imgMan->GetFromPointerID(omitMessage(input));
-                    if (modifiedImageID != -1)
+                    /* if source buffer exists, attempt to copy data */
+                    if (modifiedBufferID[0] != -1)
                     {
-                        imgMan->AssignMemory(modifiedImageID, imgMan->GetMemory(modifiedBufferID));
-                        winMan->LoadImageTexture(modifiedImageID,1024, 1024, 4, bufMan->GetData(modifiedBufferID));
+                        /* get destination image ID */
+                        modifiedImageID[1] = imgMan->GetFromPointerID(omitMessage(input));
+                        
+                        /* get source memory ID */
+                        modifiedMemoryID[0] = memMan->GetFromPointerID(bufMan->GetBoundObj(modifiedBufferID[0]));
+
+                        /* get destination memory ID */
+                        modifiedMemoryID[1] = memMan->GetFromPointerID(imgMan->GetBoundObj(modifiedImageID[1]));
+
+
+                        std::cout << "copying buffer #" << modifiedMemoryID[0] << " to buffer #" << modifiedMemoryID[1] << std::endl;
+                        /* copy data between bound memory objects */
+                        memMan->AssignData(modifiedMemoryID[1], memMan->GetData(modifiedMemoryID[0]), memMan->GetDataSize(modifiedMemoryID[0]));
+                        winMan->LoadImageTexture(modifiedImageID[1], imgMan->GetWidth(modifiedImageID[1]), imgMan->GetHeight(modifiedImageID[1]), 4, imgMan->GetMemory(modifiedImageID[1])->memoryData);
                     }
                 }
             }
             else if (receptionState == "begin_vkCmdCopyImage")
             {
-
                 if (omitValue(input) == "layer_srcImg")
                 {
-                    modifiedImageID = imgMan->GetFromPointerID(omitMessage(input));
+                    /* get source image ID */
+                    modifiedImageID[0] = imgMan->GetFromPointerID(omitMessage(input));
                 }
                 else if (omitValue(input) == "layer_dstImg")
                 {
-                    modifiedMemoryID = imgMan->GetFromPointerID(omitMessage(input));
-                    if (modifiedMemoryID != -1)
+                    /* if source image exists, attempt to copy the data */
+                    if (modifiedMemoryID[0] != -1)
                     {
-                        imgMan->AssignMemory(modifiedMemoryID, imgMan->GetMemory(modifiedImageID));
+                        /* get destination image ID */
+                        modifiedImageID[1] = imgMan->GetFromPointerID(omitMessage(input));
+
+                        /* get source memory ID */
+                        modifiedMemoryID[0] = memMan->GetFromPointerID(imgMan->GetBoundObj(modifiedImageID[0]));
+
+                        /* get destination memory ID */
+                        modifiedMemoryID[1] = memMan->GetFromPointerID(imgMan->GetBoundObj(modifiedImageID[1]));
+
+                        memMan->AssignData(modifiedMemoryID[1], memMan->GetData(modifiedMemoryID[0]), memMan->GetDataSize(modifiedMemoryID[0]));
+                        winMan->LoadImageTexture(modifiedImageID[1], imgMan->GetWidth(modifiedImageID[1]), imgMan->GetHeight(modifiedImageID[1]), 4, imgMan->GetMemory(modifiedImageID[1])->memoryData);
                     }
                 }
             }
@@ -292,14 +359,25 @@ namespace details {
             {
                 if (omitValue(input) == "layer_srcBuf")
                 {
-                    modifiedBufferID = bufMan->GetFromPointerID(omitMessage(input));
+                    /* get source buffer ID */
+                    modifiedBufferID[0] = bufMan->GetFromPointerID(omitMessage(input));
                 }
                 else if (omitValue(input) == "layer_dstBuf")
                 {
-                    modifiedMemoryID = bufMan->GetFromPointerID(omitMessage(input));
-                    if (modifiedMemoryID != -1)
+                    /* if source buffer exists, attempt to copy data */
+                    if (modifiedBufferID[0] != -1)
                     {
-                        bufMan->AssignMemory(modifiedMemoryID, imgMan->GetMemory(modifiedBufferID));
+                        /* get destination buffer ID */
+                        modifiedBufferID[1] = bufMan->GetFromPointerID(omitMessage(input));
+
+                        /* get source memory ID */
+                        modifiedMemoryID[0] = memMan->GetFromPointerID(bufMan->GetBoundObj(modifiedBufferID[0]));
+
+                        /* get destination memory ID */
+                        modifiedMemoryID[1] = memMan->GetFromPointerID(bufMan->GetBoundObj(modifiedBufferID[1]));
+
+                        /* assign source memory data to destination memory */
+                        memMan->AssignData(modifiedMemoryID[1], memMan->GetData(modifiedMemoryID[0]), memMan->GetDataSize(modifiedMemoryID[0]));
                     }
                 }
             }
@@ -324,8 +402,10 @@ namespace details {
     }
 
     /* Receive new message from the thread, send it to be parsed after it has been constructed successfully */
-    void events::newInfo(const char* input, size_t index)
+    void events::newInfo(const char* input, int index)
     {
+        if (index < 0)
+            return;
         std::string s = input;
         s = s.substr(0, index);
 
@@ -335,7 +415,7 @@ namespace details {
             currentDataSize += index;
             if (currentDataSize >= dataSize)
             {
-                unsigned long remainderIndex = currentDataSize - dataSize;
+                size_t remainderIndex = currentDataSize - dataSize;
                 remainderIndex = index - remainderIndex;
                 /*
                 * in some cases, input may look like this
@@ -345,6 +425,7 @@ namespace details {
                 * and then copying command1!command2! to the remainder string,
                 * which will be handled in the next call of the function
                 */
+
                 memcpy(allocatedData + currentDataSize - index, input, remainderIndex);
                 char* temp = (char*)malloc(currentDataSize - dataSize);
                 memcpy(temp, input + remainderIndex, currentDataSize - dataSize);

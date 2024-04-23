@@ -60,7 +60,7 @@ namespace details {
 
 		static DWORD WINAPI listenForData(__in LPVOID lpParameter);
 
-		void newInfo(const char* input, size_t index);
+		void newInfo(const char* input, int index);
 		void parseMessage(const char* inputChar);
 		void createDataManagers();
 		std::string omitMessage(std::string input);

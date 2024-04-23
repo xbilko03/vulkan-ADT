@@ -84,6 +84,8 @@ typedef struct memoryObj {
     VkDeviceSize size;
     VkBuffer boundBuffer;
     VkImage boundImage;
+    std::string status;
+
     void** data;
 };
 std::map<VkDeviceMemory, memoryObj> memoryMap;
@@ -92,7 +94,7 @@ void layer_AllocateMemory_after(VkDevice device, VkMemoryAllocateInfo* pAllocate
 {
     /* map memory to memoryObj */
     memoryMap[*pMemory] = {};
-    memoryMap[*pMemory] = memoryObj((*pAllocateInfo).allocationSize, 0, 0, 0);
+    memoryMap[*pMemory] = memoryObj((*pAllocateInfo).allocationSize, 0, 0, "allocated", NULL);
 
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", ptrToString((void**)pMemory)));
 }
@@ -133,12 +135,14 @@ void layer_MapMemory_after(VkDevice device, VkDeviceMemory memory, VkDeviceSize 
     if (tarObject.size > size)
         tarObject.size = size;
     tarObject.data = ppData;
+    tarObject.status = "mapped";
     memoryMap[memory] = tarObject;
 }
 /* Get data from the local pointer */
 void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
-{    
+{
     auto tarObject = memoryMap[memory];
+    tarObject.status = "unmapped";
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", addrToString((void*)memory)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "size=", std::to_string(tarObject.size)));
     
@@ -195,6 +199,29 @@ void layer_CmdCopyImage_before(VkCommandBuffer commandBuffer, VkImage srcImage, 
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "srcImg=", addrToString((void*)srcImage)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "dstImg=", addrToString((void*)dstImage)));
 }
+
+void layer_QueueSubmit_after(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence)
+{
+    /* just mapped buffers data send */
+    for (const auto& [key, value] : memoryMap) {
+        if (value.status == "mapped")
+        {
+            auto tarObject = value;
+            if (value.data == NULL)
+                continue;
+            winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", addrToString((void*)key)));
+            winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "size=", std::to_string(tarObject.size)));
+
+            std::string dataMessage = "data";
+            dataMessage += std::to_string(tarObject.size);
+            dataMessage += '!';
+
+            winsockSendToUI(&ConnectSocket, dataMessage);
+            winsockSendToUIraw(&ConnectSocket, reinterpret_cast<char*>(*tarObject.data), tarObject.size);
+        }
+    }
+}
+
 
 /* before new frame hits */
 unsigned long long frameCount = 0;
