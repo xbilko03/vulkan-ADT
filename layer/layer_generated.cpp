@@ -868,6 +868,7 @@ instance_dispatch[GetKey(*pInstance)] = dispatchTable;
 std::map<VkCommandBuffer, CommandStats> commandbuffer_stats;
 */
 bool connected = false;
+bool skipLock = false;
 #include <memory>
 #include <fstream>
 
@@ -1256,7 +1257,8 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateDeviceExtensionPropert
 /* Generated part */
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumeratePhysicalDevices(VkInstance instance, uint32_t* pPhysicalDeviceCount, VkPhysicalDevice* pPhysicalDevices) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkEnumeratePhysicalDevices!");
 }
@@ -1284,7 +1286,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceProperties!");
 }
@@ -1318,7 +1321,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceProperties!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceQueueFamilyProperties(VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties* pQueueFamilyProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceQueueFamilyProperties!");
 }
@@ -1349,7 +1353,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceQueueFamilyProperties!")
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceMemoryProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties* pMemoryProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceMemoryProperties!");
 }
@@ -1379,7 +1384,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceMemoryProperties!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceFeatures(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures* pFeatures) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceFeatures!");
 }
@@ -1460,7 +1466,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceFeatures!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceFormatProperties(VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties* pFormatProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceFormatProperties!");
 }
@@ -1489,7 +1496,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceFormatProperties!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceImageFormatProperties(VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags, VkImageFormatProperties* pImageFormatProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceImageFormatProperties!");
 }
@@ -1524,7 +1532,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceSparseImageFormatProperties(VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkSampleCountFlagBits samples, VkImageUsageFlags usage, VkImageTiling tiling, uint32_t* pPropertyCount, VkSparseImageFormatProperties* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSparseImageFormatProperties!");
 }
@@ -1556,7 +1565,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSparseImageFormatPropert
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateAndroidSurfaceKHR(VkInstance instance, VkAndroidSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateAndroidSurfaceKHR!");
 }
@@ -1597,7 +1607,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceDisplayPropertiesKHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkDisplayPropertiesKHR* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceDisplayPropertiesKHR!");
 }
@@ -1633,7 +1644,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceDisplayPlanePropertiesKHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkDisplayPlanePropertiesKHR* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceDisplayPlanePropertiesKHR!");
 }
@@ -1664,7 +1676,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDisplayPlaneSupportedDisplaysKHR(VkPhysicalDevice physicalDevice, uint32_t planeIndex, uint32_t* pDisplayCount, VkDisplayKHR* pDisplays) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDisplayPlaneSupportedDisplaysKHR!");
 }
@@ -1693,7 +1706,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDisplayModePropertiesKHR(VkPhysicalDevice physicalDevice, VkDisplayKHR display, uint32_t* pPropertyCount, VkDisplayModePropertiesKHR* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDisplayModePropertiesKHR!");
 }
@@ -1725,7 +1739,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDisplayModeKHR(VkPhysicalDevice physicalDevice, VkDisplayKHR display, VkDisplayModeCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDisplayModeKHR* pMode) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateDisplayModeKHR!");
 }
@@ -1766,7 +1781,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDisplayPlaneCapabilitiesKHR(VkPhysicalDevice physicalDevice, VkDisplayModeKHR mode, uint32_t planeIndex, VkDisplayPlaneCapabilitiesKHR* pCapabilities) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDisplayPlaneCapabilitiesKHR!");
 }
@@ -1805,7 +1821,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDisplayPlaneSurfaceKHR(VkInstance instance, VkDisplaySurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateDisplayPlaneSurfaceKHR!");
 }
@@ -1849,7 +1866,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroySurfaceKHR(VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroySurfaceKHR!");
 }
@@ -1882,7 +1900,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroySurfaceKHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfaceSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, VkSurfaceKHR surface, VkBool32* pSupported) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfaceSupportKHR!");
 }
@@ -1911,7 +1930,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfaceCapabilitiesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkSurfaceCapabilitiesKHR* pSurfaceCapabilities) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfaceCapabilitiesKHR!");
 }
@@ -1949,7 +1969,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfaceFormatsKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pSurfaceFormatCount, VkSurfaceFormatKHR* pSurfaceFormats) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfaceFormatsKHR!");
 }
@@ -1979,7 +2000,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfacePresentModesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pPresentModeCount, VkPresentModeKHR* pPresentModes) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfacePresentModesKHR!");
 }
@@ -2009,7 +2031,8 @@ return ret;
 
 #if defined(VK_USE_PLATFORM_VI_NN)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateViSurfaceNN(VkInstance instance, VkViSurfaceCreateInfoNN* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateViSurfaceNN!");
 }
@@ -2051,7 +2074,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateWaylandSurfaceKHR(VkInstance instance, VkWaylandSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateWaylandSurfaceKHR!");
 }
@@ -2094,7 +2118,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
  VK_LAYER_EXPORT VkBool32 VKAPI_CALL DetailsLayer_GetPhysicalDeviceWaylandPresentationSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, wl_display* display) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceWaylandPresentationSupportKHR!");
 }
@@ -2124,7 +2149,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateWin32SurfaceKHR(VkInstance instance, VkWin32SurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateWin32SurfaceKHR!");
 }
@@ -2167,7 +2193,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkBool32 VKAPI_CALL DetailsLayer_GetPhysicalDeviceWin32PresentationSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceWin32PresentationSupportKHR!");
 }
@@ -2196,7 +2223,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_XLIB_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateXlibSurfaceKHR(VkInstance instance, VkXlibSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateXlibSurfaceKHR!");
 }
@@ -2239,7 +2267,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_XLIB_KHR)
  VK_LAYER_EXPORT VkBool32 VKAPI_CALL DetailsLayer_GetPhysicalDeviceXlibPresentationSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, Display* dpy, VisualID visualID) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceXlibPresentationSupportKHR!");
 }
@@ -2270,7 +2299,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_XCB_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateXcbSurfaceKHR(VkInstance instance, VkXcbSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateXcbSurfaceKHR!");
 }
@@ -2313,7 +2343,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_XCB_KHR)
  VK_LAYER_EXPORT VkBool32 VKAPI_CALL DetailsLayer_GetPhysicalDeviceXcbPresentationSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, xcb_connection_t* connection, xcb_visualid_t visual_id) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceXcbPresentationSupportKHR!");
 }
@@ -2344,7 +2375,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_DIRECTFB_EXT)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDirectFBSurfaceEXT(VkInstance instance, VkDirectFBSurfaceCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateDirectFBSurfaceEXT!");
 }
@@ -2387,7 +2419,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_DIRECTFB_EXT)
  VK_LAYER_EXPORT VkBool32 VKAPI_CALL DetailsLayer_GetPhysicalDeviceDirectFBPresentationSupportEXT(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, IDirectFB* dfb) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceDirectFBPresentationSupportEXT!");
 }
@@ -2417,7 +2450,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_FUCHSIA)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateImagePipeSurfaceFUCHSIA(VkInstance instance, VkImagePipeSurfaceCreateInfoFUCHSIA* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateImagePipeSurfaceFUCHSIA!");
 }
@@ -2459,7 +2493,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_GGP)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateStreamDescriptorSurfaceGGP(VkInstance instance, VkStreamDescriptorSurfaceCreateInfoGGP* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateStreamDescriptorSurfaceGGP!");
 }
@@ -2501,7 +2536,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_SCREEN_QNX)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateScreenSurfaceQNX(VkInstance instance, VkScreenSurfaceCreateInfoQNX* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateScreenSurfaceQNX!");
 }
@@ -2544,7 +2580,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_SCREEN_QNX)
  VK_LAYER_EXPORT VkBool32 VKAPI_CALL DetailsLayer_GetPhysicalDeviceScreenPresentationSupportQNX(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, _screen_window* window) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceScreenPresentationSupportQNX!");
 }
@@ -2573,7 +2610,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDebugReportCallbackEXT(VkInstance instance, VkDebugReportCallbackCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDebugReportCallbackEXT* pCallback) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateDebugReportCallbackEXT!");
 }
@@ -2614,7 +2652,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDebugReportCallbackEXT(VkInstance instance, VkDebugReportCallbackEXT callback, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyDebugReportCallbackEXT!");
 }
@@ -2647,7 +2686,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyDebugReportCallbackEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DebugReportMessageEXT(VkInstance instance, VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, char* pLayerPrefix, char* pMessage) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDebugReportMessageEXT!");
 }
@@ -2677,7 +2717,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDebugReportMessageEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalImageFormatPropertiesNV(VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags, VkExternalMemoryHandleTypeFlagsNV externalHandleType, VkExternalImageFormatPropertiesNV* pExternalImageFormatProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalImageFormatPropertiesNV!");
 }
@@ -2712,7 +2753,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceFeatures2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceFeatures2!");
 }
@@ -2740,7 +2782,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceFeatures2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties2* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceProperties2!");
 }
@@ -2768,7 +2811,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceProperties2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceFormatProperties2(VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties2* pFormatProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceFormatProperties2!");
 }
@@ -2796,7 +2840,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceFormatProperties2!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceImageFormatProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceImageFormatInfo2* pImageFormatInfo, VkImageFormatProperties2* pImageFormatProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceImageFormatProperties2!");
 }
@@ -2831,7 +2876,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceQueueFamilyProperties2(VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties2* pQueueFamilyProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceQueueFamilyProperties2!");
 }
@@ -2860,7 +2906,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceQueueFamilyProperties2!"
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceMemoryProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties2* pMemoryProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceMemoryProperties2!");
 }
@@ -2888,7 +2935,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceMemoryProperties2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceSparseImageFormatProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSparseImageFormatInfo2* pFormatInfo, uint32_t* pPropertyCount, VkSparseImageFormatProperties2* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSparseImageFormatProperties2!");
 }
@@ -2921,7 +2969,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSparseImageFormatPropert
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalBufferProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalBufferInfo* pExternalBufferInfo, VkExternalBufferProperties* pExternalBufferProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalBufferProperties!");
 }
@@ -2955,7 +3004,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceExternalBufferProperties
 
 #if defined(VK_USE_PLATFORM_SCI)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalMemorySciBufPropertiesNV(VkPhysicalDevice physicalDevice, VkExternalMemoryHandleTypeFlagBits handleType, NvSciBufObj handle, VkMemorySciBufPropertiesNV* pMemorySciBufProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalMemorySciBufPropertiesNV!");
 }
@@ -2988,7 +3038,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSciBufAttributesNV(VkPhysicalDevice physicalDevice, NvSciBufAttrList pAttributes) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSciBufAttributesNV!");
 }
@@ -3016,7 +3067,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalSemaphoreProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalSemaphoreInfo* pExternalSemaphoreInfo, VkExternalSemaphoreProperties* pExternalSemaphoreProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalSemaphoreProperties!");
 }
@@ -3049,7 +3101,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceExternalSemaphorePropert
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalFenceProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalFenceInfo* pExternalFenceInfo, VkExternalFenceProperties* pExternalFenceProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalFenceProperties!");
 }
@@ -3083,7 +3136,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceExternalFenceProperties!
 
 #if defined(VK_USE_PLATFORM_SCI)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSciSyncAttributesNV(VkPhysicalDevice physicalDevice, VkSciSyncAttributesInfoNV* pSciSyncAttributesInfo, NvSciSyncAttrList pAttributes) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSciSyncAttributesNV!");
 }
@@ -3114,7 +3168,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ReleaseDisplayEXT(VkPhysicalDevice physicalDevice, VkDisplayKHR display) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkReleaseDisplayEXT!");
 }
@@ -3142,7 +3197,8 @@ return ret;
 
 #if defined(VK_USE_PLATFORM_XLIB_XRANDR_EXT)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireXlibDisplayEXT(VkPhysicalDevice physicalDevice, Display* dpy, VkDisplayKHR display) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkAcquireXlibDisplayEXT!");
 }
@@ -3172,7 +3228,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_XLIB_XRANDR_EXT)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetRandROutputDisplayEXT(VkPhysicalDevice physicalDevice, Display* dpy, RROutput rrOutput, VkDisplayKHR* pDisplay) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetRandROutputDisplayEXT!");
 }
@@ -3203,7 +3260,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireWinrtDisplayNV(VkPhysicalDevice physicalDevice, VkDisplayKHR display) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkAcquireWinrtDisplayNV!");
 }
@@ -3232,7 +3290,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetWinrtDisplayNV(VkPhysicalDevice physicalDevice, uint32_t deviceRelativeId, VkDisplayKHR* pDisplay) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetWinrtDisplayNV!");
 }
@@ -3261,7 +3320,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfaceCapabilities2EXT(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkSurfaceCapabilities2EXT* pSurfaceCapabilities) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfaceCapabilities2EXT!");
 }
@@ -3301,7 +3361,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumeratePhysicalDeviceGroups(VkInstance instance, uint32_t* pPhysicalDeviceGroupCount, VkPhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkEnumeratePhysicalDeviceGroups!");
 }
@@ -3334,7 +3395,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDevicePresentRectanglesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pRectCount, VkRect2D* pRects) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDevicePresentRectanglesKHR!");
 }
@@ -3367,7 +3429,8 @@ return ret;
 
 #if defined(VK_USE_PLATFORM_IOS_MVK)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateIOSSurfaceMVK(VkInstance instance, VkIOSSurfaceCreateInfoMVK* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateIOSSurfaceMVK!");
 }
@@ -3409,7 +3472,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_MACOS_MVK)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateMacOSSurfaceMVK(VkInstance instance, VkMacOSSurfaceCreateInfoMVK* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateMacOSSurfaceMVK!");
 }
@@ -3451,7 +3515,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_METAL_EXT)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateMetalSurfaceEXT(VkInstance instance, VkMetalSurfaceCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateMetalSurfaceEXT!");
 }
@@ -3492,7 +3557,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceMultisamplePropertiesEXT(VkPhysicalDevice physicalDevice, VkSampleCountFlagBits samples, VkMultisamplePropertiesEXT* pMultisampleProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceMultisamplePropertiesEXT!");
 }
@@ -3520,7 +3586,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceMultisamplePropertiesEXT
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfaceCapabilities2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, VkSurfaceCapabilities2KHR* pSurfaceCapabilities) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfaceCapabilities2KHR!");
 }
@@ -3554,7 +3621,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfaceFormats2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, uint32_t* pSurfaceFormatCount, VkSurfaceFormat2KHR* pSurfaceFormats) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfaceFormats2KHR!");
 }
@@ -3589,7 +3657,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceDisplayProperties2KHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkDisplayProperties2KHR* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceDisplayProperties2KHR!");
 }
@@ -3620,7 +3689,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceDisplayPlaneProperties2KHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkDisplayPlaneProperties2KHR* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceDisplayPlaneProperties2KHR!");
 }
@@ -3651,7 +3721,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDisplayModeProperties2KHR(VkPhysicalDevice physicalDevice, VkDisplayKHR display, uint32_t* pPropertyCount, VkDisplayModeProperties2KHR* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDisplayModeProperties2KHR!");
 }
@@ -3683,7 +3754,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDisplayPlaneCapabilities2KHR(VkPhysicalDevice physicalDevice, VkDisplayPlaneInfo2KHR* pDisplayPlaneInfo, VkDisplayPlaneCapabilities2KHR* pCapabilities) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDisplayPlaneCapabilities2KHR!");
 }
@@ -3718,7 +3790,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceCalibrateableTimeDomainsKHR(VkPhysicalDevice physicalDevice, uint32_t* pTimeDomainCount, VkTimeDomainKHR* pTimeDomains) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR!");
 }
@@ -3746,7 +3819,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pMessenger) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateDebugUtilsMessengerEXT!");
 }
@@ -3789,7 +3863,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT messenger, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyDebugUtilsMessengerEXT!");
 }
@@ -3822,7 +3897,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyDebugUtilsMessengerEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_SubmitDebugUtilsMessageEXT(VkInstance instance, VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageTypes, VkDebugUtilsMessengerCallbackDataEXT* pCallbackData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSubmitDebugUtilsMessageEXT!");
 }
@@ -3872,7 +3948,8 @@ winsockSendToUI(&ConnectSocket, "end_vkSubmitDebugUtilsMessageEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceCooperativeMatrixPropertiesNV(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkCooperativeMatrixPropertiesNV* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV!");
 }
@@ -3911,7 +3988,8 @@ return ret;
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfacePresentModes2EXT(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, uint32_t* pPresentModeCount, VkPresentModeKHR* pPresentModes) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSurfacePresentModes2EXT!");
 }
@@ -3944,7 +4022,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, uint32_t* pCounterCount, VkPerformanceCounterKHR* pCounters, VkPerformanceCounterDescriptionKHR* pCounterDescriptions) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR!");
 }
@@ -3983,7 +4062,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR(VkPhysicalDevice physicalDevice, VkQueryPoolPerformanceCreateInfoKHR* pPerformanceQueryCreateInfo, uint32_t* pNumPasses) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR!");
 }
@@ -4014,7 +4094,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceQueueFamilyPerformanceQu
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateHeadlessSurfaceEXT(VkInstance instance, VkHeadlessSurfaceCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateHeadlessSurfaceEXT!");
 }
@@ -4053,7 +4134,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(VkPhysicalDevice physicalDevice, uint32_t* pCombinationCount, VkFramebufferMixedSamplesCombinationNV* pCombinations) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV!");
 }
@@ -4085,7 +4167,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceToolProperties(VkPhysicalDevice physicalDevice, uint32_t* pToolCount, VkPhysicalDeviceToolProperties* pToolProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceToolProperties!");
 }
@@ -4120,7 +4203,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceFragmentShadingRatesKHR(VkPhysicalDevice physicalDevice, uint32_t* pFragmentShadingRateCount, VkPhysicalDeviceFragmentShadingRateKHR* pFragmentShadingRates) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceFragmentShadingRatesKHR!");
 }
@@ -4152,7 +4236,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceVideoCapabilitiesKHR(VkPhysicalDevice physicalDevice, VkVideoProfileInfoKHR* pVideoProfile, VkVideoCapabilitiesKHR* pCapabilities) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceVideoCapabilitiesKHR!");
 }
@@ -4196,7 +4281,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceVideoFormatPropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceVideoFormatInfoKHR* pVideoFormatInfo, uint32_t* pVideoFormatPropertyCount, VkVideoFormatPropertiesKHR* pVideoFormatProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceVideoFormatPropertiesKHR!");
 }
@@ -4233,7 +4319,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR* pQualityLevelInfo, VkVideoEncodeQualityLevelPropertiesKHR* pQualityLevelProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR!");
 }
@@ -4273,7 +4360,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireDrmDisplayEXT(VkPhysicalDevice physicalDevice, int32_t drmFd, VkDisplayKHR display) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkAcquireDrmDisplayEXT!");
 }
@@ -4301,7 +4389,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDrmDisplayEXT(VkPhysicalDevice physicalDevice, int32_t drmFd, uint32_t connectorId, VkDisplayKHR* display) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDrmDisplayEXT!");
 }
@@ -4330,7 +4419,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceOpticalFlowImageFormatsNV(VkPhysicalDevice physicalDevice, VkOpticalFlowImageFormatInfoNV* pOpticalFlowImageFormatInfo, uint32_t* pFormatCount, VkOpticalFlowImageFormatPropertiesNV* pImageFormatProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceOpticalFlowImageFormatsNV!");
 }
@@ -4364,7 +4454,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceCooperativeMatrixPropertiesKHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkCooperativeMatrixPropertiesKHR* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR!");
 }
@@ -4398,7 +4489,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceFeatures2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceFeatures2KHR!");
 }
@@ -4426,7 +4518,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceFeatures2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties2* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceProperties2KHR!");
 }
@@ -4454,7 +4547,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceProperties2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceFormatProperties2KHR(VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties2* pFormatProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceFormatProperties2KHR!");
 }
@@ -4482,7 +4576,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceFormatProperties2KHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceImageFormatProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceImageFormatInfo2* pImageFormatInfo, VkImageFormatProperties2* pImageFormatProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceImageFormatProperties2KHR!");
 }
@@ -4517,7 +4612,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceQueueFamilyProperties2KHR(VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties2* pQueueFamilyProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceQueueFamilyProperties2KHR!");
 }
@@ -4546,7 +4642,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceQueueFamilyProperties2KH
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceMemoryProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties2* pMemoryProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceMemoryProperties2KHR!");
 }
@@ -4574,7 +4671,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceMemoryProperties2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceSparseImageFormatProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSparseImageFormatInfo2* pFormatInfo, uint32_t* pPropertyCount, VkSparseImageFormatProperties2* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceSparseImageFormatProperties2KHR!");
 }
@@ -4607,7 +4705,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSparseImageFormatPropert
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalBufferPropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalBufferInfo* pExternalBufferInfo, VkExternalBufferProperties* pExternalBufferProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalBufferPropertiesKHR!");
 }
@@ -4640,7 +4739,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceExternalBufferProperties
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalSemaphorePropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalSemaphoreInfo* pExternalSemaphoreInfo, VkExternalSemaphoreProperties* pExternalSemaphoreProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR!");
 }
@@ -4673,7 +4773,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceExternalSemaphorePropert
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalFencePropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalFenceInfo* pExternalFenceInfo, VkExternalFenceProperties* pExternalFenceProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceExternalFencePropertiesKHR!");
 }
@@ -4706,7 +4807,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceExternalFencePropertiesK
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumeratePhysicalDeviceGroupsKHR(VkInstance instance, uint32_t* pPhysicalDeviceGroupCount, VkPhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkEnumeratePhysicalDeviceGroupsKHR!");
 }
@@ -4739,7 +4841,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceCalibrateableTimeDomainsEXT(VkPhysicalDevice physicalDevice, uint32_t* pTimeDomainCount, VkTimeDomainKHR* pTimeDomains) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT!");
 }
@@ -4767,7 +4870,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceToolPropertiesEXT(VkPhysicalDevice physicalDevice, uint32_t* pToolCount, VkPhysicalDeviceToolProperties* pToolProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPhysicalDeviceToolPropertiesEXT!");
 }
@@ -4802,7 +4906,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceQueue(VkDevice device, uint32_t queueFamilyIndex, uint32_t queueIndex, VkQueue* pQueue) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceQueue!");
 }
@@ -4829,7 +4934,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDeviceQueue!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueueSubmit(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkQueueSubmit!");
 }
@@ -4867,7 +4973,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueueWaitIdle(VkQueue queue) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkQueueWaitIdle!");
 }
@@ -4893,7 +5000,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_DeviceWaitIdle(VkDevice device) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDeviceWaitIdle!");
 }
@@ -4919,7 +5027,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AllocateMemory(VkDevice device, VkMemoryAllocateInfo* pAllocateInfo, VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkAllocateMemory!");
 }
@@ -4959,7 +5068,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_FreeMemory(VkDevice device, VkDeviceMemory memory, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkFreeMemory!");
 }
@@ -4992,7 +5102,8 @@ winsockSendToUI(&ConnectSocket, "end_vkFreeMemory!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_MapMemory(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkMapMemory!");
 }
@@ -5023,7 +5134,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_UnmapMemory(VkDevice device, VkDeviceMemory memory) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkUnmapMemory!");
 }
@@ -5048,7 +5160,8 @@ winsockSendToUI(&ConnectSocket, "end_vkUnmapMemory!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_FlushMappedMemoryRanges(VkDevice device, uint32_t memoryRangeCount, VkMappedMemoryRange* pMemoryRanges) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkFlushMappedMemoryRanges!");
 }
@@ -5081,7 +5194,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_InvalidateMappedMemoryRanges(VkDevice device, uint32_t memoryRangeCount, VkMappedMemoryRange* pMemoryRanges) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkInvalidateMappedMemoryRanges!");
 }
@@ -5114,7 +5228,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceMemoryCommitment(VkDevice device, VkDeviceMemory memory, VkDeviceSize* pCommittedMemoryInBytes) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceMemoryCommitment!");
 }
@@ -5140,7 +5255,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDeviceMemoryCommitment!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetBufferMemoryRequirements(VkDevice device, VkBuffer buffer, VkMemoryRequirements* pMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetBufferMemoryRequirements!");
 }
@@ -5170,7 +5286,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetBufferMemoryRequirements!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindBufferMemory(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkBindBufferMemory!");
 }
@@ -5199,7 +5316,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageMemoryRequirements(VkDevice device, VkImage image, VkMemoryRequirements* pMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetImageMemoryRequirements!");
 }
@@ -5229,7 +5347,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetImageMemoryRequirements!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindImageMemory(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkBindImageMemory!");
 }
@@ -5258,7 +5377,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageSparseMemoryRequirements(VkDevice device, VkImage image, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements* pSparseMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetImageSparseMemoryRequirements!");
 }
@@ -5291,7 +5411,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetImageSparseMemoryRequirements!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueueBindSparse(VkQueue queue, uint32_t bindInfoCount, VkBindSparseInfo* pBindInfo, VkFence fence) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkQueueBindSparse!");
 }
@@ -5363,7 +5484,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateFence(VkDevice device, VkFenceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkFence* pFence) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateFence!");
 }
@@ -5402,7 +5524,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyFence(VkDevice device, VkFence fence, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyFence!");
 }
@@ -5435,7 +5558,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyFence!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ResetFences(VkDevice device, uint32_t fenceCount, VkFence* pFences) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkResetFences!");
 }
@@ -5463,7 +5587,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetFenceStatus(VkDevice device, VkFence fence) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetFenceStatus!");
 }
@@ -5490,7 +5615,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_WaitForFences(VkDevice device, uint32_t fenceCount, VkFence* pFences, VkBool32 waitAll, uint64_t timeout) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkWaitForFences!");
 }
@@ -5520,7 +5646,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateSemaphore(VkDevice device, VkSemaphoreCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSemaphore* pSemaphore) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateSemaphore!");
 }
@@ -5559,7 +5686,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroySemaphore(VkDevice device, VkSemaphore semaphore, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroySemaphore!");
 }
@@ -5592,7 +5720,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroySemaphore!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateEvent(VkDevice device, VkEventCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkEvent* pEvent) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateEvent!");
 }
@@ -5631,7 +5760,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyEvent(VkDevice device, VkEvent event, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyEvent!");
 }
@@ -5664,7 +5794,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyEvent!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetEventStatus(VkDevice device, VkEvent event) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetEventStatus!");
 }
@@ -5691,7 +5822,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetEvent(VkDevice device, VkEvent event) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSetEvent!");
 }
@@ -5718,7 +5850,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ResetEvent(VkDevice device, VkEvent event) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkResetEvent!");
 }
@@ -5745,7 +5878,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateQueryPool(VkDevice device, VkQueryPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkQueryPool* pQueryPool) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateQueryPool!");
 }
@@ -5786,7 +5920,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyQueryPool(VkDevice device, VkQueryPool queryPool, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyQueryPool!");
 }
@@ -5819,7 +5954,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyQueryPool!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetQueryPoolResults(VkDevice device, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, size_t dataSize, void* pData, VkDeviceSize stride, VkQueryResultFlags flags) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetQueryPoolResults!");
 }
@@ -5852,7 +5988,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_ResetQueryPool(VkDevice device, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkResetQueryPool!");
 }
@@ -5879,7 +6016,8 @@ winsockSendToUI(&ConnectSocket, "end_vkResetQueryPool!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateBuffer(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateBuffer!");
 }
@@ -5922,7 +6060,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyBuffer(VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyBuffer!");
 }
@@ -5955,7 +6094,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyBuffer!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateBufferView(VkDevice device, VkBufferViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBufferView* pView) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateBufferView!");
 }
@@ -5997,7 +6137,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyBufferView(VkDevice device, VkBufferView bufferView, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyBufferView!");
 }
@@ -6030,7 +6171,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyBufferView!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateImage(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateImage!");
 }
@@ -6075,7 +6217,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyImage(VkDevice device, VkImage image, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyImage!");
 }
@@ -6108,7 +6251,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyImage!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageSubresourceLayout(VkDevice device, VkImage image, VkImageSubresource* pSubresource, VkSubresourceLayout* pLayout) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetImageSubresourceLayout!");
 }
@@ -6145,7 +6289,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetImageSubresourceLayout!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateImageView(VkDevice device, VkImageViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImageView* pView) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateImageView!");
 }
@@ -6187,7 +6332,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyImageView(VkDevice device, VkImageView imageView, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyImageView!");
 }
@@ -6220,7 +6366,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyImageView!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateShaderModule(VkDevice device, VkShaderModuleCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkShaderModule* pShaderModule) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateShaderModule!");
 }
@@ -6261,7 +6408,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyShaderModule(VkDevice device, VkShaderModule shaderModule, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyShaderModule!");
 }
@@ -6294,7 +6442,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyShaderModule!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreatePipelineCache(VkDevice device, VkPipelineCacheCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreatePipelineCache!");
 }
@@ -6336,7 +6485,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyPipelineCache(VkDevice device, VkPipelineCache pipelineCache, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyPipelineCache!");
 }
@@ -6369,7 +6519,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyPipelineCache!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPipelineCacheData(VkDevice device, VkPipelineCache pipelineCache, size_t* pDataSize, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPipelineCacheData!");
 }
@@ -6398,7 +6549,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_MergePipelineCaches(VkDevice device, VkPipelineCache dstCache, uint32_t srcCacheCount, VkPipelineCache* pSrcCaches) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkMergePipelineCaches!");
 }
@@ -6427,7 +6579,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateGraphicsPipelines(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkGraphicsPipelineCreateInfo* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateGraphicsPipelines!");
 }
@@ -6591,7 +6744,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateComputePipelines(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkComputePipelineCreateInfo* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateComputePipelines!");
 }
@@ -6636,7 +6790,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(VkDevice device, VkRenderPass renderpass, VkExtent2D* pMaxWorkgroupSize) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI!");
 }
@@ -6667,7 +6822,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyPipeline(VkDevice device, VkPipeline pipeline, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyPipeline!");
 }
@@ -6700,7 +6856,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyPipeline!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreatePipelineLayout(VkDevice device, VkPipelineLayoutCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPipelineLayout* pPipelineLayout) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreatePipelineLayout!");
 }
@@ -6747,7 +6904,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyPipelineLayout(VkDevice device, VkPipelineLayout pipelineLayout, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyPipelineLayout!");
 }
@@ -6780,7 +6938,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyPipelineLayout!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateSampler(VkDevice device, VkSamplerCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSampler* pSampler) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateSampler!");
 }
@@ -6826,7 +6985,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroySampler(VkDevice device, VkSampler sampler, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroySampler!");
 }
@@ -6859,7 +7019,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroySampler!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDescriptorSetLayout(VkDevice device, VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorSetLayout* pSetLayout) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateDescriptorSetLayout!");
 }
@@ -6905,7 +7066,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDescriptorSetLayout(VkDevice device, VkDescriptorSetLayout descriptorSetLayout, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyDescriptorSetLayout!");
 }
@@ -6938,7 +7100,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyDescriptorSetLayout!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDescriptorPool(VkDevice device, VkDescriptorPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorPool* pDescriptorPool) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateDescriptorPool!");
 }
@@ -6982,7 +7145,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDescriptorPool(VkDevice device, VkDescriptorPool descriptorPool, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyDescriptorPool!");
 }
@@ -7015,7 +7179,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyDescriptorPool!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ResetDescriptorPool(VkDevice device, VkDescriptorPool descriptorPool, VkDescriptorPoolResetFlags flags) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkResetDescriptorPool!");
 }
@@ -7043,7 +7208,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AllocateDescriptorSets(VkDevice device, VkDescriptorSetAllocateInfo* pAllocateInfo, VkDescriptorSet* pDescriptorSets) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkAllocateDescriptorSets!");
 }
@@ -7076,7 +7242,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_FreeDescriptorSets(VkDevice device, VkDescriptorPool descriptorPool, uint32_t descriptorSetCount, VkDescriptorSet* pDescriptorSets) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkFreeDescriptorSets!");
 }
@@ -7105,7 +7272,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_UpdateDescriptorSets(VkDevice device, uint32_t descriptorWriteCount, VkWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount, VkCopyDescriptorSet* pDescriptorCopies) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkUpdateDescriptorSets!");
 }
@@ -7158,7 +7326,8 @@ winsockSendToUI(&ConnectSocket, "end_vkUpdateDescriptorSets!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateFramebuffer(VkDevice device, VkFramebufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateFramebuffer!");
 }
@@ -7203,7 +7372,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyFramebuffer(VkDevice device, VkFramebuffer framebuffer, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyFramebuffer!");
 }
@@ -7236,7 +7406,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyFramebuffer!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateRenderPass(VkDevice device, VkRenderPassCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateRenderPass!");
 }
@@ -7309,7 +7480,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyRenderPass(VkDevice device, VkRenderPass renderPass, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyRenderPass!");
 }
@@ -7342,7 +7514,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyRenderPass!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetRenderAreaGranularity(VkDevice device, VkRenderPass renderPass, VkExtent2D* pGranularity) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetRenderAreaGranularity!");
 }
@@ -7371,7 +7544,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetRenderAreaGranularity!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetRenderingAreaGranularityKHR(VkDevice device, VkRenderingAreaInfoKHR* pRenderingAreaInfo, VkExtent2D* pGranularity) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetRenderingAreaGranularityKHR!");
 }
@@ -7405,7 +7579,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetRenderingAreaGranularityKHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateCommandPool(VkDevice device, VkCommandPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateCommandPool!");
 }
@@ -7445,7 +7620,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyCommandPool(VkDevice device, VkCommandPool commandPool, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyCommandPool!");
 }
@@ -7478,7 +7654,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyCommandPool!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ResetCommandPool(VkDevice device, VkCommandPool commandPool, VkCommandPoolResetFlags flags) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkResetCommandPool!");
 }
@@ -7506,7 +7683,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AllocateCommandBuffers(VkDevice device, VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkAllocateCommandBuffers!");
 }
@@ -7538,7 +7716,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_FreeCommandBuffers(VkDevice device, VkCommandPool commandPool, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkFreeCommandBuffers!");
 }
@@ -7565,7 +7744,8 @@ winsockSendToUI(&ConnectSocket, "end_vkFreeCommandBuffers!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BeginCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferBeginInfo* pBeginInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkBeginCommandBuffer!");
 }
@@ -7604,7 +7784,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EndCommandBuffer(VkCommandBuffer commandBuffer) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkEndCommandBuffer!");
 }
@@ -7630,7 +7811,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ResetCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkResetCommandBuffer!");
 }
@@ -7657,7 +7839,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindPipeline(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindPipeline!");
 }
@@ -7682,7 +7865,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindPipeline!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetAttachmentFeedbackLoopEnableEXT(VkCommandBuffer commandBuffer, VkImageAspectFlags aspectMask) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetAttachmentFeedbackLoopEnableEXT!");
 }
@@ -7707,7 +7891,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetAttachmentFeedbackLoopEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetViewport(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, VkViewport* pViewports) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetViewport!");
 }
@@ -7741,7 +7926,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetViewport!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetScissor(VkCommandBuffer commandBuffer, uint32_t firstScissor, uint32_t scissorCount, VkRect2D* pScissors) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetScissor!");
 }
@@ -7771,7 +7957,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetScissor!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetLineWidth(VkCommandBuffer commandBuffer, float lineWidth) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetLineWidth!");
 }
@@ -7796,7 +7983,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetLineWidth!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthBias(VkCommandBuffer commandBuffer, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthBias!");
 }
@@ -7823,7 +8011,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthBias!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetBlendConstants(VkCommandBuffer commandBuffer, float* blendConstants) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetBlendConstants!");
 }
@@ -7848,7 +8037,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetBlendConstants!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthBounds(VkCommandBuffer commandBuffer, float minDepthBounds, float maxDepthBounds) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthBounds!");
 }
@@ -7874,7 +8064,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthBounds!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetStencilCompareMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t compareMask) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetStencilCompareMask!");
 }
@@ -7900,7 +8091,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetStencilCompareMask!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetStencilWriteMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t writeMask) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetStencilWriteMask!");
 }
@@ -7926,7 +8118,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetStencilWriteMask!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetStencilReference(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t reference) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetStencilReference!");
 }
@@ -7952,7 +8145,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetStencilReference!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindDescriptorSets(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t descriptorSetCount, VkDescriptorSet* pDescriptorSets, uint32_t dynamicOffsetCount, uint32_t* pDynamicOffsets) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindDescriptorSets!");
 }
@@ -7982,7 +8176,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindDescriptorSets!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindIndexBuffer(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkIndexType indexType) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindIndexBuffer!");
 }
@@ -8008,7 +8203,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindIndexBuffer!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindVertexBuffers(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, VkBuffer* pBuffers, VkDeviceSize* pOffsets) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindVertexBuffers!");
 }
@@ -8036,7 +8232,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindVertexBuffers!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDraw!");
 }
@@ -8064,7 +8261,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDraw!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndexed(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndexed!");
 }
@@ -8093,7 +8291,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndexed!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMultiEXT(VkCommandBuffer commandBuffer, uint32_t drawCount, VkMultiDrawInfoEXT* pVertexInfo, uint32_t instanceCount, uint32_t firstInstance, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMultiEXT!");
 }
@@ -8125,7 +8324,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMultiEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMultiIndexedEXT(VkCommandBuffer commandBuffer, uint32_t drawCount, VkMultiDrawIndexedInfoEXT* pIndexInfo, uint32_t instanceCount, uint32_t firstInstance, uint32_t stride, int32_t* pVertexOffset) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMultiIndexedEXT!");
 }
@@ -8159,7 +8359,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMultiIndexedEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndirect!");
 }
@@ -8187,7 +8388,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndirect!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndexedIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndexedIndirect!");
 }
@@ -8215,7 +8417,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndexedIndirect!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDispatch(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDispatch!");
 }
@@ -8242,7 +8445,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDispatch!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDispatchIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDispatchIndirect!");
 }
@@ -8268,7 +8472,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDispatchIndirect!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSubpassShadingHUAWEI(VkCommandBuffer commandBuffer) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSubpassShadingHUAWEI!");
 }
@@ -8292,7 +8497,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSubpassShadingHUAWEI!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawClusterHUAWEI(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawClusterHUAWEI!");
 }
@@ -8319,7 +8525,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawClusterHUAWEI!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawClusterIndirectHUAWEI(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawClusterIndirectHUAWEI!");
 }
@@ -8345,7 +8552,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawClusterIndirectHUAWEI!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdUpdatePipelineIndirectBufferNV(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdUpdatePipelineIndirectBufferNV!");
 }
@@ -8370,7 +8578,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdUpdatePipelineIndirectBufferNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyBuffer(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, VkBufferCopy* pRegions) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyBuffer!");
 }
@@ -8402,7 +8611,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyBuffer!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageCopy* pRegions) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyImage!");
 }
@@ -8436,7 +8646,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyImage!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBlitImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageBlit* pRegions, VkFilter filter) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBlitImage!");
 }
@@ -8469,7 +8680,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBlitImage!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkBufferImageCopy* pRegions) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyBufferToImage!");
 }
@@ -8504,7 +8716,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyBufferToImage!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyImageToBuffer(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, VkBufferImageCopy* pRegions) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyImageToBuffer!");
 }
@@ -8539,7 +8752,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyImageToBuffer!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyMemoryIndirectNV(VkCommandBuffer commandBuffer, VkDeviceAddress copyBufferAddress, uint32_t copyCount, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyMemoryIndirectNV!");
 }
@@ -8566,7 +8780,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyMemoryIndirectNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyMemoryToImageIndirectNV(VkCommandBuffer commandBuffer, VkDeviceAddress copyBufferAddress, uint32_t copyCount, uint32_t stride, VkImage dstImage, VkImageLayout dstImageLayout, VkImageSubresourceLayers* pImageSubresources) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyMemoryToImageIndirectNV!");
 }
@@ -8600,7 +8815,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyMemoryToImageIndirectNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdUpdateBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize dataSize, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdUpdateBuffer!");
 }
@@ -8628,7 +8844,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdUpdateBuffer!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdFillBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize size, uint32_t data) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdFillBuffer!");
 }
@@ -8656,7 +8873,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdFillBuffer!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdClearColorImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, VkClearColorValue* pColor, uint32_t rangeCount, VkImageSubresourceRange* pRanges) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdClearColorImage!");
 }
@@ -8690,7 +8908,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdClearColorImage!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdClearDepthStencilImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, VkClearDepthStencilValue* pDepthStencil, uint32_t rangeCount, VkImageSubresourceRange* pRanges) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdClearDepthStencilImage!");
 }
@@ -8727,7 +8946,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdClearDepthStencilImage!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdClearAttachments(VkCommandBuffer commandBuffer, uint32_t attachmentCount, VkClearAttachment* pAttachments, uint32_t rectCount, VkClearRect* pRects) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdClearAttachments!");
 }
@@ -8763,7 +8983,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdClearAttachments!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdResolveImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageResolve* pRegions) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdResolveImage!");
 }
@@ -8797,7 +9018,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdResolveImage!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetEvent!");
 }
@@ -8823,7 +9045,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetEvent!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdResetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdResetEvent!");
 }
@@ -8849,7 +9072,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdResetEvent!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWaitEvents(VkCommandBuffer commandBuffer, uint32_t eventCount, VkEvent* pEvents, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, uint32_t memoryBarrierCount, VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, VkImageMemoryBarrier* pImageMemoryBarriers) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdWaitEvents!");
 }
@@ -8904,7 +9128,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdWaitEvents!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPipelineBarrier(VkCommandBuffer commandBuffer, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags dependencyFlags, uint32_t memoryBarrierCount, VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, VkImageMemoryBarrier* pImageMemoryBarriers) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdPipelineBarrier!");
 }
@@ -8958,7 +9183,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdPipelineBarrier!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginQuery!");
 }
@@ -8985,7 +9211,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBeginQuery!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdEndQuery!");
 }
@@ -9011,7 +9238,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdEndQuery!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginConditionalRenderingEXT(VkCommandBuffer commandBuffer, VkConditionalRenderingBeginInfoEXT* pConditionalRenderingBegin) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginConditionalRenderingEXT!");
 }
@@ -9041,7 +9269,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBeginConditionalRenderingEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndConditionalRenderingEXT(VkCommandBuffer commandBuffer) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdEndConditionalRenderingEXT!");
 }
@@ -9065,7 +9294,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdEndConditionalRenderingEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdResetQueryPool(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdResetQueryPool!");
 }
@@ -9092,7 +9322,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdResetQueryPool!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteTimestamp(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkQueryPool queryPool, uint32_t query) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteTimestamp!");
 }
@@ -9118,7 +9349,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdWriteTimestamp!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyQueryPoolResults(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize stride, VkQueryResultFlags flags) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyQueryPoolResults!");
 }
@@ -9149,7 +9381,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyQueryPoolResults!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPushConstants(VkCommandBuffer commandBuffer, VkPipelineLayout layout, VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size, void* pValues) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdPushConstants!");
 }
@@ -9178,7 +9411,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdPushConstants!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginRenderPass(VkCommandBuffer commandBuffer, VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassContents contents) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginRenderPass!");
 }
@@ -9210,7 +9444,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBeginRenderPass!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdNextSubpass(VkCommandBuffer commandBuffer, VkSubpassContents contents) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdNextSubpass!");
 }
@@ -9234,7 +9469,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdNextSubpass!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndRenderPass(VkCommandBuffer commandBuffer) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdEndRenderPass!");
 }
@@ -9258,7 +9494,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdEndRenderPass!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdExecuteCommands(VkCommandBuffer commandBuffer, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdExecuteCommands!");
 }
@@ -9284,7 +9521,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdExecuteCommands!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateSharedSwapchainsKHR(VkDevice device, uint32_t swapchainCount, VkSwapchainCreateInfoKHR* pCreateInfos, VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchains) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateSharedSwapchainsKHR!");
 }
@@ -9334,7 +9572,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateSwapchainKHR(VkDevice device, VkSwapchainCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchain) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateSwapchainKHR!");
 }
@@ -9383,7 +9622,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroySwapchainKHR(VkDevice device, VkSwapchainKHR swapchain, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroySwapchainKHR!");
 }
@@ -9416,7 +9656,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroySwapchainKHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSwapchainImagesKHR(VkDevice device, VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetSwapchainImagesKHR!");
 }
@@ -9445,7 +9686,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireNextImageKHR(VkDevice device, VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkAcquireNextImageKHR!");
 }
@@ -9476,7 +9718,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueuePresentKHR(VkQueue queue, VkPresentInfoKHR* pPresentInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkQueuePresentKHR!");
 }
@@ -9510,7 +9753,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_DebugMarkerSetObjectNameEXT(VkDevice device, VkDebugMarkerObjectNameInfoEXT* pNameInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDebugMarkerSetObjectNameEXT!");
 }
@@ -9541,7 +9785,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_DebugMarkerSetObjectTagEXT(VkDevice device, VkDebugMarkerObjectTagInfoEXT* pTagInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDebugMarkerSetObjectTagEXT!");
 }
@@ -9574,7 +9819,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDebugMarkerBeginEXT(VkCommandBuffer commandBuffer, VkDebugMarkerMarkerInfoEXT* pMarkerInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDebugMarkerBeginEXT!");
 }
@@ -9603,7 +9849,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDebugMarkerBeginEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDebugMarkerEndEXT(VkCommandBuffer commandBuffer) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDebugMarkerEndEXT!");
 }
@@ -9627,7 +9874,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDebugMarkerEndEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDebugMarkerInsertEXT(VkCommandBuffer commandBuffer, VkDebugMarkerMarkerInfoEXT* pMarkerInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDebugMarkerInsertEXT!");
 }
@@ -9657,7 +9905,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDebugMarkerInsertEXT!");
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryWin32HandleNV(VkDevice device, VkDeviceMemory memory, VkExternalMemoryHandleTypeFlagsNV handleType, HANDLE* pHandle) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryWin32HandleNV!");
 }
@@ -9687,7 +9936,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdExecuteGeneratedCommandsNV(VkCommandBuffer commandBuffer, VkBool32 isPreprocessed, VkGeneratedCommandsInfoNV* pGeneratedCommandsInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdExecuteGeneratedCommandsNV!");
 }
@@ -9730,7 +9980,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdExecuteGeneratedCommandsNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPreprocessGeneratedCommandsNV(VkCommandBuffer commandBuffer, VkGeneratedCommandsInfoNV* pGeneratedCommandsInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdPreprocessGeneratedCommandsNV!");
 }
@@ -9772,7 +10023,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdPreprocessGeneratedCommandsNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindPipelineShaderGroupNV(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline, uint32_t groupIndex) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindPipelineShaderGroupNV!");
 }
@@ -9798,7 +10050,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindPipelineShaderGroupNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetGeneratedCommandsMemoryRequirementsNV(VkDevice device, VkGeneratedCommandsMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetGeneratedCommandsMemoryRequirementsNV!");
 }
@@ -9832,7 +10085,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetGeneratedCommandsMemoryRequirementsNV!
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateIndirectCommandsLayoutNV(VkDevice device, VkIndirectCommandsLayoutCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkIndirectCommandsLayoutNV* pIndirectCommandsLayout) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateIndirectCommandsLayoutNV!");
 }
@@ -9889,7 +10143,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyIndirectCommandsLayoutNV(VkDevice device, VkIndirectCommandsLayoutNV indirectCommandsLayout, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyIndirectCommandsLayoutNV!");
 }
@@ -9922,7 +10177,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyIndirectCommandsLayoutNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPushDescriptorSetKHR(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t set, uint32_t descriptorWriteCount, VkWriteDescriptorSet* pDescriptorWrites) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdPushDescriptorSetKHR!");
 }
@@ -9966,7 +10222,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdPushDescriptorSetKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_TrimCommandPool(VkDevice device, VkCommandPool commandPool, VkCommandPoolTrimFlags flags) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkTrimCommandPool!");
 }
@@ -9993,7 +10250,8 @@ winsockSendToUI(&ConnectSocket, "end_vkTrimCommandPool!");
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryWin32HandleKHR(VkDevice device, VkMemoryGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryWin32HandleKHR!");
 }
@@ -10026,7 +10284,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryWin32HandlePropertiesKHR(VkDevice device, VkExternalMemoryHandleTypeFlagBits handleType, HANDLE handle, VkMemoryWin32HandlePropertiesKHR* pMemoryWin32HandleProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryWin32HandlePropertiesKHR!");
 }
@@ -10058,7 +10317,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryFdKHR(VkDevice device, VkMemoryGetFdInfoKHR* pGetFdInfo, int* pFd) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryFdKHR!");
 }
@@ -10089,7 +10349,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryFdPropertiesKHR(VkDevice device, VkExternalMemoryHandleTypeFlagBits handleType, int fd, VkMemoryFdPropertiesKHR* pMemoryFdProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryFdPropertiesKHR!");
 }
@@ -10121,7 +10382,8 @@ return ret;
 
 #if defined(VK_USE_PLATFORM_FUCHSIA)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryZirconHandleFUCHSIA(VkDevice device, VkMemoryGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, zx_handle_t* pZirconHandle) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryZirconHandleFUCHSIA!");
 }
@@ -10154,7 +10416,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_FUCHSIA)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryZirconHandlePropertiesFUCHSIA(VkDevice device, VkExternalMemoryHandleTypeFlagBits handleType, zx_handle_t zirconHandle, VkMemoryZirconHandlePropertiesFUCHSIA* pMemoryZirconHandleProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryZirconHandlePropertiesFUCHSIA!");
 }
@@ -10186,7 +10449,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryRemoteAddressNV(VkDevice device, VkMemoryGetRemoteAddressInfoNV* pMemoryGetRemoteAddressInfo, VkRemoteAddressNV* pAddress) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryRemoteAddressNV!");
 }
@@ -10218,7 +10482,8 @@ return ret;
 
 #if defined(VK_USE_PLATFORM_SCI)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemorySciBufNV(VkDevice device, VkMemoryGetSciBufInfoNV* pGetSciBufInfo, NvSciBufObj* pHandle) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetMemorySciBufNV!");
 }
@@ -10251,7 +10516,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSemaphoreWin32HandleKHR(VkDevice device, VkSemaphoreGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetSemaphoreWin32HandleKHR!");
 }
@@ -10284,7 +10550,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportSemaphoreWin32HandleKHR(VkDevice device, VkImportSemaphoreWin32HandleInfoKHR* pImportSemaphoreWin32HandleInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkImportSemaphoreWin32HandleKHR!");
 }
@@ -10318,7 +10585,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSemaphoreFdKHR(VkDevice device, VkSemaphoreGetFdInfoKHR* pGetFdInfo, int* pFd) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetSemaphoreFdKHR!");
 }
@@ -10349,7 +10617,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportSemaphoreFdKHR(VkDevice device, VkImportSemaphoreFdInfoKHR* pImportSemaphoreFdInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkImportSemaphoreFdKHR!");
 }
@@ -10382,7 +10651,8 @@ return ret;
 
 #if defined(VK_USE_PLATFORM_FUCHSIA)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSemaphoreZirconHandleFUCHSIA(VkDevice device, VkSemaphoreGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, zx_handle_t* pZirconHandle) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetSemaphoreZirconHandleFUCHSIA!");
 }
@@ -10415,7 +10685,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_FUCHSIA)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportSemaphoreZirconHandleFUCHSIA(VkDevice device, VkImportSemaphoreZirconHandleInfoFUCHSIA* pImportSemaphoreZirconHandleInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkImportSemaphoreZirconHandleFUCHSIA!");
 }
@@ -10449,7 +10720,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetFenceWin32HandleKHR(VkDevice device, VkFenceGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetFenceWin32HandleKHR!");
 }
@@ -10482,7 +10754,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportFenceWin32HandleKHR(VkDevice device, VkImportFenceWin32HandleInfoKHR* pImportFenceWin32HandleInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkImportFenceWin32HandleKHR!");
 }
@@ -10516,7 +10789,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetFenceFdKHR(VkDevice device, VkFenceGetFdInfoKHR* pGetFdInfo, int* pFd) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetFenceFdKHR!");
 }
@@ -10547,7 +10821,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportFenceFdKHR(VkDevice device, VkImportFenceFdInfoKHR* pImportFenceFdInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkImportFenceFdKHR!");
 }
@@ -10580,7 +10855,8 @@ return ret;
 
 #if defined(VK_USE_PLATFORM_SCI)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetFenceSciSyncFenceNV(VkDevice device, VkFenceGetSciSyncInfoNV* pGetSciSyncHandleInfo, void* pHandle) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetFenceSciSyncFenceNV!");
 }
@@ -10613,7 +10889,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetFenceSciSyncObjNV(VkDevice device, VkFenceGetSciSyncInfoNV* pGetSciSyncHandleInfo, void* pHandle) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetFenceSciSyncObjNV!");
 }
@@ -10646,7 +10923,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportFenceSciSyncFenceNV(VkDevice device, VkImportFenceSciSyncInfoNV* pImportFenceSciSyncInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkImportFenceSciSyncFenceNV!");
 }
@@ -10679,7 +10957,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportFenceSciSyncObjNV(VkDevice device, VkImportFenceSciSyncInfoNV* pImportFenceSciSyncInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkImportFenceSciSyncObjNV!");
 }
@@ -10712,7 +10991,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSemaphoreSciSyncObjNV(VkDevice device, VkSemaphoreGetSciSyncInfoNV* pGetSciSyncInfo, void* pHandle) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetSemaphoreSciSyncObjNV!");
 }
@@ -10745,7 +11025,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportSemaphoreSciSyncObjNV(VkDevice device, VkImportSemaphoreSciSyncInfoNV* pImportSemaphoreSciSyncInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkImportSemaphoreSciSyncObjNV!");
 }
@@ -10778,7 +11059,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateSemaphoreSciSyncPoolNV(VkDevice device, VkSemaphoreSciSyncPoolCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSemaphoreSciSyncPoolNV* pSemaphorePool) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateSemaphoreSciSyncPoolNV!");
 }
@@ -10819,7 +11101,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroySemaphoreSciSyncPoolNV(VkDevice device, VkSemaphoreSciSyncPoolNV semaphorePool, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroySemaphoreSciSyncPoolNV!");
 }
@@ -10853,7 +11136,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroySemaphoreSciSyncPoolNV!");
 
 #endif
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_DisplayPowerControlEXT(VkDevice device, VkDisplayKHR display, VkDisplayPowerInfoEXT* pDisplayPowerInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDisplayPowerControlEXT!");
 }
@@ -10883,7 +11167,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_RegisterDeviceEventEXT(VkDevice device, VkDeviceEventInfoEXT* pDeviceEventInfo, VkAllocationCallbacks* pAllocator, VkFence* pFence) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkRegisterDeviceEventEXT!");
 }
@@ -10921,7 +11206,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_RegisterDisplayEventEXT(VkDevice device, VkDisplayKHR display, VkDisplayEventInfoEXT* pDisplayEventInfo, VkAllocationCallbacks* pAllocator, VkFence* pFence) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkRegisterDisplayEventEXT!");
 }
@@ -10960,7 +11246,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSwapchainCounterEXT(VkDevice device, VkSwapchainKHR swapchain, VkSurfaceCounterFlagBitsEXT counter, uint64_t* pCounterValue) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetSwapchainCounterEXT!");
 }
@@ -10988,7 +11275,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceGroupPeerMemoryFeatures(VkDevice device, uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceGroupPeerMemoryFeatures!");
 }
@@ -11016,7 +11304,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDeviceGroupPeerMemoryFeatures!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindBufferMemory2(VkDevice device, uint32_t bindInfoCount, VkBindBufferMemoryInfo* pBindInfos) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkBindBufferMemory2!");
 }
@@ -11049,7 +11338,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindImageMemory2(VkDevice device, uint32_t bindInfoCount, VkBindImageMemoryInfo* pBindInfos) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkBindImageMemory2!");
 }
@@ -11082,7 +11372,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDeviceMask(VkCommandBuffer commandBuffer, uint32_t deviceMask) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDeviceMask!");
 }
@@ -11107,7 +11398,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDeviceMask!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDeviceGroupPresentCapabilitiesKHR(VkDevice device, VkDeviceGroupPresentCapabilitiesKHR* pDeviceGroupPresentCapabilities) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceGroupPresentCapabilitiesKHR!");
 }
@@ -11138,7 +11430,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDeviceGroupSurfacePresentModesKHR(VkDevice device, VkSurfaceKHR surface, VkDeviceGroupPresentModeFlagsKHR* pModes) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceGroupSurfacePresentModesKHR!");
 }
@@ -11166,7 +11459,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireNextImage2KHR(VkDevice device, VkAcquireNextImageInfoKHR* pAcquireInfo, uint32_t* pImageIndex) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkAcquireNextImage2KHR!");
 }
@@ -11201,7 +11495,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDispatchBase(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDispatchBase!");
 }
@@ -11231,7 +11526,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDispatchBase!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDescriptorUpdateTemplate(VkDevice device, VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateDescriptorUpdateTemplate!");
 }
@@ -11281,7 +11577,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDescriptorUpdateTemplate(VkDevice device, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyDescriptorUpdateTemplate!");
 }
@@ -11314,7 +11611,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyDescriptorUpdateTemplate!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_UpdateDescriptorSetWithTemplate(VkDevice device, VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkUpdateDescriptorSetWithTemplate!");
 }
@@ -11341,7 +11639,8 @@ winsockSendToUI(&ConnectSocket, "end_vkUpdateDescriptorSetWithTemplate!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdPushDescriptorSetWithTemplateKHR!");
 }
@@ -11369,7 +11668,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdPushDescriptorSetWithTemplateKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_SetHdrMetadataEXT(VkDevice device, uint32_t swapchainCount, VkSwapchainKHR* pSwapchains, VkHdrMetadataEXT* pMetadata) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSetHdrMetadataEXT!");
 }
@@ -11406,7 +11706,8 @@ winsockSendToUI(&ConnectSocket, "end_vkSetHdrMetadataEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSwapchainStatusKHR(VkDevice device, VkSwapchainKHR swapchain) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetSwapchainStatusKHR!");
 }
@@ -11433,7 +11734,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetRefreshCycleDurationGOOGLE(VkDevice device, VkSwapchainKHR swapchain, VkRefreshCycleDurationGOOGLE* pDisplayTimingProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetRefreshCycleDurationGOOGLE!");
 }
@@ -11463,7 +11765,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPastPresentationTimingGOOGLE(VkDevice device, VkSwapchainKHR swapchain, uint32_t* pPresentationTimingCount, VkPastPresentationTimingGOOGLE* pPresentationTimings) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPastPresentationTimingGOOGLE!");
 }
@@ -11498,7 +11801,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetViewportWScalingNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, VkViewportWScalingNV* pViewportWScalings) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetViewportWScalingNV!");
 }
@@ -11528,7 +11832,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetViewportWScalingNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDiscardRectangleEXT(VkCommandBuffer commandBuffer, uint32_t firstDiscardRectangle, uint32_t discardRectangleCount, VkRect2D* pDiscardRectangles) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDiscardRectangleEXT!");
 }
@@ -11558,7 +11863,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDiscardRectangleEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDiscardRectangleEnableEXT(VkCommandBuffer commandBuffer, VkBool32 discardRectangleEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDiscardRectangleEnableEXT!");
 }
@@ -11583,7 +11889,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDiscardRectangleEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDiscardRectangleModeEXT(VkCommandBuffer commandBuffer, VkDiscardRectangleModeEXT discardRectangleMode) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDiscardRectangleModeEXT!");
 }
@@ -11607,7 +11914,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDiscardRectangleModeEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetSampleLocationsEXT(VkCommandBuffer commandBuffer, VkSampleLocationsInfoEXT* pSampleLocationsInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetSampleLocationsEXT!");
 }
@@ -11640,7 +11948,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetSampleLocationsEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetBufferMemoryRequirements2(VkDevice device, VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetBufferMemoryRequirements2!");
 }
@@ -11672,7 +11981,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetBufferMemoryRequirements2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageMemoryRequirements2(VkDevice device, VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetImageMemoryRequirements2!");
 }
@@ -11704,7 +12014,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetImageMemoryRequirements2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageSparseMemoryRequirements2(VkDevice device, VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetImageSparseMemoryRequirements2!");
 }
@@ -11737,7 +12048,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetImageSparseMemoryRequirements2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceBufferMemoryRequirements(VkDevice device, VkDeviceBufferMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceBufferMemoryRequirements!");
 }
@@ -11776,7 +12088,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDeviceBufferMemoryRequirements!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceImageMemoryRequirements(VkDevice device, VkDeviceImageMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceImageMemoryRequirements!");
 }
@@ -11817,7 +12130,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDeviceImageMemoryRequirements!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceImageSparseMemoryRequirements(VkDevice device, VkDeviceImageMemoryRequirements* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceImageSparseMemoryRequirements!");
 }
@@ -11859,7 +12173,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDeviceImageSparseMemoryRequirements!")
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateSamplerYcbcrConversion(VkDevice device, VkSamplerYcbcrConversionCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateSamplerYcbcrConversion!");
 }
@@ -11899,7 +12214,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroySamplerYcbcrConversion(VkDevice device, VkSamplerYcbcrConversion ycbcrConversion, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroySamplerYcbcrConversion!");
 }
@@ -11932,7 +12248,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroySamplerYcbcrConversion!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceQueue2(VkDevice device, VkDeviceQueueInfo2* pQueueInfo, VkQueue* pQueue) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceQueue2!");
 }
@@ -11963,7 +12280,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDeviceQueue2!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateValidationCacheEXT(VkDevice device, VkValidationCacheCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkValidationCacheEXT* pValidationCache) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateValidationCacheEXT!");
 }
@@ -12004,7 +12322,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyValidationCacheEXT(VkDevice device, VkValidationCacheEXT validationCache, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyValidationCacheEXT!");
 }
@@ -12037,7 +12356,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyValidationCacheEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetValidationCacheDataEXT(VkDevice device, VkValidationCacheEXT validationCache, size_t* pDataSize, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetValidationCacheDataEXT!");
 }
@@ -12066,7 +12386,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_MergeValidationCachesEXT(VkDevice device, VkValidationCacheEXT dstCache, uint32_t srcCacheCount, VkValidationCacheEXT* pSrcCaches) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkMergeValidationCachesEXT!");
 }
@@ -12095,7 +12416,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDescriptorSetLayoutSupport(VkDevice device, VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDescriptorSetLayoutSupport!");
 }
@@ -12135,7 +12457,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDescriptorSetLayoutSupport!");
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSwapchainGrallocUsageANDROID(VkDevice device, VkFormat format, VkImageUsageFlags imageUsage, int* grallocUsage) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetSwapchainGrallocUsageANDROID!");
 }
@@ -12165,7 +12488,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSwapchainGrallocUsage2ANDROID(VkDevice device, VkFormat format, VkImageUsageFlags imageUsage, VkSwapchainImageUsageFlagsANDROID swapchainImageUsage, uint64_t* grallocConsumerUsage, uint64_t* grallocProducerUsage) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetSwapchainGrallocUsage2ANDROID!");
 }
@@ -12197,7 +12521,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireImageANDROID(VkDevice device, VkImage image, int nativeFenceFd, VkSemaphore semaphore, VkFence fence) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkAcquireImageANDROID!");
 }
@@ -12229,7 +12554,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueueSignalReleaseImageANDROID(VkQueue queue, uint32_t waitSemaphoreCount, VkSemaphore* pWaitSemaphores, VkImage image, int* pNativeFenceFd) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkQueueSignalReleaseImageANDROID!");
 }
@@ -12260,7 +12586,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetShaderInfoAMD(VkDevice device, VkPipeline pipeline, VkShaderStageFlagBits shaderStage, VkShaderInfoTypeAMD infoType, size_t* pInfoSize, void* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetShaderInfoAMD!");
 }
@@ -12289,7 +12616,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_SetLocalDimmingAMD(VkDevice device, VkSwapchainKHR swapChain, VkBool32 localDimmingEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSetLocalDimmingAMD!");
 }
@@ -12315,7 +12643,8 @@ winsockSendToUI(&ConnectSocket, "end_vkSetLocalDimmingAMD!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetCalibratedTimestampsKHR(VkDevice device, uint32_t timestampCount, VkCalibratedTimestampInfoKHR* pTimestampInfos, uint64_t* pTimestamps, uint64_t* pMaxDeviation) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetCalibratedTimestampsKHR!");
 }
@@ -12347,7 +12676,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetDebugUtilsObjectNameEXT(VkDevice device, VkDebugUtilsObjectNameInfoEXT* pNameInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSetDebugUtilsObjectNameEXT!");
 }
@@ -12378,7 +12708,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetDebugUtilsObjectTagEXT(VkDevice device, VkDebugUtilsObjectTagInfoEXT* pTagInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSetDebugUtilsObjectTagEXT!");
 }
@@ -12411,7 +12742,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_QueueBeginDebugUtilsLabelEXT(VkQueue queue, VkDebugUtilsLabelEXT* pLabelInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkQueueBeginDebugUtilsLabelEXT!");
 }
@@ -12440,7 +12772,8 @@ winsockSendToUI(&ConnectSocket, "end_vkQueueBeginDebugUtilsLabelEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_QueueEndDebugUtilsLabelEXT(VkQueue queue) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkQueueEndDebugUtilsLabelEXT!");
 }
@@ -12464,7 +12797,8 @@ winsockSendToUI(&ConnectSocket, "end_vkQueueEndDebugUtilsLabelEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_QueueInsertDebugUtilsLabelEXT(VkQueue queue, VkDebugUtilsLabelEXT* pLabelInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkQueueInsertDebugUtilsLabelEXT!");
 }
@@ -12493,7 +12827,8 @@ winsockSendToUI(&ConnectSocket, "end_vkQueueInsertDebugUtilsLabelEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, VkDebugUtilsLabelEXT* pLabelInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginDebugUtilsLabelEXT!");
 }
@@ -12522,7 +12857,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBeginDebugUtilsLabelEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndDebugUtilsLabelEXT(VkCommandBuffer commandBuffer) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdEndDebugUtilsLabelEXT!");
 }
@@ -12546,7 +12882,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdEndDebugUtilsLabelEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdInsertDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, VkDebugUtilsLabelEXT* pLabelInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdInsertDebugUtilsLabelEXT!");
 }
@@ -12575,7 +12912,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdInsertDebugUtilsLabelEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryHostPointerPropertiesEXT(VkDevice device, VkExternalMemoryHandleTypeFlagBits handleType, void* pHostPointer, VkMemoryHostPointerPropertiesEXT* pMemoryHostPointerProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryHostPointerPropertiesEXT!");
 }
@@ -12606,7 +12944,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteBufferMarkerAMD(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteBufferMarkerAMD!");
 }
@@ -12633,7 +12972,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdWriteBufferMarkerAMD!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateRenderPass2(VkDevice device, VkRenderPassCreateInfo2* pCreateInfo, VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateRenderPass2!");
 }
@@ -12721,7 +13061,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginRenderPass2(VkCommandBuffer commandBuffer, VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassBeginInfo* pSubpassBeginInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginRenderPass2!");
 }
@@ -12756,7 +13097,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBeginRenderPass2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdNextSubpass2(VkCommandBuffer commandBuffer, VkSubpassBeginInfo* pSubpassBeginInfo, VkSubpassEndInfo* pSubpassEndInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdNextSubpass2!");
 }
@@ -12786,7 +13128,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdNextSubpass2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndRenderPass2(VkCommandBuffer commandBuffer, VkSubpassEndInfo* pSubpassEndInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdEndRenderPass2!");
 }
@@ -12813,7 +13156,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdEndRenderPass2!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSemaphoreCounterValue(VkDevice device, VkSemaphore semaphore, uint64_t* pValue) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetSemaphoreCounterValue!");
 }
@@ -12841,7 +13185,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_WaitSemaphores(VkDevice device, VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkWaitSemaphores!");
 }
@@ -12875,7 +13220,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SignalSemaphore(VkDevice device, VkSemaphoreSignalInfo* pSignalInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSignalSemaphore!");
 }
@@ -12907,7 +13253,8 @@ return ret;
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetAndroidHardwareBufferPropertiesANDROID(VkDevice device, AHardwareBuffer* buffer, VkAndroidHardwareBufferPropertiesANDROID* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetAndroidHardwareBufferPropertiesANDROID!");
 }
@@ -12941,7 +13288,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryAndroidHardwareBufferANDROID(VkDevice device, VkMemoryGetAndroidHardwareBufferInfoANDROID* pInfo, AHardwareBuffer* pBuffer) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetMemoryAndroidHardwareBufferANDROID!");
 }
@@ -12973,7 +13321,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndirectCount!");
 }
@@ -13003,7 +13352,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndirectCount!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndexedIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndexedIndirectCount!");
 }
@@ -13033,7 +13383,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndexedIndirectCount!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCheckpointNV(VkCommandBuffer commandBuffer, void* pCheckpointMarker) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCheckpointNV!");
 }
@@ -13058,7 +13409,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetCheckpointNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetQueueCheckpointDataNV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointDataNV* pCheckpointData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetQueueCheckpointDataNV!");
 }
@@ -13087,7 +13439,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetQueueCheckpointDataNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindTransformFeedbackBuffersEXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, VkBuffer* pBuffers, VkDeviceSize* pOffsets, VkDeviceSize* pSizes) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindTransformFeedbackBuffersEXT!");
 }
@@ -13116,7 +13469,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindTransformFeedbackBuffersEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginTransformFeedbackEXT(VkCommandBuffer commandBuffer, uint32_t firstCounterBuffer, uint32_t counterBufferCount, VkBuffer* pCounterBuffers, VkDeviceSize* pCounterBufferOffsets) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginTransformFeedbackEXT!");
 }
@@ -13144,7 +13498,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBeginTransformFeedbackEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndTransformFeedbackEXT(VkCommandBuffer commandBuffer, uint32_t firstCounterBuffer, uint32_t counterBufferCount, VkBuffer* pCounterBuffers, VkDeviceSize* pCounterBufferOffsets) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdEndTransformFeedbackEXT!");
 }
@@ -13172,7 +13527,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdEndTransformFeedbackEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginQueryIndexedEXT(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags, uint32_t index) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginQueryIndexedEXT!");
 }
@@ -13200,7 +13556,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBeginQueryIndexedEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndQueryIndexedEXT(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, uint32_t index) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdEndQueryIndexedEXT!");
 }
@@ -13227,7 +13584,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdEndQueryIndexedEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndirectByteCountEXT(VkCommandBuffer commandBuffer, uint32_t instanceCount, uint32_t firstInstance, VkBuffer counterBuffer, VkDeviceSize counterBufferOffset, uint32_t counterOffset, uint32_t vertexStride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndirectByteCountEXT!");
 }
@@ -13257,7 +13615,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndirectByteCountEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetExclusiveScissorNV(VkCommandBuffer commandBuffer, uint32_t firstExclusiveScissor, uint32_t exclusiveScissorCount, VkRect2D* pExclusiveScissors) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetExclusiveScissorNV!");
 }
@@ -13287,7 +13646,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetExclusiveScissorNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetExclusiveScissorEnableNV(VkCommandBuffer commandBuffer, uint32_t firstExclusiveScissor, uint32_t exclusiveScissorCount, VkBool32* pExclusiveScissorEnables) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetExclusiveScissorEnableNV!");
 }
@@ -13314,7 +13674,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetExclusiveScissorEnableNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindShadingRateImageNV(VkCommandBuffer commandBuffer, VkImageView imageView, VkImageLayout imageLayout) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindShadingRateImageNV!");
 }
@@ -13339,7 +13700,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindShadingRateImageNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetViewportShadingRatePaletteNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, VkShadingRatePaletteNV* pShadingRatePalettes) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetViewportShadingRatePaletteNV!");
 }
@@ -13369,7 +13731,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetViewportShadingRatePaletteNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCoarseSampleOrderNV(VkCommandBuffer commandBuffer, VkCoarseSampleOrderTypeNV sampleOrderType, uint32_t customSampleOrderCount, VkCoarseSampleOrderCustomNV* pCustomSampleOrders) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCoarseSampleOrderNV!");
 }
@@ -13403,7 +13766,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetCoarseSampleOrderNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMeshTasksNV(VkCommandBuffer commandBuffer, uint32_t taskCount, uint32_t firstTask) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMeshTasksNV!");
 }
@@ -13429,7 +13793,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMeshTasksNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMeshTasksIndirectNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMeshTasksIndirectNV!");
 }
@@ -13457,7 +13822,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMeshTasksIndirectNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMeshTasksIndirectCountNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMeshTasksIndirectCountNV!");
 }
@@ -13487,7 +13853,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMeshTasksIndirectCountNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMeshTasksEXT(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMeshTasksEXT!");
 }
@@ -13514,7 +13881,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMeshTasksEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMeshTasksIndirectEXT(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMeshTasksIndirectEXT!");
 }
@@ -13542,7 +13910,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMeshTasksIndirectEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMeshTasksIndirectCountEXT(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawMeshTasksIndirectCountEXT!");
 }
@@ -13572,7 +13941,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMeshTasksIndirectCountEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CompileDeferredNV(VkDevice device, VkPipeline pipeline, uint32_t shader) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCompileDeferredNV!");
 }
@@ -13600,7 +13970,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateAccelerationStructureNV(VkDevice device, VkAccelerationStructureCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkAccelerationStructureNV* pAccelerationStructure) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateAccelerationStructureNV!");
 }
@@ -13640,7 +14011,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindInvocationMaskHUAWEI(VkCommandBuffer commandBuffer, VkImageView imageView, VkImageLayout imageLayout) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindInvocationMaskHUAWEI!");
 }
@@ -13665,7 +14037,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindInvocationMaskHUAWEI!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyAccelerationStructureKHR(VkDevice device, VkAccelerationStructureKHR accelerationStructure, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyAccelerationStructureKHR!");
 }
@@ -13698,7 +14071,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyAccelerationStructureKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyAccelerationStructureNV(VkDevice device, VkAccelerationStructureNV accelerationStructure, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyAccelerationStructureNV!");
 }
@@ -13731,7 +14105,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyAccelerationStructureNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetAccelerationStructureMemoryRequirementsNV(VkDevice device, VkAccelerationStructureMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetAccelerationStructureMemoryRequirementsNV!");
 }
@@ -13761,7 +14136,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetAccelerationStructureMemoryRequirement
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindAccelerationStructureMemoryNV(VkDevice device, uint32_t bindInfoCount, VkBindAccelerationStructureMemoryInfoNV* pBindInfos) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkBindAccelerationStructureMemoryNV!");
 }
@@ -13796,7 +14172,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkCopyAccelerationStructureModeKHR mode) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyAccelerationStructureNV!");
 }
@@ -13822,7 +14199,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyAccelerationStructureNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyAccelerationStructureKHR(VkCommandBuffer commandBuffer, VkCopyAccelerationStructureInfoKHR* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyAccelerationStructureKHR!");
 }
@@ -13851,7 +14229,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyAccelerationStructureKHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyAccelerationStructureKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyAccelerationStructureInfoKHR* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCopyAccelerationStructureKHR!");
 }
@@ -13883,7 +14262,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyAccelerationStructureToMemoryKHR(VkCommandBuffer commandBuffer, VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyAccelerationStructureToMemoryKHR!");
 }
@@ -13912,7 +14292,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyAccelerationStructureToMemoryKHR!"
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyAccelerationStructureToMemoryKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCopyAccelerationStructureToMemoryKHR!");
 }
@@ -13944,7 +14325,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyMemoryToAccelerationStructureKHR(VkCommandBuffer commandBuffer, VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyMemoryToAccelerationStructureKHR!");
 }
@@ -13973,7 +14355,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyMemoryToAccelerationStructureKHR!"
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyMemoryToAccelerationStructureKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCopyMemoryToAccelerationStructureKHR!");
 }
@@ -14005,7 +14388,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteAccelerationStructuresPropertiesKHR(VkCommandBuffer commandBuffer, uint32_t accelerationStructureCount, VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteAccelerationStructuresPropertiesKHR!");
 }
@@ -14033,7 +14417,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdWriteAccelerationStructuresPropertiesK
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteAccelerationStructuresPropertiesNV(VkCommandBuffer commandBuffer, uint32_t accelerationStructureCount, VkAccelerationStructureNV* pAccelerationStructures, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteAccelerationStructuresPropertiesNV!");
 }
@@ -14061,7 +14446,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdWriteAccelerationStructuresPropertiesN
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBuildAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureInfoNV* pInfo, VkBuffer instanceData, VkDeviceSize instanceOffset, VkBool32 update, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkBuffer scratch, VkDeviceSize scratchOffset) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBuildAccelerationStructureNV!");
 }
@@ -14104,7 +14490,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBuildAccelerationStructureNV!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_WriteAccelerationStructuresPropertiesKHR(VkDevice device, uint32_t accelerationStructureCount, VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, size_t dataSize, void* pData, size_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkWriteAccelerationStructuresPropertiesKHR!");
 }
@@ -14135,7 +14522,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdTraceRaysKHR(VkCommandBuffer commandBuffer, VkStridedDeviceAddressRegionKHR* pRaygenShaderBindingTable, VkStridedDeviceAddressRegionKHR* pMissShaderBindingTable, VkStridedDeviceAddressRegionKHR* pHitShaderBindingTable, VkStridedDeviceAddressRegionKHR* pCallableShaderBindingTable, uint32_t width, uint32_t height, uint32_t depth) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdTraceRaysKHR!");
 }
@@ -14182,7 +14570,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdTraceRaysKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdTraceRaysNV(VkCommandBuffer commandBuffer, VkBuffer raygenShaderBindingTableBuffer, VkDeviceSize raygenShaderBindingOffset, VkBuffer missShaderBindingTableBuffer, VkDeviceSize missShaderBindingOffset, VkDeviceSize missShaderBindingStride, VkBuffer hitShaderBindingTableBuffer, VkDeviceSize hitShaderBindingOffset, VkDeviceSize hitShaderBindingStride, VkBuffer callableShaderBindingTableBuffer, VkDeviceSize callableShaderBindingOffset, VkDeviceSize callableShaderBindingStride, uint32_t width, uint32_t height, uint32_t depth) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdTraceRaysNV!");
 }
@@ -14220,7 +14609,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdTraceRaysNV!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetRayTracingShaderGroupHandlesKHR(VkDevice device, VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetRayTracingShaderGroupHandlesKHR!");
 }
@@ -14251,7 +14641,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetRayTracingCaptureReplayShaderGroupHandlesKHR(VkDevice device, VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR!");
 }
@@ -14282,7 +14673,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetAccelerationStructureHandleNV(VkDevice device, VkAccelerationStructureNV accelerationStructure, size_t dataSize, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetAccelerationStructureHandleNV!");
 }
@@ -14311,7 +14703,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateRayTracingPipelinesNV(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkRayTracingPipelineCreateInfoNV* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateRayTracingPipelinesNV!");
 }
@@ -14377,7 +14770,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateRayTracingPipelinesKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkRayTracingPipelineCreateInfoKHR* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateRayTracingPipelinesKHR!");
 }
@@ -14461,7 +14855,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdTraceRaysIndirectKHR(VkCommandBuffer commandBuffer, VkStridedDeviceAddressRegionKHR* pRaygenShaderBindingTable, VkStridedDeviceAddressRegionKHR* pMissShaderBindingTable, VkStridedDeviceAddressRegionKHR* pHitShaderBindingTable, VkStridedDeviceAddressRegionKHR* pCallableShaderBindingTable, VkDeviceAddress indirectDeviceAddress) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdTraceRaysIndirectKHR!");
 }
@@ -14506,7 +14901,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdTraceRaysIndirectKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdTraceRaysIndirect2KHR(VkCommandBuffer commandBuffer, VkDeviceAddress indirectDeviceAddress) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdTraceRaysIndirect2KHR!");
 }
@@ -14531,7 +14927,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdTraceRaysIndirect2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceAccelerationStructureCompatibilityKHR(VkDevice device, VkAccelerationStructureVersionInfoKHR* pVersionInfo, VkAccelerationStructureCompatibilityKHR* pCompatibility) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceAccelerationStructureCompatibilityKHR!");
 }
@@ -14560,7 +14957,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDeviceAccelerationStructureCompatibili
 }
 
  VK_LAYER_EXPORT VkDeviceSize VKAPI_CALL DetailsLayer_GetRayTracingShaderGroupStackSizeKHR(VkDevice device, VkPipeline pipeline, uint32_t group, VkShaderGroupShaderKHR groupShader) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetRayTracingShaderGroupStackSizeKHR!");
 }
@@ -14588,7 +14986,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetRayTracingPipelineStackSizeKHR(VkCommandBuffer commandBuffer, uint32_t pipelineStackSize) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetRayTracingPipelineStackSizeKHR!");
 }
@@ -14613,7 +15012,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetRayTracingPipelineStackSizeKHR!");
 }
 
  VK_LAYER_EXPORT uint32_t VKAPI_CALL DetailsLayer_GetImageViewHandleNVX(VkDevice device, VkImageViewHandleInfoNVX* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetImageViewHandleNVX!");
 }
@@ -14644,7 +15044,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetImageViewAddressNVX(VkDevice device, VkImageView imageView, VkImageViewAddressPropertiesNVX* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetImageViewAddressNVX!");
 }
@@ -14677,7 +15078,8 @@ return ret;
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDeviceGroupSurfacePresentModes2EXT(VkDevice device, VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, VkDeviceGroupPresentModeFlagsKHR* pModes) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceGroupSurfacePresentModes2EXT!");
 }
@@ -14710,7 +15112,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireFullScreenExclusiveModeEXT(VkDevice device, VkSwapchainKHR swapchain) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkAcquireFullScreenExclusiveModeEXT!");
 }
@@ -14739,7 +15142,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ReleaseFullScreenExclusiveModeEXT(VkDevice device, VkSwapchainKHR swapchain) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkReleaseFullScreenExclusiveModeEXT!");
 }
@@ -14767,7 +15171,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireProfilingLockKHR(VkDevice device, VkAcquireProfilingLockInfoKHR* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkAcquireProfilingLockKHR!");
 }
@@ -14798,7 +15203,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_ReleaseProfilingLockKHR(VkDevice device) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkReleaseProfilingLockKHR!");
 }
@@ -14822,7 +15228,8 @@ winsockSendToUI(&ConnectSocket, "end_vkReleaseProfilingLockKHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetImageDrmFormatModifierPropertiesEXT(VkDevice device, VkImage image, VkImageDrmFormatModifierPropertiesEXT* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetImageDrmFormatModifierPropertiesEXT!");
 }
@@ -14853,7 +15260,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT uint64_t VKAPI_CALL DetailsLayer_GetBufferOpaqueCaptureAddress(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetBufferOpaqueCaptureAddress!");
 }
@@ -14883,7 +15291,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DetailsLayer_GetBufferDeviceAddress(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetBufferDeviceAddress!");
 }
@@ -14913,7 +15322,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_InitializePerformanceApiINTEL(VkDevice device, VkInitializePerformanceApiInfoINTEL* pInitializeInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkInitializePerformanceApiINTEL!");
 }
@@ -14943,7 +15353,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_UninitializePerformanceApiINTEL(VkDevice device) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkUninitializePerformanceApiINTEL!");
 }
@@ -14967,7 +15378,8 @@ winsockSendToUI(&ConnectSocket, "end_vkUninitializePerformanceApiINTEL!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CmdSetPerformanceMarkerINTEL(VkCommandBuffer commandBuffer, VkPerformanceMarkerInfoINTEL* pMarkerInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPerformanceMarkerINTEL!");
 }
@@ -14997,7 +15409,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CmdSetPerformanceStreamMarkerINTEL(VkCommandBuffer commandBuffer, VkPerformanceStreamMarkerInfoINTEL* pMarkerInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPerformanceStreamMarkerINTEL!");
 }
@@ -15027,7 +15440,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CmdSetPerformanceOverrideINTEL(VkCommandBuffer commandBuffer, VkPerformanceOverrideInfoINTEL* pOverrideInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPerformanceOverrideINTEL!");
 }
@@ -15058,7 +15472,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquirePerformanceConfigurationINTEL(VkDevice device, VkPerformanceConfigurationAcquireInfoINTEL* pAcquireInfo, VkPerformanceConfigurationINTEL* pConfiguration) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkAcquirePerformanceConfigurationINTEL!");
 }
@@ -15088,7 +15503,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ReleasePerformanceConfigurationINTEL(VkDevice device, VkPerformanceConfigurationINTEL configuration) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkReleasePerformanceConfigurationINTEL!");
 }
@@ -15115,7 +15531,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueueSetPerformanceConfigurationINTEL(VkQueue queue, VkPerformanceConfigurationINTEL configuration) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkQueueSetPerformanceConfigurationINTEL!");
 }
@@ -15142,7 +15559,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPerformanceParameterINTEL(VkDevice device, VkPerformanceParameterTypeINTEL parameter, VkPerformanceValueINTEL* pValue) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPerformanceParameterINTEL!");
 }
@@ -15171,7 +15589,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT uint64_t VKAPI_CALL DetailsLayer_GetDeviceMemoryOpaqueCaptureAddress(VkDevice device, VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceMemoryOpaqueCaptureAddress!");
 }
@@ -15201,7 +15620,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPipelineExecutablePropertiesKHR(VkDevice device, VkPipelineInfoKHR* pPipelineInfo, uint32_t* pExecutableCount, VkPipelineExecutablePropertiesKHR* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPipelineExecutablePropertiesKHR!");
 }
@@ -15239,7 +15659,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPipelineExecutableStatisticsKHR(VkDevice device, VkPipelineExecutableInfoKHR* pExecutableInfo, uint32_t* pStatisticCount, VkPipelineExecutableStatisticKHR* pStatistics) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPipelineExecutableStatisticsKHR!");
 }
@@ -15277,7 +15698,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPipelineExecutableInternalRepresentationsKHR(VkDevice device, VkPipelineExecutableInfoKHR* pExecutableInfo, uint32_t* pInternalRepresentationCount, VkPipelineExecutableInternalRepresentationKHR* pInternalRepresentations) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPipelineExecutableInternalRepresentationsKHR!");
 }
@@ -15317,7 +15739,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateAccelerationStructureKHR(VkDevice device, VkAccelerationStructureCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkAccelerationStructureKHR* pAccelerationStructure) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateAccelerationStructureKHR!");
 }
@@ -15360,7 +15783,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBuildAccelerationStructuresKHR(VkCommandBuffer commandBuffer, uint32_t infoCount, VkAccelerationStructureBuildGeometryInfoKHR* pInfos, VkAccelerationStructureBuildRangeInfoKHR** ppBuildRangeInfos) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBuildAccelerationStructuresKHR!");
 }
@@ -15399,7 +15823,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBuildAccelerationStructuresKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBuildAccelerationStructuresIndirectKHR(VkCommandBuffer commandBuffer, uint32_t infoCount, VkAccelerationStructureBuildGeometryInfoKHR* pInfos, VkDeviceAddress* pIndirectDeviceAddresses, uint32_t* pIndirectStrides, uint32_t** ppMaxPrimitiveCounts) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBuildAccelerationStructuresIndirectKHR!");
 }
@@ -15440,7 +15865,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBuildAccelerationStructuresIndirectKHR
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BuildAccelerationStructuresKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, uint32_t infoCount, VkAccelerationStructureBuildGeometryInfoKHR* pInfos, VkAccelerationStructureBuildRangeInfoKHR** ppBuildRangeInfos) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkBuildAccelerationStructuresKHR!");
 }
@@ -15482,7 +15908,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DetailsLayer_GetAccelerationStructureDeviceAddressKHR(VkDevice device, VkAccelerationStructureDeviceAddressInfoKHR* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetAccelerationStructureDeviceAddressKHR!");
 }
@@ -15512,7 +15939,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDeferredOperationKHR(VkDevice device, VkAllocationCallbacks* pAllocator, VkDeferredOperationKHR* pDeferredOperation) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateDeferredOperationKHR!");
 }
@@ -15547,7 +15975,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDeferredOperationKHR(VkDevice device, VkDeferredOperationKHR operation, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyDeferredOperationKHR!");
 }
@@ -15580,7 +16009,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyDeferredOperationKHR!");
 }
 
  VK_LAYER_EXPORT uint32_t VKAPI_CALL DetailsLayer_GetDeferredOperationMaxConcurrencyKHR(VkDevice device, VkDeferredOperationKHR operation) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeferredOperationMaxConcurrencyKHR!");
 }
@@ -15607,7 +16037,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDeferredOperationResultKHR(VkDevice device, VkDeferredOperationKHR operation) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeferredOperationResultKHR!");
 }
@@ -15634,7 +16065,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_DeferredOperationJoinKHR(VkDevice device, VkDeferredOperationKHR operation) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDeferredOperationJoinKHR!");
 }
@@ -15661,7 +16093,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPipelineIndirectMemoryRequirementsNV(VkDevice device, VkComputePipelineCreateInfo* pCreateInfo, VkMemoryRequirements2* pMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPipelineIndirectMemoryRequirementsNV!");
 }
@@ -15697,7 +16130,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPipelineIndirectMemoryRequirementsNV!"
 }
 
  VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DetailsLayer_GetPipelineIndirectDeviceAddressNV(VkDevice device, VkPipelineIndirectDeviceAddressInfoNV* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPipelineIndirectDeviceAddressNV!");
 }
@@ -15727,7 +16161,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCullMode(VkCommandBuffer commandBuffer, VkCullModeFlags cullMode) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCullMode!");
 }
@@ -15752,7 +16187,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetCullMode!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetFrontFace(VkCommandBuffer commandBuffer, VkFrontFace frontFace) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetFrontFace!");
 }
@@ -15776,7 +16212,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetFrontFace!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetPrimitiveTopology(VkCommandBuffer commandBuffer, VkPrimitiveTopology primitiveTopology) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPrimitiveTopology!");
 }
@@ -15800,7 +16237,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetPrimitiveTopology!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetViewportWithCount(VkCommandBuffer commandBuffer, uint32_t viewportCount, VkViewport* pViewports) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetViewportWithCount!");
 }
@@ -15833,7 +16271,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetViewportWithCount!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetScissorWithCount(VkCommandBuffer commandBuffer, uint32_t scissorCount, VkRect2D* pScissors) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetScissorWithCount!");
 }
@@ -15862,7 +16301,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetScissorWithCount!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindIndexBuffer2KHR(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkDeviceSize size, VkIndexType indexType) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindIndexBuffer2KHR!");
 }
@@ -15889,7 +16329,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindIndexBuffer2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindVertexBuffers2(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, VkBuffer* pBuffers, VkDeviceSize* pOffsets, VkDeviceSize* pSizes, VkDeviceSize* pStrides) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindVertexBuffers2!");
 }
@@ -15919,7 +16360,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindVertexBuffers2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthTestEnable(VkCommandBuffer commandBuffer, VkBool32 depthTestEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthTestEnable!");
 }
@@ -15944,7 +16386,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthTestEnable!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthWriteEnable(VkCommandBuffer commandBuffer, VkBool32 depthWriteEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthWriteEnable!");
 }
@@ -15969,7 +16412,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthWriteEnable!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthCompareOp(VkCommandBuffer commandBuffer, VkCompareOp depthCompareOp) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthCompareOp!");
 }
@@ -15993,7 +16437,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthCompareOp!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthBoundsTestEnable(VkCommandBuffer commandBuffer, VkBool32 depthBoundsTestEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthBoundsTestEnable!");
 }
@@ -16018,7 +16463,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthBoundsTestEnable!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetStencilTestEnable(VkCommandBuffer commandBuffer, VkBool32 stencilTestEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetStencilTestEnable!");
 }
@@ -16043,7 +16489,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetStencilTestEnable!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetStencilOp(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp, VkCompareOp compareOp) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetStencilOp!");
 }
@@ -16068,7 +16515,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetStencilOp!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetPatchControlPointsEXT(VkCommandBuffer commandBuffer, uint32_t patchControlPoints) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPatchControlPointsEXT!");
 }
@@ -16093,7 +16541,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetPatchControlPointsEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetRasterizerDiscardEnable(VkCommandBuffer commandBuffer, VkBool32 rasterizerDiscardEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetRasterizerDiscardEnable!");
 }
@@ -16118,7 +16567,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetRasterizerDiscardEnable!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthBiasEnable(VkCommandBuffer commandBuffer, VkBool32 depthBiasEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthBiasEnable!");
 }
@@ -16143,7 +16593,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthBiasEnable!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetLogicOpEXT(VkCommandBuffer commandBuffer, VkLogicOp logicOp) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetLogicOpEXT!");
 }
@@ -16167,7 +16618,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetLogicOpEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetPrimitiveRestartEnable(VkCommandBuffer commandBuffer, VkBool32 primitiveRestartEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPrimitiveRestartEnable!");
 }
@@ -16192,7 +16644,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetPrimitiveRestartEnable!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetTessellationDomainOriginEXT(VkCommandBuffer commandBuffer, VkTessellationDomainOrigin domainOrigin) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetTessellationDomainOriginEXT!");
 }
@@ -16216,7 +16669,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetTessellationDomainOriginEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthClampEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthClampEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthClampEnableEXT!");
 }
@@ -16241,7 +16695,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthClampEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetPolygonModeEXT(VkCommandBuffer commandBuffer, VkPolygonMode polygonMode) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPolygonModeEXT!");
 }
@@ -16265,7 +16720,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetPolygonModeEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetRasterizationSamplesEXT(VkCommandBuffer commandBuffer, VkSampleCountFlagBits rasterizationSamples) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetRasterizationSamplesEXT!");
 }
@@ -16289,7 +16745,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetRasterizationSamplesEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetSampleMaskEXT(VkCommandBuffer commandBuffer, VkSampleCountFlagBits samples, VkSampleMask* pSampleMask) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetSampleMaskEXT!");
 }
@@ -16314,7 +16771,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetSampleMaskEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetAlphaToCoverageEnableEXT(VkCommandBuffer commandBuffer, VkBool32 alphaToCoverageEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetAlphaToCoverageEnableEXT!");
 }
@@ -16339,7 +16797,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetAlphaToCoverageEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetAlphaToOneEnableEXT(VkCommandBuffer commandBuffer, VkBool32 alphaToOneEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetAlphaToOneEnableEXT!");
 }
@@ -16364,7 +16823,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetAlphaToOneEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetLogicOpEnableEXT(VkCommandBuffer commandBuffer, VkBool32 logicOpEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetLogicOpEnableEXT!");
 }
@@ -16389,7 +16849,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetLogicOpEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetColorBlendEnableEXT(VkCommandBuffer commandBuffer, uint32_t firstAttachment, uint32_t attachmentCount, VkBool32* pColorBlendEnables) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetColorBlendEnableEXT!");
 }
@@ -16416,7 +16877,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetColorBlendEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetColorBlendEquationEXT(VkCommandBuffer commandBuffer, uint32_t firstAttachment, uint32_t attachmentCount, VkColorBlendEquationEXT* pColorBlendEquations) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetColorBlendEquationEXT!");
 }
@@ -16444,7 +16906,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetColorBlendEquationEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetColorWriteMaskEXT(VkCommandBuffer commandBuffer, uint32_t firstAttachment, uint32_t attachmentCount, VkColorComponentFlags* pColorWriteMasks) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetColorWriteMaskEXT!");
 }
@@ -16471,7 +16934,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetColorWriteMaskEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetRasterizationStreamEXT(VkCommandBuffer commandBuffer, uint32_t rasterizationStream) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetRasterizationStreamEXT!");
 }
@@ -16496,7 +16960,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetRasterizationStreamEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetConservativeRasterizationModeEXT(VkCommandBuffer commandBuffer, VkConservativeRasterizationModeEXT conservativeRasterizationMode) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetConservativeRasterizationModeEXT!");
 }
@@ -16520,7 +16985,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetConservativeRasterizationModeEXT!")
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetExtraPrimitiveOverestimationSizeEXT(VkCommandBuffer commandBuffer, float extraPrimitiveOverestimationSize) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetExtraPrimitiveOverestimationSizeEXT!");
 }
@@ -16545,7 +17011,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetExtraPrimitiveOverestimationSizeEXT
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthClipEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthClipEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthClipEnableEXT!");
 }
@@ -16570,7 +17037,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthClipEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetSampleLocationsEnableEXT(VkCommandBuffer commandBuffer, VkBool32 sampleLocationsEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetSampleLocationsEnableEXT!");
 }
@@ -16595,7 +17063,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetSampleLocationsEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetColorBlendAdvancedEXT(VkCommandBuffer commandBuffer, uint32_t firstAttachment, uint32_t attachmentCount, VkColorBlendAdvancedEXT* pColorBlendAdvanced) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetColorBlendAdvancedEXT!");
 }
@@ -16626,7 +17095,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetColorBlendAdvancedEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetProvokingVertexModeEXT(VkCommandBuffer commandBuffer, VkProvokingVertexModeEXT provokingVertexMode) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetProvokingVertexModeEXT!");
 }
@@ -16650,7 +17120,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetProvokingVertexModeEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetLineRasterizationModeEXT(VkCommandBuffer commandBuffer, VkLineRasterizationModeEXT lineRasterizationMode) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetLineRasterizationModeEXT!");
 }
@@ -16675,7 +17146,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetLineRasterizationModeEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetLineStippleEnableEXT(VkCommandBuffer commandBuffer, VkBool32 stippledLineEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetLineStippleEnableEXT!");
 }
@@ -16700,7 +17172,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetLineStippleEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthClipNegativeOneToOneEXT(VkCommandBuffer commandBuffer, VkBool32 negativeOneToOne) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthClipNegativeOneToOneEXT!");
 }
@@ -16725,7 +17198,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthClipNegativeOneToOneEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetViewportWScalingEnableNV(VkCommandBuffer commandBuffer, VkBool32 viewportWScalingEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetViewportWScalingEnableNV!");
 }
@@ -16750,7 +17224,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetViewportWScalingEnableNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetViewportSwizzleNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, VkViewportSwizzleNV* pViewportSwizzles) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetViewportSwizzleNV!");
 }
@@ -16778,7 +17253,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetViewportSwizzleNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCoverageToColorEnableNV(VkCommandBuffer commandBuffer, VkBool32 coverageToColorEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCoverageToColorEnableNV!");
 }
@@ -16803,7 +17279,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetCoverageToColorEnableNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCoverageToColorLocationNV(VkCommandBuffer commandBuffer, uint32_t coverageToColorLocation) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCoverageToColorLocationNV!");
 }
@@ -16828,7 +17305,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetCoverageToColorLocationNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCoverageModulationModeNV(VkCommandBuffer commandBuffer, VkCoverageModulationModeNV coverageModulationMode) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCoverageModulationModeNV!");
 }
@@ -16852,7 +17330,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetCoverageModulationModeNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCoverageModulationTableEnableNV(VkCommandBuffer commandBuffer, VkBool32 coverageModulationTableEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCoverageModulationTableEnableNV!");
 }
@@ -16877,7 +17356,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetCoverageModulationTableEnableNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCoverageModulationTableNV(VkCommandBuffer commandBuffer, uint32_t coverageModulationTableCount, float* pCoverageModulationTable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCoverageModulationTableNV!");
 }
@@ -16903,7 +17383,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetCoverageModulationTableNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetShadingRateImageEnableNV(VkCommandBuffer commandBuffer, VkBool32 shadingRateImageEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetShadingRateImageEnableNV!");
 }
@@ -16928,7 +17409,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetShadingRateImageEnableNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCoverageReductionModeNV(VkCommandBuffer commandBuffer, VkCoverageReductionModeNV coverageReductionMode) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCoverageReductionModeNV!");
 }
@@ -16952,7 +17434,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetCoverageReductionModeNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetRepresentativeFragmentTestEnableNV(VkCommandBuffer commandBuffer, VkBool32 representativeFragmentTestEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetRepresentativeFragmentTestEnableNV!");
 }
@@ -16977,7 +17460,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetRepresentativeFragmentTestEnableNV!
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreatePrivateDataSlot(VkDevice device, VkPrivateDataSlotCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreatePrivateDataSlot!");
 }
@@ -17016,7 +17500,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyPrivateDataSlot(VkDevice device, VkPrivateDataSlot privateDataSlot, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyPrivateDataSlot!");
 }
@@ -17049,7 +17534,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyPrivateDataSlot!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetPrivateData(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t data) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSetPrivateData!");
 }
@@ -17078,7 +17564,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPrivateData(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPrivateData!");
 }
@@ -17105,7 +17592,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPrivateData!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyBuffer2(VkCommandBuffer commandBuffer, VkCopyBufferInfo2* pCopyBufferInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyBuffer2!");
 }
@@ -17141,7 +17629,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyBuffer2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyImage2(VkCommandBuffer commandBuffer, VkCopyImageInfo2* pCopyImageInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyImage2!");
 }
@@ -17179,7 +17668,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyImage2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBlitImage2(VkCommandBuffer commandBuffer, VkBlitImageInfo2* pBlitImageInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBlitImage2!");
 }
@@ -17216,7 +17706,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBlitImage2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyBufferToImage2(VkCommandBuffer commandBuffer, VkCopyBufferToImageInfo2* pCopyBufferToImageInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyBufferToImage2!");
 }
@@ -17255,7 +17746,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyBufferToImage2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyImageToBuffer2(VkCommandBuffer commandBuffer, VkCopyImageToBufferInfo2* pCopyImageToBufferInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyImageToBuffer2!");
 }
@@ -17294,7 +17786,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyImageToBuffer2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdResolveImage2(VkCommandBuffer commandBuffer, VkResolveImageInfo2* pResolveImageInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdResolveImage2!");
 }
@@ -17332,7 +17825,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdResolveImage2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetFragmentShadingRateKHR(VkCommandBuffer commandBuffer, VkExtent2D* pFragmentSize, VkFragmentShadingRateCombinerOpKHR* combinerOps) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetFragmentShadingRateKHR!");
 }
@@ -17361,7 +17855,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetFragmentShadingRateKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetFragmentShadingRateEnumNV(VkCommandBuffer commandBuffer, VkFragmentShadingRateNV shadingRate, VkFragmentShadingRateCombinerOpKHR* combinerOps) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetFragmentShadingRateEnumNV!");
 }
@@ -17386,7 +17881,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetFragmentShadingRateEnumNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetAccelerationStructureBuildSizesKHR(VkDevice device, VkAccelerationStructureBuildTypeKHR buildType, VkAccelerationStructureBuildGeometryInfoKHR* pBuildInfo, uint32_t* pMaxPrimitiveCounts, VkAccelerationStructureBuildSizesInfoKHR* pSizeInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetAccelerationStructureBuildSizesKHR!");
 }
@@ -17430,7 +17926,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetAccelerationStructureBuildSizesKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetVertexInputEXT(VkCommandBuffer commandBuffer, uint32_t vertexBindingDescriptionCount, VkVertexInputBindingDescription2EXT* pVertexBindingDescriptions, uint32_t vertexAttributeDescriptionCount, VkVertexInputAttributeDescription2EXT* pVertexAttributeDescriptions) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetVertexInputEXT!");
 }
@@ -17468,7 +17965,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetVertexInputEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetColorWriteEnableEXT(VkCommandBuffer commandBuffer, uint32_t attachmentCount, VkBool32* pColorWriteEnables) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetColorWriteEnableEXT!");
 }
@@ -17494,7 +17992,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetColorWriteEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetEvent2(VkCommandBuffer commandBuffer, VkEvent event, VkDependencyInfo* pDependencyInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetEvent2!");
 }
@@ -17556,7 +18055,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetEvent2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdResetEvent2(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2 stageMask) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdResetEvent2!");
 }
@@ -17582,7 +18082,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdResetEvent2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWaitEvents2(VkCommandBuffer commandBuffer, uint32_t eventCount, VkEvent* pEvents, VkDependencyInfo* pDependencyInfos) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdWaitEvents2!");
 }
@@ -17645,7 +18146,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdWaitEvents2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPipelineBarrier2(VkCommandBuffer commandBuffer, VkDependencyInfo* pDependencyInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdPipelineBarrier2!");
 }
@@ -17706,7 +18208,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdPipelineBarrier2!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueueSubmit2(VkQueue queue, uint32_t submitCount, VkSubmitInfo2* pSubmits, VkFence fence) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkQueueSubmit2!");
 }
@@ -17760,7 +18263,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteTimestamp2(VkCommandBuffer commandBuffer, VkPipelineStageFlags2 stage, VkQueryPool queryPool, uint32_t query) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteTimestamp2!");
 }
@@ -17787,7 +18291,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdWriteTimestamp2!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteBufferMarker2AMD(VkCommandBuffer commandBuffer, VkPipelineStageFlags2 stage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteBufferMarker2AMD!");
 }
@@ -17815,7 +18320,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdWriteBufferMarker2AMD!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetQueueCheckpointData2NV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointData2NV* pCheckpointData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetQueueCheckpointData2NV!");
 }
@@ -17845,7 +18351,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetQueueCheckpointData2NV!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyMemoryToImageEXT(VkDevice device, VkCopyMemoryToImageInfoEXT* pCopyMemoryToImageInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCopyMemoryToImageEXT!");
 }
@@ -17886,7 +18393,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyImageToMemoryEXT(VkDevice device, VkCopyImageToMemoryInfoEXT* pCopyImageToMemoryInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCopyImageToMemoryEXT!");
 }
@@ -17927,7 +18435,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyImageToImageEXT(VkDevice device, VkCopyImageToImageInfoEXT* pCopyImageToImageInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCopyImageToImageEXT!");
 }
@@ -17968,7 +18477,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_TransitionImageLayoutEXT(VkDevice device, uint32_t transitionCount, VkHostImageLayoutTransitionInfoEXT* pTransitions) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkTransitionImageLayoutEXT!");
 }
@@ -18000,7 +18510,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateVideoSessionKHR(VkDevice device, VkVideoSessionCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkVideoSessionKHR* pVideoSession) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateVideoSessionKHR!");
 }
@@ -18053,7 +18564,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyVideoSessionKHR(VkDevice device, VkVideoSessionKHR videoSession, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyVideoSessionKHR!");
 }
@@ -18086,7 +18598,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyVideoSessionKHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateVideoSessionParametersKHR(VkDevice device, VkVideoSessionParametersCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkVideoSessionParametersKHR* pVideoSessionParameters) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateVideoSessionParametersKHR!");
 }
@@ -18127,7 +18640,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_UpdateVideoSessionParametersKHR(VkDevice device, VkVideoSessionParametersKHR videoSessionParameters, VkVideoSessionParametersUpdateInfoKHR* pUpdateInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkUpdateVideoSessionParametersKHR!");
 }
@@ -18158,7 +18672,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetEncodedVideoSessionParametersKHR(VkDevice device, VkVideoEncodeSessionParametersGetInfoKHR* pVideoSessionParametersInfo, VkVideoEncodeSessionParametersFeedbackInfoKHR* pFeedbackInfo, size_t* pDataSize, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetEncodedVideoSessionParametersKHR!");
 }
@@ -18194,7 +18709,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyVideoSessionParametersKHR(VkDevice device, VkVideoSessionParametersKHR videoSessionParameters, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyVideoSessionParametersKHR!");
 }
@@ -18227,7 +18743,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyVideoSessionParametersKHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetVideoSessionMemoryRequirementsKHR(VkDevice device, VkVideoSessionKHR videoSession, uint32_t* pMemoryRequirementsCount, VkVideoSessionMemoryRequirementsKHR* pMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetVideoSessionMemoryRequirementsKHR!");
 }
@@ -18260,7 +18777,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindVideoSessionMemoryKHR(VkDevice device, VkVideoSessionKHR videoSession, uint32_t bindSessionMemoryInfoCount, VkBindVideoSessionMemoryInfoKHR* pBindSessionMemoryInfos) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkBindVideoSessionMemoryKHR!");
 }
@@ -18295,7 +18813,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDecodeVideoKHR(VkCommandBuffer commandBuffer, VkVideoDecodeInfoKHR* pDecodeInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDecodeVideoKHR!");
 }
@@ -18350,7 +18869,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDecodeVideoKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginVideoCodingKHR(VkCommandBuffer commandBuffer, VkVideoBeginCodingInfoKHR* pBeginInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginVideoCodingKHR!");
 }
@@ -18392,7 +18912,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBeginVideoCodingKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdControlVideoCodingKHR(VkCommandBuffer commandBuffer, VkVideoCodingControlInfoKHR* pCodingControlInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdControlVideoCodingKHR!");
 }
@@ -18420,7 +18941,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdControlVideoCodingKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndVideoCodingKHR(VkCommandBuffer commandBuffer, VkVideoEndCodingInfoKHR* pEndCodingInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdEndVideoCodingKHR!");
 }
@@ -18448,7 +18970,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdEndVideoCodingKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEncodeVideoKHR(VkCommandBuffer commandBuffer, VkVideoEncodeInfoKHR* pEncodeInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdEncodeVideoKHR!");
 }
@@ -18504,7 +19027,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdEncodeVideoKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDecompressMemoryNV(VkCommandBuffer commandBuffer, uint32_t decompressRegionCount, VkDecompressMemoryRegionNV* pDecompressMemoryRegions) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDecompressMemoryNV!");
 }
@@ -18536,7 +19060,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDecompressMemoryNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDecompressMemoryIndirectCountNV(VkCommandBuffer commandBuffer, VkDeviceAddress indirectCommandsAddress, VkDeviceAddress indirectCommandsCountAddress, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDecompressMemoryIndirectCountNV!");
 }
@@ -18563,7 +19088,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDecompressMemoryIndirectCountNV!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateCuModuleNVX(VkDevice device, VkCuModuleCreateInfoNVX* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCuModuleNVX* pModule) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateCuModuleNVX!");
 }
@@ -18603,7 +19129,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateCuFunctionNVX(VkDevice device, VkCuFunctionCreateInfoNVX* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCuFunctionNVX* pFunction) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateCuFunctionNVX!");
 }
@@ -18643,7 +19170,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyCuModuleNVX(VkDevice device, VkCuModuleNVX module, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyCuModuleNVX!");
 }
@@ -18676,7 +19204,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyCuModuleNVX!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyCuFunctionNVX(VkDevice device, VkCuFunctionNVX function, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyCuFunctionNVX!");
 }
@@ -18709,7 +19238,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyCuFunctionNVX!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCuLaunchKernelNVX(VkCommandBuffer commandBuffer, VkCuLaunchInfoNVX* pLaunchInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCuLaunchKernelNVX!");
 }
@@ -18748,7 +19278,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCuLaunchKernelNVX!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDescriptorSetLayoutSizeEXT(VkDevice device, VkDescriptorSetLayout layout, VkDeviceSize* pLayoutSizeInBytes) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDescriptorSetLayoutSizeEXT!");
 }
@@ -18774,7 +19305,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDescriptorSetLayoutSizeEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDescriptorSetLayoutBindingOffsetEXT(VkDevice device, VkDescriptorSetLayout layout, uint32_t binding, VkDeviceSize* pOffset) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDescriptorSetLayoutBindingOffsetEXT!");
 }
@@ -18801,7 +19333,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDescriptorSetLayoutBindingOffsetEXT!")
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDescriptorEXT(VkDevice device, VkDescriptorGetInfoEXT* pDescriptorInfo, size_t dataSize, void* pDescriptor) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDescriptorEXT!");
 }
@@ -18831,7 +19364,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDescriptorEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindDescriptorBuffersEXT(VkCommandBuffer commandBuffer, uint32_t bufferCount, VkDescriptorBufferBindingInfoEXT* pBindingInfos) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindDescriptorBuffersEXT!");
 }
@@ -18861,7 +19395,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindDescriptorBuffersEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDescriptorBufferOffsetsEXT(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t setCount, uint32_t* pBufferIndices, VkDeviceSize* pOffsets) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDescriptorBufferOffsetsEXT!");
 }
@@ -18890,7 +19425,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDescriptorBufferOffsetsEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindDescriptorBufferEmbeddedSamplersEXT(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t set) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindDescriptorBufferEmbeddedSamplersEXT!");
 }
@@ -18916,7 +19452,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindDescriptorBufferEmbeddedSamplersEX
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetBufferOpaqueCaptureDescriptorDataEXT(VkDevice device, VkBufferCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetBufferOpaqueCaptureDescriptorDataEXT!");
 }
@@ -18947,7 +19484,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetImageOpaqueCaptureDescriptorDataEXT(VkDevice device, VkImageCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetImageOpaqueCaptureDescriptorDataEXT!");
 }
@@ -18978,7 +19516,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetImageViewOpaqueCaptureDescriptorDataEXT(VkDevice device, VkImageViewCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetImageViewOpaqueCaptureDescriptorDataEXT!");
 }
@@ -19009,7 +19548,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSamplerOpaqueCaptureDescriptorDataEXT(VkDevice device, VkSamplerCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetSamplerOpaqueCaptureDescriptorDataEXT!");
 }
@@ -19040,7 +19580,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetAccelerationStructureOpaqueCaptureDescriptorDataEXT(VkDevice device, VkAccelerationStructureCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT!");
 }
@@ -19072,7 +19613,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_SetDeviceMemoryPriorityEXT(VkDevice device, VkDeviceMemory memory, float priority) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSetDeviceMemoryPriorityEXT!");
 }
@@ -19098,7 +19640,8 @@ winsockSendToUI(&ConnectSocket, "end_vkSetDeviceMemoryPriorityEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_WaitForPresentKHR(VkDevice device, VkSwapchainKHR swapchain, uint64_t presentId, uint64_t timeout) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkWaitForPresentKHR!");
 }
@@ -19128,7 +19671,8 @@ return ret;
 
 #if defined(VK_USE_PLATFORM_FUCHSIA)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateBufferCollectionFUCHSIA(VkDevice device, VkBufferCollectionCreateInfoFUCHSIA* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBufferCollectionFUCHSIA* pCollection) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateBufferCollectionFUCHSIA!");
 }
@@ -19169,7 +19713,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_FUCHSIA)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetBufferCollectionBufferConstraintsFUCHSIA(VkDevice device, VkBufferCollectionFUCHSIA collection, VkBufferConstraintsInfoFUCHSIA* pBufferConstraintsInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSetBufferCollectionBufferConstraintsFUCHSIA!");
 }
@@ -19204,7 +19749,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_FUCHSIA)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetBufferCollectionImageConstraintsFUCHSIA(VkDevice device, VkBufferCollectionFUCHSIA collection, VkImageConstraintsInfoFUCHSIA* pImageConstraintsInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSetBufferCollectionImageConstraintsFUCHSIA!");
 }
@@ -19251,7 +19797,8 @@ return ret;
 #endif
 #if defined(VK_USE_PLATFORM_FUCHSIA)
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyBufferCollectionFUCHSIA(VkDevice device, VkBufferCollectionFUCHSIA collection, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyBufferCollectionFUCHSIA!");
 }
@@ -19286,7 +19833,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyBufferCollectionFUCHSIA!");
 #endif
 #if defined(VK_USE_PLATFORM_FUCHSIA)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetBufferCollectionPropertiesFUCHSIA(VkDevice device, VkBufferCollectionFUCHSIA collection, VkBufferCollectionPropertiesFUCHSIA* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetBufferCollectionPropertiesFUCHSIA!");
 }
@@ -19324,7 +19872,8 @@ return ret;
 
 #endif
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateCudaModuleNV(VkDevice device, VkCudaModuleCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCudaModuleNV* pModule) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateCudaModuleNV!");
 }
@@ -19364,7 +19913,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetCudaModuleCacheNV(VkDevice device, VkCudaModuleNV module, size_t* pCacheSize, void* pCacheData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetCudaModuleCacheNV!");
 }
@@ -19393,7 +19943,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateCudaFunctionNV(VkDevice device, VkCudaFunctionCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCudaFunctionNV* pFunction) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateCudaFunctionNV!");
 }
@@ -19433,7 +19984,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyCudaModuleNV(VkDevice device, VkCudaModuleNV module, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyCudaModuleNV!");
 }
@@ -19466,7 +20018,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyCudaModuleNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyCudaFunctionNV(VkDevice device, VkCudaFunctionNV function, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyCudaFunctionNV!");
 }
@@ -19499,7 +20052,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyCudaFunctionNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCudaLaunchKernelNV(VkCommandBuffer commandBuffer, VkCudaLaunchInfoNV* pLaunchInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCudaLaunchKernelNV!");
 }
@@ -19538,7 +20092,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCudaLaunchKernelNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginRendering(VkCommandBuffer commandBuffer, VkRenderingInfo* pRenderingInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginRendering!");
 }
@@ -19588,7 +20143,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBeginRendering!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndRendering(VkCommandBuffer commandBuffer) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdEndRendering!");
 }
@@ -19612,7 +20168,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdEndRendering!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDescriptorSetLayoutHostMappingInfoVALVE(VkDevice device, VkDescriptorSetBindingReferenceVALVE* pBindingReference, VkDescriptorSetLayoutHostMappingInfoVALVE* pHostMapping) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDescriptorSetLayoutHostMappingInfoVALVE!");
 }
@@ -19646,7 +20203,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDescriptorSetLayoutHostMappingInfoVALV
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDescriptorSetHostMappingVALVE(VkDevice device, VkDescriptorSet descriptorSet, void** ppData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDescriptorSetHostMappingVALVE!");
 }
@@ -19672,7 +20230,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDescriptorSetHostMappingVALVE!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateMicromapEXT(VkDevice device, VkMicromapCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkMicromapEXT* pMicromap) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateMicromapEXT!");
 }
@@ -19715,7 +20274,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBuildMicromapsEXT(VkCommandBuffer commandBuffer, uint32_t infoCount, VkMicromapBuildInfoEXT* pInfos) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBuildMicromapsEXT!");
 }
@@ -19755,7 +20315,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBuildMicromapsEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BuildMicromapsEXT(VkDevice device, VkDeferredOperationKHR deferredOperation, uint32_t infoCount, VkMicromapBuildInfoEXT* pInfos) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkBuildMicromapsEXT!");
 }
@@ -19798,7 +20359,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyMicromapEXT(VkDevice device, VkMicromapEXT micromap, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyMicromapEXT!");
 }
@@ -19831,7 +20393,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyMicromapEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyMicromapEXT(VkCommandBuffer commandBuffer, VkCopyMicromapInfoEXT* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyMicromapEXT!");
 }
@@ -19860,7 +20423,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyMicromapEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyMicromapEXT(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyMicromapInfoEXT* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCopyMicromapEXT!");
 }
@@ -19892,7 +20456,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyMicromapToMemoryEXT(VkCommandBuffer commandBuffer, VkCopyMicromapToMemoryInfoEXT* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyMicromapToMemoryEXT!");
 }
@@ -19921,7 +20486,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyMicromapToMemoryEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyMicromapToMemoryEXT(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyMicromapToMemoryInfoEXT* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCopyMicromapToMemoryEXT!");
 }
@@ -19953,7 +20519,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyMemoryToMicromapEXT(VkCommandBuffer commandBuffer, VkCopyMemoryToMicromapInfoEXT* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyMemoryToMicromapEXT!");
 }
@@ -19982,7 +20549,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyMemoryToMicromapEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyMemoryToMicromapEXT(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyMemoryToMicromapInfoEXT* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCopyMemoryToMicromapEXT!");
 }
@@ -20014,7 +20582,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteMicromapsPropertiesEXT(VkCommandBuffer commandBuffer, uint32_t micromapCount, VkMicromapEXT* pMicromaps, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteMicromapsPropertiesEXT!");
 }
@@ -20042,7 +20611,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdWriteMicromapsPropertiesEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_WriteMicromapsPropertiesEXT(VkDevice device, uint32_t micromapCount, VkMicromapEXT* pMicromaps, VkQueryType queryType, size_t dataSize, void* pData, size_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkWriteMicromapsPropertiesEXT!");
 }
@@ -20073,7 +20643,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceMicromapCompatibilityEXT(VkDevice device, VkMicromapVersionInfoEXT* pVersionInfo, VkAccelerationStructureCompatibilityKHR* pCompatibility) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceMicromapCompatibilityEXT!");
 }
@@ -20102,7 +20673,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDeviceMicromapCompatibilityEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetMicromapBuildSizesEXT(VkDevice device, VkAccelerationStructureBuildTypeKHR buildType, VkMicromapBuildInfoEXT* pBuildInfo, VkMicromapBuildSizesInfoEXT* pSizeInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetMicromapBuildSizesEXT!");
 }
@@ -20147,7 +20719,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetMicromapBuildSizesEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetShaderModuleIdentifierEXT(VkDevice device, VkShaderModule shaderModule, VkShaderModuleIdentifierEXT* pIdentifier) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetShaderModuleIdentifierEXT!");
 }
@@ -20177,7 +20750,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetShaderModuleIdentifierEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetShaderModuleCreateInfoIdentifierEXT(VkDevice device, VkShaderModuleCreateInfo* pCreateInfo, VkShaderModuleIdentifierEXT* pIdentifier) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetShaderModuleCreateInfoIdentifierEXT!");
 }
@@ -20212,7 +20786,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetShaderModuleCreateInfoIdentifierEXT!")
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageSubresourceLayout2KHR(VkDevice device, VkImage image, VkImageSubresource2KHR* pSubresource, VkSubresourceLayout2KHR* pLayout) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetImageSubresourceLayout2KHR!");
 }
@@ -20245,7 +20820,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetImageSubresourceLayout2KHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPipelinePropertiesEXT(VkDevice device, VkPipelineInfoEXT* pPipelineInfo, VkBaseOutStructure* pPipelineProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPipelinePropertiesEXT!");
 }
@@ -20280,7 +20856,8 @@ return ret;
 
 #if defined(VK_USE_PLATFORM_METAL_EXT)
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_ExportMetalObjectsEXT(VkDevice device, VkExportMetalObjectsInfoEXT* pMetalObjectsInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkExportMetalObjectsEXT!");
 }
@@ -20308,7 +20885,8 @@ winsockSendToUI(&ConnectSocket, "end_vkExportMetalObjectsEXT!");
 
 #endif
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetFramebufferTilePropertiesQCOM(VkDevice device, VkFramebuffer framebuffer, uint32_t* pPropertiesCount, VkTilePropertiesQCOM* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetFramebufferTilePropertiesQCOM!");
 }
@@ -20342,7 +20920,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDynamicRenderingTilePropertiesQCOM(VkDevice device, VkRenderingInfo* pRenderingInfo, VkTilePropertiesQCOM* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDynamicRenderingTilePropertiesQCOM!");
 }
@@ -20400,7 +20979,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateOpticalFlowSessionNV(VkDevice device, VkOpticalFlowSessionCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkOpticalFlowSessionNV* pSession) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateOpticalFlowSessionNV!");
 }
@@ -20443,7 +21023,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyOpticalFlowSessionNV(VkDevice device, VkOpticalFlowSessionNV session, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyOpticalFlowSessionNV!");
 }
@@ -20476,7 +21057,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyOpticalFlowSessionNV!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindOpticalFlowSessionImageNV(VkDevice device, VkOpticalFlowSessionNV session, VkOpticalFlowSessionBindingPointNV bindingPoint, VkImageView view, VkImageLayout layout) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkBindOpticalFlowSessionImageNV!");
 }
@@ -20504,7 +21086,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdOpticalFlowExecuteNV(VkCommandBuffer commandBuffer, VkOpticalFlowSessionNV session, VkOpticalFlowExecuteInfoNV* pExecuteInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdOpticalFlowExecuteNV!");
 }
@@ -20538,7 +21121,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdOpticalFlowExecuteNV!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDeviceFaultInfoEXT(VkDevice device, VkDeviceFaultCountsEXT* pFaultCounts, VkDeviceFaultInfoEXT* pFaultInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceFaultInfoEXT!");
 }
@@ -20577,7 +21161,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthBias2EXT(VkCommandBuffer commandBuffer, VkDepthBiasInfoEXT* pDepthBiasInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthBias2EXT!");
 }
@@ -20607,7 +21192,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthBias2EXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ReleaseSwapchainImagesEXT(VkDevice device, VkReleaseSwapchainImagesInfoEXT* pReleaseInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkReleaseSwapchainImagesEXT!");
 }
@@ -20639,7 +21225,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceImageSubresourceLayoutKHR(VkDevice device, VkDeviceImageSubresourceInfoKHR* pInfo, VkSubresourceLayout2KHR* pLayout) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceImageSubresourceLayoutKHR!");
 }
@@ -20684,7 +21271,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDeviceImageSubresourceLayoutKHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_MapMemory2KHR(VkDevice device, VkMemoryMapInfoKHR* pMemoryMapInfo, void** ppData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkMapMemory2KHR!");
 }
@@ -20718,7 +21306,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_UnmapMemory2KHR(VkDevice device, VkMemoryUnmapInfoKHR* pMemoryUnmapInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkUnmapMemory2KHR!");
 }
@@ -20749,7 +21338,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateShadersEXT(VkDevice device, uint32_t createInfoCount, VkShaderCreateInfoEXT* pCreateInfos, VkAllocationCallbacks* pAllocator, VkShaderEXT* pShaders) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateShadersEXT!");
 }
@@ -20811,7 +21401,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyShaderEXT(VkDevice device, VkShaderEXT shader, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyShaderEXT!");
 }
@@ -20844,7 +21435,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyShaderEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetShaderBinaryDataEXT(VkDevice device, VkShaderEXT shader, size_t* pDataSize, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetShaderBinaryDataEXT!");
 }
@@ -20873,7 +21465,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindShadersEXT(VkCommandBuffer commandBuffer, uint32_t stageCount, VkShaderStageFlagBits* pStages, VkShaderEXT* pShaders) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindShadersEXT!");
 }
@@ -20901,7 +21494,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindShadersEXT!");
 
 #if defined(VK_USE_PLATFORM_SCREEN_QNX)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetScreenBufferPropertiesQNX(VkDevice device, _screen_buffer* buffer, VkScreenBufferPropertiesQNX* pProperties) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetScreenBufferPropertiesQNX!");
 }
@@ -20935,7 +21529,8 @@ return ret;
 #endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetExecutionGraphPipelineScratchSizeAMDX(VkDevice device, VkPipeline executionGraph, VkExecutionGraphPipelineScratchSizeAMDX* pSizeInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetExecutionGraphPipelineScratchSizeAMDX!");
 }
@@ -20968,7 +21563,8 @@ return ret;
 #endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetExecutionGraphPipelineNodeIndexAMDX(VkDevice device, VkPipeline executionGraph, VkPipelineShaderStageNodeCreateInfoAMDX* pNodeInfo, uint32_t* pNodeIndex) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetExecutionGraphPipelineNodeIndexAMDX!");
 }
@@ -21003,7 +21599,8 @@ return ret;
 #endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateExecutionGraphPipelinesAMDX(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkExecutionGraphPipelineCreateInfoAMDX* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateExecutionGraphPipelinesAMDX!");
 }
@@ -21067,7 +21664,8 @@ return ret;
 #endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdInitializeGraphScratchMemoryAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdInitializeGraphScratchMemoryAMDX!");
 }
@@ -21094,7 +21692,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdInitializeGraphScratchMemoryAMDX!");
 #endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDispatchGraphAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDispatchGraphCountInfoAMDX* pCountInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDispatchGraphAMDX!");
 }
@@ -21126,7 +21725,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDispatchGraphAMDX!");
 #endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDispatchGraphIndirectAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDispatchGraphCountInfoAMDX* pCountInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDispatchGraphIndirectAMDX!");
 }
@@ -21158,7 +21758,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDispatchGraphIndirectAMDX!");
 #endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDispatchGraphIndirectCountAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDeviceAddress countInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDispatchGraphIndirectCountAMDX!");
 }
@@ -21185,7 +21786,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDispatchGraphIndirectCountAMDX!");
 
 #endif
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindDescriptorSets2KHR(VkCommandBuffer commandBuffer, VkBindDescriptorSetsInfoKHR* pBindDescriptorSetsInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindDescriptorSets2KHR!");
 }
@@ -21219,7 +21821,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindDescriptorSets2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPushConstants2KHR(VkCommandBuffer commandBuffer, VkPushConstantsInfoKHR* pPushConstantsInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdPushConstants2KHR!");
 }
@@ -21251,7 +21854,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdPushConstants2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPushDescriptorSet2KHR(VkCommandBuffer commandBuffer, VkPushDescriptorSetInfoKHR* pPushDescriptorSetInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdPushDescriptorSet2KHR!");
 }
@@ -21299,7 +21903,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdPushDescriptorSet2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPushDescriptorSetWithTemplate2KHR(VkCommandBuffer commandBuffer, VkPushDescriptorSetWithTemplateInfoKHR* pPushDescriptorSetWithTemplateInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdPushDescriptorSetWithTemplate2KHR!");
 }
@@ -21330,7 +21935,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdPushDescriptorSetWithTemplate2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDescriptorBufferOffsets2EXT(VkCommandBuffer commandBuffer, VkSetDescriptorBufferOffsetsInfoEXT* pSetDescriptorBufferOffsetsInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDescriptorBufferOffsets2EXT!");
 }
@@ -21363,7 +21969,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDescriptorBufferOffsets2EXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindDescriptorBufferEmbeddedSamplers2EXT(VkCommandBuffer commandBuffer, VkBindDescriptorBufferEmbeddedSamplersInfoEXT* pBindDescriptorBufferEmbeddedSamplersInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT!");
 }
@@ -21393,7 +22000,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindDescriptorBufferEmbeddedSamplers2E
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetLatencySleepModeNV(VkDevice device, VkSwapchainKHR swapchain, VkLatencySleepModeInfoNV* pSleepModeInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSetLatencySleepModeNV!");
 }
@@ -21426,7 +22034,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_LatencySleepNV(VkDevice device, VkSwapchainKHR swapchain, VkLatencySleepInfoNV* pSleepInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkLatencySleepNV!");
 }
@@ -21458,7 +22067,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_SetLatencyMarkerNV(VkDevice device, VkSwapchainKHR swapchain, VkSetLatencyMarkerInfoNV* pLatencyMarkerInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSetLatencyMarkerNV!");
 }
@@ -21487,7 +22097,8 @@ winsockSendToUI(&ConnectSocket, "end_vkSetLatencyMarkerNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetLatencyTimingsNV(VkDevice device, VkSwapchainKHR swapchain, VkGetLatencyMarkerInfoNV* pLatencyMarkerInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetLatencyTimingsNV!");
 }
@@ -21517,7 +22128,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetLatencyTimingsNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_QueueNotifyOutOfBandNV(VkQueue queue, VkOutOfBandQueueTypeInfoNV* pQueueTypeInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkQueueNotifyOutOfBandNV!");
 }
@@ -21544,7 +22156,8 @@ winsockSendToUI(&ConnectSocket, "end_vkQueueNotifyOutOfBandNV!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_ResetQueryPoolEXT(VkDevice device, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkResetQueryPoolEXT!");
 }
@@ -21571,7 +22184,8 @@ winsockSendToUI(&ConnectSocket, "end_vkResetQueryPoolEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_TrimCommandPoolKHR(VkDevice device, VkCommandPool commandPool, VkCommandPoolTrimFlags flags) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkTrimCommandPoolKHR!");
 }
@@ -21597,7 +22211,8 @@ winsockSendToUI(&ConnectSocket, "end_vkTrimCommandPoolKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceGroupPeerMemoryFeaturesKHR(VkDevice device, uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceGroupPeerMemoryFeaturesKHR!");
 }
@@ -21625,7 +22240,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDeviceGroupPeerMemoryFeaturesKHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindBufferMemory2KHR(VkDevice device, uint32_t bindInfoCount, VkBindBufferMemoryInfo* pBindInfos) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkBindBufferMemory2KHR!");
 }
@@ -21658,7 +22274,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindImageMemory2KHR(VkDevice device, uint32_t bindInfoCount, VkBindImageMemoryInfo* pBindInfos) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkBindImageMemory2KHR!");
 }
@@ -21691,7 +22308,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDeviceMaskKHR(VkCommandBuffer commandBuffer, uint32_t deviceMask) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDeviceMaskKHR!");
 }
@@ -21716,7 +22334,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDeviceMaskKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDispatchBaseKHR(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDispatchBaseKHR!");
 }
@@ -21746,7 +22365,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDispatchBaseKHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDescriptorUpdateTemplateKHR(VkDevice device, VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateDescriptorUpdateTemplateKHR!");
 }
@@ -21796,7 +22416,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDescriptorUpdateTemplateKHR(VkDevice device, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyDescriptorUpdateTemplateKHR!");
 }
@@ -21829,7 +22450,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyDescriptorUpdateTemplateKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_UpdateDescriptorSetWithTemplateKHR(VkDevice device, VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkUpdateDescriptorSetWithTemplateKHR!");
 }
@@ -21856,7 +22478,8 @@ winsockSendToUI(&ConnectSocket, "end_vkUpdateDescriptorSetWithTemplateKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetBufferMemoryRequirements2KHR(VkDevice device, VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetBufferMemoryRequirements2KHR!");
 }
@@ -21888,7 +22511,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetBufferMemoryRequirements2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageMemoryRequirements2KHR(VkDevice device, VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetImageMemoryRequirements2KHR!");
 }
@@ -21920,7 +22544,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetImageMemoryRequirements2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageSparseMemoryRequirements2KHR(VkDevice device, VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetImageSparseMemoryRequirements2KHR!");
 }
@@ -21953,7 +22578,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetImageSparseMemoryRequirements2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceBufferMemoryRequirementsKHR(VkDevice device, VkDeviceBufferMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceBufferMemoryRequirementsKHR!");
 }
@@ -21992,7 +22618,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDeviceBufferMemoryRequirementsKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceImageMemoryRequirementsKHR(VkDevice device, VkDeviceImageMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceImageMemoryRequirementsKHR!");
 }
@@ -22033,7 +22660,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDeviceImageMemoryRequirementsKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceImageSparseMemoryRequirementsKHR(VkDevice device, VkDeviceImageMemoryRequirements* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceImageSparseMemoryRequirementsKHR!");
 }
@@ -22075,7 +22703,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDeviceImageSparseMemoryRequirementsKHR
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateSamplerYcbcrConversionKHR(VkDevice device, VkSamplerYcbcrConversionCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateSamplerYcbcrConversionKHR!");
 }
@@ -22115,7 +22744,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroySamplerYcbcrConversionKHR(VkDevice device, VkSamplerYcbcrConversion ycbcrConversion, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroySamplerYcbcrConversionKHR!");
 }
@@ -22148,7 +22778,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroySamplerYcbcrConversionKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDescriptorSetLayoutSupportKHR(VkDevice device, VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDescriptorSetLayoutSupportKHR!");
 }
@@ -22187,7 +22818,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetDescriptorSetLayoutSupportKHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetCalibratedTimestampsEXT(VkDevice device, uint32_t timestampCount, VkCalibratedTimestampInfoKHR* pTimestampInfos, uint64_t* pTimestamps, uint64_t* pMaxDeviation) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetCalibratedTimestampsEXT!");
 }
@@ -22219,7 +22851,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateRenderPass2KHR(VkDevice device, VkRenderPassCreateInfo2* pCreateInfo, VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreateRenderPass2KHR!");
 }
@@ -22307,7 +22940,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginRenderPass2KHR(VkCommandBuffer commandBuffer, VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassBeginInfo* pSubpassBeginInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginRenderPass2KHR!");
 }
@@ -22342,7 +22976,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBeginRenderPass2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdNextSubpass2KHR(VkCommandBuffer commandBuffer, VkSubpassBeginInfo* pSubpassBeginInfo, VkSubpassEndInfo* pSubpassEndInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdNextSubpass2KHR!");
 }
@@ -22372,7 +23007,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdNextSubpass2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndRenderPass2KHR(VkCommandBuffer commandBuffer, VkSubpassEndInfo* pSubpassEndInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdEndRenderPass2KHR!");
 }
@@ -22399,7 +23035,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdEndRenderPass2KHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSemaphoreCounterValueKHR(VkDevice device, VkSemaphore semaphore, uint64_t* pValue) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetSemaphoreCounterValueKHR!");
 }
@@ -22427,7 +23064,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_WaitSemaphoresKHR(VkDevice device, VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkWaitSemaphoresKHR!");
 }
@@ -22461,7 +23099,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SignalSemaphoreKHR(VkDevice device, VkSemaphoreSignalInfo* pSignalInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSignalSemaphoreKHR!");
 }
@@ -22492,7 +23131,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndirectCountKHR(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndirectCountKHR!");
 }
@@ -22522,7 +23162,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndirectCountKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndirectCountAMD!");
 }
@@ -22552,7 +23193,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndirectCountAMD!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndexedIndirectCountKHR(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndexedIndirectCountKHR!");
 }
@@ -22582,7 +23224,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndexedIndirectCountKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndexedIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdDrawIndexedIndirectCountAMD!");
 }
@@ -22612,7 +23255,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndexedIndirectCountAMD!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetRayTracingShaderGroupHandlesNV(VkDevice device, VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetRayTracingShaderGroupHandlesNV!");
 }
@@ -22643,7 +23287,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT uint64_t VKAPI_CALL DetailsLayer_GetBufferOpaqueCaptureAddressKHR(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetBufferOpaqueCaptureAddressKHR!");
 }
@@ -22673,7 +23318,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DetailsLayer_GetBufferDeviceAddressKHR(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetBufferDeviceAddressKHR!");
 }
@@ -22703,7 +23349,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DetailsLayer_GetBufferDeviceAddressEXT(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetBufferDeviceAddressEXT!");
 }
@@ -22733,7 +23380,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT uint64_t VKAPI_CALL DetailsLayer_GetDeviceMemoryOpaqueCaptureAddressKHR(VkDevice device, VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetDeviceMemoryOpaqueCaptureAddressKHR!");
 }
@@ -22763,7 +23411,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetLineStippleEXT(VkCommandBuffer commandBuffer, uint32_t lineStippleFactor, uint16_t lineStipplePattern) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetLineStippleEXT!");
 }
@@ -22789,7 +23438,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetLineStippleEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCullModeEXT(VkCommandBuffer commandBuffer, VkCullModeFlags cullMode) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetCullModeEXT!");
 }
@@ -22814,7 +23464,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetCullModeEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetFrontFaceEXT(VkCommandBuffer commandBuffer, VkFrontFace frontFace) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetFrontFaceEXT!");
 }
@@ -22838,7 +23489,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetFrontFaceEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetPrimitiveTopologyEXT(VkCommandBuffer commandBuffer, VkPrimitiveTopology primitiveTopology) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPrimitiveTopologyEXT!");
 }
@@ -22862,7 +23514,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetPrimitiveTopologyEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetViewportWithCountEXT(VkCommandBuffer commandBuffer, uint32_t viewportCount, VkViewport* pViewports) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetViewportWithCountEXT!");
 }
@@ -22895,7 +23548,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetViewportWithCountEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetScissorWithCountEXT(VkCommandBuffer commandBuffer, uint32_t scissorCount, VkRect2D* pScissors) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetScissorWithCountEXT!");
 }
@@ -22924,7 +23578,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetScissorWithCountEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindVertexBuffers2EXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, VkBuffer* pBuffers, VkDeviceSize* pOffsets, VkDeviceSize* pSizes, VkDeviceSize* pStrides) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBindVertexBuffers2EXT!");
 }
@@ -22954,7 +23609,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBindVertexBuffers2EXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthTestEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthTestEnableEXT!");
 }
@@ -22979,7 +23635,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthTestEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthWriteEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthWriteEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthWriteEnableEXT!");
 }
@@ -23004,7 +23661,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthWriteEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthCompareOpEXT(VkCommandBuffer commandBuffer, VkCompareOp depthCompareOp) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthCompareOpEXT!");
 }
@@ -23028,7 +23686,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthCompareOpEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthBoundsTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBoundsTestEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthBoundsTestEnableEXT!");
 }
@@ -23053,7 +23712,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthBoundsTestEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetStencilTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 stencilTestEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetStencilTestEnableEXT!");
 }
@@ -23078,7 +23738,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetStencilTestEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetStencilOpEXT(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp, VkCompareOp compareOp) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetStencilOpEXT!");
 }
@@ -23103,7 +23764,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetStencilOpEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetRasterizerDiscardEnableEXT(VkCommandBuffer commandBuffer, VkBool32 rasterizerDiscardEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetRasterizerDiscardEnableEXT!");
 }
@@ -23128,7 +23790,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetRasterizerDiscardEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthBiasEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBiasEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetDepthBiasEnableEXT!");
 }
@@ -23153,7 +23816,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthBiasEnableEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetPrimitiveRestartEnableEXT(VkCommandBuffer commandBuffer, VkBool32 primitiveRestartEnable) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetPrimitiveRestartEnableEXT!");
 }
@@ -23178,7 +23842,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetPrimitiveRestartEnableEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreatePrivateDataSlotEXT(VkDevice device, VkPrivateDataSlotCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCreatePrivateDataSlotEXT!");
 }
@@ -23217,7 +23882,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyPrivateDataSlotEXT(VkDevice device, VkPrivateDataSlot privateDataSlot, VkAllocationCallbacks* pAllocator) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkDestroyPrivateDataSlotEXT!");
 }
@@ -23250,7 +23916,8 @@ winsockSendToUI(&ConnectSocket, "end_vkDestroyPrivateDataSlotEXT!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetPrivateDataEXT(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t data) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkSetPrivateDataEXT!");
 }
@@ -23279,7 +23946,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPrivateDataEXT(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t* pData) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetPrivateDataEXT!");
 }
@@ -23306,7 +23974,8 @@ winsockSendToUI(&ConnectSocket, "end_vkGetPrivateDataEXT!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyBuffer2KHR(VkCommandBuffer commandBuffer, VkCopyBufferInfo2* pCopyBufferInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyBuffer2KHR!");
 }
@@ -23342,7 +24011,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyBuffer2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyImage2KHR(VkCommandBuffer commandBuffer, VkCopyImageInfo2* pCopyImageInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyImage2KHR!");
 }
@@ -23380,7 +24050,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyImage2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBlitImage2KHR(VkCommandBuffer commandBuffer, VkBlitImageInfo2* pBlitImageInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBlitImage2KHR!");
 }
@@ -23417,7 +24088,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBlitImage2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyBufferToImage2KHR(VkCommandBuffer commandBuffer, VkCopyBufferToImageInfo2* pCopyBufferToImageInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyBufferToImage2KHR!");
 }
@@ -23456,7 +24128,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyBufferToImage2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyImageToBuffer2KHR(VkCommandBuffer commandBuffer, VkCopyImageToBufferInfo2* pCopyImageToBufferInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdCopyImageToBuffer2KHR!");
 }
@@ -23495,7 +24168,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdCopyImageToBuffer2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdResolveImage2KHR(VkCommandBuffer commandBuffer, VkResolveImageInfo2* pResolveImageInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdResolveImage2KHR!");
 }
@@ -23533,7 +24207,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdResolveImage2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, VkDependencyInfo* pDependencyInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdSetEvent2KHR!");
 }
@@ -23595,7 +24270,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdSetEvent2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdResetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2 stageMask) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdResetEvent2KHR!");
 }
@@ -23621,7 +24297,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdResetEvent2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWaitEvents2KHR(VkCommandBuffer commandBuffer, uint32_t eventCount, VkEvent* pEvents, VkDependencyInfo* pDependencyInfos) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdWaitEvents2KHR!");
 }
@@ -23684,7 +24361,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdWaitEvents2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPipelineBarrier2KHR(VkCommandBuffer commandBuffer, VkDependencyInfo* pDependencyInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdPipelineBarrier2KHR!");
 }
@@ -23745,7 +24423,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdPipelineBarrier2KHR!");
 }
 
  VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueueSubmit2KHR(VkQueue queue, uint32_t submitCount, VkSubmitInfo2* pSubmits, VkFence fence) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkQueueSubmit2KHR!");
 }
@@ -23799,7 +24478,8 @@ return ret;
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteTimestamp2KHR(VkCommandBuffer commandBuffer, VkPipelineStageFlags2 stage, VkQueryPool queryPool, uint32_t query) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdWriteTimestamp2KHR!");
 }
@@ -23826,7 +24506,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdWriteTimestamp2KHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginRenderingKHR(VkCommandBuffer commandBuffer, VkRenderingInfo* pRenderingInfo) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdBeginRenderingKHR!");
 }
@@ -23876,7 +24557,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdBeginRenderingKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndRenderingKHR(VkCommandBuffer commandBuffer) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkCmdEndRenderingKHR!");
 }
@@ -23900,7 +24582,8 @@ winsockSendToUI(&ConnectSocket, "end_vkCmdEndRenderingKHR!");
 }
 
  VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageSubresourceLayout2EXT(VkDevice device, VkImage image, VkImageSubresource2KHR* pSubresource, VkSubresourceLayout2KHR* pLayout) {
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 if(connected) {
 winsockSendToUI(&ConnectSocket, "begin_vkGetImageSubresourceLayout2EXT!");
 }
@@ -24601,7 +25284,8 @@ GETPROCADDR(CmdWriteTimestamp2KHR);
 GETPROCADDR(CmdBeginRenderingKHR);
 GETPROCADDR(CmdEndRenderingKHR);
 GETPROCADDR(GetImageSubresourceLayout2EXT);
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 return device_dispatch[GetKey(device)].GetDeviceProcAddr(device, pName);}
 VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DetailsLayer_GetInstanceProcAddr(VkInstance instance, const char* pName) {
 if (GetWindowName() == "vkDetails.exe") { GETPROCADDR(CreateDevice); GETPROCADDR(CreateInstance); return instance_dispatch[GetKey(instance)].GetInstanceProcAddr(instance, pName); }
@@ -25436,5 +26120,6 @@ GETPROCADDR(CmdWriteTimestamp2KHR);
 GETPROCADDR(CmdBeginRenderingKHR);
 GETPROCADDR(CmdEndRenderingKHR);
 GETPROCADDR(GetImageSubresourceLayout2EXT);
-scoped_lock l(global_lock);
+if(skipLock)
+	scoped_lock l(global_lock);
 return instance_dispatch[GetKey(instance)].GetInstanceProcAddr(instance, pName);}

@@ -13,6 +13,7 @@
 
 extern SOCKET ConnectSocket;
 extern bool connected;
+extern bool skipLock;
 
 std::string GetWindowName();
 void SetMemoryVariables(std::string configContent);
@@ -65,6 +66,9 @@ void layer_AcquireNextImageKHR_before(VkDevice device, VkSwapchainKHR swapchain,
 
 #define QUEUESUBMIT_AFTER_EXEC_EXISTS
 void layer_QueueSubmit_after(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence);
+
+#define CREATEIMAGEVIEW_AFTER_EXEC_EXISTS
+void layer_CreateImageView_after(VkDevice device, VkImageViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImageView* pView);
 
 //#pragma comment(lib, "Ws2_32.lib")
 #define WINDOW_NAME "VK_DEBUGGER"

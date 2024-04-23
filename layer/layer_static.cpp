@@ -8,6 +8,7 @@
 std::map<VkCommandBuffer, CommandStats> commandbuffer_stats;
 */
 bool connected = false;
+bool skipLock = false;
 #include <memory>
 #include <fstream>
 

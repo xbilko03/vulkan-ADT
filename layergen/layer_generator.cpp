@@ -216,7 +216,8 @@ namespace laygen
     }
     void LayerGenerator::PrintLock(std::ofstream* output)
     {
-        *output << "scoped_lock l(global_lock);" << std::endl;
+        *output << "if(skipLock)" << std::endl;
+        *output << "\tscoped_lock l(global_lock);" << std::endl;
     }
     void LayerGenerator::PrintCustomCall(std::ofstream* output, std::string* functName, auto* parameterList, std::string functSuffix, std::string suffix)
     {

@@ -89,6 +89,7 @@ typedef struct memoryObj {
     void** data;
 };
 std::map<VkDeviceMemory, memoryObj> memoryMap;
+
 /* Create memory object */
 void layer_AllocateMemory_after(VkDevice device, VkMemoryAllocateInfo* pAllocateInfo, VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory)
 {
@@ -114,16 +115,14 @@ void layer_CreateInstance_after(const VkInstanceCreateInfo* pCreateInfo, const V
 
 void layer_BindBufferMemory_after(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset)
 {
-    auto tarObject = memoryMap[memory];
-    tarObject.boundBuffer = buffer;
+    memoryMap[memory].boundBuffer = buffer;
 
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "memPtr=", addrToString((void*)memory)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "bufPtr=", addrToString((void*)buffer)));
 }
 void layer_BindImageMemory_after(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset)
 {
-    auto tarObject = memoryMap[memory];
-    tarObject.boundImage = image;
+    memoryMap[memory].boundImage = image;
 
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "memPtr=", addrToString((void*)memory)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "imgPtr=", addrToString((void*)image)));
@@ -234,6 +233,44 @@ void layer_AcquireNextImageKHR_before(VkDevice device, VkSwapchainKHR swapchain,
         if (frameCount % frameEveryValue == 0)
         {
             winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "warning_frameCount=", std::to_string(frameCount)));
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+void test()
+{
+
+}
+
+
+
+
+void layer_CreateImageView_after(VkDevice device, VkImageViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImageView* pView)
+{
+    /* find corresponding image */
+    for (const auto& [key, value] : memoryMap) {
+        if (value.boundImage == pCreateInfo->image)
+        {
+            /* pause layer functionality with these booleans */
+            connected = false;
+            skipLock = true;
+
+            test();
+
+            exit(0);
+            skipLock = false;
+            connected = true;
+            break;
         }
     }
 }
