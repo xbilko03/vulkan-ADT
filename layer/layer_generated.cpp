@@ -878,7 +878,7 @@ std::string bool_as_text(VkBool32 b)
     converter << std::boolalpha << b;   // flag boolalpha calls converter.setf(std::ios_base::boolalpha)
     return converter.str();
 }
-
+#include <iostream>
 std::string GetWindowName()
 {
     /* get the name of the program the layer is on [windows only] */
@@ -938,6 +938,11 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateInstance(const VkInstance
                 //do nothing, vkDetails layer will use default settings
             }
         }
+
+
+
+
+
     }
 
     VkLayerInstanceCreateInfo* layerCreateInfo = (VkLayerInstanceCreateInfo*)pCreateInfo->pNext;
@@ -1003,6 +1008,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateInstance(const VkInstance
 
         winsockSendToUI(&ConnectSocket, "end_vkCreateInstance!");
     }
+
 
     return ret;
 }
@@ -1077,7 +1083,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDevice(VkPhysicalDevice p
         layer_CreateDevice_before(physicalDevice, pCreateInfo, pAllocator, pDevice);
     }
     #endif
-
+        
     /* send to loader */
     VkResult ret = createFunc(physicalDevice, pCreateInfo, pAllocator, pDevice);
 

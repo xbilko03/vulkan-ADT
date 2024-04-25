@@ -85,17 +85,20 @@ typedef struct memoryObj {
     VkBuffer boundBuffer;
     VkImage boundImage;
     std::string status;
+    std::string boundTo;
 
     void** data;
 };
 std::map<VkDeviceMemory, memoryObj> memoryMap;
+std::map<VkImage, VkExtent3D> extentMap;
+std::map<VkImage, VkImageLayout> layoutMap;
 
 /* Create memory object */
 void layer_AllocateMemory_after(VkDevice device, VkMemoryAllocateInfo* pAllocateInfo, VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory)
 {
     /* map memory to memoryObj */
     memoryMap[*pMemory] = {};
-    memoryMap[*pMemory] = memoryObj((*pAllocateInfo).allocationSize, 0, 0, "allocated", NULL);
+    memoryMap[*pMemory] = memoryObj((*pAllocateInfo).allocationSize, nullptr, nullptr, "allocated", "nothing", NULL);
 
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", ptrToString((void**)pMemory)));
 }
@@ -107,8 +110,12 @@ void layer_FreeMemory_before(VkDevice device, VkDeviceMemory memory, VkAllocatio
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", addrToString((void*)memory)));
 }
 
+VkInstance instance;
+
 void layer_CreateInstance_after(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
 {
+    instance = *pInstance;
+
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "appName=", GetWindowName()));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "proccessID=", std::to_string(GetCurrentProcessId())));
 }
@@ -116,20 +123,31 @@ void layer_CreateInstance_after(const VkInstanceCreateInfo* pCreateInfo, const V
 void layer_BindBufferMemory_after(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset)
 {
     memoryMap[memory].boundBuffer = buffer;
+    memoryMap[memory].boundTo = "image";
 
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "memPtr=", addrToString((void*)memory)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "bufPtr=", addrToString((void*)buffer)));
 }
 void layer_BindImageMemory_after(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset)
 {
+
+
+
+
     memoryMap[memory].boundImage = image;
+    memoryMap[memory].boundTo = "image";
 
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "memPtr=", addrToString((void*)memory)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "imgPtr=", addrToString((void*)image)));
 }
+
+VkDevice deviceGl;
+
 /* Get local pointer to memory data */
 void layer_MapMemory_after(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData)
 {
+    deviceGl = device;
+
     auto tarObject = memoryMap[memory];
     if (tarObject.size > size)
         tarObject.size = size;
@@ -138,6 +156,192 @@ void layer_MapMemory_after(VkDevice device, VkDeviceMemory memory, VkDeviceSize 
     memoryMap[memory] = tarObject;
 }
 /* Get data from the local pointer */
+#define VK_USE_PLATFORM_WIN32_KHR
+
+/* filled by vkGetPhysicalDeviceSurfaceSupportKHR */
+VkSurfaceKHR surfaceNew;
+VkPhysicalDevice physicalDeviceNew;
+
+void layer_GetPhysicalDeviceSurfaceSupportKHR_before(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, VkSurfaceKHR surface, VkBool32* pSupported)
+{
+    surfaceNew = surface;
+}
+
+VkCommandPool commandPool;
+void layer_CreateCommandPool_after(VkDevice device, VkCommandPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool)
+{
+    commandPool = *pCommandPool;
+}
+
+
+
+void test(VkDevice device, VkDeviceSize size, VkImage image)
+{
+    uint32_t pPhysicalDeviceCount;
+    std::cout << "in " << instance << std::endl;
+    vkEnumeratePhysicalDevices(instance, &pPhysicalDeviceCount, nullptr);
+    
+
+    std::vector<VkPhysicalDevice> devices(pPhysicalDeviceCount);
+    vkEnumeratePhysicalDevices(instance, &pPhysicalDeviceCount, devices.data());
+
+    int devCounter = 0;
+    int i = 0;
+    for (const auto& device : devices) {
+        if (i == devCounter) {
+            physicalDeviceNew = device;
+            break;
+        }
+        i++;
+    }
+
+    std::cout << "dev" << physicalDeviceNew << std::endl;
+    uint32_t queueFamilyCount = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(physicalDeviceNew, &queueFamilyCount, nullptr);
+
+    std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+    vkGetPhysicalDeviceQueueFamilyProperties(physicalDeviceNew, &queueFamilyCount, queueFamilies.data());
+
+    uint32_t queueFamilyIndex = 0;
+    i = 0;
+    for (const auto& queueFamily : queueFamilies) {
+        if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+            queueFamilyIndex = i;
+            break;
+        }
+        i++;
+    }
+
+
+
+
+
+    VkCommandPool commandPool;
+
+    VkCommandPoolCreateInfo poolInfo{};
+    poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+    poolInfo.queueFamilyIndex = queueFamilyIndex;
+
+    if (vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create command pool!");
+    }
+
+    std::cout << "new pool " << commandPool << std::endl;
+
+    VkCommandBuffer commandBuffer;
+    VkCommandBufferAllocateInfo allocInfo{};
+    allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    allocInfo.commandPool = commandPool;
+    allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    allocInfo.commandBufferCount = 1;
+
+    if (vkAllocateCommandBuffers(device, &allocInfo, &commandBuffer) != VK_SUCCESS) {
+        throw std::runtime_error("failed to allocate command buffers!");
+    }
+
+    std::cout << "new cmdBuff " << commandBuffer << std::endl;
+
+    VkCommandBufferBeginInfo beginInfo{};
+    beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+    beginInfo.flags = 0; // Optional
+    beginInfo.pInheritanceInfo = nullptr; // Optional
+
+    if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
+        throw std::runtime_error("failed to begin recording command buffer!");
+    }
+
+
+    std::cout << "recording " << commandBuffer << std::endl;
+
+    if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
+        throw std::runtime_error("failed to record command buffer!");
+    }
+
+    std::cout << "done " << commandBuffer << std::endl;
+
+    VkQueue graphicsQueue;
+    vkGetDeviceQueue(device, queueFamilyIndex, 0, &graphicsQueue);
+
+    std::cout << "done queue " << graphicsQueue << std::endl;
+
+    VkSubmitInfo submitInfo{};
+    submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submitInfo.commandBufferCount = 1;
+    submitInfo.pCommandBuffers = &commandBuffer;
+
+    vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
+    vkQueueWaitIdle(graphicsQueue);
+
+    std::cout << "done submit " << graphicsQueue << std::endl;
+
+    VkDeviceMemory bufferMemory;
+    VkBuffer buffer;
+
+    VkBufferCreateInfo bufferInfo{};
+    bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+    bufferInfo.size = size;
+    bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+    bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+    if (vkCreateBuffer(device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
+        throw std::runtime_error("failed to create buffer!");
+    }
+    std::cout << "done buffer " << buffer << std::endl;
+
+    VkMemoryRequirements memRequirements;
+    vkGetBufferMemoryRequirements(device, buffer, &memRequirements);
+
+    VkMemoryAllocateInfo allocInfoMem{};
+    allocInfoMem.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocInfoMem.allocationSize = memRequirements.size;
+
+
+    VkPhysicalDeviceMemoryProperties memProperties;
+    vkGetPhysicalDeviceMemoryProperties(physicalDeviceNew, &memProperties);
+
+    for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
+        if ((memRequirements.memoryTypeBits & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) == (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)) {
+            allocInfoMem.memoryTypeIndex = i;
+        }
+    }
+
+    if (vkAllocateMemory(device, &allocInfoMem, nullptr, &bufferMemory) != VK_SUCCESS) {
+        throw std::runtime_error("failed to allocate buffer memory!");
+    }
+
+    std::cout << "done memory " << bufferMemory << std::endl;
+    vkBindBufferMemory(device, buffer, bufferMemory, 0);
+
+
+    std::cout << "done memory bound and everything ready " << bufferMemory << std::endl;
+
+    VkBufferImageCopy region{};
+    region.bufferOffset = 0;
+    region.bufferRowLength = 0;
+    region.bufferImageHeight = 0;
+    region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    region.imageSubresource.mipLevel = 0;
+    region.imageSubresource.baseArrayLayer = 0;
+    region.imageSubresource.layerCount = 1;
+    region.imageOffset = { 0, 0, 0 };
+    region.imageExtent = extentMap[image];
+
+    vkCmdCopyImageToBuffer(commandBuffer,image, layoutMap[image], buffer, 1, &region);
+    std::cout << "image is copied " << buffer << std::endl;
+
+    void* data;
+    vkMapMemory(device, bufferMemory, 0, size, 0, &data);
+    vkDeviceWaitIdle(device);
+    
+    std::cout << "data = " << (char*)data << " of size " << size << std::endl;
+
+    //vkDestroyCommandPool(device, commandPool, nullptr);
+    exit(0);
+}
+
+
+
 void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
 {
     auto tarObject = memoryMap[memory];
@@ -155,6 +359,9 @@ void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
 /* Create Image object */
 void layer_CreateImage_after(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage)
 {
+    layoutMap[*pImage] = pCreateInfo->initialLayout;
+    extentMap[*pImage] = pCreateInfo->extent;
+
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", ptrToString((void**)pImage)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "width=", std::to_string(pCreateInfo->extent.width)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "height=", std::to_string(pCreateInfo->extent.height)));
@@ -218,6 +425,19 @@ void layer_QueueSubmit_after(VkQueue queue, uint32_t submitCount, VkSubmitInfo* 
             winsockSendToUI(&ConnectSocket, dataMessage);
             winsockSendToUIraw(&ConnectSocket, reinterpret_cast<char*>(*tarObject.data), tarObject.size);
         }
+        else if(value.status == "allocated")
+        {
+            auto tarObject = value;
+
+            connected = false;
+            skipLock = true;
+
+            if(tarObject.boundTo == "image")
+                test(deviceGl,tarObject.size, tarObject.boundImage);
+
+            skipLock = false;
+            connected = true;
+        }
     }
 }
 
@@ -237,26 +457,9 @@ void layer_AcquireNextImageKHR_before(VkDevice device, VkSwapchainKHR swapchain,
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-void test()
-{
-
-}
-
-
-
-
 void layer_CreateImageView_after(VkDevice device, VkImageViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImageView* pView)
 {
+    return;
     /* find corresponding image */
     for (const auto& [key, value] : memoryMap) {
         if (value.boundImage == pCreateInfo->image)
@@ -265,7 +468,6 @@ void layer_CreateImageView_after(VkDevice device, VkImageViewCreateInfo* pCreate
             connected = false;
             skipLock = true;
 
-            test();
 
             exit(0);
             skipLock = false;

@@ -217,7 +217,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDevice(VkPhysicalDevice p
         layer_CreateDevice_before(physicalDevice, pCreateInfo, pAllocator, pDevice);
     }
     #endif
-
+        
     /* send to loader */
     VkResult ret = createFunc(physicalDevice, pCreateInfo, pAllocator, pDevice);
 

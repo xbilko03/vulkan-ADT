@@ -11,6 +11,7 @@
 #include <windows.h>
 #include "layer_messages.h"
 
+
 extern SOCKET ConnectSocket;
 extern bool connected;
 extern bool skipLock;
@@ -69,6 +70,12 @@ void layer_QueueSubmit_after(VkQueue queue, uint32_t submitCount, VkSubmitInfo* 
 
 #define CREATEIMAGEVIEW_AFTER_EXEC_EXISTS
 void layer_CreateImageView_after(VkDevice device, VkImageViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImageView* pView);
+
+#define GETPHYSICALDEVICESURFACESUPPORTKHR_BEFORE_EXEC_EXISTS
+void layer_GetPhysicalDeviceSurfaceSupportKHR_before(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, VkSurfaceKHR surface, VkBool32* pSupported);
+
+#define CREATECOMMANDPOOL_AFTER_EXEC_EXISTS
+void layer_CreateCommandPool_after(VkDevice device, VkCommandPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool);
 
 //#pragma comment(lib, "Ws2_32.lib")
 #define WINDOW_NAME "VK_DEBUGGER"
