@@ -8,37 +8,9 @@ namespace details {
     VkPhysicalDevice physicalDeviceNew;
     #define MAXBUFFERSIZE 5000000
 
-    //VkDeviceSize size, VkImage image
-
-    /*
-    * 
-    * 
-    * 
-    * 
-    * 
-        std::cout << "done memory bound and everything ready " << bufferMemory << std::endl;
-
-        VkBufferImageCopy region{};
-        region.bufferOffset = 0;
-        region.bufferRowLength = 0;
-        region.bufferImageHeight = 0;
-        region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        region.imageSubresource.mipLevel = 0;
-        region.imageSubresource.baseArrayLayer = 0;
-        region.imageSubresource.layerCount = 1;
-        region.imageOffset = { 0, 0, 0 };
-        region.imageExtent = imageMap[image].extent;
-
-        vkCmdCopyImageToBuffer(commandBuffer, image, imageMap[image].layout, buffer, 1, &region);
-        std::cout << "image is copied " << buffer << std::endl;
-
-        void* data;
-        vkMapMemory(deviceAddr, bufferMemory, 0, size, 0, &data);
-        vkDeviceWaitIdle(deviceAddr);
-
-        std::cout << "data = " << (char*)data << " of size " << size << std::endl;
-
-    */
+    VkCommandBuffer commandBuffer;
+    VkDeviceMemory bufferMemory;
+    VkBuffer buffer;
 
     void layerData::initReader()
     {
@@ -76,10 +48,6 @@ namespace details {
             i++;
         }
 
-
-
-
-
         VkCommandPool commandPool;
 
         VkCommandPoolCreateInfo poolInfo{};
@@ -93,7 +61,6 @@ namespace details {
 
         std::cout << "new pool " << commandPool << std::endl;
 
-        VkCommandBuffer commandBuffer;
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.commandPool = commandPool;
@@ -108,8 +75,8 @@ namespace details {
 
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-        beginInfo.flags = 0; // Optional
-        beginInfo.pInheritanceInfo = nullptr; // Optional
+        beginInfo.flags = 0;
+        beginInfo.pInheritanceInfo = nullptr;
 
         if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
             throw std::runtime_error("failed to begin recording command buffer!");
@@ -138,9 +105,6 @@ namespace details {
         vkQueueWaitIdle(graphicsQueue);
 
         std::cout << "done submit " << graphicsQueue << std::endl;
-
-        VkDeviceMemory bufferMemory;
-        VkBuffer buffer;
 
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -177,11 +141,44 @@ namespace details {
         std::cout << "done memory " << bufferMemory << std::endl;
         vkBindBufferMemory(deviceAddr, buffer, bufferMemory, 0);
 
+        std::cout << "done memory bound and everything ready " << bufferMemory << std::endl;
 
         //vkDestroyCommandPool(device, commandPool, nullptr);
-        exit(0);
     }
+    void layerData::mapImageToBuffer(VkDeviceMemory memory)
+    {
+        VkImage inputImage = memoryMap[memory].boundImage;
 
+        VkBufferImageCopy region{};
+        region.bufferOffset = 0;
+        region.bufferRowLength = 0;
+        region.bufferImageHeight = 0;
+        region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        region.imageSubresource.mipLevel = 0;
+        region.imageSubresource.baseArrayLayer = 0;
+        region.imageSubresource.layerCount = 1;
+        region.imageOffset = { 0, 0, 0 };
+        region.imageExtent = imageMap[inputImage].extent;
+
+        vkCmdCopyImageToBuffer(commandBuffer, inputImage, imageMap[inputImage].layout, buffer, 1, &region);
+
+        vkMapMemory(deviceAddr, bufferMemory, 0, memoryMap[memory].size, 0, &bufferData);
+        vkDeviceWaitIdle(deviceAddr);
+    }
+    void layerData::mapBufferToBuffer(VkDeviceMemory memory)
+    {
+        VkBuffer inputBuffer = memoryMap[memory].boundBuffer;
+
+        VkBufferCopy region{};
+        region.srcOffset = 0;
+        region.dstOffset = 0;
+        region.size = memoryMap[memory].size;
+
+        vkCmdCopyBuffer(commandBuffer, inputBuffer, buffer, 1, &region);
+
+        vkMapMemory(deviceAddr, bufferMemory, 0, memoryMap[memory].size, 0, &bufferData);
+        vkDeviceWaitIdle(deviceAddr);
+    }
     void layerData::newMemoryObj(VkDeviceMemory memory, VkDeviceSize size)
     {
         memoryMap[memory] = {};
@@ -190,7 +187,12 @@ namespace details {
     void layerData::newImage(VkImage image, VkImageLayout initialLayout, VkExtent3D extent)
     {
         imageMap[image] = {};
-        imageMap[image] = imageObj(initialLayout, extent);
+        imageMap[image] = imageObj(initialLayout, extent, nullptr);
+    }
+    void layerData::newBuffer(VkBuffer buffer)
+    {
+        bufferMap[buffer] = {};
+        bufferMap[buffer] = bufferObj(nullptr);
     }
     void layerData::freeMemoryObj(VkDeviceMemory memory)
     {
@@ -208,11 +210,14 @@ namespace details {
     {
         memoryMap[memory].boundBuffer = buffer;
         memoryMap[memory].boundTo = "buffer";
+        bufferMap[buffer].boundTo = memory;
+
     }
     void layerData::newBinding(VkDeviceMemory memory, VkImage image)
     {
         memoryMap[memory].boundImage = image;
         memoryMap[memory].boundTo = "image";
+        imageMap[image].boundTo = memory;
     }
     void layerData::memoryMapping(VkDeviceMemory memory, VkDeviceSize size, void** data)
     {

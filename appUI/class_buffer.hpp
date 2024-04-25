@@ -11,7 +11,7 @@ namespace details {
     public:
         /* state change */
         void newBuffer(unsigned long long inputID) { bufferCount++; bufferMap[inputID] = vkBuffer(); bufferMap[inputID].bufferState = "allocated"; }
-        void FreeBuffer(unsigned long long inputID) { BOUNDARYCHECK; bufferMap[inputID].bufferState = "freed"; }
+        void SetState(unsigned long long inputID, std::string input) { BOUNDARYCHECK; bufferMap[inputID].bufferState = input; }
 
         /* getInfo */
         std::string GetState(unsigned long long inputID) { return bufferMap[inputID].bufferState; }

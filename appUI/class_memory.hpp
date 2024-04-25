@@ -29,7 +29,7 @@ namespace details {
 
         unsigned long long GetFromPointerID(std::string message);
 
-        void FreeMemory(unsigned long long inputID) { BOUNDARYCHECK; memoryMap[inputID].memoryState = "freed"; }
+        void SetState(unsigned long long inputID, std::string input) { BOUNDARYCHECK; memoryMap[inputID].memoryState = input; }
 
         struct vkMemory;
         vkMemory* GetMemory(unsigned long long inputID) { return &memoryMap[inputID]; }

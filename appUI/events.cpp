@@ -162,10 +162,19 @@ namespace details {
                 else if (omitValue(input) == "layer_ptr")
                 {
                     modifiedMemoryID[0] = memMan->GetFromPointerID(omitMessage(input));
+                    memMan->SetState(modifiedMemoryID[0], "unmapped");
                 }
                 else if (omitValue(input) == "layer_size")
                 {
                     lastMemorySize = stoul(omitMessage(input));
+                }
+            }
+            else if (receptionState == "begin_vkMapMemory")
+            {
+                if (omitValue(input) == "layer_ptr")
+                {
+                    modifiedMemoryID[1] = memMan->GetFromPointerID(omitMessage(input));
+                    memMan->SetState(modifiedMemoryID[1], "mapped");
                 }
             }
             else if (receptionState == "begin_vkQueueSubmit")
@@ -189,7 +198,7 @@ namespace details {
             }
             else if (receptionState == "begin_vkFreeMemory")
             {
-                memMan->FreeMemory(memMan->GetFromPointerID(omitMessage(input)));
+                memMan->SetState(memMan->GetFromPointerID(omitMessage(input)), "freed");
             }
             else if (receptionState == "begin_vkCreateImage")
             {
@@ -210,7 +219,7 @@ namespace details {
             {
                 modifiedImageID[1] = imgMan->GetFromPointerID(omitMessage(input));
                 if (modifiedImageID[1] != -1)
-                    imgMan->FreeBuffer(modifiedImageID[1]);
+                    imgMan->SetState(modifiedImageID[1], "freed");
             }
             else if (receptionState == "begin_vkCreateBuffer")
             {
@@ -220,7 +229,7 @@ namespace details {
             {
                 modifiedBufferID[1] = bufMan->GetFromPointerID(omitMessage(input));
                 if (modifiedBufferID[1] != -1)
-                    bufMan->FreeBuffer(modifiedBufferID[1]);
+                    bufMan->SetState(modifiedBufferID[1], "freed");
             }
             else if (receptionState == "begin_vkBindBufferMemory")
             {
@@ -239,9 +248,11 @@ namespace details {
 
                         /* bind memoryPtr to bufferPtr */
                         bufMan->AssignBoundObj(modifiedBufferID[1], memMan->GetPointer(modifiedMemoryID[0]));
+                        bufMan->SetState(modifiedBufferID[1], "bound");
 
                         /* bind bufferPtr to memoryPtr */
                         memMan->AssignBoundObj(modifiedMemoryID[0], omitMessage(input));
+                        memMan->SetState(modifiedMemoryID[0], "bound");
 
                         /* assign memoryObj to bufferObj */
                         bufMan->AssignMemory(modifiedBufferID[1], memMan->GetMemory(modifiedMemoryID[0]));
@@ -265,9 +276,11 @@ namespace details {
 
                         /* bind memoryPtr to imagePtr */
                         imgMan->AssignBoundObj(modifiedImageID[1], memMan->GetPointer(modifiedMemoryID[0]));
+                        imgMan->SetState(modifiedImageID[1], "bound");
 
                         /* bind imagePtr to memoryPtr */
                         memMan->AssignBoundObj(modifiedMemoryID[0], omitMessage(input));
+                        memMan->SetState(modifiedMemoryID[0], "bound");
 
                         /* assign memoryObj to imageObj */
                         imgMan->AssignMemory(modifiedImageID[1], memMan->GetMemory(modifiedMemoryID[0]));
@@ -288,6 +301,7 @@ namespace details {
                     {
                         /* get destination buffer ID */
                         modifiedBufferID[1] = bufMan->GetFromPointerID(omitMessage(input));
+                        bufMan->SetState(modifiedBufferID[1], "copied");
 
                         /* get source memory ID */
                         modifiedMemoryID[0] = memMan->GetFromPointerID(imgMan->GetBoundObj(modifiedImageID[0]));
@@ -314,6 +328,7 @@ namespace details {
                     {
                         /* get destination image ID */
                         modifiedImageID[1] = imgMan->GetFromPointerID(omitMessage(input));
+                        imgMan->SetState(modifiedImageID[1], "copied");
                         
                         /* get source memory ID */
                         modifiedMemoryID[0] = memMan->GetFromPointerID(bufMan->GetBoundObj(modifiedBufferID[0]));
@@ -343,6 +358,7 @@ namespace details {
                     {
                         /* get destination image ID */
                         modifiedImageID[1] = imgMan->GetFromPointerID(omitMessage(input));
+                        imgMan->SetState(modifiedImageID[1], "copied");
 
                         /* get source memory ID */
                         modifiedMemoryID[0] = memMan->GetFromPointerID(imgMan->GetBoundObj(modifiedImageID[0]));
@@ -369,6 +385,7 @@ namespace details {
                     {
                         /* get destination buffer ID */
                         modifiedBufferID[1] = bufMan->GetFromPointerID(omitMessage(input));
+                        bufMan->SetState(modifiedBufferID[1], "copied");
 
                         /* get source memory ID */
                         modifiedMemoryID[0] = memMan->GetFromPointerID(bufMan->GetBoundObj(modifiedBufferID[0]));
