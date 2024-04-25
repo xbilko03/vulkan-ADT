@@ -2,15 +2,12 @@
 
 #include <vulkan/vulkan.h>
 #include <vulkan/vk_layer.h>
-//#include <winsock2.h>
 #include "../appUI/winsock.h"
 #include <string>
 #include <map>
-//#include <thread>
 #include <filesystem>
 #include <windows.h>
 #include "layer_messages.h"
-
 
 extern SOCKET ConnectSocket;
 extern bool connected;
@@ -76,6 +73,10 @@ void layer_GetPhysicalDeviceSurfaceSupportKHR_before(VkPhysicalDevice physicalDe
 
 #define CREATECOMMANDPOOL_AFTER_EXEC_EXISTS
 void layer_CreateCommandPool_after(VkDevice device, VkCommandPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool);
+
+#define CREATEDEVICE_AFTER_EXEC_EXISTS
+void layer_CreateDevice_after(VkPhysicalDevice physicalDevice, const VkDeviceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDevice* pDevice);
+
 
 //#pragma comment(lib, "Ws2_32.lib")
 #define WINDOW_NAME "VK_DEBUGGER"

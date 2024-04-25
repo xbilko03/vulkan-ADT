@@ -91,6 +91,8 @@ ${Vulkan_LIBRARIES}
 "layer/layer_messages.h"
 "layer/layer_messages.cpp"
 "layer/layer_generated.cpp"
+"layer/layer_reader.hpp"
+"layer/layer_data.cpp"
 
  "appUI/winsock.h"
  "appUI/winsock.cpp")
