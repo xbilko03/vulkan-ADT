@@ -423,7 +423,8 @@ namespace details {
     {
         if (index < 0)
             return;
-        std::string s = input;
+        char* s = input;
+
         s = s.substr(0, index);
 
         if (currentDataSize < dataSize)

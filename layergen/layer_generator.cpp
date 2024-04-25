@@ -216,7 +216,7 @@ namespace laygen
     }
     void LayerGenerator::PrintLock(std::ofstream* output)
     {
-        *output << "if(skipLock)" << std::endl;
+        *output << "if(skipLock == false) {" << std::endl;
         *output << "\tscoped_lock l(global_lock);" << std::endl;
     }
     void LayerGenerator::PrintCustomCall(std::ofstream* output, std::string* functName, auto* parameterList, std::string functSuffix, std::string suffix)
@@ -451,6 +451,8 @@ namespace laygen
         {
             generatedLayerFile << "return device_dispatch[GetKey(device)].GetDeviceProcAddr(device, pName);}" << std::endl;
         }
+        /* enclose skip lock definition*/
+        generatedLayerFile << "}";
     }
     void LayerGenerator::generateForCmdList(std::list<XmlParser::Command> inputCmdList, std::string cmdListType)
     {
@@ -548,11 +550,20 @@ namespace laygen
             PrintSendToUI(&generatedLayerFile, "end_" + item.functName);
             generatedLayerFile << "}" << std::endl;
 
+            if (strcmp(item.functType.c_str(), "void") != 0)
+            {
+                generatedLayerFile << "return ret;" << std::endl;
+            }
+            /* enclose skipLock */
+            generatedLayerFile << "} else {" << std::endl;
+            /* call for functions that bypass global lock */
+            PrintExecuteCall(&generatedLayerFile, &(item.functType), &(item.functName), &(item.parameterList), cmdListType);
 
             if (strcmp(item.functType.c_str(), "void") != 0)
             {
                 generatedLayerFile << "return ret;" << std::endl;
             }
+            generatedLayerFile << "}" << std::endl;
 
             generatedLayerFile << "}" << std::endl;
             /* END */

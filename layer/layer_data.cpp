@@ -1,6 +1,5 @@
 #include "layer_data.hpp"
-
-
+#include "layer.hpp"
 
 namespace details {
     VkInstance instanceAddr;
@@ -15,11 +14,14 @@ namespace details {
     void layerData::initReader()
     {
         uint32_t pPhysicalDeviceCount;
-        std::cout << "in " << instanceAddr << std::endl;
+        skipLock = true;
         vkEnumeratePhysicalDevices(instanceAddr, &pPhysicalDeviceCount, nullptr);
+        skipLock = false;
 
         std::vector<VkPhysicalDevice> devices(pPhysicalDeviceCount);
+        skipLock = true;
         vkEnumeratePhysicalDevices(instanceAddr, &pPhysicalDeviceCount, devices.data());
+        skipLock = false;
 
         int devCounter = 0;
         int i = 0;
@@ -31,12 +33,15 @@ namespace details {
             i++;
         }
 
-        std::cout << "dev" << physicalDeviceNew << std::endl;
         uint32_t queueFamilyCount = 0;
+        skipLock = true;
         vkGetPhysicalDeviceQueueFamilyProperties(physicalDeviceNew, &queueFamilyCount, nullptr);
+        skipLock = false;
 
         std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+        skipLock = true;
         vkGetPhysicalDeviceQueueFamilyProperties(physicalDeviceNew, &queueFamilyCount, queueFamilies.data());
+        skipLock = false;
 
         uint32_t queueFamilyIndex = 0;
         i = 0;
@@ -55,11 +60,11 @@ namespace details {
         poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
         poolInfo.queueFamilyIndex = queueFamilyIndex;
 
+        skipLock = true;
         if (vkCreateCommandPool(deviceAddr, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
             throw std::runtime_error("failed to create command pool!");
         }
-
-        std::cout << "new pool " << commandPool << std::endl;
+        skipLock = false;
 
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -67,44 +72,47 @@ namespace details {
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
         allocInfo.commandBufferCount = 1;
 
+        skipLock = true;
         if (vkAllocateCommandBuffers(deviceAddr, &allocInfo, &commandBuffer) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate command buffers!");
         }
-
-        std::cout << "new cmdBuff " << commandBuffer << std::endl;
+        skipLock = false;
 
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         beginInfo.flags = 0;
         beginInfo.pInheritanceInfo = nullptr;
 
+        skipLock = true;
         if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
             throw std::runtime_error("failed to begin recording command buffer!");
         }
+        skipLock = false;
 
-
-        std::cout << "recording " << commandBuffer << std::endl;
-
+        skipLock = true;
         if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
             throw std::runtime_error("failed to record command buffer!");
         }
-
-        std::cout << "done " << commandBuffer << std::endl;
+        skipLock = false;
 
         VkQueue graphicsQueue;
+        skipLock = true;
         vkGetDeviceQueue(deviceAddr, queueFamilyIndex, 0, &graphicsQueue);
+        skipLock = false;
 
-        std::cout << "done queue " << graphicsQueue << std::endl;
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
         submitInfo.commandBufferCount = 1;
         submitInfo.pCommandBuffers = &commandBuffer;
 
+        skipLock = true;
         vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
-        vkQueueWaitIdle(graphicsQueue);
+        skipLock = false;
 
-        std::cout << "done submit " << graphicsQueue << std::endl;
+        skipLock = true;
+        vkQueueWaitIdle(graphicsQueue);
+        skipLock = false;
 
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -112,13 +120,16 @@ namespace details {
         bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
         bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
+        skipLock = true;
         if (vkCreateBuffer(deviceAddr, &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
             throw std::runtime_error("failed to create buffer!");
         }
-        std::cout << "done buffer " << buffer << std::endl;
+        skipLock = false;
 
         VkMemoryRequirements memRequirements;
+        skipLock = true;
         vkGetBufferMemoryRequirements(deviceAddr, buffer, &memRequirements);
+        skipLock = false;
 
         VkMemoryAllocateInfo allocInfoMem{};
         allocInfoMem.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -126,7 +137,9 @@ namespace details {
 
 
         VkPhysicalDeviceMemoryProperties memProperties;
+        skipLock = true;
         vkGetPhysicalDeviceMemoryProperties(physicalDeviceNew, &memProperties);
+        skipLock = false;
 
         for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
             if ((memRequirements.memoryTypeBits & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) == (VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)) {
@@ -134,14 +147,15 @@ namespace details {
             }
         }
 
+        skipLock = true;
         if (vkAllocateMemory(deviceAddr, &allocInfoMem, nullptr, &bufferMemory) != VK_SUCCESS) {
             throw std::runtime_error("failed to allocate buffer memory!");
         }
+        skipLock = false;
 
-        std::cout << "done memory " << bufferMemory << std::endl;
+        skipLock = true;
         vkBindBufferMemory(deviceAddr, buffer, bufferMemory, 0);
-
-        std::cout << "done memory bound and everything ready " << bufferMemory << std::endl;
+        skipLock = false;
 
         //vkDestroyCommandPool(device, commandPool, nullptr);
     }
@@ -160,10 +174,17 @@ namespace details {
         region.imageOffset = { 0, 0, 0 };
         region.imageExtent = imageMap[inputImage].extent;
 
+        skipLock = true;
         vkCmdCopyImageToBuffer(commandBuffer, inputImage, imageMap[inputImage].layout, buffer, 1, &region);
+        skipLock = false;
 
+        skipLock = true;
         vkMapMemory(deviceAddr, bufferMemory, 0, memoryMap[memory].size, 0, &bufferData);
+        skipLock = false;
+
+        skipLock = true;
         vkDeviceWaitIdle(deviceAddr);
+        skipLock = false;
     }
     void layerData::mapBufferToBuffer(VkDeviceMemory memory)
     {
@@ -174,10 +195,17 @@ namespace details {
         region.dstOffset = 0;
         region.size = memoryMap[memory].size;
 
+        skipLock = true;
         vkCmdCopyBuffer(commandBuffer, inputBuffer, buffer, 1, &region);
+        skipLock = false;
 
+        skipLock = true;
         vkMapMemory(deviceAddr, bufferMemory, 0, memoryMap[memory].size, 0, &bufferData);
+        skipLock = false;
+
+        skipLock = true;
         vkDeviceWaitIdle(deviceAddr);
+        skipLock = false;
     }
     void layerData::newMemoryObj(VkDeviceMemory memory, VkDeviceSize size)
     {

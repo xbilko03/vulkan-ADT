@@ -152,17 +152,13 @@ void layer_CreateImage_after(VkDevice device, VkImageCreateInfo* pCreateInfo, Vk
 {
     data->newImage(*pImage, pCreateInfo->initialLayout, pCreateInfo->extent);
 
-    connected = false;
-    skipLock = true;
-
     if (readerReady == false)
     {
+        connected = false;
         data->initReader(); // value.size, value.boundImage
+        connected = true;
         readerReady = true;
     }
-
-    skipLock = false;
-    connected = true;
 
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", ptrToString((void**)pImage)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "width=", std::to_string(pCreateInfo->extent.width)));
@@ -171,17 +167,13 @@ void layer_CreateImage_after(VkDevice device, VkImageCreateInfo* pCreateInfo, Vk
 void layer_CreateBuffer_after(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer)
 {
 
-    connected = false;
-    skipLock = true;
-
     if (readerReady == false)
     {
+        connected = false;
         data->initReader(); // value.size, value.boundImage
+        connected = true;
         readerReady = true;
     }
-
-    skipLock = false;
-    connected = true;
 
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", ptrToString((void**)pBuffer)));
 }
@@ -195,38 +187,31 @@ void layer_DestroyBuffer_before(VkDevice device, VkBuffer buffer, VkAllocationCa
 }
 void layer_CmdCopyImageToBuffer_before(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, VkBufferImageCopy* pRegions)
 {
-    data->setState(dstBuffer, "copied");
+    //data->setState(dstBuffer, "copied");
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "dstBuf=", addrToString((void*)dstBuffer)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "srcImg=", addrToString((void*)srcImage)));
 }
 void layer_CmdCopyBufferToImage_before(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkBufferImageCopy* pRegions)
 {
-    data->setState(dstImage, "copied");
+    //data->setState(dstImage, "copied");
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "srcBuf=", addrToString((void*)srcBuffer)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "dstImg=", addrToString((void*)dstImage)));
 }
 void layer_CmdCopyBuffer_before(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, VkBufferCopy* pRegions)
 {
-    data->setState(dstBuffer, "copied");
+    //data->setState(dstBuffer, "copied");
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "srcBuf=", addrToString((void*)srcBuffer)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "dstBuf=", addrToString((void*)dstBuffer)));
 }
 void layer_CmdCopyImage_before(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageCopy* pRegions)
 {
-    data->setState(dstImage, "copied");
+    //data->setState(dstImage, "copied");
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "srcImg=", addrToString((void*)srcImage)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "dstImg=", addrToString((void*)dstImage)));
 }
 void layer_CreateDevice_after(VkPhysicalDevice physicalDevice, const VkDeviceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDevice* pDevice)
 {
-    connected = false;
-    skipLock = true;
-
     data->newDevice(*pDevice);
-
-    skipLock = false;
-    connected = true;
-
 }
 void layer_QueueSubmit_after(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence)
 {
@@ -252,17 +237,13 @@ void layer_QueueSubmit_after(VkQueue queue, uint32_t submitCount, VkSubmitInfo* 
             if (value.boundTo == "image")
             {
                 connected = false;
-                skipLock = true;
                 data->mapImageToBuffer(key);
-                skipLock = false;
                 connected = true;
             }
             else if (value.boundTo == "buffer")
             {
                 connected = false;
-                skipLock = true;
                 data->mapBufferToBuffer(key);
-                skipLock = false;
                 connected = true;
             }
             winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", addrToString((void*)key)));
@@ -272,11 +253,11 @@ void layer_QueueSubmit_after(VkQueue queue, uint32_t submitCount, VkSubmitInfo* 
             dataMessage += std::to_string(value.size);
             dataMessage += '!';
 
-            void* limitedData = malloc(value.size);
+            char* limitedData = (char*)malloc(value.size);
             memcpy(limitedData, *data->getBufferData(), value.size);
 
             winsockSendToUI(&ConnectSocket, dataMessage);
-            winsockSendToUIraw(&ConnectSocket, reinterpret_cast<char*>(limitedData), value.size);
+            winsockSendToUIraw(&ConnectSocket, (limitedData), value.size);
 
             free(limitedData);
         }
