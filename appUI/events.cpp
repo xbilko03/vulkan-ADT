@@ -14,7 +14,7 @@ namespace details {
     /* FSM state */
     std::string receptionState = "";
     /* Data concatenation string in case the input is longer than 500 chars or if not the entire data has been accepted */
-    std::string remainder = "";
+    char* remainder;
     std::string newData;
     char* allocatedData;
     size_t dataSize = 0;
@@ -421,9 +421,9 @@ namespace details {
     /* Receive new message from the thread, send it to be parsed after it has been constructed successfully */
     void events::newInfo(const char* input, int index)
     {
-        if (index < 0)
+        if (index <= 0)
             return;
-        char* s = input;
+        std::string s = input;
 
         s = s.substr(0, index);
 
