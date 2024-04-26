@@ -50,8 +50,9 @@ namespace details {
 		std::string getImageCulpritName(unsigned long long ID) { return imgMan->GetCulprit(ID)->getName(); }
 		unsigned long long getImageCulpritID(unsigned long long ID) { return imgMan->GetCulprit(ID)->getID(); }
 
-		std::list<std::string>* getWarningsList() { return &warningsList; }
+		void loadTexture(unsigned long long ID);
 
+		std::list<std::string>* getWarningsList() { return &warningsList; }
 		std::list<std::string> getAppInfo() { return sysMan->getAppInfo(); }
 		std::list<std::string> getVkInfo() { return sysMan->getVkInfo(); }
 	private:

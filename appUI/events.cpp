@@ -47,6 +47,11 @@ namespace details {
         imgMan = new vkImageManager();
         sysMan = new vkSystemManager(winMan);
     }
+    void events::loadTexture(unsigned long long ID )
+    { 
+        winMan->LoadImageTexture(ID, imgMan->GetWidth(ID), imgMan->GetHeight(ID), 4, imgMan->GetMemory(ID)->memoryData); 
+    }
+
     /* Remove the message prefix before = */
     std::string events::omitMessage(std::string input)
     {
@@ -89,7 +94,7 @@ namespace details {
             if (modifiedImageID[1] != -1)
             {
                 //imgMan->AssignMemory(modifiedImageID[1], memMan->GetMemory(modifiedMemoryID[0]));
-                winMan->LoadImageTexture(modifiedImageID[1], imgMan->GetWidth(modifiedImageID[1]), imgMan->GetHeight(modifiedImageID[1]), 4, imgMan->GetMemory(modifiedImageID[1])->memoryData);
+                //winMan->LoadImageTexture(modifiedImageID[1], imgMan->GetWidth(modifiedImageID[1]), imgMan->GetHeight(modifiedImageID[1]), 4, imgMan->GetMemory(modifiedImageID[1])->memoryData);
             }
             dataLoad = false;
             return;
@@ -336,11 +341,9 @@ namespace details {
                         /* get destination memory ID */
                         modifiedMemoryID[1] = memMan->GetFromPointerID(imgMan->GetBoundObj(modifiedImageID[1]));
 
-
-                        std::cout << "copying buffer #" << modifiedMemoryID[0] << " to buffer #" << modifiedMemoryID[1] << std::endl;
                         /* copy data between bound memory objects */
                         memMan->AssignData(modifiedMemoryID[1], memMan->GetData(modifiedMemoryID[0]), memMan->GetDataSize(modifiedMemoryID[0]));
-                        winMan->LoadImageTexture(modifiedImageID[1], imgMan->GetWidth(modifiedImageID[1]), imgMan->GetHeight(modifiedImageID[1]), 4, imgMan->GetMemory(modifiedImageID[1])->memoryData);
+                        //winMan->LoadImageTexture(modifiedImageID[1], imgMan->GetWidth(modifiedImageID[1]), imgMan->GetHeight(modifiedImageID[1]), 4, imgMan->GetMemory(modifiedImageID[1])->memoryData);
                     }
                 }
             }
@@ -367,7 +370,7 @@ namespace details {
                         modifiedMemoryID[1] = memMan->GetFromPointerID(imgMan->GetBoundObj(modifiedImageID[1]));
 
                         memMan->AssignData(modifiedMemoryID[1], memMan->GetData(modifiedMemoryID[0]), memMan->GetDataSize(modifiedMemoryID[0]));
-                        winMan->LoadImageTexture(modifiedImageID[1], imgMan->GetWidth(modifiedImageID[1]), imgMan->GetHeight(modifiedImageID[1]), 4, imgMan->GetMemory(modifiedImageID[1])->memoryData);
+                        //winMan->LoadImageTexture(modifiedImageID[1], imgMan->GetWidth(modifiedImageID[1]), imgMan->GetHeight(modifiedImageID[1]), 4, imgMan->GetMemory(modifiedImageID[1])->memoryData);
                     }
                 }
             }

@@ -26,7 +26,6 @@ namespace details {
 
     bool appWindow::LoadImageTexture(unsigned long long ID, int width, int height, int channels, void* imageData)
     {
-        return false;
         /* free last texture if exists */
         if (loadedImages.count(ID))
         {
@@ -66,7 +65,10 @@ namespace details {
             info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
             info.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
             err = vkCreateImage(g_Device, &info, g_Allocator, &my_texture.Image);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
             VkMemoryRequirements req;
             vkGetImageMemoryRequirements(g_Device, my_texture.Image, &req);
             VkMemoryAllocateInfo alloc_info = {};
@@ -74,9 +76,15 @@ namespace details {
             alloc_info.allocationSize = req.size;
             alloc_info.memoryTypeIndex = findMemoryType(req.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
             err = vkAllocateMemory(g_Device, &alloc_info, g_Allocator, &my_texture.ImageMemory);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
             err = vkBindImageMemory(g_Device, my_texture.Image, my_texture.ImageMemory, 0);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
         }
 
         // Create the Image View
@@ -90,7 +98,10 @@ namespace details {
             info.subresourceRange.levelCount = 1;
             info.subresourceRange.layerCount = 1;
             err = vkCreateImageView(g_Device, &info, g_Allocator, &my_texture.ImageView);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
         }
 
         // Create Sampler
@@ -107,7 +118,10 @@ namespace details {
             sampler_info.maxLod = 1000;
             sampler_info.maxAnisotropy = 1.0f;
             err = vkCreateSampler(g_Device, &sampler_info, g_Allocator, &my_texture.Sampler);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
         }
 
         // Create Descriptor Set using ImGUI's implementation
@@ -121,7 +135,10 @@ namespace details {
             buffer_info.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
             buffer_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
             err = vkCreateBuffer(g_Device, &buffer_info, g_Allocator, &my_texture.UploadBuffer);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
             VkMemoryRequirements req;
             vkGetBufferMemoryRequirements(g_Device, my_texture.UploadBuffer, &req);
             VkMemoryAllocateInfo alloc_info = {};
@@ -129,9 +146,15 @@ namespace details {
             alloc_info.allocationSize = req.size;
             alloc_info.memoryTypeIndex = findMemoryType(req.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
             err = vkAllocateMemory(g_Device, &alloc_info, g_Allocator, &my_texture.UploadBufferMemory);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
             err = vkBindBufferMemory(g_Device, my_texture.UploadBuffer, my_texture.UploadBufferMemory, 0);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
         }
 
         // Upload to Buffer:
@@ -139,17 +162,20 @@ namespace details {
             void* map = NULL;
 
             err = vkMapMemory(g_Device, my_texture.UploadBufferMemory, 0, image_size, 0, &map);
-
-            std::cout << map << std::endl;
-
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
             memcpy(map, image_data, image_size);
             VkMappedMemoryRange range[1] = {};
             range[0].sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
             range[0].memory = my_texture.UploadBufferMemory;
             range[0].size = image_size;
             err = vkFlushMappedMemoryRanges(g_Device, 1, range);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
             vkUnmapMemory(g_Device, my_texture.UploadBufferMemory);
         }
 
@@ -168,13 +194,19 @@ namespace details {
             alloc_info.commandBufferCount = 1;
 
             err = vkAllocateCommandBuffers(g_Device, &alloc_info, &command_buffer);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
 
             VkCommandBufferBeginInfo begin_info = {};
             begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
             begin_info.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
             err = vkBeginCommandBuffer(command_buffer, &begin_info);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
         }
 
         // Copy to Image
@@ -222,11 +254,20 @@ namespace details {
             end_info.commandBufferCount = 1;
             end_info.pCommandBuffers = &command_buffer;
             err = vkEndCommandBuffer(command_buffer);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
             err = vkQueueSubmit(g_Queue, 1, &end_info, VK_NULL_HANDLE);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
             err = vkDeviceWaitIdle(g_Device);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                return false;
+            }
         }
 
         loadedImages[ID] = my_texture;
