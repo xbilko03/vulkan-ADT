@@ -14,7 +14,7 @@ namespace details {
     /* FSM state */
     std::string receptionState = "";
     /* Data concatenation string in case the input is longer than 500 chars or if not the entire data has been accepted */
-    char* remainder;
+    std::string remainder;
     std::string newData;
     char* allocatedData;
     size_t dataSize = 0;
@@ -445,17 +445,23 @@ namespace details {
                 */
 
                 memcpy(allocatedData + currentDataSize - index, input, remainderIndex);
+                /*
                 char* temp = (char*)malloc(currentDataSize - dataSize);
                 memcpy(temp, input + remainderIndex, currentDataSize - dataSize);
 
                 remainder = temp;
                 remainder = remainder.substr(0, currentDataSize - dataSize);
+                */
 
                 std::string invokeData = "layer_data=" + std::to_string(dataSize);
                 parseMessage(invokeData.c_str());
                 parseMessage(allocatedData);
+                int offset = currentDataSize - dataSize;
                 currentDataSize = 0;
                 dataSize = 0;
+                remainder = "";
+                newInfo(input + remainderIndex, offset);
+                return;
             }
             else
             {

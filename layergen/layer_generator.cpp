@@ -529,7 +529,7 @@ namespace laygen
             * print parameters that can be sent
             */
 
-            PrintParemeterSends(&generatedLayerFile, &(xmlp.structList), &(item.parameterList));
+            //PrintParemeterSends(&generatedLayerFile, &(xmlp.structList), &(item.parameterList));
 
             /*
             * additional functionality (if) defined in layer.cpp

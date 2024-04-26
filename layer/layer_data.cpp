@@ -10,6 +10,7 @@ namespace details {
     VkCommandBuffer commandBuffer;
     VkDeviceMemory bufferMemory;
     VkBuffer buffer;
+    VkQueue graphicsQueue;
 
     void layerData::initReader()
     {
@@ -78,28 +79,9 @@ namespace details {
         }
         skipLock = false;
 
-        VkCommandBufferBeginInfo beginInfo{};
-        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-        beginInfo.flags = 0;
-        beginInfo.pInheritanceInfo = nullptr;
-
-        skipLock = true;
-        if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
-            throw std::runtime_error("failed to begin recording command buffer!");
-        }
-        skipLock = false;
-
-        skipLock = true;
-        if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
-            throw std::runtime_error("failed to record command buffer!");
-        }
-        skipLock = false;
-
-        VkQueue graphicsQueue;
         skipLock = true;
         vkGetDeviceQueue(deviceAddr, queueFamilyIndex, 0, &graphicsQueue);
         skipLock = false;
-
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -174,12 +156,39 @@ namespace details {
         region.imageOffset = { 0, 0, 0 };
         region.imageExtent = imageMap[inputImage].extent;
 
+
+        VkCommandBufferBeginInfo beginInfo{};
+        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        beginInfo.flags = 0;
+        beginInfo.pInheritanceInfo = nullptr;
+
+        VkSubmitInfo submitInfo{};
+        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submitInfo.commandBufferCount = 1;
+        submitInfo.pCommandBuffers = &commandBuffer;
+
+        skipLock = true;
+        if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
+            throw std::runtime_error("failed to begin recording command buffer!");
+        }
+        skipLock = false;
+
         skipLock = true;
         vkCmdCopyImageToBuffer(commandBuffer, inputImage, imageMap[inputImage].layout, buffer, 1, &region);
         skipLock = false;
 
         skipLock = true;
         vkMapMemory(deviceAddr, bufferMemory, 0, memoryMap[memory].size, 0, &bufferData);
+        skipLock = false;
+
+        skipLock = true;
+        if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
+            throw std::runtime_error("failed to record command buffer!");
+        }
+        skipLock = false;
+
+        skipLock = true;
+        vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
         skipLock = false;
 
         skipLock = true;
@@ -190,10 +199,27 @@ namespace details {
     {
         VkBuffer inputBuffer = memoryMap[memory].boundBuffer;
 
+
+        VkCommandBufferBeginInfo beginInfo{};
+        beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        beginInfo.flags = 0;
+        beginInfo.pInheritanceInfo = nullptr;
+
+        VkSubmitInfo submitInfo{};
+        submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+        submitInfo.commandBufferCount = 1;
+        submitInfo.pCommandBuffers = &commandBuffer;
+
         VkBufferCopy region{};
         region.srcOffset = 0;
         region.dstOffset = 0;
         region.size = memoryMap[memory].size;
+
+        skipLock = true;
+        if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
+            throw std::runtime_error("failed to begin recording command buffer!");
+        }
+        skipLock = false;
 
         skipLock = true;
         vkCmdCopyBuffer(commandBuffer, inputBuffer, buffer, 1, &region);
@@ -201,6 +227,16 @@ namespace details {
 
         skipLock = true;
         vkMapMemory(deviceAddr, bufferMemory, 0, memoryMap[memory].size, 0, &bufferData);
+        skipLock = false;
+
+        skipLock = true;
+        if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
+            throw std::runtime_error("failed to record command buffer!");
+        }
+        skipLock = false;
+
+        skipLock = true;
+        vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
         skipLock = false;
 
         skipLock = true;

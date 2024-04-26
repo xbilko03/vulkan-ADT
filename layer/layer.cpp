@@ -253,11 +253,11 @@ void layer_QueueSubmit_after(VkQueue queue, uint32_t submitCount, VkSubmitInfo* 
             dataMessage += std::to_string(value.size);
             dataMessage += '!';
 
-            char* limitedData = (char*)malloc(value.size);
+            void* limitedData = (void*)malloc(value.size);
             memcpy(limitedData, *data->getBufferData(), value.size);
 
             winsockSendToUI(&ConnectSocket, dataMessage);
-            winsockSendToUIraw(&ConnectSocket, (limitedData), value.size);
+            winsockSendToUIraw(&ConnectSocket, (reinterpret_cast<char*>(limitedData)), value.size);
 
             free(limitedData);
         }

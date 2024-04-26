@@ -1269,11 +1269,6 @@ layer_EnumeratePhysicalDevices_before(instance, pPhysicalDeviceCount, pPhysicalD
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].EnumeratePhysicalDevices(instance, pPhysicalDeviceCount, pPhysicalDevices);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceCount=" + ptrToString((void**)std::addressof(pPhysicalDeviceCount)) + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDevices=" + ptrToString((void**)std::addressof(pPhysicalDevices)) + '!');
-}
 #ifdef ENUMERATEPHYSICALDEVICES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_EnumeratePhysicalDevices_after(instance, pPhysicalDeviceCount, pPhysicalDevices);
@@ -1302,19 +1297,6 @@ layer_GetPhysicalDeviceProperties_before(physicalDevice, pProperties);
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties(physicalDevice, pProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->apiVersion=" + std::to_string(pProperties->apiVersion) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->driverVersion=" + std::to_string(pProperties->driverVersion) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->vendorID=" + std::to_string(pProperties->vendorID) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->deviceID=" + std::to_string(pProperties->deviceID) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->deviceName=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->pipelineCacheUUID=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->limits=" + ptrToString((void**)std::addressof(pProperties->limits)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->sparseProperties=" + ptrToString((void**)std::addressof(pProperties->sparseProperties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceProperties_after(physicalDevice, pProperties);
@@ -1340,16 +1322,6 @@ layer_GetPhysicalDeviceQueueFamilyProperties_before(physicalDevice, pQueueFamily
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueFamilyPropertyCount=" + ptrToString((void**)std::addressof(pQueueFamilyPropertyCount)) + '!');
-if(pQueueFamilyProperties != VK_NULL_HANDLE && pQueueFamilyProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pQueueFamilyProperties->queueFlags=" + ptrToString((void**)std::addressof(pQueueFamilyProperties->queueFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueFamilyProperties->queueCount=" + std::to_string(pQueueFamilyProperties->queueCount) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueFamilyProperties->timestampValidBits=" + std::to_string(pQueueFamilyProperties->timestampValidBits) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueFamilyProperties->minImageTransferGranularity=" + ptrToString((void**)std::addressof(pQueueFamilyProperties->minImageTransferGranularity)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pQueueFamilyProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceQueueFamilyProperties_after(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
@@ -1375,15 +1347,6 @@ layer_GetPhysicalDeviceMemoryProperties_before(physicalDevice, pMemoryProperties
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties(physicalDevice, pMemoryProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pMemoryProperties != VK_NULL_HANDLE && pMemoryProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryProperties->memoryTypeCount=" + std::to_string(pMemoryProperties->memoryTypeCount) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryProperties->memoryTypes=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryProperties->memoryHeapCount=" + std::to_string(pMemoryProperties->memoryHeapCount) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryProperties->memoryHeaps=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEMEMORYPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceMemoryProperties_after(physicalDevice, pMemoryProperties);
@@ -1409,66 +1372,6 @@ layer_GetPhysicalDeviceFeatures_before(physicalDevice, pFeatures);
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures(physicalDevice, pFeatures);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pFeatures != VK_NULL_HANDLE && pFeatures != NULL) {
-winsockSendToUI(&ConnectSocket,"pFeatures->robustBufferAccess=" + bool_as_text(pFeatures->robustBufferAccess) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->fullDrawIndexUint32=" + bool_as_text(pFeatures->fullDrawIndexUint32) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->imageCubeArray=" + bool_as_text(pFeatures->imageCubeArray) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->independentBlend=" + bool_as_text(pFeatures->independentBlend) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->geometryShader=" + bool_as_text(pFeatures->geometryShader) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->tessellationShader=" + bool_as_text(pFeatures->tessellationShader) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->sampleRateShading=" + bool_as_text(pFeatures->sampleRateShading) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->dualSrcBlend=" + bool_as_text(pFeatures->dualSrcBlend) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->logicOp=" + bool_as_text(pFeatures->logicOp) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->multiDrawIndirect=" + bool_as_text(pFeatures->multiDrawIndirect) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->drawIndirectFirstInstance=" + bool_as_text(pFeatures->drawIndirectFirstInstance) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->depthClamp=" + bool_as_text(pFeatures->depthClamp) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->depthBiasClamp=" + bool_as_text(pFeatures->depthBiasClamp) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->fillModeNonSolid=" + bool_as_text(pFeatures->fillModeNonSolid) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->depthBounds=" + bool_as_text(pFeatures->depthBounds) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->wideLines=" + bool_as_text(pFeatures->wideLines) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->largePoints=" + bool_as_text(pFeatures->largePoints) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->alphaToOne=" + bool_as_text(pFeatures->alphaToOne) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->multiViewport=" + bool_as_text(pFeatures->multiViewport) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->samplerAnisotropy=" + bool_as_text(pFeatures->samplerAnisotropy) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->textureCompressionETC2=" + bool_as_text(pFeatures->textureCompressionETC2) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->textureCompressionASTC_LDR=" + bool_as_text(pFeatures->textureCompressionASTC_LDR) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->textureCompressionBC=" + bool_as_text(pFeatures->textureCompressionBC) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->occlusionQueryPrecise=" + bool_as_text(pFeatures->occlusionQueryPrecise) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->pipelineStatisticsQuery=" + bool_as_text(pFeatures->pipelineStatisticsQuery) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->vertexPipelineStoresAndAtomics=" + bool_as_text(pFeatures->vertexPipelineStoresAndAtomics) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->fragmentStoresAndAtomics=" + bool_as_text(pFeatures->fragmentStoresAndAtomics) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderTessellationAndGeometryPointSize=" + bool_as_text(pFeatures->shaderTessellationAndGeometryPointSize) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderImageGatherExtended=" + bool_as_text(pFeatures->shaderImageGatherExtended) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderStorageImageExtendedFormats=" + bool_as_text(pFeatures->shaderStorageImageExtendedFormats) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderStorageImageMultisample=" + bool_as_text(pFeatures->shaderStorageImageMultisample) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderStorageImageReadWithoutFormat=" + bool_as_text(pFeatures->shaderStorageImageReadWithoutFormat) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderStorageImageWriteWithoutFormat=" + bool_as_text(pFeatures->shaderStorageImageWriteWithoutFormat) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderUniformBufferArrayDynamicIndexing=" + bool_as_text(pFeatures->shaderUniformBufferArrayDynamicIndexing) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderSampledImageArrayDynamicIndexing=" + bool_as_text(pFeatures->shaderSampledImageArrayDynamicIndexing) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderStorageBufferArrayDynamicIndexing=" + bool_as_text(pFeatures->shaderStorageBufferArrayDynamicIndexing) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderStorageImageArrayDynamicIndexing=" + bool_as_text(pFeatures->shaderStorageImageArrayDynamicIndexing) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderClipDistance=" + bool_as_text(pFeatures->shaderClipDistance) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderCullDistance=" + bool_as_text(pFeatures->shaderCullDistance) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderFloat64=" + bool_as_text(pFeatures->shaderFloat64) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderInt64=" + bool_as_text(pFeatures->shaderInt64) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderInt16=" + bool_as_text(pFeatures->shaderInt16) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderResourceResidency=" + bool_as_text(pFeatures->shaderResourceResidency) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->shaderResourceMinLod=" + bool_as_text(pFeatures->shaderResourceMinLod) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->sparseBinding=" + bool_as_text(pFeatures->sparseBinding) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->sparseResidencyBuffer=" + bool_as_text(pFeatures->sparseResidencyBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->sparseResidencyImage2D=" + bool_as_text(pFeatures->sparseResidencyImage2D) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->sparseResidencyImage3D=" + bool_as_text(pFeatures->sparseResidencyImage3D) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->sparseResidency2Samples=" + bool_as_text(pFeatures->sparseResidency2Samples) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->sparseResidency4Samples=" + bool_as_text(pFeatures->sparseResidency4Samples) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->sparseResidency8Samples=" + bool_as_text(pFeatures->sparseResidency8Samples) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->sparseResidency16Samples=" + bool_as_text(pFeatures->sparseResidency16Samples) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->sparseResidencyAliased=" + bool_as_text(pFeatures->sparseResidencyAliased) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->variableMultisampleRate=" + bool_as_text(pFeatures->variableMultisampleRate) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->inheritedQueries=" + bool_as_text(pFeatures->inheritedQueries) + '!');
-}else winsockSendToUI(&ConnectSocket, "pFeatures=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEFEATURES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceFeatures_after(physicalDevice, pFeatures);
@@ -1494,14 +1397,6 @@ layer_GetPhysicalDeviceFormatProperties_before(physicalDevice, format, pFormatPr
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties(physicalDevice, format, pFormatProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pFormatProperties != VK_NULL_HANDLE && pFormatProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pFormatProperties->linearTilingFeatures=" + ptrToString((void**)std::addressof(pFormatProperties->linearTilingFeatures)) + '!');
-winsockSendToUI(&ConnectSocket,"pFormatProperties->optimalTilingFeatures=" + ptrToString((void**)std::addressof(pFormatProperties->optimalTilingFeatures)) + '!');
-winsockSendToUI(&ConnectSocket,"pFormatProperties->bufferFeatures=" + ptrToString((void**)std::addressof(pFormatProperties->bufferFeatures)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pFormatProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEFORMATPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceFormatProperties_after(physicalDevice, format, pFormatProperties);
@@ -1528,18 +1423,6 @@ layer_GetPhysicalDeviceImageFormatProperties_before(physicalDevice, format, type
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceImageFormatProperties(physicalDevice, format, type, tiling, usage, flags, pImageFormatProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"usage=" + ptrToString((void**)std::addressof(usage)) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void**)std::addressof(flags)) + '!');
-if(pImageFormatProperties != VK_NULL_HANDLE && pImageFormatProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pImageFormatProperties->maxExtent=" + ptrToString((void**)std::addressof(pImageFormatProperties->maxExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatProperties->maxMipLevels=" + std::to_string(pImageFormatProperties->maxMipLevels) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatProperties->maxArrayLayers=" + std::to_string(pImageFormatProperties->maxArrayLayers) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatProperties->sampleCounts=" + ptrToString((void**)std::addressof(pImageFormatProperties->sampleCounts)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatProperties->maxResourceSize=" + std::to_string(pImageFormatProperties->maxResourceSize) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageFormatProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEIMAGEFORMATPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceImageFormatProperties_after(physicalDevice, format, type, tiling, usage, flags, pImageFormatProperties);
@@ -1568,16 +1451,6 @@ layer_GetPhysicalDeviceSparseImageFormatProperties_before(physicalDevice, format
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProperties(physicalDevice, format, type, samples, usage, tiling, pPropertyCount, pProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"usage=" + ptrToString((void**)std::addressof(usage)) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void**)std::addressof(pPropertyCount)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->aspectMask=" + ptrToString((void**)std::addressof(pProperties->aspectMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->imageGranularity=" + ptrToString((void**)std::addressof(pProperties->imageGranularity)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->flags=" + ptrToString((void**)std::addressof(pProperties->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICESPARSEIMAGEFORMATPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSparseImageFormatProperties_after(physicalDevice, format, type, samples, usage, tiling, pPropertyCount, pProperties);
@@ -1605,23 +1478,6 @@ layer_CreateAndroidSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateAndroidSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->window=" + ptrToString((void**)std::addressof(pCreateInfo->window)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATEANDROIDSURFACEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateAndroidSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -1652,19 +1508,6 @@ layer_GetPhysicalDeviceDisplayPropertiesKHR_before(physicalDevice, pPropertyCoun
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDisplayPropertiesKHR(physicalDevice, pPropertyCount, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void**)std::addressof(pPropertyCount)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->display=" + ptrToString((void**)std::addressof(pProperties->display)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->displayName=" + charToString((char*)pProperties->displayName) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->physicalDimensions=" + ptrToString((void**)std::addressof(pProperties->physicalDimensions)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->physicalResolution=" + ptrToString((void**)std::addressof(pProperties->physicalResolution)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->supportedTransforms=" + ptrToString((void**)std::addressof(pProperties->supportedTransforms)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->planeReorderPossible=" + bool_as_text(pProperties->planeReorderPossible) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->persistentContent=" + bool_as_text(pProperties->persistentContent) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEDISPLAYPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceDisplayPropertiesKHR_after(physicalDevice, pPropertyCount, pProperties);
@@ -1694,14 +1537,6 @@ layer_GetPhysicalDeviceDisplayPlanePropertiesKHR_before(physicalDevice, pPropert
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDisplayPlanePropertiesKHR(physicalDevice, pPropertyCount, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void**)std::addressof(pPropertyCount)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->currentDisplay=" + ptrToString((void**)std::addressof(pProperties->currentDisplay)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->currentStackIndex=" + std::to_string(pProperties->currentStackIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEDISPLAYPLANEPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceDisplayPlanePropertiesKHR_after(physicalDevice, pPropertyCount, pProperties);
@@ -1731,12 +1566,6 @@ layer_GetDisplayPlaneSupportedDisplaysKHR_before(physicalDevice, planeIndex, pDi
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayPlaneSupportedDisplaysKHR(physicalDevice, planeIndex, pDisplayCount, pDisplays);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"planeIndex=" + std::to_string(planeIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDisplayCount=" + ptrToString((void**)std::addressof(pDisplayCount)) + '!');
-winsockSendToUI(&ConnectSocket,"pDisplays=" + ptrToString((void**)std::addressof(pDisplays)) + '!');
-}
 #ifdef GETDISPLAYPLANESUPPORTEDDISPLAYSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDisplayPlaneSupportedDisplaysKHR_after(physicalDevice, planeIndex, pDisplayCount, pDisplays);
@@ -1766,15 +1595,6 @@ layer_GetDisplayModePropertiesKHR_before(physicalDevice, display, pPropertyCount
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayModePropertiesKHR(physicalDevice, display, pPropertyCount, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void**)std::addressof(display)) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void**)std::addressof(pPropertyCount)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->displayMode=" + ptrToString((void**)std::addressof(pProperties->displayMode)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->parameters=" + ptrToString((void**)std::addressof(pProperties->parameters)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETDISPLAYMODEPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDisplayModePropertiesKHR_after(physicalDevice, display, pPropertyCount, pProperties);
@@ -1804,24 +1624,6 @@ layer_CreateDisplayModeKHR_before(physicalDevice, display, pCreateInfo, pAllocat
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].CreateDisplayModeKHR(physicalDevice, display, pCreateInfo, pAllocator, pMode);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void**)std::addressof(display)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->parameters=" + ptrToString((void**)std::addressof(pCreateInfo->parameters)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pMode=" + ptrToString((void**)std::addressof(pMode)) + '!');
-}
 #ifdef CREATEDISPLAYMODEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDisplayModeKHR_after(physicalDevice, display, pCreateInfo, pAllocator, pMode);
@@ -1851,22 +1653,6 @@ layer_GetDisplayPlaneCapabilitiesKHR_before(physicalDevice, mode, planeIndex, pC
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayPlaneCapabilitiesKHR(physicalDevice, mode, planeIndex, pCapabilities);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"mode=" + ptrToString((void**)std::addressof(mode)) + '!');
-winsockSendToUI(&ConnectSocket,"planeIndex=" + std::to_string(planeIndex) + '!');
-if(pCapabilities != VK_NULL_HANDLE && pCapabilities != NULL) {
-winsockSendToUI(&ConnectSocket,"pCapabilities->supportedAlpha=" + ptrToString((void**)std::addressof(pCapabilities->supportedAlpha)) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->minSrcPosition=" + ptrToString((void**)std::addressof(pCapabilities->minSrcPosition)) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->maxSrcPosition=" + ptrToString((void**)std::addressof(pCapabilities->maxSrcPosition)) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->minSrcExtent=" + ptrToString((void**)std::addressof(pCapabilities->minSrcExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->maxSrcExtent=" + ptrToString((void**)std::addressof(pCapabilities->maxSrcExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->minDstPosition=" + ptrToString((void**)std::addressof(pCapabilities->minDstPosition)) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->maxDstPosition=" + ptrToString((void**)std::addressof(pCapabilities->maxDstPosition)) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->minDstExtent=" + ptrToString((void**)std::addressof(pCapabilities->minDstExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->maxDstExtent=" + ptrToString((void**)std::addressof(pCapabilities->maxDstExtent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCapabilities=VK_NULL_HANDLE!");
-}
 #ifdef GETDISPLAYPLANECAPABILITIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDisplayPlaneCapabilitiesKHR_after(physicalDevice, mode, planeIndex, pCapabilities);
@@ -1896,27 +1682,6 @@ layer_CreateDisplayPlaneSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSu
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateDisplayPlaneSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->displayMode=" + ptrToString((void**)std::addressof(pCreateInfo->displayMode)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->planeIndex=" + std::to_string(pCreateInfo->planeIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->planeStackIndex=" + std::to_string(pCreateInfo->planeStackIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->globalAlpha=" + std::to_string(pCreateInfo->globalAlpha) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->imageExtent=" + ptrToString((void**)std::addressof(pCreateInfo->imageExtent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATEDISPLAYPLANESURFACEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDisplayPlaneSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -1945,18 +1710,6 @@ layer_DestroySurfaceKHR_before(instance, surface, pAllocator);
 }
 #endif 
 instance_dispatch[GetKey(instance)].DestroySurfaceKHR(instance, surface, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void**)std::addressof(surface)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYSURFACEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroySurfaceKHR_after(instance, surface, pAllocator);
@@ -1983,12 +1736,6 @@ layer_GetPhysicalDeviceSurfaceSupportKHR_before(physicalDevice, queueFamilyIndex
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceSupportKHR(physicalDevice, queueFamilyIndex, surface, pSupported);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void**)std::addressof(surface)) + '!');
-winsockSendToUI(&ConnectSocket,"pSupported=" + ptrToString((void**)std::addressof(pSupported)) + '!');
-}
 #ifdef GETPHYSICALDEVICESURFACESUPPORTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfaceSupportKHR_after(physicalDevice, queueFamilyIndex, surface, pSupported);
@@ -2018,21 +1765,6 @@ layer_GetPhysicalDeviceSurfaceCapabilitiesKHR_before(physicalDevice, surface, pS
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface, pSurfaceCapabilities);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void**)std::addressof(surface)) + '!');
-if(pSurfaceCapabilities != VK_NULL_HANDLE && pSurfaceCapabilities != NULL) {
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->minImageCount=" + std::to_string(pSurfaceCapabilities->minImageCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->maxImageCount=" + std::to_string(pSurfaceCapabilities->maxImageCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->currentExtent=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->currentExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->minImageExtent=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->minImageExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->maxImageExtent=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->maxImageExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->maxImageArrayLayers=" + std::to_string(pSurfaceCapabilities->maxImageArrayLayers) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->supportedTransforms=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->supportedTransforms)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->supportedCompositeAlpha=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->supportedCompositeAlpha)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->supportedUsageFlags=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->supportedUsageFlags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSurfaceCapabilities=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICESURFACECAPABILITIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfaceCapabilitiesKHR_after(physicalDevice, surface, pSurfaceCapabilities);
@@ -2062,13 +1794,6 @@ layer_GetPhysicalDeviceSurfaceFormatsKHR_before(physicalDevice, surface, pSurfac
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceFormatsKHR(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void**)std::addressof(surface)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceFormatCount=" + ptrToString((void**)std::addressof(pSurfaceFormatCount)) + '!');
-if(pSurfaceFormats != VK_NULL_HANDLE && pSurfaceFormats != NULL) {
-}else winsockSendToUI(&ConnectSocket, "pSurfaceFormats=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICESURFACEFORMATSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfaceFormatsKHR_after(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats);
@@ -2098,12 +1823,6 @@ layer_GetPhysicalDeviceSurfacePresentModesKHR_before(physicalDevice, surface, pP
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, pPresentModeCount, pPresentModes);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void**)std::addressof(surface)) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentModeCount=" + ptrToString((void**)std::addressof(pPresentModeCount)) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentModes=" + ptrToString((void**)std::addressof(pPresentModes)) + '!');
-}
 #ifdef GETPHYSICALDEVICESURFACEPRESENTMODESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfacePresentModesKHR_after(physicalDevice, surface, pPresentModeCount, pPresentModes);
@@ -2134,23 +1853,6 @@ layer_CreateViSurfaceNN_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateViSurfaceNN(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->window=" + ptrToString((void**)std::addressof(pCreateInfo->window)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATEVISURFACENN_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateViSurfaceNN_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2182,24 +1884,6 @@ layer_CreateWaylandSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateWaylandSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->display=" + ptrToString((void**)std::addressof(pCreateInfo->display)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->surface=" + ptrToString((void**)std::addressof(pCreateInfo->surface)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATEWAYLANDSURFACEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateWaylandSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2231,11 +1915,6 @@ layer_GetPhysicalDeviceWaylandPresentationSupportKHR_before(physicalDevice, queu
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceWaylandPresentationSupportKHR(physicalDevice, queueFamilyIndex, display);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void**)std::addressof(display)) + '!');
-}
 #ifdef GETPHYSICALDEVICEWAYLANDPRESENTATIONSUPPORTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceWaylandPresentationSupportKHR_after(physicalDevice, queueFamilyIndex, display);
@@ -2267,24 +1946,6 @@ layer_CreateWin32SurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateWin32SurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->hinstance=" + ptrToString((void**)std::addressof(pCreateInfo->hinstance)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->hwnd=" + ptrToString((void**)std::addressof(pCreateInfo->hwnd)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATEWIN32SURFACEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateWin32SurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2316,10 +1977,6 @@ layer_GetPhysicalDeviceWin32PresentationSupportKHR_before(physicalDevice, queueF
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceWin32PresentationSupportKHR(physicalDevice, queueFamilyIndex);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-}
 #ifdef GETPHYSICALDEVICEWIN32PRESENTATIONSUPPORTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceWin32PresentationSupportKHR_after(physicalDevice, queueFamilyIndex);
@@ -2351,24 +2008,6 @@ layer_CreateXlibSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateXlibSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->dpy=" + ptrToString((void**)std::addressof(pCreateInfo->dpy)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->window=" + ptrToString((void**)std::addressof(pCreateInfo->window)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATEXLIBSURFACEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateXlibSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2400,12 +2039,6 @@ layer_GetPhysicalDeviceXlibPresentationSupportKHR_before(physicalDevice, queueFa
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceXlibPresentationSupportKHR(physicalDevice, queueFamilyIndex, dpy, visualID);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"dpy=" + ptrToString((void**)std::addressof(dpy)) + '!');
-winsockSendToUI(&ConnectSocket,"visualID=" + ptrToString((void**)std::addressof(visualID)) + '!');
-}
 #ifdef GETPHYSICALDEVICEXLIBPRESENTATIONSUPPORTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceXlibPresentationSupportKHR_after(physicalDevice, queueFamilyIndex, dpy, visualID);
@@ -2437,24 +2070,6 @@ layer_CreateXcbSurfaceKHR_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateXcbSurfaceKHR(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->connection=" + ptrToString((void**)std::addressof(pCreateInfo->connection)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->window=" + ptrToString((void**)std::addressof(pCreateInfo->window)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATEXCBSURFACEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateXcbSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2486,12 +2101,6 @@ layer_GetPhysicalDeviceXcbPresentationSupportKHR_before(physicalDevice, queueFam
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceXcbPresentationSupportKHR(physicalDevice, queueFamilyIndex, connection, visual_id);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"connection=" + ptrToString((void**)std::addressof(connection)) + '!');
-winsockSendToUI(&ConnectSocket,"visual_id=" + ptrToString((void**)std::addressof(visual_id)) + '!');
-}
 #ifdef GETPHYSICALDEVICEXCBPRESENTATIONSUPPORTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceXcbPresentationSupportKHR_after(physicalDevice, queueFamilyIndex, connection, visual_id);
@@ -2523,24 +2132,6 @@ layer_CreateDirectFBSurfaceEXT_before(instance, pCreateInfo, pAllocator, pSurfac
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateDirectFBSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->dfb=" + ptrToString((void**)std::addressof(pCreateInfo->dfb)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->surface=" + ptrToString((void**)std::addressof(pCreateInfo->surface)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATEDIRECTFBSURFACEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDirectFBSurfaceEXT_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2572,11 +2163,6 @@ layer_GetPhysicalDeviceDirectFBPresentationSupportEXT_before(physicalDevice, que
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDirectFBPresentationSupportEXT(physicalDevice, queueFamilyIndex, dfb);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"dfb=" + ptrToString((void**)std::addressof(dfb)) + '!');
-}
 #ifdef GETPHYSICALDEVICEDIRECTFBPRESENTATIONSUPPORTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceDirectFBPresentationSupportEXT_after(physicalDevice, queueFamilyIndex, dfb);
@@ -2608,23 +2194,6 @@ layer_CreateImagePipeSurfaceFUCHSIA_before(instance, pCreateInfo, pAllocator, pS
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateImagePipeSurfaceFUCHSIA(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->imagePipeHandle=" + ptrToString((void**)std::addressof(pCreateInfo->imagePipeHandle)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATEIMAGEPIPESURFACEFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateImagePipeSurfaceFUCHSIA_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2656,23 +2225,6 @@ layer_CreateStreamDescriptorSurfaceGGP_before(instance, pCreateInfo, pAllocator,
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateStreamDescriptorSurfaceGGP(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->streamDescriptor=" + ptrToString((void**)std::addressof(pCreateInfo->streamDescriptor)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATESTREAMDESCRIPTORSURFACEGGP_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateStreamDescriptorSurfaceGGP_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2704,24 +2256,6 @@ layer_CreateScreenSurfaceQNX_before(instance, pCreateInfo, pAllocator, pSurface)
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateScreenSurfaceQNX(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->context=" + ptrToString((void**)std::addressof(pCreateInfo->context)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->window=" + ptrToString((void**)std::addressof(pCreateInfo->window)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATESCREENSURFACEQNX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateScreenSurfaceQNX_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -2753,11 +2287,6 @@ layer_GetPhysicalDeviceScreenPresentationSupportQNX_before(physicalDevice, queue
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceScreenPresentationSupportQNX(physicalDevice, queueFamilyIndex, window);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"window=" + ptrToString((void**)std::addressof(window)) + '!');
-}
 #ifdef GETPHYSICALDEVICESCREENPRESENTATIONSUPPORTQNX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceScreenPresentationSupportQNX_after(physicalDevice, queueFamilyIndex, window);
@@ -2788,24 +2317,6 @@ layer_CreateDebugReportCallbackEXT_before(instance, pCreateInfo, pAllocator, pCa
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateDebugReportCallbackEXT(instance, pCreateInfo, pAllocator, pCallback);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pfnCallback=" + ptrToString((void**)std::addressof(pCreateInfo->pfnCallback)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pUserData=" + ptrToString((void**)std::addressof(pCreateInfo->pUserData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCallback=" + ptrToString((void**)std::addressof(pCallback)) + '!');
-}
 #ifdef CREATEDEBUGREPORTCALLBACKEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDebugReportCallbackEXT_after(instance, pCreateInfo, pAllocator, pCallback);
@@ -2834,18 +2345,6 @@ layer_DestroyDebugReportCallbackEXT_before(instance, callback, pAllocator);
 }
 #endif 
 instance_dispatch[GetKey(instance)].DestroyDebugReportCallbackEXT(instance, callback, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-winsockSendToUI(&ConnectSocket,"callback=" + ptrToString((void**)std::addressof(callback)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYDEBUGREPORTCALLBACKEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyDebugReportCallbackEXT_after(instance, callback, pAllocator);
@@ -2871,15 +2370,6 @@ layer_DebugReportMessageEXT_before(instance, flags, objectType, object, location
 }
 #endif 
 instance_dispatch[GetKey(instance)].DebugReportMessageEXT(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage);
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void**)std::addressof(flags)) + '!');
-winsockSendToUI(&ConnectSocket,"object=" + std::to_string(object) + '!');
-winsockSendToUI(&ConnectSocket,"location=" + std::to_string(location) + '!');
-winsockSendToUI(&ConnectSocket,"messageCode=" + std::to_string(messageCode) + '!');
-winsockSendToUI(&ConnectSocket,"pLayerPrefix=" + charToString((char*)pLayerPrefix) + '!');
-winsockSendToUI(&ConnectSocket,"pMessage=" + charToString((char*)pMessage) + '!');
-}
 #ifdef DEBUGREPORTMESSAGEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DebugReportMessageEXT_after(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage);
@@ -2906,18 +2396,6 @@ layer_GetPhysicalDeviceExternalImageFormatPropertiesNV_before(physicalDevice, fo
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalImageFormatPropertiesNV(physicalDevice, format, type, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"usage=" + ptrToString((void**)std::addressof(usage)) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void**)std::addressof(flags)) + '!');
-winsockSendToUI(&ConnectSocket,"externalHandleType=" + ptrToString((void**)std::addressof(externalHandleType)) + '!');
-if(pExternalImageFormatProperties != VK_NULL_HANDLE && pExternalImageFormatProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pExternalImageFormatProperties->imageFormatProperties=" + ptrToString((void**)std::addressof(pExternalImageFormatProperties->imageFormatProperties)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalImageFormatProperties->externalMemoryFeatures=" + ptrToString((void**)std::addressof(pExternalImageFormatProperties->externalMemoryFeatures)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalImageFormatProperties->exportFromImportedHandleTypes=" + ptrToString((void**)std::addressof(pExternalImageFormatProperties->exportFromImportedHandleTypes)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalImageFormatProperties->compatibleHandleTypes=" + ptrToString((void**)std::addressof(pExternalImageFormatProperties->compatibleHandleTypes)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExternalImageFormatProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEEXTERNALIMAGEFORMATPROPERTIESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalImageFormatPropertiesNV_after(physicalDevice, format, type, tiling, usage, flags, externalHandleType, pExternalImageFormatProperties);
@@ -2946,13 +2424,6 @@ layer_GetPhysicalDeviceFeatures2_before(physicalDevice, pFeatures);
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures2(physicalDevice, pFeatures);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pFeatures != VK_NULL_HANDLE && pFeatures != NULL) {
-winsockSendToUI(&ConnectSocket,"pFeatures->pNext=" + ptrToString((void**)std::addressof(pFeatures->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->features=" + ptrToString((void**)std::addressof(pFeatures->features)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pFeatures=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEFEATURES2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceFeatures2_after(physicalDevice, pFeatures);
@@ -2978,13 +2449,6 @@ layer_GetPhysicalDeviceProperties2_before(physicalDevice, pProperties);
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties2(physicalDevice, pProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->properties=" + ptrToString((void**)std::addressof(pProperties->properties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEPROPERTIES2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceProperties2_after(physicalDevice, pProperties);
@@ -3010,13 +2474,6 @@ layer_GetPhysicalDeviceFormatProperties2_before(physicalDevice, format, pFormatP
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties2(physicalDevice, format, pFormatProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pFormatProperties != VK_NULL_HANDLE && pFormatProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pFormatProperties->pNext=" + ptrToString((void**)std::addressof(pFormatProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pFormatProperties->formatProperties=" + ptrToString((void**)std::addressof(pFormatProperties->formatProperties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pFormatProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEFORMATPROPERTIES2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceFormatProperties2_after(physicalDevice, format, pFormatProperties);
@@ -3043,18 +2500,6 @@ layer_GetPhysicalDeviceImageFormatProperties2_before(physicalDevice, pImageForma
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceImageFormatProperties2(physicalDevice, pImageFormatInfo, pImageFormatProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pImageFormatInfo != VK_NULL_HANDLE && pImageFormatInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pImageFormatInfo->pNext=" + ptrToString((void**)std::addressof(pImageFormatInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatInfo->usage=" + ptrToString((void**)std::addressof(pImageFormatInfo->usage)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatInfo->flags=" + ptrToString((void**)std::addressof(pImageFormatInfo->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageFormatInfo=VK_NULL_HANDLE!");
-if(pImageFormatProperties != VK_NULL_HANDLE && pImageFormatProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pImageFormatProperties->pNext=" + ptrToString((void**)std::addressof(pImageFormatProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatProperties->imageFormatProperties=" + ptrToString((void**)std::addressof(pImageFormatProperties->imageFormatProperties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageFormatProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEIMAGEFORMATPROPERTIES2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceImageFormatProperties2_after(physicalDevice, pImageFormatInfo, pImageFormatProperties);
@@ -3083,14 +2528,6 @@ layer_GetPhysicalDeviceQueueFamilyProperties2_before(physicalDevice, pQueueFamil
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties2(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueFamilyPropertyCount=" + ptrToString((void**)std::addressof(pQueueFamilyPropertyCount)) + '!');
-if(pQueueFamilyProperties != VK_NULL_HANDLE && pQueueFamilyProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pQueueFamilyProperties->pNext=" + ptrToString((void**)std::addressof(pQueueFamilyProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueFamilyProperties->queueFamilyProperties=" + ptrToString((void**)std::addressof(pQueueFamilyProperties->queueFamilyProperties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pQueueFamilyProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPROPERTIES2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceQueueFamilyProperties2_after(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
@@ -3116,13 +2553,6 @@ layer_GetPhysicalDeviceMemoryProperties2_before(physicalDevice, pMemoryPropertie
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties2(physicalDevice, pMemoryProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pMemoryProperties != VK_NULL_HANDLE && pMemoryProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryProperties->pNext=" + ptrToString((void**)std::addressof(pMemoryProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryProperties->memoryProperties=" + ptrToString((void**)std::addressof(pMemoryProperties->memoryProperties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEMEMORYPROPERTIES2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceMemoryProperties2_after(physicalDevice, pMemoryProperties);
@@ -3148,18 +2578,6 @@ layer_GetPhysicalDeviceSparseImageFormatProperties2_before(physicalDevice, pForm
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pFormatInfo != VK_NULL_HANDLE && pFormatInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pFormatInfo->pNext=" + ptrToString((void**)std::addressof(pFormatInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pFormatInfo->usage=" + ptrToString((void**)std::addressof(pFormatInfo->usage)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pFormatInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void**)std::addressof(pPropertyCount)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->properties=" + ptrToString((void**)std::addressof(pProperties->properties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICESPARSEIMAGEFORMATPROPERTIES2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSparseImageFormatProperties2_after(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
@@ -3185,18 +2603,6 @@ layer_GetPhysicalDeviceExternalBufferProperties_before(physicalDevice, pExternal
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalBufferProperties(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pExternalBufferInfo != VK_NULL_HANDLE && pExternalBufferInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pExternalBufferInfo->pNext=" + ptrToString((void**)std::addressof(pExternalBufferInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalBufferInfo->flags=" + ptrToString((void**)std::addressof(pExternalBufferInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalBufferInfo->usage=" + ptrToString((void**)std::addressof(pExternalBufferInfo->usage)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExternalBufferInfo=VK_NULL_HANDLE!");
-if(pExternalBufferProperties != VK_NULL_HANDLE && pExternalBufferProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pExternalBufferProperties->pNext=" + ptrToString((void**)std::addressof(pExternalBufferProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalBufferProperties->externalMemoryProperties=" + ptrToString((void**)std::addressof(pExternalBufferProperties->externalMemoryProperties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExternalBufferProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEEXTERNALBUFFERPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalBufferProperties_after(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
@@ -3224,14 +2630,6 @@ layer_GetPhysicalDeviceExternalMemorySciBufPropertiesNV_before(physicalDevice, h
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalMemorySciBufPropertiesNV(physicalDevice, handleType, handle, pMemorySciBufProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"handle=" + ptrToString((void**)std::addressof(handle)) + '!');
-if(pMemorySciBufProperties != VK_NULL_HANDLE && pMemorySciBufProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemorySciBufProperties->pNext=" + ptrToString((void**)std::addressof(pMemorySciBufProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemorySciBufProperties->memoryTypeBits=" + std::to_string(pMemorySciBufProperties->memoryTypeBits) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemorySciBufProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEEXTERNALMEMORYSCIBUFPROPERTIESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalMemorySciBufPropertiesNV_after(physicalDevice, handleType, handle, pMemorySciBufProperties);
@@ -3263,10 +2661,6 @@ layer_GetPhysicalDeviceSciBufAttributesNV_before(physicalDevice, pAttributes);
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSciBufAttributesNV(physicalDevice, pAttributes);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pAttributes=" + ptrToString((void**)std::addressof(pAttributes)) + '!');
-}
 #ifdef GETPHYSICALDEVICESCIBUFATTRIBUTESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSciBufAttributesNV_after(physicalDevice, pAttributes);
@@ -3296,18 +2690,6 @@ layer_GetPhysicalDeviceExternalSemaphoreProperties_before(physicalDevice, pExter
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pExternalSemaphoreInfo != VK_NULL_HANDLE && pExternalSemaphoreInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pExternalSemaphoreInfo->pNext=" + ptrToString((void**)std::addressof(pExternalSemaphoreInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExternalSemaphoreInfo=VK_NULL_HANDLE!");
-if(pExternalSemaphoreProperties != VK_NULL_HANDLE && pExternalSemaphoreProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pExternalSemaphoreProperties->pNext=" + ptrToString((void**)std::addressof(pExternalSemaphoreProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalSemaphoreProperties->exportFromImportedHandleTypes=" + ptrToString((void**)std::addressof(pExternalSemaphoreProperties->exportFromImportedHandleTypes)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalSemaphoreProperties->compatibleHandleTypes=" + ptrToString((void**)std::addressof(pExternalSemaphoreProperties->compatibleHandleTypes)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalSemaphoreProperties->externalSemaphoreFeatures=" + ptrToString((void**)std::addressof(pExternalSemaphoreProperties->externalSemaphoreFeatures)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExternalSemaphoreProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEEXTERNALSEMAPHOREPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalSemaphoreProperties_after(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
@@ -3333,18 +2715,6 @@ layer_GetPhysicalDeviceExternalFenceProperties_before(physicalDevice, pExternalF
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalFenceProperties(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pExternalFenceInfo != VK_NULL_HANDLE && pExternalFenceInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pExternalFenceInfo->pNext=" + ptrToString((void**)std::addressof(pExternalFenceInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExternalFenceInfo=VK_NULL_HANDLE!");
-if(pExternalFenceProperties != VK_NULL_HANDLE && pExternalFenceProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pExternalFenceProperties->pNext=" + ptrToString((void**)std::addressof(pExternalFenceProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalFenceProperties->exportFromImportedHandleTypes=" + ptrToString((void**)std::addressof(pExternalFenceProperties->exportFromImportedHandleTypes)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalFenceProperties->compatibleHandleTypes=" + ptrToString((void**)std::addressof(pExternalFenceProperties->compatibleHandleTypes)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalFenceProperties->externalFenceFeatures=" + ptrToString((void**)std::addressof(pExternalFenceProperties->externalFenceFeatures)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExternalFenceProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEEXTERNALFENCEPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalFenceProperties_after(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
@@ -3372,13 +2742,6 @@ layer_GetPhysicalDeviceSciSyncAttributesNV_before(physicalDevice, pSciSyncAttrib
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSciSyncAttributesNV(physicalDevice, pSciSyncAttributesInfo, pAttributes);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pSciSyncAttributesInfo != VK_NULL_HANDLE && pSciSyncAttributesInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSciSyncAttributesInfo->pNext=" + ptrToString((void**)std::addressof(pSciSyncAttributesInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSciSyncAttributesInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pAttributes=" + ptrToString((void**)std::addressof(pAttributes)) + '!');
-}
 #ifdef GETPHYSICALDEVICESCISYNCATTRIBUTESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSciSyncAttributesNV_after(physicalDevice, pSciSyncAttributesInfo, pAttributes);
@@ -3409,10 +2772,6 @@ layer_ReleaseDisplayEXT_before(physicalDevice, display);
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].ReleaseDisplayEXT(physicalDevice, display);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void**)std::addressof(display)) + '!');
-}
 #ifdef RELEASEDISPLAYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ReleaseDisplayEXT_after(physicalDevice, display);
@@ -3443,11 +2802,6 @@ layer_AcquireXlibDisplayEXT_before(physicalDevice, dpy, display);
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].AcquireXlibDisplayEXT(physicalDevice, dpy, display);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"dpy=" + ptrToString((void**)std::addressof(dpy)) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void**)std::addressof(display)) + '!');
-}
 #ifdef ACQUIREXLIBDISPLAYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireXlibDisplayEXT_after(physicalDevice, dpy, display);
@@ -3479,12 +2833,6 @@ layer_GetRandROutputDisplayEXT_before(physicalDevice, dpy, rrOutput, pDisplay);
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetRandROutputDisplayEXT(physicalDevice, dpy, rrOutput, pDisplay);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"dpy=" + ptrToString((void**)std::addressof(dpy)) + '!');
-winsockSendToUI(&ConnectSocket,"rrOutput=" + ptrToString((void**)std::addressof(rrOutput)) + '!');
-winsockSendToUI(&ConnectSocket,"pDisplay=" + ptrToString((void**)std::addressof(pDisplay)) + '!');
-}
 #ifdef GETRANDROUTPUTDISPLAYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRandROutputDisplayEXT_after(physicalDevice, dpy, rrOutput, pDisplay);
@@ -3516,10 +2864,6 @@ layer_AcquireWinrtDisplayNV_before(physicalDevice, display);
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].AcquireWinrtDisplayNV(physicalDevice, display);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void**)std::addressof(display)) + '!');
-}
 #ifdef ACQUIREWINRTDISPLAYNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireWinrtDisplayNV_after(physicalDevice, display);
@@ -3551,11 +2895,6 @@ layer_GetWinrtDisplayNV_before(physicalDevice, deviceRelativeId, pDisplay);
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetWinrtDisplayNV(physicalDevice, deviceRelativeId, pDisplay);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"deviceRelativeId=" + std::to_string(deviceRelativeId) + '!');
-winsockSendToUI(&ConnectSocket,"pDisplay=" + ptrToString((void**)std::addressof(pDisplay)) + '!');
-}
 #ifdef GETWINRTDISPLAYNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetWinrtDisplayNV_after(physicalDevice, deviceRelativeId, pDisplay);
@@ -3586,23 +2925,6 @@ layer_GetPhysicalDeviceSurfaceCapabilities2EXT_before(physicalDevice, surface, p
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceCapabilities2EXT(physicalDevice, surface, pSurfaceCapabilities);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void**)std::addressof(surface)) + '!');
-if(pSurfaceCapabilities != VK_NULL_HANDLE && pSurfaceCapabilities != NULL) {
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->pNext=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->minImageCount=" + std::to_string(pSurfaceCapabilities->minImageCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->maxImageCount=" + std::to_string(pSurfaceCapabilities->maxImageCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->currentExtent=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->currentExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->minImageExtent=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->minImageExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->maxImageExtent=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->maxImageExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->maxImageArrayLayers=" + std::to_string(pSurfaceCapabilities->maxImageArrayLayers) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->supportedTransforms=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->supportedTransforms)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->supportedCompositeAlpha=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->supportedCompositeAlpha)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->supportedUsageFlags=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->supportedUsageFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->supportedSurfaceCounters=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->supportedSurfaceCounters)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSurfaceCapabilities=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICESURFACECAPABILITIES2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfaceCapabilities2EXT_after(physicalDevice, surface, pSurfaceCapabilities);
@@ -3632,16 +2954,6 @@ layer_EnumeratePhysicalDeviceGroups_before(instance, pPhysicalDeviceGroupCount, 
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].EnumeratePhysicalDeviceGroups(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceGroupCount=" + ptrToString((void**)std::addressof(pPhysicalDeviceGroupCount)) + '!');
-if(pPhysicalDeviceGroupProperties != VK_NULL_HANDLE && pPhysicalDeviceGroupProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceGroupProperties->pNext=" + ptrToString((void**)std::addressof(pPhysicalDeviceGroupProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceGroupProperties->physicalDeviceCount=" + std::to_string(pPhysicalDeviceGroupProperties->physicalDeviceCount) + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceGroupProperties->physicalDevices=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceGroupProperties->subsetAllocation=" + bool_as_text(pPhysicalDeviceGroupProperties->subsetAllocation) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPhysicalDeviceGroupProperties=VK_NULL_HANDLE!");
-}
 #ifdef ENUMERATEPHYSICALDEVICEGROUPS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_EnumeratePhysicalDeviceGroups_after(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
@@ -3671,15 +2983,6 @@ layer_GetPhysicalDevicePresentRectanglesKHR_before(physicalDevice, surface, pRec
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDevicePresentRectanglesKHR(physicalDevice, surface, pRectCount, pRects);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void**)std::addressof(surface)) + '!');
-winsockSendToUI(&ConnectSocket,"pRectCount=" + ptrToString((void**)std::addressof(pRectCount)) + '!');
-if(pRects != VK_NULL_HANDLE && pRects != NULL) {
-winsockSendToUI(&ConnectSocket,"pRects->offset=" + ptrToString((void**)std::addressof(pRects->offset)) + '!');
-winsockSendToUI(&ConnectSocket,"pRects->extent=" + ptrToString((void**)std::addressof(pRects->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRects=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEPRESENTRECTANGLESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDevicePresentRectanglesKHR_after(physicalDevice, surface, pRectCount, pRects);
@@ -3710,23 +3013,6 @@ layer_CreateIOSSurfaceMVK_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateIOSSurfaceMVK(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pView=" + ptrToString((void**)std::addressof(pCreateInfo->pView)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATEIOSSURFACEMVK_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateIOSSurfaceMVK_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -3758,23 +3044,6 @@ layer_CreateMacOSSurfaceMVK_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateMacOSSurfaceMVK(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pView=" + ptrToString((void**)std::addressof(pCreateInfo->pView)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATEMACOSSURFACEMVK_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateMacOSSurfaceMVK_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -3806,23 +3075,6 @@ layer_CreateMetalSurfaceEXT_before(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateMetalSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pLayer=" + ptrToString((void**)std::addressof(pCreateInfo->pLayer)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATEMETALSURFACEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateMetalSurfaceEXT_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -3852,13 +3104,6 @@ layer_GetPhysicalDeviceMultisamplePropertiesEXT_before(physicalDevice, samples, 
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMultisamplePropertiesEXT(physicalDevice, samples, pMultisampleProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pMultisampleProperties != VK_NULL_HANDLE && pMultisampleProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pMultisampleProperties->pNext=" + ptrToString((void**)std::addressof(pMultisampleProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMultisampleProperties->maxSampleLocationGridSize=" + ptrToString((void**)std::addressof(pMultisampleProperties->maxSampleLocationGridSize)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMultisampleProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEMULTISAMPLEPROPERTIESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceMultisamplePropertiesEXT_after(physicalDevice, samples, pMultisampleProperties);
@@ -3885,17 +3130,6 @@ layer_GetPhysicalDeviceSurfaceCapabilities2KHR_before(physicalDevice, pSurfaceIn
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceCapabilities2KHR(physicalDevice, pSurfaceInfo, pSurfaceCapabilities);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pSurfaceInfo != VK_NULL_HANDLE && pSurfaceInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSurfaceInfo->pNext=" + ptrToString((void**)std::addressof(pSurfaceInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceInfo->surface=" + ptrToString((void**)std::addressof(pSurfaceInfo->surface)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSurfaceInfo=VK_NULL_HANDLE!");
-if(pSurfaceCapabilities != VK_NULL_HANDLE && pSurfaceCapabilities != NULL) {
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->pNext=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceCapabilities->surfaceCapabilities=" + ptrToString((void**)std::addressof(pSurfaceCapabilities->surfaceCapabilities)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSurfaceCapabilities=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICESURFACECAPABILITIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfaceCapabilities2KHR_after(physicalDevice, pSurfaceInfo, pSurfaceCapabilities);
@@ -3925,18 +3159,6 @@ layer_GetPhysicalDeviceSurfaceFormats2KHR_before(physicalDevice, pSurfaceInfo, p
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfaceFormats2KHR(physicalDevice, pSurfaceInfo, pSurfaceFormatCount, pSurfaceFormats);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pSurfaceInfo != VK_NULL_HANDLE && pSurfaceInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSurfaceInfo->pNext=" + ptrToString((void**)std::addressof(pSurfaceInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceInfo->surface=" + ptrToString((void**)std::addressof(pSurfaceInfo->surface)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSurfaceInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurfaceFormatCount=" + ptrToString((void**)std::addressof(pSurfaceFormatCount)) + '!');
-if(pSurfaceFormats != VK_NULL_HANDLE && pSurfaceFormats != NULL) {
-winsockSendToUI(&ConnectSocket,"pSurfaceFormats->pNext=" + ptrToString((void**)std::addressof(pSurfaceFormats->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceFormats->surfaceFormat=" + ptrToString((void**)std::addressof(pSurfaceFormats->surfaceFormat)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSurfaceFormats=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICESURFACEFORMATS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfaceFormats2KHR_after(physicalDevice, pSurfaceInfo, pSurfaceFormatCount, pSurfaceFormats);
@@ -3966,14 +3188,6 @@ layer_GetPhysicalDeviceDisplayProperties2KHR_before(physicalDevice, pPropertyCou
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDisplayProperties2KHR(physicalDevice, pPropertyCount, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void**)std::addressof(pPropertyCount)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->displayProperties=" + ptrToString((void**)std::addressof(pProperties->displayProperties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEDISPLAYPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceDisplayProperties2KHR_after(physicalDevice, pPropertyCount, pProperties);
@@ -4003,14 +3217,6 @@ layer_GetPhysicalDeviceDisplayPlaneProperties2KHR_before(physicalDevice, pProper
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceDisplayPlaneProperties2KHR(physicalDevice, pPropertyCount, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void**)std::addressof(pPropertyCount)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->displayPlaneProperties=" + ptrToString((void**)std::addressof(pProperties->displayPlaneProperties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEDISPLAYPLANEPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceDisplayPlaneProperties2KHR_after(physicalDevice, pPropertyCount, pProperties);
@@ -4040,15 +3246,6 @@ layer_GetDisplayModeProperties2KHR_before(physicalDevice, display, pPropertyCoun
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayModeProperties2KHR(physicalDevice, display, pPropertyCount, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void**)std::addressof(display)) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void**)std::addressof(pPropertyCount)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->displayModeProperties=" + ptrToString((void**)std::addressof(pProperties->displayModeProperties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETDISPLAYMODEPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDisplayModeProperties2KHR_after(physicalDevice, display, pPropertyCount, pProperties);
@@ -4078,18 +3275,6 @@ layer_GetDisplayPlaneCapabilities2KHR_before(physicalDevice, pDisplayPlaneInfo, 
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDisplayPlaneCapabilities2KHR(physicalDevice, pDisplayPlaneInfo, pCapabilities);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pDisplayPlaneInfo != VK_NULL_HANDLE && pDisplayPlaneInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDisplayPlaneInfo->pNext=" + ptrToString((void**)std::addressof(pDisplayPlaneInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDisplayPlaneInfo->mode=" + ptrToString((void**)std::addressof(pDisplayPlaneInfo->mode)) + '!');
-winsockSendToUI(&ConnectSocket,"pDisplayPlaneInfo->planeIndex=" + std::to_string(pDisplayPlaneInfo->planeIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDisplayPlaneInfo=VK_NULL_HANDLE!");
-if(pCapabilities != VK_NULL_HANDLE && pCapabilities != NULL) {
-winsockSendToUI(&ConnectSocket,"pCapabilities->pNext=" + ptrToString((void**)std::addressof(pCapabilities->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->capabilities=" + ptrToString((void**)std::addressof(pCapabilities->capabilities)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCapabilities=VK_NULL_HANDLE!");
-}
 #ifdef GETDISPLAYPLANECAPABILITIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDisplayPlaneCapabilities2KHR_after(physicalDevice, pDisplayPlaneInfo, pCapabilities);
@@ -4119,11 +3304,6 @@ layer_GetPhysicalDeviceCalibrateableTimeDomainsKHR_before(physicalDevice, pTimeD
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceCalibrateableTimeDomainsKHR(physicalDevice, pTimeDomainCount, pTimeDomains);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pTimeDomainCount=" + ptrToString((void**)std::addressof(pTimeDomainCount)) + '!');
-winsockSendToUI(&ConnectSocket,"pTimeDomains=" + ptrToString((void**)std::addressof(pTimeDomains)) + '!');
-}
 #ifdef GETPHYSICALDEVICECALIBRATEABLETIMEDOMAINSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceCalibrateableTimeDomainsKHR_after(physicalDevice, pTimeDomainCount, pTimeDomains);
@@ -4153,26 +3333,6 @@ layer_CreateDebugUtilsMessengerEXT_before(instance, pCreateInfo, pAllocator, pMe
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateDebugUtilsMessengerEXT(instance, pCreateInfo, pAllocator, pMessenger);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->messageSeverity=" + ptrToString((void**)std::addressof(pCreateInfo->messageSeverity)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->messageType=" + ptrToString((void**)std::addressof(pCreateInfo->messageType)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pfnUserCallback=" + ptrToString((void**)std::addressof(pCreateInfo->pfnUserCallback)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pUserData=" + ptrToString((void**)std::addressof(pCreateInfo->pUserData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pMessenger=" + ptrToString((void**)std::addressof(pMessenger)) + '!');
-}
 #ifdef CREATEDEBUGUTILSMESSENGEREXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDebugUtilsMessengerEXT_after(instance, pCreateInfo, pAllocator, pMessenger);
@@ -4201,18 +3361,6 @@ layer_DestroyDebugUtilsMessengerEXT_before(instance, messenger, pAllocator);
 }
 #endif 
 instance_dispatch[GetKey(instance)].DestroyDebugUtilsMessengerEXT(instance, messenger, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-winsockSendToUI(&ConnectSocket,"messenger=" + ptrToString((void**)std::addressof(messenger)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYDEBUGUTILSMESSENGEREXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyDebugUtilsMessengerEXT_after(instance, messenger, pAllocator);
@@ -4238,35 +3386,6 @@ layer_SubmitDebugUtilsMessageEXT_before(instance, messageSeverity, messageTypes,
 }
 #endif 
 instance_dispatch[GetKey(instance)].SubmitDebugUtilsMessageEXT(instance, messageSeverity, messageTypes, pCallbackData);
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-winsockSendToUI(&ConnectSocket,"messageTypes=" + ptrToString((void**)std::addressof(messageTypes)) + '!');
-if(pCallbackData != VK_NULL_HANDLE && pCallbackData != NULL) {
-winsockSendToUI(&ConnectSocket,"pCallbackData->pNext=" + ptrToString((void**)std::addressof(pCallbackData->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCallbackData->flags=" + ptrToString((void**)std::addressof(pCallbackData->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCallbackData->pMessageIdName=" + charToString((char*)pCallbackData->pMessageIdName) + '!');
-winsockSendToUI(&ConnectSocket,"pCallbackData->messageIdNumber=" + std::to_string(pCallbackData->messageIdNumber) + '!');
-winsockSendToUI(&ConnectSocket,"pCallbackData->pMessage=" + charToString((char*)pCallbackData->pMessage) + '!');
-winsockSendToUI(&ConnectSocket,"pCallbackData->queueLabelCount=" + std::to_string(pCallbackData->queueLabelCount) + '!');
-if(pCallbackData->pQueueLabels != VK_NULL_HANDLE && pCallbackData->pQueueLabels != NULL) {
-winsockSendToUI(&ConnectSocket,"pCallbackData->pQueueLabels->pNext=" + ptrToString((void**)std::addressof(pCallbackData->pQueueLabels->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCallbackData->pQueueLabels->pLabelName=" + charToString((char*)pCallbackData->pQueueLabels->pLabelName) + '!');
-winsockSendToUI(&ConnectSocket,"pCallbackData->pQueueLabels->color=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pQueueLabels=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCallbackData->cmdBufLabelCount=" + std::to_string(pCallbackData->cmdBufLabelCount) + '!');
-if(pCallbackData->pCmdBufLabels != VK_NULL_HANDLE && pCallbackData->pCmdBufLabels != NULL) {
-winsockSendToUI(&ConnectSocket,"pCallbackData->pCmdBufLabels->pNext=" + ptrToString((void**)std::addressof(pCallbackData->pCmdBufLabels->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCallbackData->pCmdBufLabels->pLabelName=" + charToString((char*)pCallbackData->pCmdBufLabels->pLabelName) + '!');
-winsockSendToUI(&ConnectSocket,"pCallbackData->pCmdBufLabels->color=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pCmdBufLabels=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCallbackData->objectCount=" + std::to_string(pCallbackData->objectCount) + '!');
-if(pCallbackData->pObjects != VK_NULL_HANDLE && pCallbackData->pObjects != NULL) {
-winsockSendToUI(&ConnectSocket,"pCallbackData->pObjects->pNext=" + ptrToString((void**)std::addressof(pCallbackData->pObjects->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCallbackData->pObjects->objectHandle=" + std::to_string(pCallbackData->pObjects->objectHandle) + '!');
-winsockSendToUI(&ConnectSocket,"pCallbackData->pObjects->pObjectName=" + charToString((char*)pCallbackData->pObjects->pObjectName) + '!');
-}else winsockSendToUI(&ConnectSocket, "pObjects=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCallbackData=VK_NULL_HANDLE!");
-}
 #ifdef SUBMITDEBUGUTILSMESSAGEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SubmitDebugUtilsMessageEXT_after(instance, messageSeverity, messageTypes, pCallbackData);
@@ -4293,21 +3412,6 @@ layer_GetPhysicalDeviceCooperativeMatrixPropertiesNV_before(physicalDevice, pPro
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceCooperativeMatrixPropertiesNV(physicalDevice, pPropertyCount, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void**)std::addressof(pPropertyCount)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->MSize=" + std::to_string(pProperties->MSize) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->NSize=" + std::to_string(pProperties->NSize) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->KSize=" + std::to_string(pProperties->KSize) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->AType=" + ptrToString((void**)std::addressof(pProperties->AType)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->BType=" + ptrToString((void**)std::addressof(pProperties->BType)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->CType=" + ptrToString((void**)std::addressof(pProperties->CType)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->DType=" + ptrToString((void**)std::addressof(pProperties->DType)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->scope=" + ptrToString((void**)std::addressof(pProperties->scope)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICECOOPERATIVEMATRIXPROPERTIESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceCooperativeMatrixPropertiesNV_after(physicalDevice, pPropertyCount, pProperties);
@@ -4338,15 +3442,6 @@ layer_GetPhysicalDeviceSurfacePresentModes2EXT_before(physicalDevice, pSurfaceIn
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSurfacePresentModes2EXT(physicalDevice, pSurfaceInfo, pPresentModeCount, pPresentModes);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pSurfaceInfo != VK_NULL_HANDLE && pSurfaceInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSurfaceInfo->pNext=" + ptrToString((void**)std::addressof(pSurfaceInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceInfo->surface=" + ptrToString((void**)std::addressof(pSurfaceInfo->surface)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSurfaceInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pPresentModeCount=" + ptrToString((void**)std::addressof(pPresentModeCount)) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentModes=" + ptrToString((void**)std::addressof(pPresentModes)) + '!');
-}
 #ifdef GETPHYSICALDEVICESURFACEPRESENTMODES2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSurfacePresentModes2EXT_after(physicalDevice, pSurfaceInfo, pPresentModeCount, pPresentModes);
@@ -4377,22 +3472,6 @@ layer_EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR_before(physi
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterCount=" + ptrToString((void**)std::addressof(pCounterCount)) + '!');
-if(pCounters != VK_NULL_HANDLE && pCounters != NULL) {
-winsockSendToUI(&ConnectSocket,"pCounters->pNext=" + ptrToString((void**)std::addressof(pCounters->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCounters->uuid=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pCounters=VK_NULL_HANDLE!");
-if(pCounterDescriptions != VK_NULL_HANDLE && pCounterDescriptions != NULL) {
-winsockSendToUI(&ConnectSocket,"pCounterDescriptions->pNext=" + ptrToString((void**)std::addressof(pCounterDescriptions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterDescriptions->flags=" + ptrToString((void**)std::addressof(pCounterDescriptions->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterDescriptions->name=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pCounterDescriptions->category=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pCounterDescriptions->description=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pCounterDescriptions=VK_NULL_HANDLE!");
-}
 #ifdef ENUMERATEPHYSICALDEVICEQUEUEFAMILYPERFORMANCEQUERYCOUNTERSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR_after(physicalDevice, queueFamilyIndex, pCounterCount, pCounters, pCounterDescriptions);
@@ -4421,16 +3500,6 @@ layer_GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR_before(physicalDevic
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR(physicalDevice, pPerformanceQueryCreateInfo, pNumPasses);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pPerformanceQueryCreateInfo != VK_NULL_HANDLE && pPerformanceQueryCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pPerformanceQueryCreateInfo->pNext=" + ptrToString((void**)std::addressof(pPerformanceQueryCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pPerformanceQueryCreateInfo->queueFamilyIndex=" + std::to_string(pPerformanceQueryCreateInfo->queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pPerformanceQueryCreateInfo->counterIndexCount=" + std::to_string(pPerformanceQueryCreateInfo->counterIndexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pPerformanceQueryCreateInfo->pCounterIndices=" + ptrToString((void**)std::addressof(pPerformanceQueryCreateInfo->pCounterIndices)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPerformanceQueryCreateInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pNumPasses=" + ptrToString((void**)std::addressof(pNumPasses)) + '!');
-}
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPERFORMANCEQUERYPASSESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR_after(physicalDevice, pPerformanceQueryCreateInfo, pNumPasses);
@@ -4457,22 +3526,6 @@ layer_CreateHeadlessSurfaceEXT_before(instance, pCreateInfo, pAllocator, pSurfac
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].CreateHeadlessSurfaceEXT(instance, pCreateInfo, pAllocator, pSurface);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSurface=" + ptrToString((void**)std::addressof(pSurface)) + '!');
-}
 #ifdef CREATEHEADLESSSURFACEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateHeadlessSurfaceEXT_after(instance, pCreateInfo, pAllocator, pSurface);
@@ -4502,15 +3555,6 @@ layer_GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV_before(phy
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(physicalDevice, pCombinationCount, pCombinations);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pCombinationCount=" + ptrToString((void**)std::addressof(pCombinationCount)) + '!');
-if(pCombinations != VK_NULL_HANDLE && pCombinations != NULL) {
-winsockSendToUI(&ConnectSocket,"pCombinations->pNext=" + ptrToString((void**)std::addressof(pCombinations->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCombinations->depthStencilSamples=" + ptrToString((void**)std::addressof(pCombinations->depthStencilSamples)) + '!');
-winsockSendToUI(&ConnectSocket,"pCombinations->colorSamples=" + ptrToString((void**)std::addressof(pCombinations->colorSamples)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCombinations=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICESUPPORTEDFRAMEBUFFERMIXEDSAMPLESCOMBINATIONSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV_after(physicalDevice, pCombinationCount, pCombinations);
@@ -4540,18 +3584,6 @@ layer_GetPhysicalDeviceToolProperties_before(physicalDevice, pToolCount, pToolPr
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceToolProperties(physicalDevice, pToolCount, pToolProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pToolCount=" + ptrToString((void**)std::addressof(pToolCount)) + '!');
-if(pToolProperties != VK_NULL_HANDLE && pToolProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pToolProperties->pNext=" + ptrToString((void**)std::addressof(pToolProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pToolProperties->name=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pToolProperties->version=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pToolProperties->purposes=" + ptrToString((void**)std::addressof(pToolProperties->purposes)) + '!');
-winsockSendToUI(&ConnectSocket,"pToolProperties->description=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pToolProperties->layer=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pToolProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICETOOLPROPERTIES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceToolProperties_after(physicalDevice, pToolCount, pToolProperties);
@@ -4581,15 +3613,6 @@ layer_GetPhysicalDeviceFragmentShadingRatesKHR_before(physicalDevice, pFragmentS
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFragmentShadingRatesKHR(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pFragmentShadingRateCount=" + ptrToString((void**)std::addressof(pFragmentShadingRateCount)) + '!');
-if(pFragmentShadingRates != VK_NULL_HANDLE && pFragmentShadingRates != NULL) {
-winsockSendToUI(&ConnectSocket,"pFragmentShadingRates->pNext=" + ptrToString((void**)std::addressof(pFragmentShadingRates->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pFragmentShadingRates->sampleCounts=" + ptrToString((void**)std::addressof(pFragmentShadingRates->sampleCounts)) + '!');
-winsockSendToUI(&ConnectSocket,"pFragmentShadingRates->fragmentSize=" + ptrToString((void**)std::addressof(pFragmentShadingRates->fragmentSize)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pFragmentShadingRates=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEFRAGMENTSHADINGRATESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceFragmentShadingRatesKHR_after(physicalDevice, pFragmentShadingRateCount, pFragmentShadingRates);
@@ -4619,27 +3642,6 @@ layer_GetPhysicalDeviceVideoCapabilitiesKHR_before(physicalDevice, pVideoProfile
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceVideoCapabilitiesKHR(physicalDevice, pVideoProfile, pCapabilities);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pVideoProfile != VK_NULL_HANDLE && pVideoProfile != NULL) {
-winsockSendToUI(&ConnectSocket,"pVideoProfile->pNext=" + ptrToString((void**)std::addressof(pVideoProfile->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoProfile->chromaSubsampling=" + ptrToString((void**)std::addressof(pVideoProfile->chromaSubsampling)) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoProfile->lumaBitDepth=" + ptrToString((void**)std::addressof(pVideoProfile->lumaBitDepth)) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoProfile->chromaBitDepth=" + ptrToString((void**)std::addressof(pVideoProfile->chromaBitDepth)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pVideoProfile=VK_NULL_HANDLE!");
-if(pCapabilities != VK_NULL_HANDLE && pCapabilities != NULL) {
-winsockSendToUI(&ConnectSocket,"pCapabilities->pNext=" + ptrToString((void**)std::addressof(pCapabilities->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->flags=" + ptrToString((void**)std::addressof(pCapabilities->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->minBitstreamBufferOffsetAlignment=" + std::to_string(pCapabilities->minBitstreamBufferOffsetAlignment) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->minBitstreamBufferSizeAlignment=" + std::to_string(pCapabilities->minBitstreamBufferSizeAlignment) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->pictureAccessGranularity=" + ptrToString((void**)std::addressof(pCapabilities->pictureAccessGranularity)) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->minCodedExtent=" + ptrToString((void**)std::addressof(pCapabilities->minCodedExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->maxCodedExtent=" + ptrToString((void**)std::addressof(pCapabilities->maxCodedExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->maxDpbSlots=" + std::to_string(pCapabilities->maxDpbSlots) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->maxActiveReferencePictures=" + std::to_string(pCapabilities->maxActiveReferencePictures) + '!');
-winsockSendToUI(&ConnectSocket,"pCapabilities->stdHeaderVersion=" + ptrToString((void**)std::addressof(pCapabilities->stdHeaderVersion)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCapabilities=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEVIDEOCAPABILITIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceVideoCapabilitiesKHR_after(physicalDevice, pVideoProfile, pCapabilities);
@@ -4669,20 +3671,6 @@ layer_GetPhysicalDeviceVideoFormatPropertiesKHR_before(physicalDevice, pVideoFor
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceVideoFormatPropertiesKHR(physicalDevice, pVideoFormatInfo, pVideoFormatPropertyCount, pVideoFormatProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pVideoFormatInfo != VK_NULL_HANDLE && pVideoFormatInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pVideoFormatInfo->pNext=" + ptrToString((void**)std::addressof(pVideoFormatInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoFormatInfo->imageUsage=" + ptrToString((void**)std::addressof(pVideoFormatInfo->imageUsage)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pVideoFormatInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pVideoFormatPropertyCount=" + ptrToString((void**)std::addressof(pVideoFormatPropertyCount)) + '!');
-if(pVideoFormatProperties != VK_NULL_HANDLE && pVideoFormatProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pVideoFormatProperties->pNext=" + ptrToString((void**)std::addressof(pVideoFormatProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoFormatProperties->componentMapping=" + ptrToString((void**)std::addressof(pVideoFormatProperties->componentMapping)) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoFormatProperties->imageCreateFlags=" + ptrToString((void**)std::addressof(pVideoFormatProperties->imageCreateFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoFormatProperties->imageUsageFlags=" + ptrToString((void**)std::addressof(pVideoFormatProperties->imageUsageFlags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pVideoFormatProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEVIDEOFORMATPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceVideoFormatPropertiesKHR_after(physicalDevice, pVideoFormatInfo, pVideoFormatPropertyCount, pVideoFormatProperties);
@@ -4712,23 +3700,6 @@ layer_GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR_before(physicalDevic
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(physicalDevice, pQualityLevelInfo, pQualityLevelProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pQualityLevelInfo != VK_NULL_HANDLE && pQualityLevelInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pQualityLevelInfo->pNext=" + ptrToString((void**)std::addressof(pQualityLevelInfo->pNext)) + '!');
-if(pQualityLevelInfo->pVideoProfile != VK_NULL_HANDLE && pQualityLevelInfo->pVideoProfile != NULL) {
-winsockSendToUI(&ConnectSocket,"pQualityLevelInfo->pVideoProfile->pNext=" + ptrToString((void**)std::addressof(pQualityLevelInfo->pVideoProfile->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pQualityLevelInfo->pVideoProfile->chromaSubsampling=" + ptrToString((void**)std::addressof(pQualityLevelInfo->pVideoProfile->chromaSubsampling)) + '!');
-winsockSendToUI(&ConnectSocket,"pQualityLevelInfo->pVideoProfile->lumaBitDepth=" + ptrToString((void**)std::addressof(pQualityLevelInfo->pVideoProfile->lumaBitDepth)) + '!');
-winsockSendToUI(&ConnectSocket,"pQualityLevelInfo->pVideoProfile->chromaBitDepth=" + ptrToString((void**)std::addressof(pQualityLevelInfo->pVideoProfile->chromaBitDepth)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pVideoProfile=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pQualityLevelInfo->qualityLevel=" + std::to_string(pQualityLevelInfo->qualityLevel) + '!');
-}else winsockSendToUI(&ConnectSocket, "pQualityLevelInfo=VK_NULL_HANDLE!");
-if(pQualityLevelProperties != VK_NULL_HANDLE && pQualityLevelProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pQualityLevelProperties->pNext=" + ptrToString((void**)std::addressof(pQualityLevelProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pQualityLevelProperties->preferredRateControlLayerCount=" + std::to_string(pQualityLevelProperties->preferredRateControlLayerCount) + '!');
-}else winsockSendToUI(&ConnectSocket, "pQualityLevelProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEVIDEOENCODEQUALITYLEVELPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR_after(physicalDevice, pQualityLevelInfo, pQualityLevelProperties);
@@ -4758,11 +3729,6 @@ layer_AcquireDrmDisplayEXT_before(physicalDevice, drmFd, display);
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].AcquireDrmDisplayEXT(physicalDevice, drmFd, display);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"drmFd=" + std::to_string(drmFd) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void**)std::addressof(display)) + '!');
-}
 #ifdef ACQUIREDRMDISPLAYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireDrmDisplayEXT_after(physicalDevice, drmFd, display);
@@ -4792,12 +3758,6 @@ layer_GetDrmDisplayEXT_before(physicalDevice, drmFd, connectorId, display);
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetDrmDisplayEXT(physicalDevice, drmFd, connectorId, display);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"drmFd=" + std::to_string(drmFd) + '!');
-winsockSendToUI(&ConnectSocket,"connectorId=" + std::to_string(connectorId) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void**)std::addressof(display)) + '!');
-}
 #ifdef GETDRMDISPLAYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDrmDisplayEXT_after(physicalDevice, drmFd, connectorId, display);
@@ -4827,17 +3787,6 @@ layer_GetPhysicalDeviceOpticalFlowImageFormatsNV_before(physicalDevice, pOptical
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceOpticalFlowImageFormatsNV(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pOpticalFlowImageFormatInfo != VK_NULL_HANDLE && pOpticalFlowImageFormatInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pOpticalFlowImageFormatInfo->pNext=" + ptrToString((void**)std::addressof(pOpticalFlowImageFormatInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pOpticalFlowImageFormatInfo->usage=" + ptrToString((void**)std::addressof(pOpticalFlowImageFormatInfo->usage)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pOpticalFlowImageFormatInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pFormatCount=" + ptrToString((void**)std::addressof(pFormatCount)) + '!');
-if(pImageFormatProperties != VK_NULL_HANDLE && pImageFormatProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pImageFormatProperties->pNext=" + ptrToString((void**)std::addressof(pImageFormatProperties->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageFormatProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEOPTICALFLOWIMAGEFORMATSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceOpticalFlowImageFormatsNV_after(physicalDevice, pOpticalFlowImageFormatInfo, pFormatCount, pImageFormatProperties);
@@ -4867,17 +3816,6 @@ layer_GetPhysicalDeviceCooperativeMatrixPropertiesKHR_before(physicalDevice, pPr
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceCooperativeMatrixPropertiesKHR(physicalDevice, pPropertyCount, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void**)std::addressof(pPropertyCount)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->MSize=" + std::to_string(pProperties->MSize) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->NSize=" + std::to_string(pProperties->NSize) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->KSize=" + std::to_string(pProperties->KSize) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->saturatingAccumulation=" + bool_as_text(pProperties->saturatingAccumulation) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICECOOPERATIVEMATRIXPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceCooperativeMatrixPropertiesKHR_after(physicalDevice, pPropertyCount, pProperties);
@@ -4906,13 +3844,6 @@ layer_GetPhysicalDeviceFeatures2KHR_before(physicalDevice, pFeatures);
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures2KHR(physicalDevice, pFeatures);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pFeatures != VK_NULL_HANDLE && pFeatures != NULL) {
-winsockSendToUI(&ConnectSocket,"pFeatures->pNext=" + ptrToString((void**)std::addressof(pFeatures->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pFeatures->features=" + ptrToString((void**)std::addressof(pFeatures->features)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pFeatures=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEFEATURES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceFeatures2KHR_after(physicalDevice, pFeatures);
@@ -4938,13 +3869,6 @@ layer_GetPhysicalDeviceProperties2KHR_before(physicalDevice, pProperties);
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties2KHR(physicalDevice, pProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->properties=" + ptrToString((void**)std::addressof(pProperties->properties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceProperties2KHR_after(physicalDevice, pProperties);
@@ -4970,13 +3894,6 @@ layer_GetPhysicalDeviceFormatProperties2KHR_before(physicalDevice, format, pForm
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties2KHR(physicalDevice, format, pFormatProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pFormatProperties != VK_NULL_HANDLE && pFormatProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pFormatProperties->pNext=" + ptrToString((void**)std::addressof(pFormatProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pFormatProperties->formatProperties=" + ptrToString((void**)std::addressof(pFormatProperties->formatProperties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pFormatProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEFORMATPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceFormatProperties2KHR_after(physicalDevice, format, pFormatProperties);
@@ -5003,18 +3920,6 @@ layer_GetPhysicalDeviceImageFormatProperties2KHR_before(physicalDevice, pImageFo
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceImageFormatProperties2KHR(physicalDevice, pImageFormatInfo, pImageFormatProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pImageFormatInfo != VK_NULL_HANDLE && pImageFormatInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pImageFormatInfo->pNext=" + ptrToString((void**)std::addressof(pImageFormatInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatInfo->usage=" + ptrToString((void**)std::addressof(pImageFormatInfo->usage)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatInfo->flags=" + ptrToString((void**)std::addressof(pImageFormatInfo->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageFormatInfo=VK_NULL_HANDLE!");
-if(pImageFormatProperties != VK_NULL_HANDLE && pImageFormatProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pImageFormatProperties->pNext=" + ptrToString((void**)std::addressof(pImageFormatProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageFormatProperties->imageFormatProperties=" + ptrToString((void**)std::addressof(pImageFormatProperties->imageFormatProperties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageFormatProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEIMAGEFORMATPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceImageFormatProperties2KHR_after(physicalDevice, pImageFormatInfo, pImageFormatProperties);
@@ -5043,14 +3948,6 @@ layer_GetPhysicalDeviceQueueFamilyProperties2KHR_before(physicalDevice, pQueueFa
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties2KHR(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueFamilyPropertyCount=" + ptrToString((void**)std::addressof(pQueueFamilyPropertyCount)) + '!');
-if(pQueueFamilyProperties != VK_NULL_HANDLE && pQueueFamilyProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pQueueFamilyProperties->pNext=" + ptrToString((void**)std::addressof(pQueueFamilyProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueFamilyProperties->queueFamilyProperties=" + ptrToString((void**)std::addressof(pQueueFamilyProperties->queueFamilyProperties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pQueueFamilyProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEQUEUEFAMILYPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceQueueFamilyProperties2KHR_after(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
@@ -5076,13 +3973,6 @@ layer_GetPhysicalDeviceMemoryProperties2KHR_before(physicalDevice, pMemoryProper
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties2KHR(physicalDevice, pMemoryProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pMemoryProperties != VK_NULL_HANDLE && pMemoryProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryProperties->pNext=" + ptrToString((void**)std::addressof(pMemoryProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryProperties->memoryProperties=" + ptrToString((void**)std::addressof(pMemoryProperties->memoryProperties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEMEMORYPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceMemoryProperties2KHR_after(physicalDevice, pMemoryProperties);
@@ -5108,18 +3998,6 @@ layer_GetPhysicalDeviceSparseImageFormatProperties2KHR_before(physicalDevice, pF
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProperties2KHR(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pFormatInfo != VK_NULL_HANDLE && pFormatInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pFormatInfo->pNext=" + ptrToString((void**)std::addressof(pFormatInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pFormatInfo->usage=" + ptrToString((void**)std::addressof(pFormatInfo->usage)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pFormatInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pPropertyCount=" + ptrToString((void**)std::addressof(pPropertyCount)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->properties=" + ptrToString((void**)std::addressof(pProperties->properties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICESPARSEIMAGEFORMATPROPERTIES2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceSparseImageFormatProperties2KHR_after(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
@@ -5145,18 +4023,6 @@ layer_GetPhysicalDeviceExternalBufferPropertiesKHR_before(physicalDevice, pExter
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalBufferPropertiesKHR(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pExternalBufferInfo != VK_NULL_HANDLE && pExternalBufferInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pExternalBufferInfo->pNext=" + ptrToString((void**)std::addressof(pExternalBufferInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalBufferInfo->flags=" + ptrToString((void**)std::addressof(pExternalBufferInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalBufferInfo->usage=" + ptrToString((void**)std::addressof(pExternalBufferInfo->usage)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExternalBufferInfo=VK_NULL_HANDLE!");
-if(pExternalBufferProperties != VK_NULL_HANDLE && pExternalBufferProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pExternalBufferProperties->pNext=" + ptrToString((void**)std::addressof(pExternalBufferProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalBufferProperties->externalMemoryProperties=" + ptrToString((void**)std::addressof(pExternalBufferProperties->externalMemoryProperties)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExternalBufferProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEEXTERNALBUFFERPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalBufferPropertiesKHR_after(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
@@ -5182,18 +4048,6 @@ layer_GetPhysicalDeviceExternalSemaphorePropertiesKHR_before(physicalDevice, pEx
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalSemaphorePropertiesKHR(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pExternalSemaphoreInfo != VK_NULL_HANDLE && pExternalSemaphoreInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pExternalSemaphoreInfo->pNext=" + ptrToString((void**)std::addressof(pExternalSemaphoreInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExternalSemaphoreInfo=VK_NULL_HANDLE!");
-if(pExternalSemaphoreProperties != VK_NULL_HANDLE && pExternalSemaphoreProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pExternalSemaphoreProperties->pNext=" + ptrToString((void**)std::addressof(pExternalSemaphoreProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalSemaphoreProperties->exportFromImportedHandleTypes=" + ptrToString((void**)std::addressof(pExternalSemaphoreProperties->exportFromImportedHandleTypes)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalSemaphoreProperties->compatibleHandleTypes=" + ptrToString((void**)std::addressof(pExternalSemaphoreProperties->compatibleHandleTypes)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalSemaphoreProperties->externalSemaphoreFeatures=" + ptrToString((void**)std::addressof(pExternalSemaphoreProperties->externalSemaphoreFeatures)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExternalSemaphoreProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEEXTERNALSEMAPHOREPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalSemaphorePropertiesKHR_after(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
@@ -5219,18 +4073,6 @@ layer_GetPhysicalDeviceExternalFencePropertiesKHR_before(physicalDevice, pExtern
 }
 #endif 
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalFencePropertiesKHR(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-if(pExternalFenceInfo != VK_NULL_HANDLE && pExternalFenceInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pExternalFenceInfo->pNext=" + ptrToString((void**)std::addressof(pExternalFenceInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExternalFenceInfo=VK_NULL_HANDLE!");
-if(pExternalFenceProperties != VK_NULL_HANDLE && pExternalFenceProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pExternalFenceProperties->pNext=" + ptrToString((void**)std::addressof(pExternalFenceProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalFenceProperties->exportFromImportedHandleTypes=" + ptrToString((void**)std::addressof(pExternalFenceProperties->exportFromImportedHandleTypes)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalFenceProperties->compatibleHandleTypes=" + ptrToString((void**)std::addressof(pExternalFenceProperties->compatibleHandleTypes)) + '!');
-winsockSendToUI(&ConnectSocket,"pExternalFenceProperties->externalFenceFeatures=" + ptrToString((void**)std::addressof(pExternalFenceProperties->externalFenceFeatures)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExternalFenceProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICEEXTERNALFENCEPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceExternalFencePropertiesKHR_after(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
@@ -5257,16 +4099,6 @@ layer_EnumeratePhysicalDeviceGroupsKHR_before(instance, pPhysicalDeviceGroupCoun
 #endif 
 auto ret = instance_dispatch[GetKey(instance)].EnumeratePhysicalDeviceGroupsKHR(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"instance=" + ptrToString((void**)std::addressof(instance)) + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceGroupCount=" + ptrToString((void**)std::addressof(pPhysicalDeviceGroupCount)) + '!');
-if(pPhysicalDeviceGroupProperties != VK_NULL_HANDLE && pPhysicalDeviceGroupProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceGroupProperties->pNext=" + ptrToString((void**)std::addressof(pPhysicalDeviceGroupProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceGroupProperties->physicalDeviceCount=" + std::to_string(pPhysicalDeviceGroupProperties->physicalDeviceCount) + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceGroupProperties->physicalDevices=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pPhysicalDeviceGroupProperties->subsetAllocation=" + bool_as_text(pPhysicalDeviceGroupProperties->subsetAllocation) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPhysicalDeviceGroupProperties=VK_NULL_HANDLE!");
-}
 #ifdef ENUMERATEPHYSICALDEVICEGROUPSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_EnumeratePhysicalDeviceGroupsKHR_after(instance, pPhysicalDeviceGroupCount, pPhysicalDeviceGroupProperties);
@@ -5296,11 +4128,6 @@ layer_GetPhysicalDeviceCalibrateableTimeDomainsEXT_before(physicalDevice, pTimeD
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceCalibrateableTimeDomainsEXT(physicalDevice, pTimeDomainCount, pTimeDomains);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pTimeDomainCount=" + ptrToString((void**)std::addressof(pTimeDomainCount)) + '!');
-winsockSendToUI(&ConnectSocket,"pTimeDomains=" + ptrToString((void**)std::addressof(pTimeDomains)) + '!');
-}
 #ifdef GETPHYSICALDEVICECALIBRATEABLETIMEDOMAINSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceCalibrateableTimeDomainsEXT_after(physicalDevice, pTimeDomainCount, pTimeDomains);
@@ -5330,18 +4157,6 @@ layer_GetPhysicalDeviceToolPropertiesEXT_before(physicalDevice, pToolCount, pToo
 #endif 
 auto ret = instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceToolPropertiesEXT(physicalDevice, pToolCount, pToolProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"physicalDevice=" + ptrToString((void**)std::addressof(physicalDevice)) + '!');
-winsockSendToUI(&ConnectSocket,"pToolCount=" + ptrToString((void**)std::addressof(pToolCount)) + '!');
-if(pToolProperties != VK_NULL_HANDLE && pToolProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pToolProperties->pNext=" + ptrToString((void**)std::addressof(pToolProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pToolProperties->name=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pToolProperties->version=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pToolProperties->purposes=" + ptrToString((void**)std::addressof(pToolProperties->purposes)) + '!');
-winsockSendToUI(&ConnectSocket,"pToolProperties->description=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pToolProperties->layer=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pToolProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPHYSICALDEVICETOOLPROPERTIESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPhysicalDeviceToolPropertiesEXT_after(physicalDevice, pToolCount, pToolProperties);
@@ -5370,12 +4185,6 @@ layer_GetDeviceQueue_before(device, queueFamilyIndex, queueIndex, pQueue);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceQueue(device, queueFamilyIndex, queueIndex, pQueue);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"queueFamilyIndex=" + std::to_string(queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"queueIndex=" + std::to_string(queueIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pQueue=" + ptrToString((void**)std::addressof(pQueue)) + '!');
-}
 #ifdef GETDEVICEQUEUE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceQueue_after(device, queueFamilyIndex, queueIndex, pQueue);
@@ -5402,21 +4211,6 @@ layer_QueueSubmit_before(queue, submitCount, pSubmits, fence);
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueueSubmit(queue, submitCount, pSubmits, fence);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void**)std::addressof(queue)) + '!');
-winsockSendToUI(&ConnectSocket,"submitCount=" + std::to_string(submitCount) + '!');
-if(pSubmits != VK_NULL_HANDLE && pSubmits != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubmits->pNext=" + ptrToString((void**)std::addressof(pSubmits->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->waitSemaphoreCount=" + std::to_string(pSubmits->waitSemaphoreCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pWaitSemaphores=" + ptrToString((void**)std::addressof(pSubmits->pWaitSemaphores)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pWaitDstStageMask=" + ptrToString((void**)std::addressof(pSubmits->pWaitDstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->commandBufferCount=" + std::to_string(pSubmits->commandBufferCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pCommandBuffers=" + ptrToString((void**)std::addressof(pSubmits->pCommandBuffers)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->signalSemaphoreCount=" + std::to_string(pSubmits->signalSemaphoreCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pSignalSemaphores=" + ptrToString((void**)std::addressof(pSubmits->pSignalSemaphores)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubmits=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void**)std::addressof(fence)) + '!');
-}
 #ifdef QUEUESUBMIT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueSubmit_after(queue, submitCount, pSubmits, fence);
@@ -5446,9 +4240,6 @@ layer_QueueWaitIdle_before(queue);
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueueWaitIdle(queue);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void**)std::addressof(queue)) + '!');
-}
 #ifdef QUEUEWAITIDLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueWaitIdle_after(queue);
@@ -5478,9 +4269,6 @@ layer_DeviceWaitIdle_before(device);
 #endif 
 auto ret = device_dispatch[GetKey(device)].DeviceWaitIdle(device);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-}
 #ifdef DEVICEWAITIDLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DeviceWaitIdle_after(device);
@@ -5510,23 +4298,6 @@ layer_AllocateMemory_before(device, pAllocateInfo, pAllocator, pMemory);
 #endif 
 auto ret = device_dispatch[GetKey(device)].AllocateMemory(device, pAllocateInfo, pAllocator, pMemory);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pAllocateInfo != VK_NULL_HANDLE && pAllocateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocateInfo->pNext=" + ptrToString((void**)std::addressof(pAllocateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocateInfo->allocationSize=" + std::to_string(pAllocateInfo->allocationSize) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocateInfo->memoryTypeIndex=" + std::to_string(pAllocateInfo->memoryTypeIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pMemory=" + ptrToString((void**)std::addressof(pMemory)) + '!');
-}
 #ifdef ALLOCATEMEMORY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AllocateMemory_after(device, pAllocateInfo, pAllocator, pMemory);
@@ -5555,18 +4326,6 @@ layer_FreeMemory_before(device, memory, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].FreeMemory(device, memory, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void**)std::addressof(memory)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef FREEMEMORY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_FreeMemory_after(device, memory, pAllocator);
@@ -5593,14 +4352,6 @@ layer_MapMemory_before(device, memory, offset, size, flags, ppData);
 #endif 
 auto ret = device_dispatch[GetKey(device)].MapMemory(device, memory, offset, size, flags, ppData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void**)std::addressof(memory)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"size=" + std::to_string(size) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void**)std::addressof(flags)) + '!');
-winsockSendToUI(&ConnectSocket,"ppData=" + ptrToString((void**)std::addressof(ppData)) + '!');
-}
 #ifdef MAPMEMORY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_MapMemory_after(device, memory, offset, size, flags, ppData);
@@ -5629,10 +4380,6 @@ layer_UnmapMemory_before(device, memory);
 }
 #endif 
 device_dispatch[GetKey(device)].UnmapMemory(device, memory);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void**)std::addressof(memory)) + '!');
-}
 #ifdef UNMAPMEMORY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_UnmapMemory_after(device, memory);
@@ -5659,16 +4406,6 @@ layer_FlushMappedMemoryRanges_before(device, memoryRangeCount, pMemoryRanges);
 #endif 
 auto ret = device_dispatch[GetKey(device)].FlushMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"memoryRangeCount=" + std::to_string(memoryRangeCount) + '!');
-if(pMemoryRanges != VK_NULL_HANDLE && pMemoryRanges != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRanges->pNext=" + ptrToString((void**)std::addressof(pMemoryRanges->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRanges->memory=" + ptrToString((void**)std::addressof(pMemoryRanges->memory)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRanges->offset=" + std::to_string(pMemoryRanges->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRanges->size=" + std::to_string(pMemoryRanges->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRanges=VK_NULL_HANDLE!");
-}
 #ifdef FLUSHMAPPEDMEMORYRANGES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_FlushMappedMemoryRanges_after(device, memoryRangeCount, pMemoryRanges);
@@ -5698,16 +4435,6 @@ layer_InvalidateMappedMemoryRanges_before(device, memoryRangeCount, pMemoryRange
 #endif 
 auto ret = device_dispatch[GetKey(device)].InvalidateMappedMemoryRanges(device, memoryRangeCount, pMemoryRanges);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"memoryRangeCount=" + std::to_string(memoryRangeCount) + '!');
-if(pMemoryRanges != VK_NULL_HANDLE && pMemoryRanges != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRanges->pNext=" + ptrToString((void**)std::addressof(pMemoryRanges->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRanges->memory=" + ptrToString((void**)std::addressof(pMemoryRanges->memory)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRanges->offset=" + std::to_string(pMemoryRanges->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRanges->size=" + std::to_string(pMemoryRanges->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRanges=VK_NULL_HANDLE!");
-}
 #ifdef INVALIDATEMAPPEDMEMORYRANGES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_InvalidateMappedMemoryRanges_after(device, memoryRangeCount, pMemoryRanges);
@@ -5736,11 +4463,6 @@ layer_GetDeviceMemoryCommitment_before(device, memory, pCommittedMemoryInBytes);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceMemoryCommitment(device, memory, pCommittedMemoryInBytes);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void**)std::addressof(memory)) + '!');
-winsockSendToUI(&ConnectSocket,"pCommittedMemoryInBytes=" + ptrToString((void**)std::addressof(pCommittedMemoryInBytes)) + '!');
-}
 #ifdef GETDEVICEMEMORYCOMMITMENT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceMemoryCommitment_after(device, memory, pCommittedMemoryInBytes);
@@ -5766,15 +4488,6 @@ layer_GetBufferMemoryRequirements_before(device, buffer, pMemoryRequirements);
 }
 #endif 
 device_dispatch[GetKey(device)].GetBufferMemoryRequirements(device, buffer, pMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-if(pMemoryRequirements != VK_NULL_HANDLE && pMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->size=" + std::to_string(pMemoryRequirements->size) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->alignment=" + std::to_string(pMemoryRequirements->alignment) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->memoryTypeBits=" + std::to_string(pMemoryRequirements->memoryTypeBits) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETBUFFERMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferMemoryRequirements_after(device, buffer, pMemoryRequirements);
@@ -5801,12 +4514,6 @@ layer_BindBufferMemory_before(device, buffer, memory, memoryOffset);
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindBufferMemory(device, buffer, memory, memoryOffset);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void**)std::addressof(memory)) + '!');
-winsockSendToUI(&ConnectSocket,"memoryOffset=" + std::to_string(memoryOffset) + '!');
-}
 #ifdef BINDBUFFERMEMORY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindBufferMemory_after(device, buffer, memory, memoryOffset);
@@ -5835,15 +4542,6 @@ layer_GetImageMemoryRequirements_before(device, image, pMemoryRequirements);
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageMemoryRequirements(device, image, pMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void**)std::addressof(image)) + '!');
-if(pMemoryRequirements != VK_NULL_HANDLE && pMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->size=" + std::to_string(pMemoryRequirements->size) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->alignment=" + std::to_string(pMemoryRequirements->alignment) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->memoryTypeBits=" + std::to_string(pMemoryRequirements->memoryTypeBits) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETIMAGEMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageMemoryRequirements_after(device, image, pMemoryRequirements);
@@ -5870,12 +4568,6 @@ layer_BindImageMemory_before(device, image, memory, memoryOffset);
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindImageMemory(device, image, memory, memoryOffset);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void**)std::addressof(image)) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void**)std::addressof(memory)) + '!');
-winsockSendToUI(&ConnectSocket,"memoryOffset=" + std::to_string(memoryOffset) + '!');
-}
 #ifdef BINDIMAGEMEMORY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindImageMemory_after(device, image, memory, memoryOffset);
@@ -5904,18 +4596,6 @@ layer_GetImageSparseMemoryRequirements_before(device, image, pSparseMemoryRequir
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void**)std::addressof(image)) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirementCount=" + ptrToString((void**)std::addressof(pSparseMemoryRequirementCount)) + '!');
-if(pSparseMemoryRequirements != VK_NULL_HANDLE && pSparseMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements->formatProperties=" + ptrToString((void**)std::addressof(pSparseMemoryRequirements->formatProperties)) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements->imageMipTailFirstLod=" + std::to_string(pSparseMemoryRequirements->imageMipTailFirstLod) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements->imageMipTailSize=" + std::to_string(pSparseMemoryRequirements->imageMipTailSize) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements->imageMipTailOffset=" + std::to_string(pSparseMemoryRequirements->imageMipTailOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements->imageMipTailStride=" + std::to_string(pSparseMemoryRequirements->imageMipTailStride) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSparseMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETIMAGESPARSEMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageSparseMemoryRequirements_after(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -5942,55 +4622,6 @@ layer_QueueBindSparse_before(queue, bindInfoCount, pBindInfo, fence);
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueueBindSparse(queue, bindInfoCount, pBindInfo, fence);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void**)std::addressof(queue)) + '!');
-winsockSendToUI(&ConnectSocket,"bindInfoCount=" + std::to_string(bindInfoCount) + '!');
-if(pBindInfo != VK_NULL_HANDLE && pBindInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindInfo->pNext=" + ptrToString((void**)std::addressof(pBindInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->waitSemaphoreCount=" + std::to_string(pBindInfo->waitSemaphoreCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pWaitSemaphores=" + ptrToString((void**)std::addressof(pBindInfo->pWaitSemaphores)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->bufferBindCount=" + std::to_string(pBindInfo->bufferBindCount) + '!');
-if(pBindInfo->pBufferBinds != VK_NULL_HANDLE && pBindInfo->pBufferBinds != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindInfo->pBufferBinds->buffer=" + ptrToString((void**)std::addressof(pBindInfo->pBufferBinds->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pBufferBinds->bindCount=" + std::to_string(pBindInfo->pBufferBinds->bindCount) + '!');
-if(pBindInfo->pBufferBinds->pBinds != VK_NULL_HANDLE && pBindInfo->pBufferBinds->pBinds != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindInfo->pBufferBinds->pBinds->resourceOffset=" + std::to_string(pBindInfo->pBufferBinds->pBinds->resourceOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pBufferBinds->pBinds->size=" + std::to_string(pBindInfo->pBufferBinds->pBinds->size) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pBufferBinds->pBinds->memory=" + ptrToString((void**)std::addressof(pBindInfo->pBufferBinds->pBinds->memory)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pBufferBinds->pBinds->memoryOffset=" + std::to_string(pBindInfo->pBufferBinds->pBinds->memoryOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pBufferBinds->pBinds->flags=" + ptrToString((void**)std::addressof(pBindInfo->pBufferBinds->pBinds->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBinds=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pBufferBinds=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pBindInfo->imageOpaqueBindCount=" + std::to_string(pBindInfo->imageOpaqueBindCount) + '!');
-if(pBindInfo->pImageOpaqueBinds != VK_NULL_HANDLE && pBindInfo->pImageOpaqueBinds != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageOpaqueBinds->image=" + ptrToString((void**)std::addressof(pBindInfo->pImageOpaqueBinds->image)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageOpaqueBinds->bindCount=" + std::to_string(pBindInfo->pImageOpaqueBinds->bindCount) + '!');
-if(pBindInfo->pImageOpaqueBinds->pBinds != VK_NULL_HANDLE && pBindInfo->pImageOpaqueBinds->pBinds != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageOpaqueBinds->pBinds->resourceOffset=" + std::to_string(pBindInfo->pImageOpaqueBinds->pBinds->resourceOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageOpaqueBinds->pBinds->size=" + std::to_string(pBindInfo->pImageOpaqueBinds->pBinds->size) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageOpaqueBinds->pBinds->memory=" + ptrToString((void**)std::addressof(pBindInfo->pImageOpaqueBinds->pBinds->memory)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageOpaqueBinds->pBinds->memoryOffset=" + std::to_string(pBindInfo->pImageOpaqueBinds->pBinds->memoryOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageOpaqueBinds->pBinds->flags=" + ptrToString((void**)std::addressof(pBindInfo->pImageOpaqueBinds->pBinds->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBinds=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pImageOpaqueBinds=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pBindInfo->imageBindCount=" + std::to_string(pBindInfo->imageBindCount) + '!');
-if(pBindInfo->pImageBinds != VK_NULL_HANDLE && pBindInfo->pImageBinds != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageBinds->image=" + ptrToString((void**)std::addressof(pBindInfo->pImageBinds->image)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageBinds->bindCount=" + std::to_string(pBindInfo->pImageBinds->bindCount) + '!');
-if(pBindInfo->pImageBinds->pBinds != VK_NULL_HANDLE && pBindInfo->pImageBinds->pBinds != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageBinds->pBinds->subresource=" + ptrToString((void**)std::addressof(pBindInfo->pImageBinds->pBinds->subresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageBinds->pBinds->offset=" + ptrToString((void**)std::addressof(pBindInfo->pImageBinds->pBinds->offset)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageBinds->pBinds->extent=" + ptrToString((void**)std::addressof(pBindInfo->pImageBinds->pBinds->extent)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageBinds->pBinds->memory=" + ptrToString((void**)std::addressof(pBindInfo->pImageBinds->pBinds->memory)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageBinds->pBinds->memoryOffset=" + std::to_string(pBindInfo->pImageBinds->pBinds->memoryOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pImageBinds->pBinds->flags=" + ptrToString((void**)std::addressof(pBindInfo->pImageBinds->pBinds->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBinds=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pImageBinds=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pBindInfo->signalSemaphoreCount=" + std::to_string(pBindInfo->signalSemaphoreCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfo->pSignalSemaphores=" + ptrToString((void**)std::addressof(pBindInfo->pSignalSemaphores)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBindInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void**)std::addressof(fence)) + '!');
-}
 #ifdef QUEUEBINDSPARSE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueBindSparse_after(queue, bindInfoCount, pBindInfo, fence);
@@ -6020,22 +4651,6 @@ layer_CreateFence_before(device, pCreateInfo, pAllocator, pFence);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateFence(device, pCreateInfo, pAllocator, pFence);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pFence=" + ptrToString((void**)std::addressof(pFence)) + '!');
-}
 #ifdef CREATEFENCE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateFence_after(device, pCreateInfo, pAllocator, pFence);
@@ -6064,18 +4679,6 @@ layer_DestroyFence_before(device, fence, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyFence(device, fence, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void**)std::addressof(fence)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYFENCE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyFence_after(device, fence, pAllocator);
@@ -6102,11 +4705,6 @@ layer_ResetFences_before(device, fenceCount, pFences);
 #endif 
 auto ret = device_dispatch[GetKey(device)].ResetFences(device, fenceCount, pFences);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"fenceCount=" + std::to_string(fenceCount) + '!');
-winsockSendToUI(&ConnectSocket,"pFences=" + ptrToString((void**)std::addressof(pFences)) + '!');
-}
 #ifdef RESETFENCES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ResetFences_after(device, fenceCount, pFences);
@@ -6136,10 +4734,6 @@ layer_GetFenceStatus_before(device, fence);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetFenceStatus(device, fence);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void**)std::addressof(fence)) + '!');
-}
 #ifdef GETFENCESTATUS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetFenceStatus_after(device, fence);
@@ -6169,13 +4763,6 @@ layer_WaitForFences_before(device, fenceCount, pFences, waitAll, timeout);
 #endif 
 auto ret = device_dispatch[GetKey(device)].WaitForFences(device, fenceCount, pFences, waitAll, timeout);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"fenceCount=" + std::to_string(fenceCount) + '!');
-winsockSendToUI(&ConnectSocket,"pFences=" + ptrToString((void**)std::addressof(pFences)) + '!');
-winsockSendToUI(&ConnectSocket,"waitAll=" + bool_as_text(waitAll) + '!');
-winsockSendToUI(&ConnectSocket,"timeout=" + std::to_string(timeout) + '!');
-}
 #ifdef WAITFORFENCES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_WaitForFences_after(device, fenceCount, pFences, waitAll, timeout);
@@ -6205,22 +4792,6 @@ layer_CreateSemaphore_before(device, pCreateInfo, pAllocator, pSemaphore);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateSemaphore(device, pCreateInfo, pAllocator, pSemaphore);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSemaphore=" + ptrToString((void**)std::addressof(pSemaphore)) + '!');
-}
 #ifdef CREATESEMAPHORE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateSemaphore_after(device, pCreateInfo, pAllocator, pSemaphore);
@@ -6249,18 +4820,6 @@ layer_DestroySemaphore_before(device, semaphore, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroySemaphore(device, semaphore, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"semaphore=" + ptrToString((void**)std::addressof(semaphore)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYSEMAPHORE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroySemaphore_after(device, semaphore, pAllocator);
@@ -6287,22 +4846,6 @@ layer_CreateEvent_before(device, pCreateInfo, pAllocator, pEvent);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateEvent(device, pCreateInfo, pAllocator, pEvent);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pEvent=" + ptrToString((void**)std::addressof(pEvent)) + '!');
-}
 #ifdef CREATEEVENT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateEvent_after(device, pCreateInfo, pAllocator, pEvent);
@@ -6331,18 +4874,6 @@ layer_DestroyEvent_before(device, event, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyEvent(device, event, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void**)std::addressof(event)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYEVENT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyEvent_after(device, event, pAllocator);
@@ -6369,10 +4900,6 @@ layer_GetEventStatus_before(device, event);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetEventStatus(device, event);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void**)std::addressof(event)) + '!');
-}
 #ifdef GETEVENTSTATUS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetEventStatus_after(device, event);
@@ -6402,10 +4929,6 @@ layer_SetEvent_before(device, event);
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetEvent(device, event);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void**)std::addressof(event)) + '!');
-}
 #ifdef SETEVENT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetEvent_after(device, event);
@@ -6435,10 +4958,6 @@ layer_ResetEvent_before(device, event);
 #endif 
 auto ret = device_dispatch[GetKey(device)].ResetEvent(device, event);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void**)std::addressof(event)) + '!');
-}
 #ifdef RESETEVENT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ResetEvent_after(device, event);
@@ -6468,24 +4987,6 @@ layer_CreateQueryPool_before(device, pCreateInfo, pAllocator, pQueryPool);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateQueryPool(device, pCreateInfo, pAllocator, pQueryPool);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->queryCount=" + std::to_string(pCreateInfo->queryCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pipelineStatistics=" + ptrToString((void**)std::addressof(pCreateInfo->pipelineStatistics)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pQueryPool=" + ptrToString((void**)std::addressof(pQueryPool)) + '!');
-}
 #ifdef CREATEQUERYPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateQueryPool_after(device, pCreateInfo, pAllocator, pQueryPool);
@@ -6514,18 +5015,6 @@ layer_DestroyQueryPool_before(device, queryPool, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyQueryPool(device, queryPool, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYQUERYPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyQueryPool_after(device, queryPool, pAllocator);
@@ -6552,16 +5041,6 @@ layer_GetQueryPoolResults_before(device, queryPool, firstQuery, queryCount, data
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetQueryPoolResults(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
-winsockSendToUI(&ConnectSocket,"queryCount=" + std::to_string(queryCount) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void**)std::addressof(flags)) + '!');
-}
 #ifdef GETQUERYPOOLRESULTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetQueryPoolResults_after(device, queryPool, firstQuery, queryCount, dataSize, pData, stride, flags);
@@ -6590,12 +5069,6 @@ layer_ResetQueryPool_before(device, queryPool, firstQuery, queryCount);
 }
 #endif 
 device_dispatch[GetKey(device)].ResetQueryPool(device, queryPool, firstQuery, queryCount);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
-winsockSendToUI(&ConnectSocket,"queryCount=" + std::to_string(queryCount) + '!');
-}
 #ifdef RESETQUERYPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ResetQueryPool_after(device, queryPool, firstQuery, queryCount);
@@ -6622,26 +5095,6 @@ layer_CreateBuffer_before(device, pCreateInfo, pAllocator, pBuffer);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateBuffer(device, pCreateInfo, pAllocator, pBuffer);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->size=" + std::to_string(pCreateInfo->size) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->usage=" + ptrToString((void**)std::addressof(pCreateInfo->usage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->queueFamilyIndexCount=" + std::to_string(pCreateInfo->queueFamilyIndexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pQueueFamilyIndices=" + ptrToString((void**)std::addressof(pCreateInfo->pQueueFamilyIndices)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pBuffer=" + ptrToString((void**)std::addressof(pBuffer)) + '!');
-}
 #ifdef CREATEBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateBuffer_after(device, pCreateInfo, pAllocator, pBuffer);
@@ -6670,18 +5123,6 @@ layer_DestroyBuffer_before(device, buffer, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyBuffer(device, buffer, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyBuffer_after(device, buffer, pAllocator);
@@ -6708,25 +5149,6 @@ layer_CreateBufferView_before(device, pCreateInfo, pAllocator, pView);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateBufferView(device, pCreateInfo, pAllocator, pView);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->buffer=" + ptrToString((void**)std::addressof(pCreateInfo->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->offset=" + std::to_string(pCreateInfo->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->range=" + std::to_string(pCreateInfo->range) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pView=" + ptrToString((void**)std::addressof(pView)) + '!');
-}
 #ifdef CREATEBUFFERVIEW_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateBufferView_after(device, pCreateInfo, pAllocator, pView);
@@ -6755,18 +5177,6 @@ layer_DestroyBufferView_before(device, bufferView, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyBufferView(device, bufferView, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"bufferView=" + ptrToString((void**)std::addressof(bufferView)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYBUFFERVIEW_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyBufferView_after(device, bufferView, pAllocator);
@@ -6793,28 +5203,6 @@ layer_CreateImage_before(device, pCreateInfo, pAllocator, pImage);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateImage(device, pCreateInfo, pAllocator, pImage);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->extent=" + ptrToString((void**)std::addressof(pCreateInfo->extent)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->mipLevels=" + std::to_string(pCreateInfo->mipLevels) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->arrayLayers=" + std::to_string(pCreateInfo->arrayLayers) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->usage=" + ptrToString((void**)std::addressof(pCreateInfo->usage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->queueFamilyIndexCount=" + std::to_string(pCreateInfo->queueFamilyIndexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pQueueFamilyIndices=" + ptrToString((void**)std::addressof(pCreateInfo->pQueueFamilyIndices)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pImage=" + ptrToString((void**)std::addressof(pImage)) + '!');
-}
 #ifdef CREATEIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateImage_after(device, pCreateInfo, pAllocator, pImage);
@@ -6843,18 +5231,6 @@ layer_DestroyImage_before(device, image, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyImage(device, image, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void**)std::addressof(image)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyImage_after(device, image, pAllocator);
@@ -6880,22 +5256,6 @@ layer_GetImageSubresourceLayout_before(device, image, pSubresource, pLayout);
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageSubresourceLayout(device, image, pSubresource, pLayout);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void**)std::addressof(image)) + '!');
-if(pSubresource != VK_NULL_HANDLE && pSubresource != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubresource->aspectMask=" + ptrToString((void**)std::addressof(pSubresource->aspectMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubresource->mipLevel=" + std::to_string(pSubresource->mipLevel) + '!');
-winsockSendToUI(&ConnectSocket,"pSubresource->arrayLayer=" + std::to_string(pSubresource->arrayLayer) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubresource=VK_NULL_HANDLE!");
-if(pLayout != VK_NULL_HANDLE && pLayout != NULL) {
-winsockSendToUI(&ConnectSocket,"pLayout->offset=" + std::to_string(pLayout->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pLayout->size=" + std::to_string(pLayout->size) + '!');
-winsockSendToUI(&ConnectSocket,"pLayout->rowPitch=" + std::to_string(pLayout->rowPitch) + '!');
-winsockSendToUI(&ConnectSocket,"pLayout->arrayPitch=" + std::to_string(pLayout->arrayPitch) + '!');
-winsockSendToUI(&ConnectSocket,"pLayout->depthPitch=" + std::to_string(pLayout->depthPitch) + '!');
-}else winsockSendToUI(&ConnectSocket, "pLayout=VK_NULL_HANDLE!");
-}
 #ifdef GETIMAGESUBRESOURCELAYOUT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageSubresourceLayout_after(device, image, pSubresource, pLayout);
@@ -6922,25 +5282,6 @@ layer_CreateImageView_before(device, pCreateInfo, pAllocator, pView);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateImageView(device, pCreateInfo, pAllocator, pView);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->image=" + ptrToString((void**)std::addressof(pCreateInfo->image)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->components=" + ptrToString((void**)std::addressof(pCreateInfo->components)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->subresourceRange=" + ptrToString((void**)std::addressof(pCreateInfo->subresourceRange)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pView=" + ptrToString((void**)std::addressof(pView)) + '!');
-}
 #ifdef CREATEIMAGEVIEW_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateImageView_after(device, pCreateInfo, pAllocator, pView);
@@ -6969,18 +5310,6 @@ layer_DestroyImageView_before(device, imageView, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyImageView(device, imageView, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"imageView=" + ptrToString((void**)std::addressof(imageView)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYIMAGEVIEW_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyImageView_after(device, imageView, pAllocator);
@@ -7007,24 +5336,6 @@ layer_CreateShaderModule_before(device, pCreateInfo, pAllocator, pShaderModule);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateShaderModule(device, pCreateInfo, pAllocator, pShaderModule);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->codeSize=" + std::to_string(pCreateInfo->codeSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pCode=" + ptrToString((void**)std::addressof(pCreateInfo->pCode)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pShaderModule=" + ptrToString((void**)std::addressof(pShaderModule)) + '!');
-}
 #ifdef CREATESHADERMODULE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateShaderModule_after(device, pCreateInfo, pAllocator, pShaderModule);
@@ -7053,18 +5364,6 @@ layer_DestroyShaderModule_before(device, shaderModule, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyShaderModule(device, shaderModule, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"shaderModule=" + ptrToString((void**)std::addressof(shaderModule)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYSHADERMODULE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyShaderModule_after(device, shaderModule, pAllocator);
@@ -7091,25 +5390,6 @@ layer_CreatePipelineCache_before(device, pCreateInfo, pAllocator, pPipelineCache
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreatePipelineCache(device, pCreateInfo, pAllocator, pPipelineCache);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->initialDataSize=" + std::to_string(pCreateInfo->initialDataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->initialDataSize=" + std::to_string(pCreateInfo->initialDataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pInitialData=" + ptrToString((void**)std::addressof(pCreateInfo->pInitialData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pPipelineCache=" + ptrToString((void**)std::addressof(pPipelineCache)) + '!');
-}
 #ifdef CREATEPIPELINECACHE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreatePipelineCache_after(device, pCreateInfo, pAllocator, pPipelineCache);
@@ -7138,18 +5418,6 @@ layer_DestroyPipelineCache_before(device, pipelineCache, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyPipelineCache(device, pipelineCache, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineCache=" + ptrToString((void**)std::addressof(pipelineCache)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYPIPELINECACHE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyPipelineCache_after(device, pipelineCache, pAllocator);
@@ -7176,12 +5444,6 @@ layer_GetPipelineCacheData_before(device, pipelineCache, pDataSize, pData);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPipelineCacheData(device, pipelineCache, pDataSize, pData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineCache=" + ptrToString((void**)std::addressof(pipelineCache)) + '!');
-winsockSendToUI(&ConnectSocket,"pDataSize=" + ptrToString((void**)std::addressof(pDataSize)) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETPIPELINECACHEDATA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPipelineCacheData_after(device, pipelineCache, pDataSize, pData);
@@ -7211,12 +5473,6 @@ layer_MergePipelineCaches_before(device, dstCache, srcCacheCount, pSrcCaches);
 #endif 
 auto ret = device_dispatch[GetKey(device)].MergePipelineCaches(device, dstCache, srcCacheCount, pSrcCaches);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"dstCache=" + ptrToString((void**)std::addressof(dstCache)) + '!');
-winsockSendToUI(&ConnectSocket,"srcCacheCount=" + std::to_string(srcCacheCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSrcCaches=" + ptrToString((void**)std::addressof(pSrcCaches)) + '!');
-}
 #ifdef MERGEPIPELINECACHES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_MergePipelineCaches_after(device, dstCache, srcCacheCount, pSrcCaches);
@@ -7246,147 +5502,6 @@ layer_CreateGraphicsPipelines_before(device, pipelineCache, createInfoCount, pCr
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateGraphicsPipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineCache=" + ptrToString((void**)std::addressof(pipelineCache)) + '!');
-winsockSendToUI(&ConnectSocket,"createInfoCount=" + std::to_string(createInfoCount) + '!');
-if(pCreateInfos != VK_NULL_HANDLE && pCreateInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->flags=" + ptrToString((void**)std::addressof(pCreateInfos->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->stageCount=" + std::to_string(pCreateInfos->stageCount) + '!');
-if(pCreateInfos->pStages != VK_NULL_HANDLE && pCreateInfos->pStages != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->module=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->module)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pName=" + charToString((char*)pCreateInfos->pStages->pName) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pName=" + charToString((char*)pCreateInfos->pStages->pName) + '!');
-if(pCreateInfos->pStages->pSpecializationInfo != VK_NULL_HANDLE && pCreateInfos->pStages->pSpecializationInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->mapEntryCount=" + std::to_string(pCreateInfos->pStages->pSpecializationInfo->mapEntryCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->dataSize=" + std::to_string(pCreateInfos->pStages->pSpecializationInfo->dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->pData=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->pSpecializationInfo->pData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSpecializationInfo=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pStages=VK_NULL_HANDLE!");
-if(pCreateInfos->pStages != VK_NULL_HANDLE && pCreateInfos->pStages != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->module=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->module)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pName=" + charToString((char*)pCreateInfos->pStages->pName) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pName=" + charToString((char*)pCreateInfos->pStages->pName) + '!');
-if(pCreateInfos->pStages->pSpecializationInfo != VK_NULL_HANDLE && pCreateInfos->pStages->pSpecializationInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->mapEntryCount=" + std::to_string(pCreateInfos->pStages->pSpecializationInfo->mapEntryCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->dataSize=" + std::to_string(pCreateInfos->pStages->pSpecializationInfo->dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->pData=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->pSpecializationInfo->pData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSpecializationInfo=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pStages=VK_NULL_HANDLE!");
-if(pCreateInfos->pVertexInputState != VK_NULL_HANDLE && pCreateInfos->pVertexInputState != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pVertexInputState->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pVertexInputState->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pVertexInputState->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pVertexInputState->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pVertexInputState->vertexBindingDescriptionCount=" + std::to_string(pCreateInfos->pVertexInputState->vertexBindingDescriptionCount) + '!');
-if(pCreateInfos->pVertexInputState->pVertexBindingDescriptions != VK_NULL_HANDLE && pCreateInfos->pVertexInputState->pVertexBindingDescriptions != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pVertexInputState->pVertexBindingDescriptions->binding=" + std::to_string(pCreateInfos->pVertexInputState->pVertexBindingDescriptions->binding) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pVertexInputState->pVertexBindingDescriptions->stride=" + std::to_string(pCreateInfos->pVertexInputState->pVertexBindingDescriptions->stride) + '!');
-}else winsockSendToUI(&ConnectSocket, "pVertexBindingDescriptions=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pVertexInputState->vertexAttributeDescriptionCount=" + std::to_string(pCreateInfos->pVertexInputState->vertexAttributeDescriptionCount) + '!');
-if(pCreateInfos->pVertexInputState->pVertexAttributeDescriptions != VK_NULL_HANDLE && pCreateInfos->pVertexInputState->pVertexAttributeDescriptions != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pVertexInputState->pVertexAttributeDescriptions->location=" + std::to_string(pCreateInfos->pVertexInputState->pVertexAttributeDescriptions->location) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pVertexInputState->pVertexAttributeDescriptions->binding=" + std::to_string(pCreateInfos->pVertexInputState->pVertexAttributeDescriptions->binding) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pVertexInputState->pVertexAttributeDescriptions->offset=" + std::to_string(pCreateInfos->pVertexInputState->pVertexAttributeDescriptions->offset) + '!');
-}else winsockSendToUI(&ConnectSocket, "pVertexAttributeDescriptions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pVertexInputState=VK_NULL_HANDLE!");
-if(pCreateInfos->pInputAssemblyState != VK_NULL_HANDLE && pCreateInfos->pInputAssemblyState != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pInputAssemblyState->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pInputAssemblyState->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pInputAssemblyState->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pInputAssemblyState->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pInputAssemblyState->primitiveRestartEnable=" + bool_as_text(pCreateInfos->pInputAssemblyState->primitiveRestartEnable) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInputAssemblyState=VK_NULL_HANDLE!");
-if(pCreateInfos->pTessellationState != VK_NULL_HANDLE && pCreateInfos->pTessellationState != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pTessellationState->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pTessellationState->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pTessellationState->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pTessellationState->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pTessellationState->patchControlPoints=" + std::to_string(pCreateInfos->pTessellationState->patchControlPoints) + '!');
-}else winsockSendToUI(&ConnectSocket, "pTessellationState=VK_NULL_HANDLE!");
-if(pCreateInfos->pViewportState != VK_NULL_HANDLE && pCreateInfos->pViewportState != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pViewportState->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pViewportState->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pViewportState->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pViewportState->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pViewportState->viewportCount=" + std::to_string(pCreateInfos->pViewportState->viewportCount) + '!');
-if(pCreateInfos->pViewportState->pViewports != VK_NULL_HANDLE && pCreateInfos->pViewportState->pViewports != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pViewportState->pViewports->x=" + std::to_string(pCreateInfos->pViewportState->pViewports->x) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pViewportState->pViewports->y=" + std::to_string(pCreateInfos->pViewportState->pViewports->y) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pViewportState->pViewports->width=" + std::to_string(pCreateInfos->pViewportState->pViewports->width) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pViewportState->pViewports->height=" + std::to_string(pCreateInfos->pViewportState->pViewports->height) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pViewportState->pViewports->minDepth=" + std::to_string(pCreateInfos->pViewportState->pViewports->minDepth) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pViewportState->pViewports->maxDepth=" + std::to_string(pCreateInfos->pViewportState->pViewports->maxDepth) + '!');
-}else winsockSendToUI(&ConnectSocket, "pViewports=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pViewportState->scissorCount=" + std::to_string(pCreateInfos->pViewportState->scissorCount) + '!');
-if(pCreateInfos->pViewportState->pScissors != VK_NULL_HANDLE && pCreateInfos->pViewportState->pScissors != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pViewportState->pScissors->offset=" + ptrToString((void**)std::addressof(pCreateInfos->pViewportState->pScissors->offset)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pViewportState->pScissors->extent=" + ptrToString((void**)std::addressof(pCreateInfos->pViewportState->pScissors->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pScissors=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pViewportState=VK_NULL_HANDLE!");
-if(pCreateInfos->pRasterizationState != VK_NULL_HANDLE && pCreateInfos->pRasterizationState != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pRasterizationState->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pRasterizationState->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pRasterizationState->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pRasterizationState->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pRasterizationState->depthClampEnable=" + bool_as_text(pCreateInfos->pRasterizationState->depthClampEnable) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pRasterizationState->rasterizerDiscardEnable=" + bool_as_text(pCreateInfos->pRasterizationState->rasterizerDiscardEnable) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pRasterizationState->cullMode=" + ptrToString((void**)std::addressof(pCreateInfos->pRasterizationState->cullMode)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pRasterizationState->depthBiasEnable=" + bool_as_text(pCreateInfos->pRasterizationState->depthBiasEnable) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pRasterizationState->depthBiasConstantFactor=" + std::to_string(pCreateInfos->pRasterizationState->depthBiasConstantFactor) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pRasterizationState->depthBiasClamp=" + std::to_string(pCreateInfos->pRasterizationState->depthBiasClamp) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pRasterizationState->depthBiasSlopeFactor=" + std::to_string(pCreateInfos->pRasterizationState->depthBiasSlopeFactor) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pRasterizationState->lineWidth=" + std::to_string(pCreateInfos->pRasterizationState->lineWidth) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRasterizationState=VK_NULL_HANDLE!");
-if(pCreateInfos->pMultisampleState != VK_NULL_HANDLE && pCreateInfos->pMultisampleState != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pMultisampleState->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pMultisampleState->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pMultisampleState->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pMultisampleState->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pMultisampleState->sampleShadingEnable=" + bool_as_text(pCreateInfos->pMultisampleState->sampleShadingEnable) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pMultisampleState->minSampleShading=" + std::to_string(pCreateInfos->pMultisampleState->minSampleShading) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pMultisampleState->pSampleMask=" + ptrToString((void**)std::addressof(pCreateInfos->pMultisampleState->pSampleMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pMultisampleState->alphaToCoverageEnable=" + bool_as_text(pCreateInfos->pMultisampleState->alphaToCoverageEnable) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pMultisampleState->alphaToOneEnable=" + bool_as_text(pCreateInfos->pMultisampleState->alphaToOneEnable) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMultisampleState=VK_NULL_HANDLE!");
-if(pCreateInfos->pDepthStencilState != VK_NULL_HANDLE && pCreateInfos->pDepthStencilState != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDepthStencilState->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pDepthStencilState->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDepthStencilState->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pDepthStencilState->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDepthStencilState->depthTestEnable=" + bool_as_text(pCreateInfos->pDepthStencilState->depthTestEnable) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDepthStencilState->depthWriteEnable=" + bool_as_text(pCreateInfos->pDepthStencilState->depthWriteEnable) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDepthStencilState->depthBoundsTestEnable=" + bool_as_text(pCreateInfos->pDepthStencilState->depthBoundsTestEnable) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDepthStencilState->stencilTestEnable=" + bool_as_text(pCreateInfos->pDepthStencilState->stencilTestEnable) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDepthStencilState->front=" + ptrToString((void**)std::addressof(pCreateInfos->pDepthStencilState->front)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDepthStencilState->back=" + ptrToString((void**)std::addressof(pCreateInfos->pDepthStencilState->back)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDepthStencilState->minDepthBounds=" + std::to_string(pCreateInfos->pDepthStencilState->minDepthBounds) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDepthStencilState->maxDepthBounds=" + std::to_string(pCreateInfos->pDepthStencilState->maxDepthBounds) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDepthStencilState=VK_NULL_HANDLE!");
-if(pCreateInfos->pColorBlendState != VK_NULL_HANDLE && pCreateInfos->pColorBlendState != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pColorBlendState->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pColorBlendState->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pColorBlendState->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pColorBlendState->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pColorBlendState->logicOpEnable=" + bool_as_text(pCreateInfos->pColorBlendState->logicOpEnable) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pColorBlendState->attachmentCount=" + std::to_string(pCreateInfos->pColorBlendState->attachmentCount) + '!');
-if(pCreateInfos->pColorBlendState->pAttachments != VK_NULL_HANDLE && pCreateInfos->pColorBlendState->pAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pColorBlendState->pAttachments->blendEnable=" + bool_as_text(pCreateInfos->pColorBlendState->pAttachments->blendEnable) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pColorBlendState->pAttachments->colorWriteMask=" + ptrToString((void**)std::addressof(pCreateInfos->pColorBlendState->pAttachments->colorWriteMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAttachments=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pColorBlendState->blendConstants=" + std::to_string(pCreateInfos->pColorBlendState->blendConstants[0]) + '!');
-}else winsockSendToUI(&ConnectSocket, "pColorBlendState=VK_NULL_HANDLE!");
-if(pCreateInfos->pDynamicState != VK_NULL_HANDLE && pCreateInfos->pDynamicState != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDynamicState->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pDynamicState->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDynamicState->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pDynamicState->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDynamicState->dynamicStateCount=" + std::to_string(pCreateInfos->pDynamicState->dynamicStateCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDynamicState->pDynamicStates=" + ptrToString((void**)std::addressof(pCreateInfos->pDynamicState->pDynamicStates)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDynamicState=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfos->layout=" + ptrToString((void**)std::addressof(pCreateInfos->layout)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->renderPass=" + ptrToString((void**)std::addressof(pCreateInfos->renderPass)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->subpass=" + std::to_string(pCreateInfos->subpass) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->basePipelineHandle=" + ptrToString((void**)std::addressof(pCreateInfos->basePipelineHandle)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->basePipelineIndex=" + std::to_string(pCreateInfos->basePipelineIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfos=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pPipelines=" + ptrToString((void**)std::addressof(pPipelines)) + '!');
-}
 #ifdef CREATEGRAPHICSPIPELINES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateGraphicsPipelines_after(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
@@ -7416,28 +5531,6 @@ layer_CreateComputePipelines_before(device, pipelineCache, createInfoCount, pCre
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateComputePipelines(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineCache=" + ptrToString((void**)std::addressof(pipelineCache)) + '!');
-winsockSendToUI(&ConnectSocket,"createInfoCount=" + std::to_string(createInfoCount) + '!');
-if(pCreateInfos != VK_NULL_HANDLE && pCreateInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->flags=" + ptrToString((void**)std::addressof(pCreateInfos->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->stage=" + ptrToString((void**)std::addressof(pCreateInfos->stage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->layout=" + ptrToString((void**)std::addressof(pCreateInfos->layout)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->basePipelineHandle=" + ptrToString((void**)std::addressof(pCreateInfos->basePipelineHandle)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->basePipelineIndex=" + std::to_string(pCreateInfos->basePipelineIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfos=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pPipelines=" + ptrToString((void**)std::addressof(pPipelines)) + '!');
-}
 #ifdef CREATECOMPUTEPIPELINES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateComputePipelines_after(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
@@ -7467,14 +5560,6 @@ layer_GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI_before(device, renderpass, p
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(device, renderpass, pMaxWorkgroupSize);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"renderpass=" + ptrToString((void**)std::addressof(renderpass)) + '!');
-if(pMaxWorkgroupSize != VK_NULL_HANDLE && pMaxWorkgroupSize != NULL) {
-winsockSendToUI(&ConnectSocket,"pMaxWorkgroupSize->width=" + std::to_string(pMaxWorkgroupSize->width) + '!');
-winsockSendToUI(&ConnectSocket,"pMaxWorkgroupSize->height=" + std::to_string(pMaxWorkgroupSize->height) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMaxWorkgroupSize=VK_NULL_HANDLE!");
-}
 #ifdef GETDEVICESUBPASSSHADINGMAXWORKGROUPSIZEHUAWEI_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI_after(device, renderpass, pMaxWorkgroupSize);
@@ -7503,18 +5588,6 @@ layer_DestroyPipeline_before(device, pipeline, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyPipeline(device, pipeline, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void**)std::addressof(pipeline)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYPIPELINE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyPipeline_after(device, pipeline, pAllocator);
@@ -7541,30 +5614,6 @@ layer_CreatePipelineLayout_before(device, pCreateInfo, pAllocator, pPipelineLayo
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreatePipelineLayout(device, pCreateInfo, pAllocator, pPipelineLayout);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->setLayoutCount=" + std::to_string(pCreateInfo->setLayoutCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSetLayouts=" + ptrToString((void**)std::addressof(pCreateInfo->pSetLayouts)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pushConstantRangeCount=" + std::to_string(pCreateInfo->pushConstantRangeCount) + '!');
-if(pCreateInfo->pPushConstantRanges != VK_NULL_HANDLE && pCreateInfo->pPushConstantRanges != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pPushConstantRanges->stageFlags=" + ptrToString((void**)std::addressof(pCreateInfo->pPushConstantRanges->stageFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pPushConstantRanges->offset=" + std::to_string(pCreateInfo->pPushConstantRanges->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pPushConstantRanges->size=" + std::to_string(pCreateInfo->pPushConstantRanges->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPushConstantRanges=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pPipelineLayout=" + ptrToString((void**)std::addressof(pPipelineLayout)) + '!');
-}
 #ifdef CREATEPIPELINELAYOUT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreatePipelineLayout_after(device, pCreateInfo, pAllocator, pPipelineLayout);
@@ -7593,18 +5642,6 @@ layer_DestroyPipelineLayout_before(device, pipelineLayout, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyPipelineLayout(device, pipelineLayout, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineLayout=" + ptrToString((void**)std::addressof(pipelineLayout)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYPIPELINELAYOUT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyPipelineLayout_after(device, pipelineLayout, pAllocator);
@@ -7631,29 +5668,6 @@ layer_CreateSampler_before(device, pCreateInfo, pAllocator, pSampler);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateSampler(device, pCreateInfo, pAllocator, pSampler);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->mipLodBias=" + std::to_string(pCreateInfo->mipLodBias) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->anisotropyEnable=" + bool_as_text(pCreateInfo->anisotropyEnable) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->maxAnisotropy=" + std::to_string(pCreateInfo->maxAnisotropy) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->compareEnable=" + bool_as_text(pCreateInfo->compareEnable) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->minLod=" + std::to_string(pCreateInfo->minLod) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->maxLod=" + std::to_string(pCreateInfo->maxLod) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->unnormalizedCoordinates=" + bool_as_text(pCreateInfo->unnormalizedCoordinates) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSampler=" + ptrToString((void**)std::addressof(pSampler)) + '!');
-}
 #ifdef CREATESAMPLER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateSampler_after(device, pCreateInfo, pAllocator, pSampler);
@@ -7682,18 +5696,6 @@ layer_DestroySampler_before(device, sampler, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroySampler(device, sampler, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"sampler=" + ptrToString((void**)std::addressof(sampler)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYSAMPLER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroySampler_after(device, sampler, pAllocator);
@@ -7720,29 +5722,6 @@ layer_CreateDescriptorSetLayout_before(device, pCreateInfo, pAllocator, pSetLayo
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateDescriptorSetLayout(device, pCreateInfo, pAllocator, pSetLayout);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->bindingCount=" + std::to_string(pCreateInfo->bindingCount) + '!');
-if(pCreateInfo->pBindings != VK_NULL_HANDLE && pCreateInfo->pBindings != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pBindings->binding=" + std::to_string(pCreateInfo->pBindings->binding) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pBindings->descriptorCount=" + std::to_string(pCreateInfo->pBindings->descriptorCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pBindings->stageFlags=" + ptrToString((void**)std::addressof(pCreateInfo->pBindings->stageFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pBindings->pImmutableSamplers=" + ptrToString((void**)std::addressof(pCreateInfo->pBindings->pImmutableSamplers)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBindings=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSetLayout=" + ptrToString((void**)std::addressof(pSetLayout)) + '!');
-}
 #ifdef CREATEDESCRIPTORSETLAYOUT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDescriptorSetLayout_after(device, pCreateInfo, pAllocator, pSetLayout);
@@ -7771,18 +5750,6 @@ layer_DestroyDescriptorSetLayout_before(device, descriptorSetLayout, pAllocator)
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyDescriptorSetLayout(device, descriptorSetLayout, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorSetLayout=" + ptrToString((void**)std::addressof(descriptorSetLayout)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYDESCRIPTORSETLAYOUT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyDescriptorSetLayout_after(device, descriptorSetLayout, pAllocator);
@@ -7809,27 +5776,6 @@ layer_CreateDescriptorPool_before(device, pCreateInfo, pAllocator, pDescriptorPo
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateDescriptorPool(device, pCreateInfo, pAllocator, pDescriptorPool);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->maxSets=" + std::to_string(pCreateInfo->maxSets) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->poolSizeCount=" + std::to_string(pCreateInfo->poolSizeCount) + '!');
-if(pCreateInfo->pPoolSizes != VK_NULL_HANDLE && pCreateInfo->pPoolSizes != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pPoolSizes->descriptorCount=" + std::to_string(pCreateInfo->pPoolSizes->descriptorCount) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPoolSizes=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDescriptorPool=" + ptrToString((void**)std::addressof(pDescriptorPool)) + '!');
-}
 #ifdef CREATEDESCRIPTORPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDescriptorPool_after(device, pCreateInfo, pAllocator, pDescriptorPool);
@@ -7858,18 +5804,6 @@ layer_DestroyDescriptorPool_before(device, descriptorPool, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyDescriptorPool(device, descriptorPool, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorPool=" + ptrToString((void**)std::addressof(descriptorPool)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYDESCRIPTORPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyDescriptorPool_after(device, descriptorPool, pAllocator);
@@ -7896,11 +5830,6 @@ layer_ResetDescriptorPool_before(device, descriptorPool, flags);
 #endif 
 auto ret = device_dispatch[GetKey(device)].ResetDescriptorPool(device, descriptorPool, flags);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorPool=" + ptrToString((void**)std::addressof(descriptorPool)) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void**)std::addressof(flags)) + '!');
-}
 #ifdef RESETDESCRIPTORPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ResetDescriptorPool_after(device, descriptorPool, flags);
@@ -7930,16 +5859,6 @@ layer_AllocateDescriptorSets_before(device, pAllocateInfo, pDescriptorSets);
 #endif 
 auto ret = device_dispatch[GetKey(device)].AllocateDescriptorSets(device, pAllocateInfo, pDescriptorSets);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pAllocateInfo != VK_NULL_HANDLE && pAllocateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocateInfo->pNext=" + ptrToString((void**)std::addressof(pAllocateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocateInfo->descriptorPool=" + ptrToString((void**)std::addressof(pAllocateInfo->descriptorPool)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocateInfo->descriptorSetCount=" + std::to_string(pAllocateInfo->descriptorSetCount) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocateInfo->pSetLayouts=" + ptrToString((void**)std::addressof(pAllocateInfo->pSetLayouts)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocateInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDescriptorSets=" + ptrToString((void**)std::addressof(pDescriptorSets)) + '!');
-}
 #ifdef ALLOCATEDESCRIPTORSETS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AllocateDescriptorSets_after(device, pAllocateInfo, pDescriptorSets);
@@ -7969,12 +5888,6 @@ layer_FreeDescriptorSets_before(device, descriptorPool, descriptorSetCount, pDes
 #endif 
 auto ret = device_dispatch[GetKey(device)].FreeDescriptorSets(device, descriptorPool, descriptorSetCount, pDescriptorSets);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorPool=" + ptrToString((void**)std::addressof(descriptorPool)) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorSetCount=" + std::to_string(descriptorSetCount) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorSets=" + ptrToString((void**)std::addressof(pDescriptorSets)) + '!');
-}
 #ifdef FREEDESCRIPTORSETS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_FreeDescriptorSets_after(device, descriptorPool, descriptorSetCount, pDescriptorSets);
@@ -8003,38 +5916,6 @@ layer_UpdateDescriptorSets_before(device, descriptorWriteCount, pDescriptorWrite
 }
 #endif 
 device_dispatch[GetKey(device)].UpdateDescriptorSets(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorWriteCount=" + std::to_string(descriptorWriteCount) + '!');
-if(pDescriptorWrites != VK_NULL_HANDLE && pDescriptorWrites != NULL) {
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->pNext=" + ptrToString((void**)std::addressof(pDescriptorWrites->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->dstSet=" + ptrToString((void**)std::addressof(pDescriptorWrites->dstSet)) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->dstBinding=" + std::to_string(pDescriptorWrites->dstBinding) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->dstArrayElement=" + std::to_string(pDescriptorWrites->dstArrayElement) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->descriptorCount=" + std::to_string(pDescriptorWrites->descriptorCount) + '!');
-if(pDescriptorWrites->pImageInfo != VK_NULL_HANDLE && pDescriptorWrites->pImageInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->pImageInfo->sampler=" + ptrToString((void**)std::addressof(pDescriptorWrites->pImageInfo->sampler)) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->pImageInfo->imageView=" + ptrToString((void**)std::addressof(pDescriptorWrites->pImageInfo->imageView)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageInfo=VK_NULL_HANDLE!");
-if(pDescriptorWrites->pBufferInfo != VK_NULL_HANDLE && pDescriptorWrites->pBufferInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->pBufferInfo->buffer=" + ptrToString((void**)std::addressof(pDescriptorWrites->pBufferInfo->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->pBufferInfo->offset=" + std::to_string(pDescriptorWrites->pBufferInfo->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->pBufferInfo->range=" + std::to_string(pDescriptorWrites->pBufferInfo->range) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBufferInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->pTexelBufferView=" + ptrToString((void**)std::addressof(pDescriptorWrites->pTexelBufferView)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDescriptorWrites=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"descriptorCopyCount=" + std::to_string(descriptorCopyCount) + '!');
-if(pDescriptorCopies != VK_NULL_HANDLE && pDescriptorCopies != NULL) {
-winsockSendToUI(&ConnectSocket,"pDescriptorCopies->pNext=" + ptrToString((void**)std::addressof(pDescriptorCopies->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorCopies->srcSet=" + ptrToString((void**)std::addressof(pDescriptorCopies->srcSet)) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorCopies->srcBinding=" + std::to_string(pDescriptorCopies->srcBinding) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorCopies->srcArrayElement=" + std::to_string(pDescriptorCopies->srcArrayElement) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorCopies->dstSet=" + ptrToString((void**)std::addressof(pDescriptorCopies->dstSet)) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorCopies->dstBinding=" + std::to_string(pDescriptorCopies->dstBinding) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorCopies->dstArrayElement=" + std::to_string(pDescriptorCopies->dstArrayElement) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorCopies->descriptorCount=" + std::to_string(pDescriptorCopies->descriptorCount) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDescriptorCopies=VK_NULL_HANDLE!");
-}
 #ifdef UPDATEDESCRIPTORSETS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_UpdateDescriptorSets_after(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies);
@@ -8061,28 +5942,6 @@ layer_CreateFramebuffer_before(device, pCreateInfo, pAllocator, pFramebuffer);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateFramebuffer(device, pCreateInfo, pAllocator, pFramebuffer);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->renderPass=" + ptrToString((void**)std::addressof(pCreateInfo->renderPass)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->attachmentCount=" + std::to_string(pCreateInfo->attachmentCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pAttachments=" + ptrToString((void**)std::addressof(pCreateInfo->pAttachments)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->width=" + std::to_string(pCreateInfo->width) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->height=" + std::to_string(pCreateInfo->height) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->layers=" + std::to_string(pCreateInfo->layers) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pFramebuffer=" + ptrToString((void**)std::addressof(pFramebuffer)) + '!');
-}
 #ifdef CREATEFRAMEBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateFramebuffer_after(device, pCreateInfo, pAllocator, pFramebuffer);
@@ -8111,18 +5970,6 @@ layer_DestroyFramebuffer_before(device, framebuffer, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyFramebuffer(device, framebuffer, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"framebuffer=" + ptrToString((void**)std::addressof(framebuffer)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYFRAMEBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyFramebuffer_after(device, framebuffer, pAllocator);
@@ -8149,56 +5996,6 @@ layer_CreateRenderPass_before(device, pCreateInfo, pAllocator, pRenderPass);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateRenderPass(device, pCreateInfo, pAllocator, pRenderPass);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->attachmentCount=" + std::to_string(pCreateInfo->attachmentCount) + '!');
-if(pCreateInfo->pAttachments != VK_NULL_HANDLE && pCreateInfo->pAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pAttachments->flags=" + ptrToString((void**)std::addressof(pCreateInfo->pAttachments->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAttachments=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->subpassCount=" + std::to_string(pCreateInfo->subpassCount) + '!');
-if(pCreateInfo->pSubpasses != VK_NULL_HANDLE && pCreateInfo->pSubpasses != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->flags=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->inputAttachmentCount=" + std::to_string(pCreateInfo->pSubpasses->inputAttachmentCount) + '!');
-if(pCreateInfo->pSubpasses->pInputAttachments != VK_NULL_HANDLE && pCreateInfo->pSubpasses->pInputAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pInputAttachments->attachment=" + std::to_string(pCreateInfo->pSubpasses->pInputAttachments->attachment) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInputAttachments=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->colorAttachmentCount=" + std::to_string(pCreateInfo->pSubpasses->colorAttachmentCount) + '!');
-if(pCreateInfo->pSubpasses->pColorAttachments != VK_NULL_HANDLE && pCreateInfo->pSubpasses->pColorAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pColorAttachments->attachment=" + std::to_string(pCreateInfo->pSubpasses->pColorAttachments->attachment) + '!');
-}else winsockSendToUI(&ConnectSocket, "pColorAttachments=VK_NULL_HANDLE!");
-if(pCreateInfo->pSubpasses->pResolveAttachments != VK_NULL_HANDLE && pCreateInfo->pSubpasses->pResolveAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pResolveAttachments->attachment=" + std::to_string(pCreateInfo->pSubpasses->pResolveAttachments->attachment) + '!');
-}else winsockSendToUI(&ConnectSocket, "pResolveAttachments=VK_NULL_HANDLE!");
-if(pCreateInfo->pSubpasses->pDepthStencilAttachment != VK_NULL_HANDLE && pCreateInfo->pSubpasses->pDepthStencilAttachment != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pDepthStencilAttachment->attachment=" + std::to_string(pCreateInfo->pSubpasses->pDepthStencilAttachment->attachment) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDepthStencilAttachment=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->preserveAttachmentCount=" + std::to_string(pCreateInfo->pSubpasses->preserveAttachmentCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pPreserveAttachments=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pPreserveAttachments)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubpasses=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->dependencyCount=" + std::to_string(pCreateInfo->dependencyCount) + '!');
-if(pCreateInfo->pDependencies != VK_NULL_HANDLE && pCreateInfo->pDependencies != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->srcSubpass=" + std::to_string(pCreateInfo->pDependencies->srcSubpass) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->dstSubpass=" + std::to_string(pCreateInfo->pDependencies->dstSubpass) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->srcStageMask=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->dstStageMask=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->srcAccessMask=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->dstAccessMask=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->dependencyFlags=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->dependencyFlags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDependencies=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pRenderPass=" + ptrToString((void**)std::addressof(pRenderPass)) + '!');
-}
 #ifdef CREATERENDERPASS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateRenderPass_after(device, pCreateInfo, pAllocator, pRenderPass);
@@ -8227,18 +6024,6 @@ layer_DestroyRenderPass_before(device, renderPass, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyRenderPass(device, renderPass, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"renderPass=" + ptrToString((void**)std::addressof(renderPass)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYRENDERPASS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyRenderPass_after(device, renderPass, pAllocator);
@@ -8264,14 +6049,6 @@ layer_GetRenderAreaGranularity_before(device, renderPass, pGranularity);
 }
 #endif 
 device_dispatch[GetKey(device)].GetRenderAreaGranularity(device, renderPass, pGranularity);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"renderPass=" + ptrToString((void**)std::addressof(renderPass)) + '!');
-if(pGranularity != VK_NULL_HANDLE && pGranularity != NULL) {
-winsockSendToUI(&ConnectSocket,"pGranularity->width=" + std::to_string(pGranularity->width) + '!');
-winsockSendToUI(&ConnectSocket,"pGranularity->height=" + std::to_string(pGranularity->height) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGranularity=VK_NULL_HANDLE!");
-}
 #ifdef GETRENDERAREAGRANULARITY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRenderAreaGranularity_after(device, renderPass, pGranularity);
@@ -8297,19 +6074,6 @@ layer_GetRenderingAreaGranularityKHR_before(device, pRenderingAreaInfo, pGranula
 }
 #endif 
 device_dispatch[GetKey(device)].GetRenderingAreaGranularityKHR(device, pRenderingAreaInfo, pGranularity);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pRenderingAreaInfo != VK_NULL_HANDLE && pRenderingAreaInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderingAreaInfo->pNext=" + ptrToString((void**)std::addressof(pRenderingAreaInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingAreaInfo->viewMask=" + std::to_string(pRenderingAreaInfo->viewMask) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingAreaInfo->colorAttachmentCount=" + std::to_string(pRenderingAreaInfo->colorAttachmentCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingAreaInfo->pColorAttachmentFormats=" + ptrToString((void**)std::addressof(pRenderingAreaInfo->pColorAttachmentFormats)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRenderingAreaInfo=VK_NULL_HANDLE!");
-if(pGranularity != VK_NULL_HANDLE && pGranularity != NULL) {
-winsockSendToUI(&ConnectSocket,"pGranularity->width=" + std::to_string(pGranularity->width) + '!');
-winsockSendToUI(&ConnectSocket,"pGranularity->height=" + std::to_string(pGranularity->height) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGranularity=VK_NULL_HANDLE!");
-}
 #ifdef GETRENDERINGAREAGRANULARITYKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRenderingAreaGranularityKHR_after(device, pRenderingAreaInfo, pGranularity);
@@ -8336,23 +6100,6 @@ layer_CreateCommandPool_before(device, pCreateInfo, pAllocator, pCommandPool);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateCommandPool(device, pCreateInfo, pAllocator, pCommandPool);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->queueFamilyIndex=" + std::to_string(pCreateInfo->queueFamilyIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCommandPool=" + ptrToString((void**)std::addressof(pCommandPool)) + '!');
-}
 #ifdef CREATECOMMANDPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateCommandPool_after(device, pCreateInfo, pAllocator, pCommandPool);
@@ -8381,18 +6128,6 @@ layer_DestroyCommandPool_before(device, commandPool, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyCommandPool(device, commandPool, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"commandPool=" + ptrToString((void**)std::addressof(commandPool)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYCOMMANDPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyCommandPool_after(device, commandPool, pAllocator);
@@ -8419,11 +6154,6 @@ layer_ResetCommandPool_before(device, commandPool, flags);
 #endif 
 auto ret = device_dispatch[GetKey(device)].ResetCommandPool(device, commandPool, flags);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"commandPool=" + ptrToString((void**)std::addressof(commandPool)) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void**)std::addressof(flags)) + '!');
-}
 #ifdef RESETCOMMANDPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ResetCommandPool_after(device, commandPool, flags);
@@ -8453,15 +6183,6 @@ layer_AllocateCommandBuffers_before(device, pAllocateInfo, pCommandBuffers);
 #endif 
 auto ret = device_dispatch[GetKey(device)].AllocateCommandBuffers(device, pAllocateInfo, pCommandBuffers);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pAllocateInfo != VK_NULL_HANDLE && pAllocateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocateInfo->pNext=" + ptrToString((void**)std::addressof(pAllocateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocateInfo->commandPool=" + ptrToString((void**)std::addressof(pAllocateInfo->commandPool)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocateInfo->commandBufferCount=" + std::to_string(pAllocateInfo->commandBufferCount) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocateInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCommandBuffers=" + ptrToString((void**)std::addressof(pCommandBuffers)) + '!');
-}
 #ifdef ALLOCATECOMMANDBUFFERS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AllocateCommandBuffers_after(device, pAllocateInfo, pCommandBuffers);
@@ -8490,12 +6211,6 @@ layer_FreeCommandBuffers_before(device, commandPool, commandBufferCount, pComman
 }
 #endif 
 device_dispatch[GetKey(device)].FreeCommandBuffers(device, commandPool, commandBufferCount, pCommandBuffers);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"commandPool=" + ptrToString((void**)std::addressof(commandPool)) + '!');
-winsockSendToUI(&ConnectSocket,"commandBufferCount=" + std::to_string(commandBufferCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCommandBuffers=" + ptrToString((void**)std::addressof(pCommandBuffers)) + '!');
-}
 #ifdef FREECOMMANDBUFFERS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_FreeCommandBuffers_after(device, commandPool, commandBufferCount, pCommandBuffers);
@@ -8522,22 +6237,6 @@ layer_BeginCommandBuffer_before(commandBuffer, pBeginInfo);
 #endif 
 auto ret = device_dispatch[GetKey(commandBuffer)].BeginCommandBuffer(commandBuffer, pBeginInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pBeginInfo != VK_NULL_HANDLE && pBeginInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pNext=" + ptrToString((void**)std::addressof(pBeginInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->flags=" + ptrToString((void**)std::addressof(pBeginInfo->flags)) + '!');
-if(pBeginInfo->pInheritanceInfo != VK_NULL_HANDLE && pBeginInfo->pInheritanceInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pInheritanceInfo->pNext=" + ptrToString((void**)std::addressof(pBeginInfo->pInheritanceInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pInheritanceInfo->renderPass=" + ptrToString((void**)std::addressof(pBeginInfo->pInheritanceInfo->renderPass)) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pInheritanceInfo->subpass=" + std::to_string(pBeginInfo->pInheritanceInfo->subpass) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pInheritanceInfo->framebuffer=" + ptrToString((void**)std::addressof(pBeginInfo->pInheritanceInfo->framebuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pInheritanceInfo->occlusionQueryEnable=" + bool_as_text(pBeginInfo->pInheritanceInfo->occlusionQueryEnable) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pInheritanceInfo->queryFlags=" + ptrToString((void**)std::addressof(pBeginInfo->pInheritanceInfo->queryFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pInheritanceInfo->pipelineStatistics=" + ptrToString((void**)std::addressof(pBeginInfo->pInheritanceInfo->pipelineStatistics)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInheritanceInfo=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pBeginInfo=VK_NULL_HANDLE!");
-}
 #ifdef BEGINCOMMANDBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BeginCommandBuffer_after(commandBuffer, pBeginInfo);
@@ -8567,9 +6266,6 @@ layer_EndCommandBuffer_before(commandBuffer);
 #endif 
 auto ret = device_dispatch[GetKey(commandBuffer)].EndCommandBuffer(commandBuffer);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef ENDCOMMANDBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_EndCommandBuffer_after(commandBuffer);
@@ -8599,10 +6295,6 @@ layer_ResetCommandBuffer_before(commandBuffer, flags);
 #endif 
 auto ret = device_dispatch[GetKey(commandBuffer)].ResetCommandBuffer(commandBuffer, flags);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void**)std::addressof(flags)) + '!');
-}
 #ifdef RESETCOMMANDBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ResetCommandBuffer_after(commandBuffer, flags);
@@ -8631,10 +6323,6 @@ layer_CmdBindPipeline_before(commandBuffer, pipelineBindPoint, pipeline);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindPipeline(commandBuffer, pipelineBindPoint, pipeline);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void**)std::addressof(pipeline)) + '!');
-}
 #ifdef CMDBINDPIPELINE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindPipeline_after(commandBuffer, pipelineBindPoint, pipeline);
@@ -8660,10 +6348,6 @@ layer_CmdSetAttachmentFeedbackLoopEnableEXT_before(commandBuffer, aspectMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetAttachmentFeedbackLoopEnableEXT(commandBuffer, aspectMask);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"aspectMask=" + ptrToString((void**)std::addressof(aspectMask)) + '!');
-}
 #ifdef CMDSETATTACHMENTFEEDBACKLOOPENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetAttachmentFeedbackLoopEnableEXT_after(commandBuffer, aspectMask);
@@ -8689,19 +6373,6 @@ layer_CmdSetViewport_before(commandBuffer, firstViewport, viewportCount, pViewpo
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetViewport(commandBuffer, firstViewport, viewportCount, pViewports);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstViewport=" + std::to_string(firstViewport) + '!');
-winsockSendToUI(&ConnectSocket,"viewportCount=" + std::to_string(viewportCount) + '!');
-if(pViewports != VK_NULL_HANDLE && pViewports != NULL) {
-winsockSendToUI(&ConnectSocket,"pViewports->x=" + std::to_string(pViewports->x) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->y=" + std::to_string(pViewports->y) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->width=" + std::to_string(pViewports->width) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->height=" + std::to_string(pViewports->height) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->minDepth=" + std::to_string(pViewports->minDepth) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->maxDepth=" + std::to_string(pViewports->maxDepth) + '!');
-}else winsockSendToUI(&ConnectSocket, "pViewports=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETVIEWPORT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetViewport_after(commandBuffer, firstViewport, viewportCount, pViewports);
@@ -8727,15 +6398,6 @@ layer_CmdSetScissor_before(commandBuffer, firstScissor, scissorCount, pScissors)
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetScissor(commandBuffer, firstScissor, scissorCount, pScissors);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstScissor=" + std::to_string(firstScissor) + '!');
-winsockSendToUI(&ConnectSocket,"scissorCount=" + std::to_string(scissorCount) + '!');
-if(pScissors != VK_NULL_HANDLE && pScissors != NULL) {
-winsockSendToUI(&ConnectSocket,"pScissors->offset=" + ptrToString((void**)std::addressof(pScissors->offset)) + '!');
-winsockSendToUI(&ConnectSocket,"pScissors->extent=" + ptrToString((void**)std::addressof(pScissors->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pScissors=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETSCISSOR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetScissor_after(commandBuffer, firstScissor, scissorCount, pScissors);
@@ -8761,10 +6423,6 @@ layer_CmdSetLineWidth_before(commandBuffer, lineWidth);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetLineWidth(commandBuffer, lineWidth);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"lineWidth=" + std::to_string(lineWidth) + '!');
-}
 #ifdef CMDSETLINEWIDTH_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetLineWidth_after(commandBuffer, lineWidth);
@@ -8790,12 +6448,6 @@ layer_CmdSetDepthBias_before(commandBuffer, depthBiasConstantFactor, depthBiasCl
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBias(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"depthBiasConstantFactor=" + std::to_string(depthBiasConstantFactor) + '!');
-winsockSendToUI(&ConnectSocket,"depthBiasClamp=" + std::to_string(depthBiasClamp) + '!');
-winsockSendToUI(&ConnectSocket,"depthBiasSlopeFactor=" + std::to_string(depthBiasSlopeFactor) + '!');
-}
 #ifdef CMDSETDEPTHBIAS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthBias_after(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
@@ -8821,10 +6473,6 @@ layer_CmdSetBlendConstants_before(commandBuffer, blendConstants);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetBlendConstants(commandBuffer, blendConstants);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"blendConstants=" + ptrToString((void**)std::addressof(blendConstants[0])) + '!');
-}
 #ifdef CMDSETBLENDCONSTANTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetBlendConstants_after(commandBuffer, blendConstants);
@@ -8850,11 +6498,6 @@ layer_CmdSetDepthBounds_before(commandBuffer, minDepthBounds, maxDepthBounds);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBounds(commandBuffer, minDepthBounds, maxDepthBounds);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"minDepthBounds=" + std::to_string(minDepthBounds) + '!');
-winsockSendToUI(&ConnectSocket,"maxDepthBounds=" + std::to_string(maxDepthBounds) + '!');
-}
 #ifdef CMDSETDEPTHBOUNDS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthBounds_after(commandBuffer, minDepthBounds, maxDepthBounds);
@@ -8880,11 +6523,6 @@ layer_CmdSetStencilCompareMask_before(commandBuffer, faceMask, compareMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilCompareMask(commandBuffer, faceMask, compareMask);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"faceMask=" + ptrToString((void**)std::addressof(faceMask)) + '!');
-winsockSendToUI(&ConnectSocket,"compareMask=" + std::to_string(compareMask) + '!');
-}
 #ifdef CMDSETSTENCILCOMPAREMASK_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetStencilCompareMask_after(commandBuffer, faceMask, compareMask);
@@ -8910,11 +6548,6 @@ layer_CmdSetStencilWriteMask_before(commandBuffer, faceMask, writeMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilWriteMask(commandBuffer, faceMask, writeMask);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"faceMask=" + ptrToString((void**)std::addressof(faceMask)) + '!');
-winsockSendToUI(&ConnectSocket,"writeMask=" + std::to_string(writeMask) + '!');
-}
 #ifdef CMDSETSTENCILWRITEMASK_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetStencilWriteMask_after(commandBuffer, faceMask, writeMask);
@@ -8940,11 +6573,6 @@ layer_CmdSetStencilReference_before(commandBuffer, faceMask, reference);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilReference(commandBuffer, faceMask, reference);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"faceMask=" + ptrToString((void**)std::addressof(faceMask)) + '!');
-winsockSendToUI(&ConnectSocket,"reference=" + std::to_string(reference) + '!');
-}
 #ifdef CMDSETSTENCILREFERENCE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetStencilReference_after(commandBuffer, faceMask, reference);
@@ -8970,15 +6598,6 @@ layer_CmdBindDescriptorSets_before(commandBuffer, pipelineBindPoint, layout, fir
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorSets(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void**)std::addressof(layout)) + '!');
-winsockSendToUI(&ConnectSocket,"firstSet=" + std::to_string(firstSet) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorSetCount=" + std::to_string(descriptorSetCount) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorSets=" + ptrToString((void**)std::addressof(pDescriptorSets)) + '!');
-winsockSendToUI(&ConnectSocket,"dynamicOffsetCount=" + std::to_string(dynamicOffsetCount) + '!');
-winsockSendToUI(&ConnectSocket,"pDynamicOffsets=" + ptrToString((void**)std::addressof(pDynamicOffsets)) + '!');
-}
 #ifdef CMDBINDDESCRIPTORSETS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindDescriptorSets_after(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
@@ -9004,11 +6623,6 @@ layer_CmdBindIndexBuffer_before(commandBuffer, buffer, offset, indexType);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindIndexBuffer(commandBuffer, buffer, offset, indexType);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-}
 #ifdef CMDBINDINDEXBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindIndexBuffer_after(commandBuffer, buffer, offset, indexType);
@@ -9034,13 +6648,6 @@ layer_CmdBindVertexBuffers_before(commandBuffer, firstBinding, bindingCount, pBu
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstBinding=" + std::to_string(firstBinding) + '!');
-winsockSendToUI(&ConnectSocket,"bindingCount=" + std::to_string(bindingCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBuffers=" + ptrToString((void**)std::addressof(pBuffers)) + '!');
-winsockSendToUI(&ConnectSocket,"pOffsets=" + ptrToString((void**)std::addressof(pOffsets)) + '!');
-}
 #ifdef CMDBINDVERTEXBUFFERS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindVertexBuffers_after(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets);
@@ -9066,13 +6673,6 @@ layer_CmdDraw_before(commandBuffer, vertexCount, instanceCount, firstVertex, fir
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"vertexCount=" + std::to_string(vertexCount) + '!');
-winsockSendToUI(&ConnectSocket,"instanceCount=" + std::to_string(instanceCount) + '!');
-winsockSendToUI(&ConnectSocket,"firstVertex=" + std::to_string(firstVertex) + '!');
-winsockSendToUI(&ConnectSocket,"firstInstance=" + std::to_string(firstInstance) + '!');
-}
 #ifdef CMDDRAW_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDraw_after(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
@@ -9098,14 +6698,6 @@ layer_CmdDrawIndexed_before(commandBuffer, indexCount, instanceCount, firstIndex
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"indexCount=" + std::to_string(indexCount) + '!');
-winsockSendToUI(&ConnectSocket,"instanceCount=" + std::to_string(instanceCount) + '!');
-winsockSendToUI(&ConnectSocket,"firstIndex=" + std::to_string(firstIndex) + '!');
-winsockSendToUI(&ConnectSocket,"vertexOffset=" + std::to_string(vertexOffset) + '!');
-winsockSendToUI(&ConnectSocket,"firstInstance=" + std::to_string(firstInstance) + '!');
-}
 #ifdef CMDDRAWINDEXED_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndexed_after(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
@@ -9131,17 +6723,6 @@ layer_CmdDrawMultiEXT_before(commandBuffer, drawCount, pVertexInfo, instanceCoun
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMultiEXT(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"drawCount=" + std::to_string(drawCount) + '!');
-if(pVertexInfo != VK_NULL_HANDLE && pVertexInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pVertexInfo->firstVertex=" + std::to_string(pVertexInfo->firstVertex) + '!');
-winsockSendToUI(&ConnectSocket,"pVertexInfo->vertexCount=" + std::to_string(pVertexInfo->vertexCount) + '!');
-}else winsockSendToUI(&ConnectSocket, "pVertexInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"instanceCount=" + std::to_string(instanceCount) + '!');
-winsockSendToUI(&ConnectSocket,"firstInstance=" + std::to_string(firstInstance) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDDRAWMULTIEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMultiEXT_after(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride);
@@ -9167,19 +6748,6 @@ layer_CmdDrawMultiIndexedEXT_before(commandBuffer, drawCount, pIndexInfo, instan
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMultiIndexedEXT(commandBuffer, drawCount, pIndexInfo, instanceCount, firstInstance, stride, pVertexOffset);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"drawCount=" + std::to_string(drawCount) + '!');
-if(pIndexInfo != VK_NULL_HANDLE && pIndexInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pIndexInfo->firstIndex=" + std::to_string(pIndexInfo->firstIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pIndexInfo->indexCount=" + std::to_string(pIndexInfo->indexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pIndexInfo->vertexOffset=" + std::to_string(pIndexInfo->vertexOffset) + '!');
-}else winsockSendToUI(&ConnectSocket, "pIndexInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"instanceCount=" + std::to_string(instanceCount) + '!');
-winsockSendToUI(&ConnectSocket,"firstInstance=" + std::to_string(firstInstance) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-winsockSendToUI(&ConnectSocket,"pVertexOffset=" + ptrToString((void**)std::addressof(pVertexOffset)) + '!');
-}
 #ifdef CMDDRAWMULTIINDEXEDEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMultiIndexedEXT_after(commandBuffer, drawCount, pIndexInfo, instanceCount, firstInstance, stride, pVertexOffset);
@@ -9205,13 +6773,6 @@ layer_CmdDrawIndirect_before(commandBuffer, buffer, offset, drawCount, stride);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirect(commandBuffer, buffer, offset, drawCount, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"drawCount=" + std::to_string(drawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDDRAWINDIRECT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndirect_after(commandBuffer, buffer, offset, drawCount, stride);
@@ -9237,13 +6798,6 @@ layer_CmdDrawIndexedIndirect_before(commandBuffer, buffer, offset, drawCount, st
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirect(commandBuffer, buffer, offset, drawCount, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"drawCount=" + std::to_string(drawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDDRAWINDEXEDINDIRECT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndexedIndirect_after(commandBuffer, buffer, offset, drawCount, stride);
@@ -9269,12 +6823,6 @@ layer_CmdDispatch_before(commandBuffer, groupCountX, groupCountY, groupCountZ);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountX=" + std::to_string(groupCountX) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountY=" + std::to_string(groupCountY) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountZ=" + std::to_string(groupCountZ) + '!');
-}
 #ifdef CMDDISPATCH_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDispatch_after(commandBuffer, groupCountX, groupCountY, groupCountZ);
@@ -9300,11 +6848,6 @@ layer_CmdDispatchIndirect_before(commandBuffer, buffer, offset);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDispatchIndirect(commandBuffer, buffer, offset);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-}
 #ifdef CMDDISPATCHINDIRECT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDispatchIndirect_after(commandBuffer, buffer, offset);
@@ -9330,9 +6873,6 @@ layer_CmdSubpassShadingHUAWEI_before(commandBuffer);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSubpassShadingHUAWEI(commandBuffer);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSUBPASSSHADINGHUAWEI_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSubpassShadingHUAWEI_after(commandBuffer);
@@ -9358,12 +6898,6 @@ layer_CmdDrawClusterHUAWEI_before(commandBuffer, groupCountX, groupCountY, group
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawClusterHUAWEI(commandBuffer, groupCountX, groupCountY, groupCountZ);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountX=" + std::to_string(groupCountX) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountY=" + std::to_string(groupCountY) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountZ=" + std::to_string(groupCountZ) + '!');
-}
 #ifdef CMDDRAWCLUSTERHUAWEI_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawClusterHUAWEI_after(commandBuffer, groupCountX, groupCountY, groupCountZ);
@@ -9389,11 +6923,6 @@ layer_CmdDrawClusterIndirectHUAWEI_before(commandBuffer, buffer, offset);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawClusterIndirectHUAWEI(commandBuffer, buffer, offset);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-}
 #ifdef CMDDRAWCLUSTERINDIRECTHUAWEI_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawClusterIndirectHUAWEI_after(commandBuffer, buffer, offset);
@@ -9419,10 +6948,6 @@ layer_CmdUpdatePipelineIndirectBufferNV_before(commandBuffer, pipelineBindPoint,
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdUpdatePipelineIndirectBufferNV(commandBuffer, pipelineBindPoint, pipeline);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void**)std::addressof(pipeline)) + '!');
-}
 #ifdef CMDUPDATEPIPELINEINDIRECTBUFFERNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdUpdatePipelineIndirectBufferNV_after(commandBuffer, pipelineBindPoint, pipeline);
@@ -9448,17 +6973,6 @@ layer_CmdCopyBuffer_before(commandBuffer, srcBuffer, dstBuffer, regionCount, pRe
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"srcBuffer=" + ptrToString((void**)std::addressof(srcBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"dstBuffer=" + ptrToString((void**)std::addressof(dstBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"regionCount=" + std::to_string(regionCount) + '!');
-if(pRegions != VK_NULL_HANDLE && pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pRegions->srcOffset=" + std::to_string(pRegions->srcOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->dstOffset=" + std::to_string(pRegions->dstOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->size=" + std::to_string(pRegions->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyBuffer_after(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
@@ -9484,19 +6998,6 @@ layer_CmdCopyImage_before(commandBuffer, srcImage, srcImageLayout, dstImage, dst
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"srcImage=" + ptrToString((void**)std::addressof(srcImage)) + '!');
-winsockSendToUI(&ConnectSocket,"dstImage=" + ptrToString((void**)std::addressof(dstImage)) + '!');
-winsockSendToUI(&ConnectSocket,"regionCount=" + std::to_string(regionCount) + '!');
-if(pRegions != VK_NULL_HANDLE && pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pRegions->srcSubresource=" + ptrToString((void**)std::addressof(pRegions->srcSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->srcOffset=" + ptrToString((void**)std::addressof(pRegions->srcOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->dstSubresource=" + ptrToString((void**)std::addressof(pRegions->dstSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->dstOffset=" + ptrToString((void**)std::addressof(pRegions->dstOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->extent=" + ptrToString((void**)std::addressof(pRegions->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyImage_after(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
@@ -9522,18 +7023,6 @@ layer_CmdBlitImage_before(commandBuffer, srcImage, srcImageLayout, dstImage, dst
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBlitImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"srcImage=" + ptrToString((void**)std::addressof(srcImage)) + '!');
-winsockSendToUI(&ConnectSocket,"dstImage=" + ptrToString((void**)std::addressof(dstImage)) + '!');
-winsockSendToUI(&ConnectSocket,"regionCount=" + std::to_string(regionCount) + '!');
-if(pRegions != VK_NULL_HANDLE && pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pRegions->srcSubresource=" + ptrToString((void**)std::addressof(pRegions->srcSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->srcOffsets=" + ptrToString((void**)std::addressof(pRegions->srcOffsets)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->dstSubresource=" + ptrToString((void**)std::addressof(pRegions->dstSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->dstOffsets=" + ptrToString((void**)std::addressof(pRegions->dstOffsets)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}
 #ifdef CMDBLITIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBlitImage_after(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter);
@@ -9559,20 +7048,6 @@ layer_CmdCopyBufferToImage_before(commandBuffer, srcBuffer, dstImage, dstImageLa
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"srcBuffer=" + ptrToString((void**)std::addressof(srcBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"dstImage=" + ptrToString((void**)std::addressof(dstImage)) + '!');
-winsockSendToUI(&ConnectSocket,"regionCount=" + std::to_string(regionCount) + '!');
-if(pRegions != VK_NULL_HANDLE && pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pRegions->bufferOffset=" + std::to_string(pRegions->bufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->bufferRowLength=" + std::to_string(pRegions->bufferRowLength) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->bufferImageHeight=" + std::to_string(pRegions->bufferImageHeight) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->imageSubresource=" + ptrToString((void**)std::addressof(pRegions->imageSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->imageOffset=" + ptrToString((void**)std::addressof(pRegions->imageOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->imageExtent=" + ptrToString((void**)std::addressof(pRegions->imageExtent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYBUFFERTOIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyBufferToImage_after(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
@@ -9598,20 +7073,6 @@ layer_CmdCopyImageToBuffer_before(commandBuffer, srcImage, srcImageLayout, dstBu
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"srcImage=" + ptrToString((void**)std::addressof(srcImage)) + '!');
-winsockSendToUI(&ConnectSocket,"dstBuffer=" + ptrToString((void**)std::addressof(dstBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"regionCount=" + std::to_string(regionCount) + '!');
-if(pRegions != VK_NULL_HANDLE && pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pRegions->bufferOffset=" + std::to_string(pRegions->bufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->bufferRowLength=" + std::to_string(pRegions->bufferRowLength) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->bufferImageHeight=" + std::to_string(pRegions->bufferImageHeight) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->imageSubresource=" + ptrToString((void**)std::addressof(pRegions->imageSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->imageOffset=" + ptrToString((void**)std::addressof(pRegions->imageOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->imageExtent=" + ptrToString((void**)std::addressof(pRegions->imageExtent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYIMAGETOBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyImageToBuffer_after(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
@@ -9637,12 +7098,6 @@ layer_CmdCopyMemoryIndirectNV_before(commandBuffer, copyBufferAddress, copyCount
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"copyBufferAddress=" + ptrToString((void**)std::addressof(copyBufferAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"copyCount=" + std::to_string(copyCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDCOPYMEMORYINDIRECTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyMemoryIndirectNV_after(commandBuffer, copyBufferAddress, copyCount, stride);
@@ -9668,19 +7123,6 @@ layer_CmdCopyMemoryToImageIndirectNV_before(commandBuffer, copyBufferAddress, co
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToImageIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"copyBufferAddress=" + ptrToString((void**)std::addressof(copyBufferAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"copyCount=" + std::to_string(copyCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-winsockSendToUI(&ConnectSocket,"dstImage=" + ptrToString((void**)std::addressof(dstImage)) + '!');
-if(pImageSubresources != VK_NULL_HANDLE && pImageSubresources != NULL) {
-winsockSendToUI(&ConnectSocket,"pImageSubresources->aspectMask=" + ptrToString((void**)std::addressof(pImageSubresources->aspectMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageSubresources->mipLevel=" + std::to_string(pImageSubresources->mipLevel) + '!');
-winsockSendToUI(&ConnectSocket,"pImageSubresources->baseArrayLayer=" + std::to_string(pImageSubresources->baseArrayLayer) + '!');
-winsockSendToUI(&ConnectSocket,"pImageSubresources->layerCount=" + std::to_string(pImageSubresources->layerCount) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageSubresources=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYMEMORYTOIMAGEINDIRECTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyMemoryToImageIndirectNV_after(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources);
@@ -9706,13 +7148,6 @@ layer_CmdUpdateBuffer_before(commandBuffer, dstBuffer, dstOffset, dataSize, pDat
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, dataSize, pData);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"dstBuffer=" + ptrToString((void**)std::addressof(dstBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"dstOffset=" + std::to_string(dstOffset) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef CMDUPDATEBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdUpdateBuffer_after(commandBuffer, dstBuffer, dstOffset, dataSize, pData);
@@ -9738,13 +7173,6 @@ layer_CmdFillBuffer_before(commandBuffer, dstBuffer, dstOffset, size, data);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdFillBuffer(commandBuffer, dstBuffer, dstOffset, size, data);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"dstBuffer=" + ptrToString((void**)std::addressof(dstBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"dstOffset=" + std::to_string(dstOffset) + '!');
-winsockSendToUI(&ConnectSocket,"size=" + std::to_string(size) + '!');
-winsockSendToUI(&ConnectSocket,"data=" + std::to_string(data) + '!');
-}
 #ifdef CMDFILLBUFFER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdFillBuffer_after(commandBuffer, dstBuffer, dstOffset, size, data);
@@ -9770,19 +7198,6 @@ layer_CmdClearColorImage_before(commandBuffer, image, imageLayout, pColor, range
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdClearColorImage(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void**)std::addressof(image)) + '!');
-winsockSendToUI(&ConnectSocket,"pColor=" + ptrToString((void**)std::addressof(pColor)) + '!');
-winsockSendToUI(&ConnectSocket,"rangeCount=" + std::to_string(rangeCount) + '!');
-if(pRanges != VK_NULL_HANDLE && pRanges != NULL) {
-winsockSendToUI(&ConnectSocket,"pRanges->aspectMask=" + ptrToString((void**)std::addressof(pRanges->aspectMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pRanges->baseMipLevel=" + std::to_string(pRanges->baseMipLevel) + '!');
-winsockSendToUI(&ConnectSocket,"pRanges->levelCount=" + std::to_string(pRanges->levelCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRanges->baseArrayLayer=" + std::to_string(pRanges->baseArrayLayer) + '!');
-winsockSendToUI(&ConnectSocket,"pRanges->layerCount=" + std::to_string(pRanges->layerCount) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRanges=VK_NULL_HANDLE!");
-}
 #ifdef CMDCLEARCOLORIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdClearColorImage_after(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges);
@@ -9808,22 +7223,6 @@ layer_CmdClearDepthStencilImage_before(commandBuffer, image, imageLayout, pDepth
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdClearDepthStencilImage(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void**)std::addressof(image)) + '!');
-if(pDepthStencil != VK_NULL_HANDLE && pDepthStencil != NULL) {
-winsockSendToUI(&ConnectSocket,"pDepthStencil->depth=" + std::to_string(pDepthStencil->depth) + '!');
-winsockSendToUI(&ConnectSocket,"pDepthStencil->stencil=" + std::to_string(pDepthStencil->stencil) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDepthStencil=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"rangeCount=" + std::to_string(rangeCount) + '!');
-if(pRanges != VK_NULL_HANDLE && pRanges != NULL) {
-winsockSendToUI(&ConnectSocket,"pRanges->aspectMask=" + ptrToString((void**)std::addressof(pRanges->aspectMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pRanges->baseMipLevel=" + std::to_string(pRanges->baseMipLevel) + '!');
-winsockSendToUI(&ConnectSocket,"pRanges->levelCount=" + std::to_string(pRanges->levelCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRanges->baseArrayLayer=" + std::to_string(pRanges->baseArrayLayer) + '!');
-winsockSendToUI(&ConnectSocket,"pRanges->layerCount=" + std::to_string(pRanges->layerCount) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRanges=VK_NULL_HANDLE!");
-}
 #ifdef CMDCLEARDEPTHSTENCILIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdClearDepthStencilImage_after(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges);
@@ -9849,21 +7248,6 @@ layer_CmdClearAttachments_before(commandBuffer, attachmentCount, pAttachments, r
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdClearAttachments(commandBuffer, attachmentCount, pAttachments, rectCount, pRects);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"attachmentCount=" + std::to_string(attachmentCount) + '!');
-if(pAttachments != VK_NULL_HANDLE && pAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pAttachments->aspectMask=" + ptrToString((void**)std::addressof(pAttachments->aspectMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pAttachments->colorAttachment=" + std::to_string(pAttachments->colorAttachment) + '!');
-winsockSendToUI(&ConnectSocket,"pAttachments->clearValue=" + ptrToString((void**)std::addressof(pAttachments->clearValue)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAttachments=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"rectCount=" + std::to_string(rectCount) + '!');
-if(pRects != VK_NULL_HANDLE && pRects != NULL) {
-winsockSendToUI(&ConnectSocket,"pRects->rect=" + ptrToString((void**)std::addressof(pRects->rect)) + '!');
-winsockSendToUI(&ConnectSocket,"pRects->baseArrayLayer=" + std::to_string(pRects->baseArrayLayer) + '!');
-winsockSendToUI(&ConnectSocket,"pRects->layerCount=" + std::to_string(pRects->layerCount) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRects=VK_NULL_HANDLE!");
-}
 #ifdef CMDCLEARATTACHMENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdClearAttachments_after(commandBuffer, attachmentCount, pAttachments, rectCount, pRects);
@@ -9889,19 +7273,6 @@ layer_CmdResolveImage_before(commandBuffer, srcImage, srcImageLayout, dstImage, 
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdResolveImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"srcImage=" + ptrToString((void**)std::addressof(srcImage)) + '!');
-winsockSendToUI(&ConnectSocket,"dstImage=" + ptrToString((void**)std::addressof(dstImage)) + '!');
-winsockSendToUI(&ConnectSocket,"regionCount=" + std::to_string(regionCount) + '!');
-if(pRegions != VK_NULL_HANDLE && pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pRegions->srcSubresource=" + ptrToString((void**)std::addressof(pRegions->srcSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->srcOffset=" + ptrToString((void**)std::addressof(pRegions->srcOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->dstSubresource=" + ptrToString((void**)std::addressof(pRegions->dstSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->dstOffset=" + ptrToString((void**)std::addressof(pRegions->dstOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pRegions->extent=" + ptrToString((void**)std::addressof(pRegions->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}
 #ifdef CMDRESOLVEIMAGE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdResolveImage_after(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
@@ -9927,11 +7298,6 @@ layer_CmdSetEvent_before(commandBuffer, event, stageMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetEvent(commandBuffer, event, stageMask);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void**)std::addressof(event)) + '!');
-winsockSendToUI(&ConnectSocket,"stageMask=" + ptrToString((void**)std::addressof(stageMask)) + '!');
-}
 #ifdef CMDSETEVENT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetEvent_after(commandBuffer, event, stageMask);
@@ -9957,11 +7323,6 @@ layer_CmdResetEvent_before(commandBuffer, event, stageMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdResetEvent(commandBuffer, event, stageMask);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void**)std::addressof(event)) + '!');
-winsockSendToUI(&ConnectSocket,"stageMask=" + ptrToString((void**)std::addressof(stageMask)) + '!');
-}
 #ifdef CMDRESETEVENT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdResetEvent_after(commandBuffer, event, stageMask);
@@ -9987,40 +7348,6 @@ layer_CmdWaitEvents_before(commandBuffer, eventCount, pEvents, srcStageMask, dst
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWaitEvents(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"eventCount=" + std::to_string(eventCount) + '!');
-winsockSendToUI(&ConnectSocket,"pEvents=" + ptrToString((void**)std::addressof(pEvents)) + '!');
-winsockSendToUI(&ConnectSocket,"srcStageMask=" + ptrToString((void**)std::addressof(srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"dstStageMask=" + ptrToString((void**)std::addressof(dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"memoryBarrierCount=" + std::to_string(memoryBarrierCount) + '!');
-if(pMemoryBarriers != VK_NULL_HANDLE && pMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pMemoryBarriers->dstAccessMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"bufferMemoryBarrierCount=" + std::to_string(bufferMemoryBarrierCount) + '!');
-if(pBufferMemoryBarriers != VK_NULL_HANDLE && pBufferMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pBufferMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pBufferMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pBufferMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pBufferMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pBufferMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->buffer=" + ptrToString((void**)std::addressof(pBufferMemoryBarriers->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->offset=" + std::to_string(pBufferMemoryBarriers->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->size=" + std::to_string(pBufferMemoryBarriers->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBufferMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"imageMemoryBarrierCount=" + std::to_string(imageMemoryBarrierCount) + '!');
-if(pImageMemoryBarriers != VK_NULL_HANDLE && pImageMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pImageMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pImageMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pImageMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pImageMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pImageMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers->image=" + ptrToString((void**)std::addressof(pImageMemoryBarriers->image)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers->subresourceRange=" + ptrToString((void**)std::addressof(pImageMemoryBarriers->subresourceRange)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageMemoryBarriers=VK_NULL_HANDLE!");
-}
 #ifdef CMDWAITEVENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWaitEvents_after(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
@@ -10046,39 +7373,6 @@ layer_CmdPipelineBarrier_before(commandBuffer, srcStageMask, dstStageMask, depen
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"srcStageMask=" + ptrToString((void**)std::addressof(srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"dstStageMask=" + ptrToString((void**)std::addressof(dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"dependencyFlags=" + ptrToString((void**)std::addressof(dependencyFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"memoryBarrierCount=" + std::to_string(memoryBarrierCount) + '!');
-if(pMemoryBarriers != VK_NULL_HANDLE && pMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pMemoryBarriers->dstAccessMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"bufferMemoryBarrierCount=" + std::to_string(bufferMemoryBarrierCount) + '!');
-if(pBufferMemoryBarriers != VK_NULL_HANDLE && pBufferMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pBufferMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pBufferMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pBufferMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pBufferMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pBufferMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->buffer=" + ptrToString((void**)std::addressof(pBufferMemoryBarriers->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->offset=" + std::to_string(pBufferMemoryBarriers->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferMemoryBarriers->size=" + std::to_string(pBufferMemoryBarriers->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBufferMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"imageMemoryBarrierCount=" + std::to_string(imageMemoryBarrierCount) + '!');
-if(pImageMemoryBarriers != VK_NULL_HANDLE && pImageMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pImageMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pImageMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pImageMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pImageMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pImageMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers->image=" + ptrToString((void**)std::addressof(pImageMemoryBarriers->image)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageMemoryBarriers->subresourceRange=" + ptrToString((void**)std::addressof(pImageMemoryBarriers->subresourceRange)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageMemoryBarriers=VK_NULL_HANDLE!");
-}
 #ifdef CMDPIPELINEBARRIER_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPipelineBarrier_after(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
@@ -10104,12 +7398,6 @@ layer_CmdBeginQuery_before(commandBuffer, queryPool, query, flags);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginQuery(commandBuffer, queryPool, query, flags);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"query=" + std::to_string(query) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void**)std::addressof(flags)) + '!');
-}
 #ifdef CMDBEGINQUERY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginQuery_after(commandBuffer, queryPool, query, flags);
@@ -10135,11 +7423,6 @@ layer_CmdEndQuery_before(commandBuffer, queryPool, query);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndQuery(commandBuffer, queryPool, query);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"query=" + std::to_string(query) + '!');
-}
 #ifdef CMDENDQUERY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndQuery_after(commandBuffer, queryPool, query);
@@ -10165,15 +7448,6 @@ layer_CmdBeginConditionalRenderingEXT_before(commandBuffer, pConditionalRenderin
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginConditionalRenderingEXT(commandBuffer, pConditionalRenderingBegin);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pConditionalRenderingBegin != VK_NULL_HANDLE && pConditionalRenderingBegin != NULL) {
-winsockSendToUI(&ConnectSocket,"pConditionalRenderingBegin->pNext=" + ptrToString((void**)std::addressof(pConditionalRenderingBegin->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pConditionalRenderingBegin->buffer=" + ptrToString((void**)std::addressof(pConditionalRenderingBegin->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pConditionalRenderingBegin->offset=" + std::to_string(pConditionalRenderingBegin->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pConditionalRenderingBegin->flags=" + ptrToString((void**)std::addressof(pConditionalRenderingBegin->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pConditionalRenderingBegin=VK_NULL_HANDLE!");
-}
 #ifdef CMDBEGINCONDITIONALRENDERINGEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginConditionalRenderingEXT_after(commandBuffer, pConditionalRenderingBegin);
@@ -10199,9 +7473,6 @@ layer_CmdEndConditionalRenderingEXT_before(commandBuffer);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndConditionalRenderingEXT(commandBuffer);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDENDCONDITIONALRENDERINGEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndConditionalRenderingEXT_after(commandBuffer);
@@ -10227,12 +7498,6 @@ layer_CmdResetQueryPool_before(commandBuffer, queryPool, firstQuery, queryCount)
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdResetQueryPool(commandBuffer, queryPool, firstQuery, queryCount);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
-winsockSendToUI(&ConnectSocket,"queryCount=" + std::to_string(queryCount) + '!');
-}
 #ifdef CMDRESETQUERYPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdResetQueryPool_after(commandBuffer, queryPool, firstQuery, queryCount);
@@ -10258,11 +7523,6 @@ layer_CmdWriteTimestamp_before(commandBuffer, pipelineStage, queryPool, query);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp(commandBuffer, pipelineStage, queryPool, query);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"query=" + std::to_string(query) + '!');
-}
 #ifdef CMDWRITETIMESTAMP_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteTimestamp_after(commandBuffer, pipelineStage, queryPool, query);
@@ -10288,16 +7548,6 @@ layer_CmdCopyQueryPoolResults_before(commandBuffer, queryPool, firstQuery, query
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyQueryPoolResults(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
-winsockSendToUI(&ConnectSocket,"queryCount=" + std::to_string(queryCount) + '!');
-winsockSendToUI(&ConnectSocket,"dstBuffer=" + ptrToString((void**)std::addressof(dstBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"dstOffset=" + std::to_string(dstOffset) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void**)std::addressof(flags)) + '!');
-}
 #ifdef CMDCOPYQUERYPOOLRESULTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyQueryPoolResults_after(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags);
@@ -10323,14 +7573,6 @@ layer_CmdPushConstants_before(commandBuffer, layout, stageFlags, offset, size, p
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPushConstants(commandBuffer, layout, stageFlags, offset, size, pValues);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void**)std::addressof(layout)) + '!');
-winsockSendToUI(&ConnectSocket,"stageFlags=" + ptrToString((void**)std::addressof(stageFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"size=" + std::to_string(size) + '!');
-winsockSendToUI(&ConnectSocket,"pValues=" + ptrToString((void**)std::addressof(pValues)) + '!');
-}
 #ifdef CMDPUSHCONSTANTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPushConstants_after(commandBuffer, layout, stageFlags, offset, size, pValues);
@@ -10356,17 +7598,6 @@ layer_CmdBeginRenderPass_before(commandBuffer, pRenderPassBegin, contents);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass(commandBuffer, pRenderPassBegin, contents);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pRenderPassBegin != VK_NULL_HANDLE && pRenderPassBegin != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->pNext=" + ptrToString((void**)std::addressof(pRenderPassBegin->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->renderPass=" + ptrToString((void**)std::addressof(pRenderPassBegin->renderPass)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->framebuffer=" + ptrToString((void**)std::addressof(pRenderPassBegin->framebuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->renderArea=" + ptrToString((void**)std::addressof(pRenderPassBegin->renderArea)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->clearValueCount=" + std::to_string(pRenderPassBegin->clearValueCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->pClearValues=" + ptrToString((void**)std::addressof(pRenderPassBegin->pClearValues)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRenderPassBegin=VK_NULL_HANDLE!");
-}
 #ifdef CMDBEGINRENDERPASS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginRenderPass_after(commandBuffer, pRenderPassBegin, contents);
@@ -10392,9 +7623,6 @@ layer_CmdNextSubpass_before(commandBuffer, contents);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdNextSubpass(commandBuffer, contents);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDNEXTSUBPASS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdNextSubpass_after(commandBuffer, contents);
@@ -10420,9 +7648,6 @@ layer_CmdEndRenderPass_before(commandBuffer);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass(commandBuffer);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDENDRENDERPASS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndRenderPass_after(commandBuffer);
@@ -10448,11 +7673,6 @@ layer_CmdExecuteCommands_before(commandBuffer, commandBufferCount, pCommandBuffe
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdExecuteCommands(commandBuffer, commandBufferCount, pCommandBuffers);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"commandBufferCount=" + std::to_string(commandBufferCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCommandBuffers=" + ptrToString((void**)std::addressof(pCommandBuffers)) + '!');
-}
 #ifdef CMDEXECUTECOMMANDS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdExecuteCommands_after(commandBuffer, commandBufferCount, pCommandBuffers);
@@ -10479,33 +7699,6 @@ layer_CreateSharedSwapchainsKHR_before(device, swapchainCount, pCreateInfos, pAl
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateSharedSwapchainsKHR(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchainCount=" + std::to_string(swapchainCount) + '!');
-if(pCreateInfos != VK_NULL_HANDLE && pCreateInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->flags=" + ptrToString((void**)std::addressof(pCreateInfos->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->surface=" + ptrToString((void**)std::addressof(pCreateInfos->surface)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->minImageCount=" + std::to_string(pCreateInfos->minImageCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->imageExtent=" + ptrToString((void**)std::addressof(pCreateInfos->imageExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->imageArrayLayers=" + std::to_string(pCreateInfos->imageArrayLayers) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->imageUsage=" + ptrToString((void**)std::addressof(pCreateInfos->imageUsage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->queueFamilyIndexCount=" + std::to_string(pCreateInfos->queueFamilyIndexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pQueueFamilyIndices=" + ptrToString((void**)std::addressof(pCreateInfos->pQueueFamilyIndices)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->clipped=" + bool_as_text(pCreateInfos->clipped) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->oldSwapchain=" + ptrToString((void**)std::addressof(pCreateInfos->oldSwapchain)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->oldSwapchain=" + ptrToString((void**)std::addressof(pCreateInfos->oldSwapchain)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfos=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSwapchains=" + ptrToString((void**)std::addressof(pSwapchains)) + '!');
-}
 #ifdef CREATESHAREDSWAPCHAINSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateSharedSwapchainsKHR_after(device, swapchainCount, pCreateInfos, pAllocator, pSwapchains);
@@ -10535,32 +7728,6 @@ layer_CreateSwapchainKHR_before(device, pCreateInfo, pAllocator, pSwapchain);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateSwapchainKHR(device, pCreateInfo, pAllocator, pSwapchain);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->surface=" + ptrToString((void**)std::addressof(pCreateInfo->surface)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->minImageCount=" + std::to_string(pCreateInfo->minImageCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->imageExtent=" + ptrToString((void**)std::addressof(pCreateInfo->imageExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->imageArrayLayers=" + std::to_string(pCreateInfo->imageArrayLayers) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->imageUsage=" + ptrToString((void**)std::addressof(pCreateInfo->imageUsage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->queueFamilyIndexCount=" + std::to_string(pCreateInfo->queueFamilyIndexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pQueueFamilyIndices=" + ptrToString((void**)std::addressof(pCreateInfo->pQueueFamilyIndices)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->clipped=" + bool_as_text(pCreateInfo->clipped) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->oldSwapchain=" + ptrToString((void**)std::addressof(pCreateInfo->oldSwapchain)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->oldSwapchain=" + ptrToString((void**)std::addressof(pCreateInfo->oldSwapchain)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSwapchain=" + ptrToString((void**)std::addressof(pSwapchain)) + '!');
-}
 #ifdef CREATESWAPCHAINKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateSwapchainKHR_after(device, pCreateInfo, pAllocator, pSwapchain);
@@ -10589,18 +7756,6 @@ layer_DestroySwapchainKHR_before(device, swapchain, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroySwapchainKHR(device, swapchain, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void**)std::addressof(swapchain)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYSWAPCHAINKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroySwapchainKHR_after(device, swapchain, pAllocator);
@@ -10627,12 +7782,6 @@ layer_GetSwapchainImagesKHR_before(device, swapchain, pSwapchainImageCount, pSwa
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSwapchainImagesKHR(device, swapchain, pSwapchainImageCount, pSwapchainImages);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void**)std::addressof(swapchain)) + '!');
-winsockSendToUI(&ConnectSocket,"pSwapchainImageCount=" + ptrToString((void**)std::addressof(pSwapchainImageCount)) + '!');
-winsockSendToUI(&ConnectSocket,"pSwapchainImages=" + ptrToString((void**)std::addressof(pSwapchainImages)) + '!');
-}
 #ifdef GETSWAPCHAINIMAGESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSwapchainImagesKHR_after(device, swapchain, pSwapchainImageCount, pSwapchainImages);
@@ -10662,14 +7811,6 @@ layer_AcquireNextImageKHR_before(device, swapchain, timeout, semaphore, fence, p
 #endif 
 auto ret = device_dispatch[GetKey(device)].AcquireNextImageKHR(device, swapchain, timeout, semaphore, fence, pImageIndex);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void**)std::addressof(swapchain)) + '!');
-winsockSendToUI(&ConnectSocket,"timeout=" + std::to_string(timeout) + '!');
-winsockSendToUI(&ConnectSocket,"semaphore=" + ptrToString((void**)std::addressof(semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void**)std::addressof(fence)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageIndex=" + ptrToString((void**)std::addressof(pImageIndex)) + '!');
-}
 #ifdef ACQUIRENEXTIMAGEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireNextImageKHR_after(device, swapchain, timeout, semaphore, fence, pImageIndex);
@@ -10699,17 +7840,6 @@ layer_QueuePresentKHR_before(queue, pPresentInfo);
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueuePresentKHR(queue, pPresentInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void**)std::addressof(queue)) + '!');
-if(pPresentInfo != VK_NULL_HANDLE && pPresentInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pPresentInfo->pNext=" + ptrToString((void**)std::addressof(pPresentInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentInfo->waitSemaphoreCount=" + std::to_string(pPresentInfo->waitSemaphoreCount) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentInfo->pWaitSemaphores=" + ptrToString((void**)std::addressof(pPresentInfo->pWaitSemaphores)) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentInfo->swapchainCount=" + std::to_string(pPresentInfo->swapchainCount) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentInfo->pSwapchains=" + ptrToString((void**)std::addressof(pPresentInfo->pSwapchains)) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentInfo->pImageIndices=" + ptrToString((void**)std::addressof(pPresentInfo->pImageIndices)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPresentInfo=VK_NULL_HANDLE!");
-}
 #ifdef QUEUEPRESENTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueuePresentKHR_after(queue, pPresentInfo);
@@ -10739,14 +7869,6 @@ layer_DebugMarkerSetObjectNameEXT_before(device, pNameInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].DebugMarkerSetObjectNameEXT(device, pNameInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pNameInfo != VK_NULL_HANDLE && pNameInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pNameInfo->pNext=" + ptrToString((void**)std::addressof(pNameInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pNameInfo->object=" + std::to_string(pNameInfo->object) + '!');
-winsockSendToUI(&ConnectSocket,"pNameInfo->pObjectName=" + charToString((char*)pNameInfo->pObjectName) + '!');
-}else winsockSendToUI(&ConnectSocket, "pNameInfo=VK_NULL_HANDLE!");
-}
 #ifdef DEBUGMARKERSETOBJECTNAMEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DebugMarkerSetObjectNameEXT_after(device, pNameInfo);
@@ -10776,16 +7898,6 @@ layer_DebugMarkerSetObjectTagEXT_before(device, pTagInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].DebugMarkerSetObjectTagEXT(device, pTagInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pTagInfo != VK_NULL_HANDLE && pTagInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pTagInfo->pNext=" + ptrToString((void**)std::addressof(pTagInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pTagInfo->object=" + std::to_string(pTagInfo->object) + '!');
-winsockSendToUI(&ConnectSocket,"pTagInfo->tagName=" + std::to_string(pTagInfo->tagName) + '!');
-winsockSendToUI(&ConnectSocket,"pTagInfo->tagSize=" + std::to_string(pTagInfo->tagSize) + '!');
-winsockSendToUI(&ConnectSocket,"pTagInfo->pTag=" + ptrToString((void**)std::addressof(pTagInfo->pTag)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pTagInfo=VK_NULL_HANDLE!");
-}
 #ifdef DEBUGMARKERSETOBJECTTAGEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DebugMarkerSetObjectTagEXT_after(device, pTagInfo);
@@ -10814,14 +7926,6 @@ layer_CmdDebugMarkerBeginEXT_before(commandBuffer, pMarkerInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerBeginEXT(commandBuffer, pMarkerInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pMarkerInfo != VK_NULL_HANDLE && pMarkerInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pMarkerInfo->pNext=" + ptrToString((void**)std::addressof(pMarkerInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMarkerInfo->pMarkerName=" + charToString((char*)pMarkerInfo->pMarkerName) + '!');
-winsockSendToUI(&ConnectSocket,"pMarkerInfo->color=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pMarkerInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDDEBUGMARKERBEGINEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDebugMarkerBeginEXT_after(commandBuffer, pMarkerInfo);
@@ -10847,9 +7951,6 @@ layer_CmdDebugMarkerEndEXT_before(commandBuffer);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerEndEXT(commandBuffer);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDDEBUGMARKERENDEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDebugMarkerEndEXT_after(commandBuffer);
@@ -10875,14 +7976,6 @@ layer_CmdDebugMarkerInsertEXT_before(commandBuffer, pMarkerInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerInsertEXT(commandBuffer, pMarkerInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pMarkerInfo != VK_NULL_HANDLE && pMarkerInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pMarkerInfo->pNext=" + ptrToString((void**)std::addressof(pMarkerInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMarkerInfo->pMarkerName=" + charToString((char*)pMarkerInfo->pMarkerName) + '!');
-winsockSendToUI(&ConnectSocket,"pMarkerInfo->color=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pMarkerInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDDEBUGMARKERINSERTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDebugMarkerInsertEXT_after(commandBuffer, pMarkerInfo);
@@ -10910,12 +8003,6 @@ layer_GetMemoryWin32HandleNV_before(device, memory, handleType, pHandle);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryWin32HandleNV(device, memory, handleType, pHandle);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void**)std::addressof(memory)) + '!');
-winsockSendToUI(&ConnectSocket,"handleType=" + ptrToString((void**)std::addressof(handleType)) + '!');
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void**)std::addressof(pHandle)) + '!');
-}
 #ifdef GETMEMORYWIN32HANDLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryWin32HandleNV_after(device, memory, handleType, pHandle);
@@ -10945,28 +8032,6 @@ layer_CmdExecuteGeneratedCommandsNV_before(commandBuffer, isPreprocessed, pGener
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdExecuteGeneratedCommandsNV(commandBuffer, isPreprocessed, pGeneratedCommandsInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"isPreprocessed=" + bool_as_text(isPreprocessed) + '!');
-if(pGeneratedCommandsInfo != VK_NULL_HANDLE && pGeneratedCommandsInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->pNext=" + ptrToString((void**)std::addressof(pGeneratedCommandsInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->pipeline=" + ptrToString((void**)std::addressof(pGeneratedCommandsInfo->pipeline)) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->indirectCommandsLayout=" + ptrToString((void**)std::addressof(pGeneratedCommandsInfo->indirectCommandsLayout)) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->streamCount=" + std::to_string(pGeneratedCommandsInfo->streamCount) + '!');
-if(pGeneratedCommandsInfo->pStreams != VK_NULL_HANDLE && pGeneratedCommandsInfo->pStreams != NULL) {
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->pStreams->buffer=" + ptrToString((void**)std::addressof(pGeneratedCommandsInfo->pStreams->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->pStreams->offset=" + std::to_string(pGeneratedCommandsInfo->pStreams->offset) + '!');
-}else winsockSendToUI(&ConnectSocket, "pStreams=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->sequencesCount=" + std::to_string(pGeneratedCommandsInfo->sequencesCount) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->preprocessBuffer=" + ptrToString((void**)std::addressof(pGeneratedCommandsInfo->preprocessBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->preprocessOffset=" + std::to_string(pGeneratedCommandsInfo->preprocessOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->preprocessSize=" + std::to_string(pGeneratedCommandsInfo->preprocessSize) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->sequencesCountBuffer=" + ptrToString((void**)std::addressof(pGeneratedCommandsInfo->sequencesCountBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->sequencesCountOffset=" + std::to_string(pGeneratedCommandsInfo->sequencesCountOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->sequencesIndexBuffer=" + ptrToString((void**)std::addressof(pGeneratedCommandsInfo->sequencesIndexBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->sequencesIndexOffset=" + std::to_string(pGeneratedCommandsInfo->sequencesIndexOffset) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGeneratedCommandsInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDEXECUTEGENERATEDCOMMANDSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdExecuteGeneratedCommandsNV_after(commandBuffer, isPreprocessed, pGeneratedCommandsInfo);
@@ -10992,27 +8057,6 @@ layer_CmdPreprocessGeneratedCommandsNV_before(commandBuffer, pGeneratedCommandsI
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPreprocessGeneratedCommandsNV(commandBuffer, pGeneratedCommandsInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pGeneratedCommandsInfo != VK_NULL_HANDLE && pGeneratedCommandsInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->pNext=" + ptrToString((void**)std::addressof(pGeneratedCommandsInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->pipeline=" + ptrToString((void**)std::addressof(pGeneratedCommandsInfo->pipeline)) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->indirectCommandsLayout=" + ptrToString((void**)std::addressof(pGeneratedCommandsInfo->indirectCommandsLayout)) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->streamCount=" + std::to_string(pGeneratedCommandsInfo->streamCount) + '!');
-if(pGeneratedCommandsInfo->pStreams != VK_NULL_HANDLE && pGeneratedCommandsInfo->pStreams != NULL) {
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->pStreams->buffer=" + ptrToString((void**)std::addressof(pGeneratedCommandsInfo->pStreams->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->pStreams->offset=" + std::to_string(pGeneratedCommandsInfo->pStreams->offset) + '!');
-}else winsockSendToUI(&ConnectSocket, "pStreams=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->sequencesCount=" + std::to_string(pGeneratedCommandsInfo->sequencesCount) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->preprocessBuffer=" + ptrToString((void**)std::addressof(pGeneratedCommandsInfo->preprocessBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->preprocessOffset=" + std::to_string(pGeneratedCommandsInfo->preprocessOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->preprocessSize=" + std::to_string(pGeneratedCommandsInfo->preprocessSize) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->sequencesCountBuffer=" + ptrToString((void**)std::addressof(pGeneratedCommandsInfo->sequencesCountBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->sequencesCountOffset=" + std::to_string(pGeneratedCommandsInfo->sequencesCountOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->sequencesIndexBuffer=" + ptrToString((void**)std::addressof(pGeneratedCommandsInfo->sequencesIndexBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pGeneratedCommandsInfo->sequencesIndexOffset=" + std::to_string(pGeneratedCommandsInfo->sequencesIndexOffset) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGeneratedCommandsInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDPREPROCESSGENERATEDCOMMANDSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPreprocessGeneratedCommandsNV_after(commandBuffer, pGeneratedCommandsInfo);
@@ -11038,11 +8082,6 @@ layer_CmdBindPipelineShaderGroupNV_before(commandBuffer, pipelineBindPoint, pipe
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindPipelineShaderGroupNV(commandBuffer, pipelineBindPoint, pipeline, groupIndex);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void**)std::addressof(pipeline)) + '!');
-winsockSendToUI(&ConnectSocket,"groupIndex=" + std::to_string(groupIndex) + '!');
-}
 #ifdef CMDBINDPIPELINESHADERGROUPNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindPipelineShaderGroupNV_after(commandBuffer, pipelineBindPoint, pipeline, groupIndex);
@@ -11068,19 +8107,6 @@ layer_GetGeneratedCommandsMemoryRequirementsNV_before(device, pInfo, pMemoryRequ
 }
 #endif 
 device_dispatch[GetKey(device)].GetGeneratedCommandsMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pipeline=" + ptrToString((void**)std::addressof(pInfo->pipeline)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->indirectCommandsLayout=" + ptrToString((void**)std::addressof(pInfo->indirectCommandsLayout)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->maxSequencesCount=" + std::to_string(pInfo->maxSequencesCount) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-if(pMemoryRequirements != VK_NULL_HANDLE && pMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETGENERATEDCOMMANDSMEMORYREQUIREMENTSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetGeneratedCommandsMemoryRequirementsNV_after(device, pInfo, pMemoryRequirements);
@@ -11107,40 +8133,6 @@ layer_CreateIndirectCommandsLayoutNV_before(device, pCreateInfo, pAllocator, pIn
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateIndirectCommandsLayoutNV(device, pCreateInfo, pAllocator, pIndirectCommandsLayout);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->tokenCount=" + std::to_string(pCreateInfo->tokenCount) + '!');
-if(pCreateInfo->pTokens != VK_NULL_HANDLE && pCreateInfo->pTokens != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pTokens->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pTokens->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pTokens->stream=" + std::to_string(pCreateInfo->pTokens->stream) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pTokens->offset=" + std::to_string(pCreateInfo->pTokens->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pTokens->vertexBindingUnit=" + std::to_string(pCreateInfo->pTokens->vertexBindingUnit) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pTokens->vertexDynamicStride=" + bool_as_text(pCreateInfo->pTokens->vertexDynamicStride) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pTokens->pushconstantPipelineLayout=" + ptrToString((void**)std::addressof(pCreateInfo->pTokens->pushconstantPipelineLayout)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pTokens->pushconstantShaderStageFlags=" + ptrToString((void**)std::addressof(pCreateInfo->pTokens->pushconstantShaderStageFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pTokens->pushconstantOffset=" + std::to_string(pCreateInfo->pTokens->pushconstantOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pTokens->pushconstantSize=" + std::to_string(pCreateInfo->pTokens->pushconstantSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pTokens->indirectStateFlags=" + ptrToString((void**)std::addressof(pCreateInfo->pTokens->indirectStateFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pTokens->indexTypeCount=" + std::to_string(pCreateInfo->pTokens->indexTypeCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pTokens->pIndexTypes=" + ptrToString((void**)std::addressof(pCreateInfo->pTokens->pIndexTypes)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pTokens->pIndexTypeValues=" + ptrToString((void**)std::addressof(pCreateInfo->pTokens->pIndexTypeValues)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pTokens=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->streamCount=" + std::to_string(pCreateInfo->streamCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pStreamStrides=" + ptrToString((void**)std::addressof(pCreateInfo->pStreamStrides)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pIndirectCommandsLayout=" + ptrToString((void**)std::addressof(pIndirectCommandsLayout)) + '!');
-}
 #ifdef CREATEINDIRECTCOMMANDSLAYOUTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateIndirectCommandsLayoutNV_after(device, pCreateInfo, pAllocator, pIndirectCommandsLayout);
@@ -11169,18 +8161,6 @@ layer_DestroyIndirectCommandsLayoutNV_before(device, indirectCommandsLayout, pAl
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyIndirectCommandsLayoutNV(device, indirectCommandsLayout, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"indirectCommandsLayout=" + ptrToString((void**)std::addressof(indirectCommandsLayout)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYINDIRECTCOMMANDSLAYOUTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyIndirectCommandsLayoutNV_after(device, indirectCommandsLayout, pAllocator);
@@ -11206,29 +8186,6 @@ layer_CmdPushDescriptorSetKHR_before(commandBuffer, pipelineBindPoint, layout, s
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetKHR(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void**)std::addressof(layout)) + '!');
-winsockSendToUI(&ConnectSocket,"set=" + std::to_string(set) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorWriteCount=" + std::to_string(descriptorWriteCount) + '!');
-if(pDescriptorWrites != VK_NULL_HANDLE && pDescriptorWrites != NULL) {
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->pNext=" + ptrToString((void**)std::addressof(pDescriptorWrites->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->dstSet=" + ptrToString((void**)std::addressof(pDescriptorWrites->dstSet)) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->dstBinding=" + std::to_string(pDescriptorWrites->dstBinding) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->dstArrayElement=" + std::to_string(pDescriptorWrites->dstArrayElement) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->descriptorCount=" + std::to_string(pDescriptorWrites->descriptorCount) + '!');
-if(pDescriptorWrites->pImageInfo != VK_NULL_HANDLE && pDescriptorWrites->pImageInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->pImageInfo->sampler=" + ptrToString((void**)std::addressof(pDescriptorWrites->pImageInfo->sampler)) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->pImageInfo->imageView=" + ptrToString((void**)std::addressof(pDescriptorWrites->pImageInfo->imageView)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageInfo=VK_NULL_HANDLE!");
-if(pDescriptorWrites->pBufferInfo != VK_NULL_HANDLE && pDescriptorWrites->pBufferInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->pBufferInfo->buffer=" + ptrToString((void**)std::addressof(pDescriptorWrites->pBufferInfo->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->pBufferInfo->offset=" + std::to_string(pDescriptorWrites->pBufferInfo->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->pBufferInfo->range=" + std::to_string(pDescriptorWrites->pBufferInfo->range) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBufferInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDescriptorWrites->pTexelBufferView=" + ptrToString((void**)std::addressof(pDescriptorWrites->pTexelBufferView)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDescriptorWrites=VK_NULL_HANDLE!");
-}
 #ifdef CMDPUSHDESCRIPTORSETKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPushDescriptorSetKHR_after(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
@@ -11254,11 +8211,6 @@ layer_TrimCommandPool_before(device, commandPool, flags);
 }
 #endif 
 device_dispatch[GetKey(device)].TrimCommandPool(device, commandPool, flags);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"commandPool=" + ptrToString((void**)std::addressof(commandPool)) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void**)std::addressof(flags)) + '!');
-}
 #ifdef TRIMCOMMANDPOOL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_TrimCommandPool_after(device, commandPool, flags);
@@ -11286,14 +8238,6 @@ layer_GetMemoryWin32HandleKHR_before(device, pGetWin32HandleInfo, pHandle);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pGetWin32HandleInfo != VK_NULL_HANDLE && pGetWin32HandleInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pGetWin32HandleInfo->pNext=" + ptrToString((void**)std::addressof(pGetWin32HandleInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pGetWin32HandleInfo->memory=" + ptrToString((void**)std::addressof(pGetWin32HandleInfo->memory)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGetWin32HandleInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void**)std::addressof(pHandle)) + '!');
-}
 #ifdef GETMEMORYWIN32HANDLEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryWin32HandleKHR_after(device, pGetWin32HandleInfo, pHandle);
@@ -11325,14 +8269,6 @@ layer_GetMemoryWin32HandlePropertiesKHR_before(device, handleType, handle, pMemo
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryWin32HandlePropertiesKHR(device, handleType, handle, pMemoryWin32HandleProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"handle=" + ptrToString((void**)std::addressof(handle)) + '!');
-if(pMemoryWin32HandleProperties != VK_NULL_HANDLE && pMemoryWin32HandleProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryWin32HandleProperties->pNext=" + ptrToString((void**)std::addressof(pMemoryWin32HandleProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryWin32HandleProperties->memoryTypeBits=" + std::to_string(pMemoryWin32HandleProperties->memoryTypeBits) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryWin32HandleProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETMEMORYWIN32HANDLEPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryWin32HandlePropertiesKHR_after(device, handleType, handle, pMemoryWin32HandleProperties);
@@ -11363,14 +8299,6 @@ layer_GetMemoryFdKHR_before(device, pGetFdInfo, pFd);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryFdKHR(device, pGetFdInfo, pFd);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pGetFdInfo != VK_NULL_HANDLE && pGetFdInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pGetFdInfo->pNext=" + ptrToString((void**)std::addressof(pGetFdInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pGetFdInfo->memory=" + ptrToString((void**)std::addressof(pGetFdInfo->memory)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGetFdInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pFd=" + ptrToString((void**)std::addressof(pFd)) + '!');
-}
 #ifdef GETMEMORYFDKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryFdKHR_after(device, pGetFdInfo, pFd);
@@ -11400,14 +8328,6 @@ layer_GetMemoryFdPropertiesKHR_before(device, handleType, fd, pMemoryFdPropertie
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryFdPropertiesKHR(device, handleType, fd, pMemoryFdProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"fd=" + std::to_string(fd) + '!');
-if(pMemoryFdProperties != VK_NULL_HANDLE && pMemoryFdProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryFdProperties->pNext=" + ptrToString((void**)std::addressof(pMemoryFdProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryFdProperties->memoryTypeBits=" + std::to_string(pMemoryFdProperties->memoryTypeBits) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryFdProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETMEMORYFDPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryFdPropertiesKHR_after(device, handleType, fd, pMemoryFdProperties);
@@ -11438,14 +8358,6 @@ layer_GetMemoryZirconHandleFUCHSIA_before(device, pGetZirconHandleInfo, pZirconH
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pGetZirconHandleInfo != VK_NULL_HANDLE && pGetZirconHandleInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pGetZirconHandleInfo->pNext=" + ptrToString((void**)std::addressof(pGetZirconHandleInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pGetZirconHandleInfo->memory=" + ptrToString((void**)std::addressof(pGetZirconHandleInfo->memory)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGetZirconHandleInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pZirconHandle=" + ptrToString((void**)std::addressof(pZirconHandle)) + '!');
-}
 #ifdef GETMEMORYZIRCONHANDLEFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryZirconHandleFUCHSIA_after(device, pGetZirconHandleInfo, pZirconHandle);
@@ -11477,14 +8389,6 @@ layer_GetMemoryZirconHandlePropertiesFUCHSIA_before(device, handleType, zirconHa
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryZirconHandlePropertiesFUCHSIA(device, handleType, zirconHandle, pMemoryZirconHandleProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"zirconHandle=" + ptrToString((void**)std::addressof(zirconHandle)) + '!');
-if(pMemoryZirconHandleProperties != VK_NULL_HANDLE && pMemoryZirconHandleProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryZirconHandleProperties->pNext=" + ptrToString((void**)std::addressof(pMemoryZirconHandleProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryZirconHandleProperties->memoryTypeBits=" + std::to_string(pMemoryZirconHandleProperties->memoryTypeBits) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryZirconHandleProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETMEMORYZIRCONHANDLEPROPERTIESFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryZirconHandlePropertiesFUCHSIA_after(device, handleType, zirconHandle, pMemoryZirconHandleProperties);
@@ -11515,14 +8419,6 @@ layer_GetMemoryRemoteAddressNV_before(device, pMemoryGetRemoteAddressInfo, pAddr
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryRemoteAddressNV(device, pMemoryGetRemoteAddressInfo, pAddress);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pMemoryGetRemoteAddressInfo != VK_NULL_HANDLE && pMemoryGetRemoteAddressInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryGetRemoteAddressInfo->pNext=" + ptrToString((void**)std::addressof(pMemoryGetRemoteAddressInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryGetRemoteAddressInfo->memory=" + ptrToString((void**)std::addressof(pMemoryGetRemoteAddressInfo->memory)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryGetRemoteAddressInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pAddress=" + ptrToString((void**)std::addressof(pAddress)) + '!');
-}
 #ifdef GETMEMORYREMOTEADDRESSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryRemoteAddressNV_after(device, pMemoryGetRemoteAddressInfo, pAddress);
@@ -11553,14 +8449,6 @@ layer_GetMemorySciBufNV_before(device, pGetSciBufInfo, pHandle);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemorySciBufNV(device, pGetSciBufInfo, pHandle);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pGetSciBufInfo != VK_NULL_HANDLE && pGetSciBufInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pGetSciBufInfo->pNext=" + ptrToString((void**)std::addressof(pGetSciBufInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pGetSciBufInfo->memory=" + ptrToString((void**)std::addressof(pGetSciBufInfo->memory)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGetSciBufInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void**)std::addressof(pHandle)) + '!');
-}
 #ifdef GETMEMORYSCIBUFNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemorySciBufNV_after(device, pGetSciBufInfo, pHandle);
@@ -11592,14 +8480,6 @@ layer_GetSemaphoreWin32HandleKHR_before(device, pGetWin32HandleInfo, pHandle);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pGetWin32HandleInfo != VK_NULL_HANDLE && pGetWin32HandleInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pGetWin32HandleInfo->pNext=" + ptrToString((void**)std::addressof(pGetWin32HandleInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pGetWin32HandleInfo->semaphore=" + ptrToString((void**)std::addressof(pGetWin32HandleInfo->semaphore)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGetWin32HandleInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void**)std::addressof(pHandle)) + '!');
-}
 #ifdef GETSEMAPHOREWIN32HANDLEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSemaphoreWin32HandleKHR_after(device, pGetWin32HandleInfo, pHandle);
@@ -11631,16 +8511,6 @@ layer_ImportSemaphoreWin32HandleKHR_before(device, pImportSemaphoreWin32HandleIn
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportSemaphoreWin32HandleKHR(device, pImportSemaphoreWin32HandleInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pImportSemaphoreWin32HandleInfo != VK_NULL_HANDLE && pImportSemaphoreWin32HandleInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreWin32HandleInfo->pNext=" + ptrToString((void**)std::addressof(pImportSemaphoreWin32HandleInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreWin32HandleInfo->semaphore=" + ptrToString((void**)std::addressof(pImportSemaphoreWin32HandleInfo->semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreWin32HandleInfo->flags=" + ptrToString((void**)std::addressof(pImportSemaphoreWin32HandleInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreWin32HandleInfo->handle=" + ptrToString((void**)std::addressof(pImportSemaphoreWin32HandleInfo->handle)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreWin32HandleInfo->name=" + ptrToString((void**)std::addressof(pImportSemaphoreWin32HandleInfo->name)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImportSemaphoreWin32HandleInfo=VK_NULL_HANDLE!");
-}
 #ifdef IMPORTSEMAPHOREWIN32HANDLEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportSemaphoreWin32HandleKHR_after(device, pImportSemaphoreWin32HandleInfo);
@@ -11671,14 +8541,6 @@ layer_GetSemaphoreFdKHR_before(device, pGetFdInfo, pFd);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreFdKHR(device, pGetFdInfo, pFd);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pGetFdInfo != VK_NULL_HANDLE && pGetFdInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pGetFdInfo->pNext=" + ptrToString((void**)std::addressof(pGetFdInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pGetFdInfo->semaphore=" + ptrToString((void**)std::addressof(pGetFdInfo->semaphore)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGetFdInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pFd=" + ptrToString((void**)std::addressof(pFd)) + '!');
-}
 #ifdef GETSEMAPHOREFDKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSemaphoreFdKHR_after(device, pGetFdInfo, pFd);
@@ -11708,15 +8570,6 @@ layer_ImportSemaphoreFdKHR_before(device, pImportSemaphoreFdInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportSemaphoreFdKHR(device, pImportSemaphoreFdInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pImportSemaphoreFdInfo != VK_NULL_HANDLE && pImportSemaphoreFdInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreFdInfo->pNext=" + ptrToString((void**)std::addressof(pImportSemaphoreFdInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreFdInfo->semaphore=" + ptrToString((void**)std::addressof(pImportSemaphoreFdInfo->semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreFdInfo->flags=" + ptrToString((void**)std::addressof(pImportSemaphoreFdInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreFdInfo->fd=" + std::to_string(pImportSemaphoreFdInfo->fd) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImportSemaphoreFdInfo=VK_NULL_HANDLE!");
-}
 #ifdef IMPORTSEMAPHOREFDKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportSemaphoreFdKHR_after(device, pImportSemaphoreFdInfo);
@@ -11747,14 +8600,6 @@ layer_GetSemaphoreZirconHandleFUCHSIA_before(device, pGetZirconHandleInfo, pZirc
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreZirconHandleFUCHSIA(device, pGetZirconHandleInfo, pZirconHandle);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pGetZirconHandleInfo != VK_NULL_HANDLE && pGetZirconHandleInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pGetZirconHandleInfo->pNext=" + ptrToString((void**)std::addressof(pGetZirconHandleInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pGetZirconHandleInfo->semaphore=" + ptrToString((void**)std::addressof(pGetZirconHandleInfo->semaphore)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGetZirconHandleInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pZirconHandle=" + ptrToString((void**)std::addressof(pZirconHandle)) + '!');
-}
 #ifdef GETSEMAPHOREZIRCONHANDLEFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSemaphoreZirconHandleFUCHSIA_after(device, pGetZirconHandleInfo, pZirconHandle);
@@ -11786,15 +8631,6 @@ layer_ImportSemaphoreZirconHandleFUCHSIA_before(device, pImportSemaphoreZirconHa
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportSemaphoreZirconHandleFUCHSIA(device, pImportSemaphoreZirconHandleInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pImportSemaphoreZirconHandleInfo != VK_NULL_HANDLE && pImportSemaphoreZirconHandleInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreZirconHandleInfo->pNext=" + ptrToString((void**)std::addressof(pImportSemaphoreZirconHandleInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreZirconHandleInfo->semaphore=" + ptrToString((void**)std::addressof(pImportSemaphoreZirconHandleInfo->semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreZirconHandleInfo->flags=" + ptrToString((void**)std::addressof(pImportSemaphoreZirconHandleInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreZirconHandleInfo->zirconHandle=" + ptrToString((void**)std::addressof(pImportSemaphoreZirconHandleInfo->zirconHandle)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImportSemaphoreZirconHandleInfo=VK_NULL_HANDLE!");
-}
 #ifdef IMPORTSEMAPHOREZIRCONHANDLEFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportSemaphoreZirconHandleFUCHSIA_after(device, pImportSemaphoreZirconHandleInfo);
@@ -11826,14 +8662,6 @@ layer_GetFenceWin32HandleKHR_before(device, pGetWin32HandleInfo, pHandle);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetFenceWin32HandleKHR(device, pGetWin32HandleInfo, pHandle);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pGetWin32HandleInfo != VK_NULL_HANDLE && pGetWin32HandleInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pGetWin32HandleInfo->pNext=" + ptrToString((void**)std::addressof(pGetWin32HandleInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pGetWin32HandleInfo->fence=" + ptrToString((void**)std::addressof(pGetWin32HandleInfo->fence)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGetWin32HandleInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void**)std::addressof(pHandle)) + '!');
-}
 #ifdef GETFENCEWIN32HANDLEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetFenceWin32HandleKHR_after(device, pGetWin32HandleInfo, pHandle);
@@ -11865,16 +8693,6 @@ layer_ImportFenceWin32HandleKHR_before(device, pImportFenceWin32HandleInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportFenceWin32HandleKHR(device, pImportFenceWin32HandleInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pImportFenceWin32HandleInfo != VK_NULL_HANDLE && pImportFenceWin32HandleInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pImportFenceWin32HandleInfo->pNext=" + ptrToString((void**)std::addressof(pImportFenceWin32HandleInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceWin32HandleInfo->fence=" + ptrToString((void**)std::addressof(pImportFenceWin32HandleInfo->fence)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceWin32HandleInfo->flags=" + ptrToString((void**)std::addressof(pImportFenceWin32HandleInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceWin32HandleInfo->handle=" + ptrToString((void**)std::addressof(pImportFenceWin32HandleInfo->handle)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceWin32HandleInfo->name=" + ptrToString((void**)std::addressof(pImportFenceWin32HandleInfo->name)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImportFenceWin32HandleInfo=VK_NULL_HANDLE!");
-}
 #ifdef IMPORTFENCEWIN32HANDLEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportFenceWin32HandleKHR_after(device, pImportFenceWin32HandleInfo);
@@ -11905,14 +8723,6 @@ layer_GetFenceFdKHR_before(device, pGetFdInfo, pFd);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetFenceFdKHR(device, pGetFdInfo, pFd);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pGetFdInfo != VK_NULL_HANDLE && pGetFdInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pGetFdInfo->pNext=" + ptrToString((void**)std::addressof(pGetFdInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pGetFdInfo->fence=" + ptrToString((void**)std::addressof(pGetFdInfo->fence)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGetFdInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pFd=" + ptrToString((void**)std::addressof(pFd)) + '!');
-}
 #ifdef GETFENCEFDKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetFenceFdKHR_after(device, pGetFdInfo, pFd);
@@ -11942,15 +8752,6 @@ layer_ImportFenceFdKHR_before(device, pImportFenceFdInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportFenceFdKHR(device, pImportFenceFdInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pImportFenceFdInfo != VK_NULL_HANDLE && pImportFenceFdInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pImportFenceFdInfo->pNext=" + ptrToString((void**)std::addressof(pImportFenceFdInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceFdInfo->fence=" + ptrToString((void**)std::addressof(pImportFenceFdInfo->fence)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceFdInfo->flags=" + ptrToString((void**)std::addressof(pImportFenceFdInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceFdInfo->fd=" + std::to_string(pImportFenceFdInfo->fd) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImportFenceFdInfo=VK_NULL_HANDLE!");
-}
 #ifdef IMPORTFENCEFDKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportFenceFdKHR_after(device, pImportFenceFdInfo);
@@ -11981,14 +8782,6 @@ layer_GetFenceSciSyncFenceNV_before(device, pGetSciSyncHandleInfo, pHandle);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetFenceSciSyncFenceNV(device, pGetSciSyncHandleInfo, pHandle);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pGetSciSyncHandleInfo != VK_NULL_HANDLE && pGetSciSyncHandleInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pGetSciSyncHandleInfo->pNext=" + ptrToString((void**)std::addressof(pGetSciSyncHandleInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pGetSciSyncHandleInfo->fence=" + ptrToString((void**)std::addressof(pGetSciSyncHandleInfo->fence)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGetSciSyncHandleInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void**)std::addressof(pHandle)) + '!');
-}
 #ifdef GETFENCESCISYNCFENCENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetFenceSciSyncFenceNV_after(device, pGetSciSyncHandleInfo, pHandle);
@@ -12020,14 +8813,6 @@ layer_GetFenceSciSyncObjNV_before(device, pGetSciSyncHandleInfo, pHandle);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetFenceSciSyncObjNV(device, pGetSciSyncHandleInfo, pHandle);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pGetSciSyncHandleInfo != VK_NULL_HANDLE && pGetSciSyncHandleInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pGetSciSyncHandleInfo->pNext=" + ptrToString((void**)std::addressof(pGetSciSyncHandleInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pGetSciSyncHandleInfo->fence=" + ptrToString((void**)std::addressof(pGetSciSyncHandleInfo->fence)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGetSciSyncHandleInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void**)std::addressof(pHandle)) + '!');
-}
 #ifdef GETFENCESCISYNCOBJNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetFenceSciSyncObjNV_after(device, pGetSciSyncHandleInfo, pHandle);
@@ -12059,14 +8844,6 @@ layer_ImportFenceSciSyncFenceNV_before(device, pImportFenceSciSyncInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportFenceSciSyncFenceNV(device, pImportFenceSciSyncInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pImportFenceSciSyncInfo != VK_NULL_HANDLE && pImportFenceSciSyncInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pImportFenceSciSyncInfo->pNext=" + ptrToString((void**)std::addressof(pImportFenceSciSyncInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceSciSyncInfo->fence=" + ptrToString((void**)std::addressof(pImportFenceSciSyncInfo->fence)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceSciSyncInfo->handle=" + ptrToString((void**)std::addressof(pImportFenceSciSyncInfo->handle)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImportFenceSciSyncInfo=VK_NULL_HANDLE!");
-}
 #ifdef IMPORTFENCESCISYNCFENCENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportFenceSciSyncFenceNV_after(device, pImportFenceSciSyncInfo);
@@ -12098,14 +8875,6 @@ layer_ImportFenceSciSyncObjNV_before(device, pImportFenceSciSyncInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportFenceSciSyncObjNV(device, pImportFenceSciSyncInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pImportFenceSciSyncInfo != VK_NULL_HANDLE && pImportFenceSciSyncInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pImportFenceSciSyncInfo->pNext=" + ptrToString((void**)std::addressof(pImportFenceSciSyncInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceSciSyncInfo->fence=" + ptrToString((void**)std::addressof(pImportFenceSciSyncInfo->fence)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportFenceSciSyncInfo->handle=" + ptrToString((void**)std::addressof(pImportFenceSciSyncInfo->handle)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImportFenceSciSyncInfo=VK_NULL_HANDLE!");
-}
 #ifdef IMPORTFENCESCISYNCOBJNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportFenceSciSyncObjNV_after(device, pImportFenceSciSyncInfo);
@@ -12137,14 +8906,6 @@ layer_GetSemaphoreSciSyncObjNV_before(device, pGetSciSyncInfo, pHandle);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreSciSyncObjNV(device, pGetSciSyncInfo, pHandle);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pGetSciSyncInfo != VK_NULL_HANDLE && pGetSciSyncInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pGetSciSyncInfo->pNext=" + ptrToString((void**)std::addressof(pGetSciSyncInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pGetSciSyncInfo->semaphore=" + ptrToString((void**)std::addressof(pGetSciSyncInfo->semaphore)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGetSciSyncInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pHandle=" + ptrToString((void**)std::addressof(pHandle)) + '!');
-}
 #ifdef GETSEMAPHORESCISYNCOBJNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSemaphoreSciSyncObjNV_after(device, pGetSciSyncInfo, pHandle);
@@ -12176,14 +8937,6 @@ layer_ImportSemaphoreSciSyncObjNV_before(device, pImportSemaphoreSciSyncInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].ImportSemaphoreSciSyncObjNV(device, pImportSemaphoreSciSyncInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pImportSemaphoreSciSyncInfo != VK_NULL_HANDLE && pImportSemaphoreSciSyncInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreSciSyncInfo->pNext=" + ptrToString((void**)std::addressof(pImportSemaphoreSciSyncInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreSciSyncInfo->semaphore=" + ptrToString((void**)std::addressof(pImportSemaphoreSciSyncInfo->semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"pImportSemaphoreSciSyncInfo->handle=" + ptrToString((void**)std::addressof(pImportSemaphoreSciSyncInfo->handle)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImportSemaphoreSciSyncInfo=VK_NULL_HANDLE!");
-}
 #ifdef IMPORTSEMAPHORESCISYNCOBJNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ImportSemaphoreSciSyncObjNV_after(device, pImportSemaphoreSciSyncInfo);
@@ -12215,22 +8968,6 @@ layer_CreateSemaphoreSciSyncPoolNV_before(device, pCreateInfo, pAllocator, pSema
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateSemaphoreSciSyncPoolNV(device, pCreateInfo, pAllocator, pSemaphorePool);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->handle=" + ptrToString((void**)std::addressof(pCreateInfo->handle)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSemaphorePool=" + ptrToString((void**)std::addressof(pSemaphorePool)) + '!');
-}
 #ifdef CREATESEMAPHORESCISYNCPOOLNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateSemaphoreSciSyncPoolNV_after(device, pCreateInfo, pAllocator, pSemaphorePool);
@@ -12261,18 +8998,6 @@ layer_DestroySemaphoreSciSyncPoolNV_before(device, semaphorePool, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroySemaphoreSciSyncPoolNV(device, semaphorePool, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"semaphorePool=" + ptrToString((void**)std::addressof(semaphorePool)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYSEMAPHORESCISYNCPOOLNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroySemaphoreSciSyncPoolNV_after(device, semaphorePool, pAllocator);
@@ -12300,13 +9025,6 @@ layer_DisplayPowerControlEXT_before(device, display, pDisplayPowerInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].DisplayPowerControlEXT(device, display, pDisplayPowerInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void**)std::addressof(display)) + '!');
-if(pDisplayPowerInfo != VK_NULL_HANDLE && pDisplayPowerInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDisplayPowerInfo->pNext=" + ptrToString((void**)std::addressof(pDisplayPowerInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDisplayPowerInfo=VK_NULL_HANDLE!");
-}
 #ifdef DISPLAYPOWERCONTROLEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DisplayPowerControlEXT_after(device, display, pDisplayPowerInfo);
@@ -12336,21 +9054,6 @@ layer_RegisterDeviceEventEXT_before(device, pDeviceEventInfo, pAllocator, pFence
 #endif 
 auto ret = device_dispatch[GetKey(device)].RegisterDeviceEventEXT(device, pDeviceEventInfo, pAllocator, pFence);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pDeviceEventInfo != VK_NULL_HANDLE && pDeviceEventInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDeviceEventInfo->pNext=" + ptrToString((void**)std::addressof(pDeviceEventInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDeviceEventInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pFence=" + ptrToString((void**)std::addressof(pFence)) + '!');
-}
 #ifdef REGISTERDEVICEEVENTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_RegisterDeviceEventEXT_after(device, pDeviceEventInfo, pAllocator, pFence);
@@ -12380,22 +9083,6 @@ layer_RegisterDisplayEventEXT_before(device, display, pDisplayEventInfo, pAlloca
 #endif 
 auto ret = device_dispatch[GetKey(device)].RegisterDisplayEventEXT(device, display, pDisplayEventInfo, pAllocator, pFence);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"display=" + ptrToString((void**)std::addressof(display)) + '!');
-if(pDisplayEventInfo != VK_NULL_HANDLE && pDisplayEventInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDisplayEventInfo->pNext=" + ptrToString((void**)std::addressof(pDisplayEventInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDisplayEventInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pFence=" + ptrToString((void**)std::addressof(pFence)) + '!');
-}
 #ifdef REGISTERDISPLAYEVENTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_RegisterDisplayEventEXT_after(device, display, pDisplayEventInfo, pAllocator, pFence);
@@ -12425,11 +9112,6 @@ layer_GetSwapchainCounterEXT_before(device, swapchain, counter, pCounterValue);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSwapchainCounterEXT(device, swapchain, counter, pCounterValue);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void**)std::addressof(swapchain)) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterValue=" + ptrToString((void**)std::addressof(pCounterValue)) + '!');
-}
 #ifdef GETSWAPCHAINCOUNTEREXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSwapchainCounterEXT_after(device, swapchain, counter, pCounterValue);
@@ -12458,13 +9140,6 @@ layer_GetDeviceGroupPeerMemoryFeatures_before(device, heapIndex, localDeviceInde
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceGroupPeerMemoryFeatures(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"heapIndex=" + std::to_string(heapIndex) + '!');
-winsockSendToUI(&ConnectSocket,"localDeviceIndex=" + std::to_string(localDeviceIndex) + '!');
-winsockSendToUI(&ConnectSocket,"remoteDeviceIndex=" + std::to_string(remoteDeviceIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pPeerMemoryFeatures=" + ptrToString((void**)std::addressof(pPeerMemoryFeatures)) + '!');
-}
 #ifdef GETDEVICEGROUPPEERMEMORYFEATURES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceGroupPeerMemoryFeatures_after(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
@@ -12491,16 +9166,6 @@ layer_BindBufferMemory2_before(device, bindInfoCount, pBindInfos);
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindBufferMemory2(device, bindInfoCount, pBindInfos);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"bindInfoCount=" + std::to_string(bindInfoCount) + '!');
-if(pBindInfos != VK_NULL_HANDLE && pBindInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindInfos->pNext=" + ptrToString((void**)std::addressof(pBindInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->buffer=" + ptrToString((void**)std::addressof(pBindInfos->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->memory=" + ptrToString((void**)std::addressof(pBindInfos->memory)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->memoryOffset=" + std::to_string(pBindInfos->memoryOffset) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBindInfos=VK_NULL_HANDLE!");
-}
 #ifdef BINDBUFFERMEMORY2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindBufferMemory2_after(device, bindInfoCount, pBindInfos);
@@ -12530,16 +9195,6 @@ layer_BindImageMemory2_before(device, bindInfoCount, pBindInfos);
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindImageMemory2(device, bindInfoCount, pBindInfos);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"bindInfoCount=" + std::to_string(bindInfoCount) + '!');
-if(pBindInfos != VK_NULL_HANDLE && pBindInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindInfos->pNext=" + ptrToString((void**)std::addressof(pBindInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->image=" + ptrToString((void**)std::addressof(pBindInfos->image)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->memory=" + ptrToString((void**)std::addressof(pBindInfos->memory)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->memoryOffset=" + std::to_string(pBindInfos->memoryOffset) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBindInfos=VK_NULL_HANDLE!");
-}
 #ifdef BINDIMAGEMEMORY2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindImageMemory2_after(device, bindInfoCount, pBindInfos);
@@ -12568,10 +9223,6 @@ layer_CmdSetDeviceMask_before(commandBuffer, deviceMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDeviceMask(commandBuffer, deviceMask);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"deviceMask=" + std::to_string(deviceMask) + '!');
-}
 #ifdef CMDSETDEVICEMASK_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDeviceMask_after(commandBuffer, deviceMask);
@@ -12598,14 +9249,6 @@ layer_GetDeviceGroupPresentCapabilitiesKHR_before(device, pDeviceGroupPresentCap
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeviceGroupPresentCapabilitiesKHR(device, pDeviceGroupPresentCapabilities);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pDeviceGroupPresentCapabilities != VK_NULL_HANDLE && pDeviceGroupPresentCapabilities != NULL) {
-winsockSendToUI(&ConnectSocket,"pDeviceGroupPresentCapabilities->pNext=" + ptrToString((void**)std::addressof(pDeviceGroupPresentCapabilities->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDeviceGroupPresentCapabilities->presentMask=" + ptrToString((void**)std::addressof(pDeviceGroupPresentCapabilities->presentMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDeviceGroupPresentCapabilities->modes=" + ptrToString((void**)std::addressof(pDeviceGroupPresentCapabilities->modes)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDeviceGroupPresentCapabilities=VK_NULL_HANDLE!");
-}
 #ifdef GETDEVICEGROUPPRESENTCAPABILITIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceGroupPresentCapabilitiesKHR_after(device, pDeviceGroupPresentCapabilities);
@@ -12635,11 +9278,6 @@ layer_GetDeviceGroupSurfacePresentModesKHR_before(device, surface, pModes);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeviceGroupSurfacePresentModesKHR(device, surface, pModes);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"surface=" + ptrToString((void**)std::addressof(surface)) + '!');
-winsockSendToUI(&ConnectSocket,"pModes=" + ptrToString((void**)std::addressof(pModes)) + '!');
-}
 #ifdef GETDEVICEGROUPSURFACEPRESENTMODESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceGroupSurfacePresentModesKHR_after(device, surface, pModes);
@@ -12669,18 +9307,6 @@ layer_AcquireNextImage2KHR_before(device, pAcquireInfo, pImageIndex);
 #endif 
 auto ret = device_dispatch[GetKey(device)].AcquireNextImage2KHR(device, pAcquireInfo, pImageIndex);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pAcquireInfo != VK_NULL_HANDLE && pAcquireInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pAcquireInfo->pNext=" + ptrToString((void**)std::addressof(pAcquireInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pAcquireInfo->swapchain=" + ptrToString((void**)std::addressof(pAcquireInfo->swapchain)) + '!');
-winsockSendToUI(&ConnectSocket,"pAcquireInfo->timeout=" + std::to_string(pAcquireInfo->timeout) + '!');
-winsockSendToUI(&ConnectSocket,"pAcquireInfo->semaphore=" + ptrToString((void**)std::addressof(pAcquireInfo->semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"pAcquireInfo->fence=" + ptrToString((void**)std::addressof(pAcquireInfo->fence)) + '!');
-winsockSendToUI(&ConnectSocket,"pAcquireInfo->deviceMask=" + std::to_string(pAcquireInfo->deviceMask) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAcquireInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pImageIndex=" + ptrToString((void**)std::addressof(pImageIndex)) + '!');
-}
 #ifdef ACQUIRENEXTIMAGE2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireNextImage2KHR_after(device, pAcquireInfo, pImageIndex);
@@ -12709,15 +9335,6 @@ layer_CmdDispatchBase_before(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, 
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDispatchBase(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"baseGroupX=" + std::to_string(baseGroupX) + '!');
-winsockSendToUI(&ConnectSocket,"baseGroupY=" + std::to_string(baseGroupY) + '!');
-winsockSendToUI(&ConnectSocket,"baseGroupZ=" + std::to_string(baseGroupZ) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountX=" + std::to_string(groupCountX) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountY=" + std::to_string(groupCountY) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountZ=" + std::to_string(groupCountZ) + '!');
-}
 #ifdef CMDDISPATCHBASE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDispatchBase_after(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
@@ -12744,33 +9361,6 @@ layer_CreateDescriptorUpdateTemplate_before(device, pCreateInfo, pAllocator, pDe
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateDescriptorUpdateTemplate(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->descriptorUpdateEntryCount=" + std::to_string(pCreateInfo->descriptorUpdateEntryCount) + '!');
-if(pCreateInfo->pDescriptorUpdateEntries != VK_NULL_HANDLE && pCreateInfo->pDescriptorUpdateEntries != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDescriptorUpdateEntries->dstBinding=" + std::to_string(pCreateInfo->pDescriptorUpdateEntries->dstBinding) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDescriptorUpdateEntries->dstArrayElement=" + std::to_string(pCreateInfo->pDescriptorUpdateEntries->dstArrayElement) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDescriptorUpdateEntries->descriptorCount=" + std::to_string(pCreateInfo->pDescriptorUpdateEntries->descriptorCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDescriptorUpdateEntries->offset=" + std::to_string(pCreateInfo->pDescriptorUpdateEntries->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDescriptorUpdateEntries->stride=" + std::to_string(pCreateInfo->pDescriptorUpdateEntries->stride) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDescriptorUpdateEntries=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->descriptorSetLayout=" + ptrToString((void**)std::addressof(pCreateInfo->descriptorSetLayout)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pipelineLayout=" + ptrToString((void**)std::addressof(pCreateInfo->pipelineLayout)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->set=" + std::to_string(pCreateInfo->set) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDescriptorUpdateTemplate=" + ptrToString((void**)std::addressof(pDescriptorUpdateTemplate)) + '!');
-}
 #ifdef CREATEDESCRIPTORUPDATETEMPLATE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDescriptorUpdateTemplate_after(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
@@ -12799,18 +9389,6 @@ layer_DestroyDescriptorUpdateTemplate_before(device, descriptorUpdateTemplate, p
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyDescriptorUpdateTemplate(device, descriptorUpdateTemplate, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorUpdateTemplate=" + ptrToString((void**)std::addressof(descriptorUpdateTemplate)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYDESCRIPTORUPDATETEMPLATE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyDescriptorUpdateTemplate_after(device, descriptorUpdateTemplate, pAllocator);
@@ -12836,12 +9414,6 @@ layer_UpdateDescriptorSetWithTemplate_before(device, descriptorSet, descriptorUp
 }
 #endif 
 device_dispatch[GetKey(device)].UpdateDescriptorSetWithTemplate(device, descriptorSet, descriptorUpdateTemplate, pData);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorSet=" + ptrToString((void**)std::addressof(descriptorSet)) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorUpdateTemplate=" + ptrToString((void**)std::addressof(descriptorUpdateTemplate)) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef UPDATEDESCRIPTORSETWITHTEMPLATE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_UpdateDescriptorSetWithTemplate_after(device, descriptorSet, descriptorUpdateTemplate, pData);
@@ -12867,13 +9439,6 @@ layer_CmdPushDescriptorSetWithTemplateKHR_before(commandBuffer, descriptorUpdate
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetWithTemplateKHR(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorUpdateTemplate=" + ptrToString((void**)std::addressof(descriptorUpdateTemplate)) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void**)std::addressof(layout)) + '!');
-winsockSendToUI(&ConnectSocket,"set=" + std::to_string(set) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef CMDPUSHDESCRIPTORSETWITHTEMPLATEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPushDescriptorSetWithTemplateKHR_after(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
@@ -12899,22 +9464,6 @@ layer_SetHdrMetadataEXT_before(device, swapchainCount, pSwapchains, pMetadata);
 }
 #endif 
 device_dispatch[GetKey(device)].SetHdrMetadataEXT(device, swapchainCount, pSwapchains, pMetadata);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchainCount=" + std::to_string(swapchainCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSwapchains=" + ptrToString((void**)std::addressof(pSwapchains)) + '!');
-if(pMetadata != VK_NULL_HANDLE && pMetadata != NULL) {
-winsockSendToUI(&ConnectSocket,"pMetadata->pNext=" + ptrToString((void**)std::addressof(pMetadata->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMetadata->displayPrimaryRed=" + ptrToString((void**)std::addressof(pMetadata->displayPrimaryRed)) + '!');
-winsockSendToUI(&ConnectSocket,"pMetadata->displayPrimaryGreen=" + ptrToString((void**)std::addressof(pMetadata->displayPrimaryGreen)) + '!');
-winsockSendToUI(&ConnectSocket,"pMetadata->displayPrimaryBlue=" + ptrToString((void**)std::addressof(pMetadata->displayPrimaryBlue)) + '!');
-winsockSendToUI(&ConnectSocket,"pMetadata->whitePoint=" + ptrToString((void**)std::addressof(pMetadata->whitePoint)) + '!');
-winsockSendToUI(&ConnectSocket,"pMetadata->maxLuminance=" + std::to_string(pMetadata->maxLuminance) + '!');
-winsockSendToUI(&ConnectSocket,"pMetadata->minLuminance=" + std::to_string(pMetadata->minLuminance) + '!');
-winsockSendToUI(&ConnectSocket,"pMetadata->maxContentLightLevel=" + std::to_string(pMetadata->maxContentLightLevel) + '!');
-winsockSendToUI(&ConnectSocket,"pMetadata->maxFrameAverageLightLevel=" + std::to_string(pMetadata->maxFrameAverageLightLevel) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMetadata=VK_NULL_HANDLE!");
-}
 #ifdef SETHDRMETADATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetHdrMetadataEXT_after(device, swapchainCount, pSwapchains, pMetadata);
@@ -12941,10 +9490,6 @@ layer_GetSwapchainStatusKHR_before(device, swapchain);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSwapchainStatusKHR(device, swapchain);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void**)std::addressof(swapchain)) + '!');
-}
 #ifdef GETSWAPCHAINSTATUSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSwapchainStatusKHR_after(device, swapchain);
@@ -12974,13 +9519,6 @@ layer_GetRefreshCycleDurationGOOGLE_before(device, swapchain, pDisplayTimingProp
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetRefreshCycleDurationGOOGLE(device, swapchain, pDisplayTimingProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void**)std::addressof(swapchain)) + '!');
-if(pDisplayTimingProperties != VK_NULL_HANDLE && pDisplayTimingProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pDisplayTimingProperties->refreshDuration=" + std::to_string(pDisplayTimingProperties->refreshDuration) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDisplayTimingProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETREFRESHCYCLEDURATIONGOOGLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRefreshCycleDurationGOOGLE_after(device, swapchain, pDisplayTimingProperties);
@@ -13010,18 +9548,6 @@ layer_GetPastPresentationTimingGOOGLE_before(device, swapchain, pPresentationTim
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPastPresentationTimingGOOGLE(device, swapchain, pPresentationTimingCount, pPresentationTimings);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void**)std::addressof(swapchain)) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentationTimingCount=" + ptrToString((void**)std::addressof(pPresentationTimingCount)) + '!');
-if(pPresentationTimings != VK_NULL_HANDLE && pPresentationTimings != NULL) {
-winsockSendToUI(&ConnectSocket,"pPresentationTimings->presentID=" + std::to_string(pPresentationTimings->presentID) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentationTimings->desiredPresentTime=" + std::to_string(pPresentationTimings->desiredPresentTime) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentationTimings->actualPresentTime=" + std::to_string(pPresentationTimings->actualPresentTime) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentationTimings->earliestPresentTime=" + std::to_string(pPresentationTimings->earliestPresentTime) + '!');
-winsockSendToUI(&ConnectSocket,"pPresentationTimings->presentMargin=" + std::to_string(pPresentationTimings->presentMargin) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPresentationTimings=VK_NULL_HANDLE!");
-}
 #ifdef GETPASTPRESENTATIONTIMINGGOOGLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPastPresentationTimingGOOGLE_after(device, swapchain, pPresentationTimingCount, pPresentationTimings);
@@ -13050,15 +9576,6 @@ layer_CmdSetViewportWScalingNV_before(commandBuffer, firstViewport, viewportCoun
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWScalingNV(commandBuffer, firstViewport, viewportCount, pViewportWScalings);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstViewport=" + std::to_string(firstViewport) + '!');
-winsockSendToUI(&ConnectSocket,"viewportCount=" + std::to_string(viewportCount) + '!');
-if(pViewportWScalings != VK_NULL_HANDLE && pViewportWScalings != NULL) {
-winsockSendToUI(&ConnectSocket,"pViewportWScalings->xcoeff=" + std::to_string(pViewportWScalings->xcoeff) + '!');
-winsockSendToUI(&ConnectSocket,"pViewportWScalings->ycoeff=" + std::to_string(pViewportWScalings->ycoeff) + '!');
-}else winsockSendToUI(&ConnectSocket, "pViewportWScalings=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETVIEWPORTWSCALINGNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetViewportWScalingNV_after(commandBuffer, firstViewport, viewportCount, pViewportWScalings);
@@ -13084,15 +9601,6 @@ layer_CmdSetDiscardRectangleEXT_before(commandBuffer, firstDiscardRectangle, dis
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleEXT(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstDiscardRectangle=" + std::to_string(firstDiscardRectangle) + '!');
-winsockSendToUI(&ConnectSocket,"discardRectangleCount=" + std::to_string(discardRectangleCount) + '!');
-if(pDiscardRectangles != VK_NULL_HANDLE && pDiscardRectangles != NULL) {
-winsockSendToUI(&ConnectSocket,"pDiscardRectangles->offset=" + ptrToString((void**)std::addressof(pDiscardRectangles->offset)) + '!');
-winsockSendToUI(&ConnectSocket,"pDiscardRectangles->extent=" + ptrToString((void**)std::addressof(pDiscardRectangles->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDiscardRectangles=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETDISCARDRECTANGLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDiscardRectangleEXT_after(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles);
@@ -13118,10 +9626,6 @@ layer_CmdSetDiscardRectangleEnableEXT_before(commandBuffer, discardRectangleEnab
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleEnableEXT(commandBuffer, discardRectangleEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"discardRectangleEnable=" + bool_as_text(discardRectangleEnable) + '!');
-}
 #ifdef CMDSETDISCARDRECTANGLEENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDiscardRectangleEnableEXT_after(commandBuffer, discardRectangleEnable);
@@ -13147,9 +9651,6 @@ layer_CmdSetDiscardRectangleModeEXT_before(commandBuffer, discardRectangleMode);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleModeEXT(commandBuffer, discardRectangleMode);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETDISCARDRECTANGLEMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDiscardRectangleModeEXT_after(commandBuffer, discardRectangleMode);
@@ -13175,18 +9676,6 @@ layer_CmdSetSampleLocationsEXT_before(commandBuffer, pSampleLocationsInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetSampleLocationsEXT(commandBuffer, pSampleLocationsInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pSampleLocationsInfo != VK_NULL_HANDLE && pSampleLocationsInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSampleLocationsInfo->pNext=" + ptrToString((void**)std::addressof(pSampleLocationsInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSampleLocationsInfo->sampleLocationGridSize=" + ptrToString((void**)std::addressof(pSampleLocationsInfo->sampleLocationGridSize)) + '!');
-winsockSendToUI(&ConnectSocket,"pSampleLocationsInfo->sampleLocationsCount=" + std::to_string(pSampleLocationsInfo->sampleLocationsCount) + '!');
-if(pSampleLocationsInfo->pSampleLocations != VK_NULL_HANDLE && pSampleLocationsInfo->pSampleLocations != NULL) {
-winsockSendToUI(&ConnectSocket,"pSampleLocationsInfo->pSampleLocations->x=" + std::to_string(pSampleLocationsInfo->pSampleLocations->x) + '!');
-winsockSendToUI(&ConnectSocket,"pSampleLocationsInfo->pSampleLocations->y=" + std::to_string(pSampleLocationsInfo->pSampleLocations->y) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSampleLocations=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pSampleLocationsInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETSAMPLELOCATIONSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetSampleLocationsEXT_after(commandBuffer, pSampleLocationsInfo);
@@ -13212,17 +9701,6 @@ layer_GetBufferMemoryRequirements2_before(device, pInfo, pMemoryRequirements);
 }
 #endif 
 device_dispatch[GetKey(device)].GetBufferMemoryRequirements2(device, pInfo, pMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->buffer=" + ptrToString((void**)std::addressof(pInfo->buffer)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-if(pMemoryRequirements != VK_NULL_HANDLE && pMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETBUFFERMEMORYREQUIREMENTS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferMemoryRequirements2_after(device, pInfo, pMemoryRequirements);
@@ -13248,17 +9726,6 @@ layer_GetImageMemoryRequirements2_before(device, pInfo, pMemoryRequirements);
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageMemoryRequirements2(device, pInfo, pMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->image=" + ptrToString((void**)std::addressof(pInfo->image)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-if(pMemoryRequirements != VK_NULL_HANDLE && pMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETIMAGEMEMORYREQUIREMENTS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageMemoryRequirements2_after(device, pInfo, pMemoryRequirements);
@@ -13284,18 +9751,6 @@ layer_GetImageSparseMemoryRequirements2_before(device, pInfo, pSparseMemoryRequi
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements2(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->image=" + ptrToString((void**)std::addressof(pInfo->image)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirementCount=" + ptrToString((void**)std::addressof(pSparseMemoryRequirementCount)) + '!');
-if(pSparseMemoryRequirements != VK_NULL_HANDLE && pSparseMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pSparseMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pSparseMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSparseMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETIMAGESPARSEMEMORYREQUIREMENTS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageSparseMemoryRequirements2_after(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -13321,24 +9776,6 @@ layer_GetDeviceBufferMemoryRequirements_before(device, pInfo, pMemoryRequirement
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceBufferMemoryRequirements(device, pInfo, pMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-if(pInfo->pCreateInfo != VK_NULL_HANDLE && pInfo->pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->flags=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->size=" + std::to_string(pInfo->pCreateInfo->size) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->usage=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->usage)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->queueFamilyIndexCount=" + std::to_string(pInfo->pCreateInfo->queueFamilyIndexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->pQueueFamilyIndices=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->pQueueFamilyIndices)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-if(pMemoryRequirements != VK_NULL_HANDLE && pMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETDEVICEBUFFERMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceBufferMemoryRequirements_after(device, pInfo, pMemoryRequirements);
@@ -13364,26 +9801,6 @@ layer_GetDeviceImageMemoryRequirements_before(device, pInfo, pMemoryRequirements
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceImageMemoryRequirements(device, pInfo, pMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-if(pInfo->pCreateInfo != VK_NULL_HANDLE && pInfo->pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->flags=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->extent=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->extent)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->mipLevels=" + std::to_string(pInfo->pCreateInfo->mipLevels) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->arrayLayers=" + std::to_string(pInfo->pCreateInfo->arrayLayers) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->usage=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->usage)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->queueFamilyIndexCount=" + std::to_string(pInfo->pCreateInfo->queueFamilyIndexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->pQueueFamilyIndices=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->pQueueFamilyIndices)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-if(pMemoryRequirements != VK_NULL_HANDLE && pMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETDEVICEIMAGEMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceImageMemoryRequirements_after(device, pInfo, pMemoryRequirements);
@@ -13409,27 +9826,6 @@ layer_GetDeviceImageSparseMemoryRequirements_before(device, pInfo, pSparseMemory
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceImageSparseMemoryRequirements(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-if(pInfo->pCreateInfo != VK_NULL_HANDLE && pInfo->pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->flags=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->extent=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->extent)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->mipLevels=" + std::to_string(pInfo->pCreateInfo->mipLevels) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->arrayLayers=" + std::to_string(pInfo->pCreateInfo->arrayLayers) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->usage=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->usage)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->queueFamilyIndexCount=" + std::to_string(pInfo->pCreateInfo->queueFamilyIndexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->pQueueFamilyIndices=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->pQueueFamilyIndices)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirementCount=" + ptrToString((void**)std::addressof(pSparseMemoryRequirementCount)) + '!');
-if(pSparseMemoryRequirements != VK_NULL_HANDLE && pSparseMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pSparseMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pSparseMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSparseMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETDEVICEIMAGESPARSEMEMORYREQUIREMENTS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceImageSparseMemoryRequirements_after(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -13456,23 +9852,6 @@ layer_CreateSamplerYcbcrConversion_before(device, pCreateInfo, pAllocator, pYcbc
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateSamplerYcbcrConversion(device, pCreateInfo, pAllocator, pYcbcrConversion);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->components=" + ptrToString((void**)std::addressof(pCreateInfo->components)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->forceExplicitReconstruction=" + bool_as_text(pCreateInfo->forceExplicitReconstruction) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pYcbcrConversion=" + ptrToString((void**)std::addressof(pYcbcrConversion)) + '!');
-}
 #ifdef CREATESAMPLERYCBCRCONVERSION_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateSamplerYcbcrConversion_after(device, pCreateInfo, pAllocator, pYcbcrConversion);
@@ -13501,18 +9880,6 @@ layer_DestroySamplerYcbcrConversion_before(device, ycbcrConversion, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroySamplerYcbcrConversion(device, ycbcrConversion, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"ycbcrConversion=" + ptrToString((void**)std::addressof(ycbcrConversion)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYSAMPLERYCBCRCONVERSION_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroySamplerYcbcrConversion_after(device, ycbcrConversion, pAllocator);
@@ -13538,16 +9905,6 @@ layer_GetDeviceQueue2_before(device, pQueueInfo, pQueue);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceQueue2(device, pQueueInfo, pQueue);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pQueueInfo != VK_NULL_HANDLE && pQueueInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pQueueInfo->pNext=" + ptrToString((void**)std::addressof(pQueueInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueInfo->flags=" + ptrToString((void**)std::addressof(pQueueInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueInfo->queueFamilyIndex=" + std::to_string(pQueueInfo->queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pQueueInfo->queueIndex=" + std::to_string(pQueueInfo->queueIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pQueueInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pQueue=" + ptrToString((void**)std::addressof(pQueue)) + '!');
-}
 #ifdef GETDEVICEQUEUE2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceQueue2_after(device, pQueueInfo, pQueue);
@@ -13574,24 +9931,6 @@ layer_CreateValidationCacheEXT_before(device, pCreateInfo, pAllocator, pValidati
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateValidationCacheEXT(device, pCreateInfo, pAllocator, pValidationCache);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->initialDataSize=" + std::to_string(pCreateInfo->initialDataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pInitialData=" + ptrToString((void**)std::addressof(pCreateInfo->pInitialData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pValidationCache=" + ptrToString((void**)std::addressof(pValidationCache)) + '!');
-}
 #ifdef CREATEVALIDATIONCACHEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateValidationCacheEXT_after(device, pCreateInfo, pAllocator, pValidationCache);
@@ -13620,18 +9959,6 @@ layer_DestroyValidationCacheEXT_before(device, validationCache, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyValidationCacheEXT(device, validationCache, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"validationCache=" + ptrToString((void**)std::addressof(validationCache)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYVALIDATIONCACHEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyValidationCacheEXT_after(device, validationCache, pAllocator);
@@ -13658,12 +9985,6 @@ layer_GetValidationCacheDataEXT_before(device, validationCache, pDataSize, pData
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetValidationCacheDataEXT(device, validationCache, pDataSize, pData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"validationCache=" + ptrToString((void**)std::addressof(validationCache)) + '!');
-winsockSendToUI(&ConnectSocket,"pDataSize=" + ptrToString((void**)std::addressof(pDataSize)) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETVALIDATIONCACHEDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetValidationCacheDataEXT_after(device, validationCache, pDataSize, pData);
@@ -13693,12 +10014,6 @@ layer_MergeValidationCachesEXT_before(device, dstCache, srcCacheCount, pSrcCache
 #endif 
 auto ret = device_dispatch[GetKey(device)].MergeValidationCachesEXT(device, dstCache, srcCacheCount, pSrcCaches);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"dstCache=" + ptrToString((void**)std::addressof(dstCache)) + '!');
-winsockSendToUI(&ConnectSocket,"srcCacheCount=" + std::to_string(srcCacheCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSrcCaches=" + ptrToString((void**)std::addressof(pSrcCaches)) + '!');
-}
 #ifdef MERGEVALIDATIONCACHESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_MergeValidationCachesEXT_after(device, dstCache, srcCacheCount, pSrcCaches);
@@ -13727,24 +10042,6 @@ layer_GetDescriptorSetLayoutSupport_before(device, pCreateInfo, pSupport);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutSupport(device, pCreateInfo, pSupport);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->bindingCount=" + std::to_string(pCreateInfo->bindingCount) + '!');
-if(pCreateInfo->pBindings != VK_NULL_HANDLE && pCreateInfo->pBindings != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pBindings->binding=" + std::to_string(pCreateInfo->pBindings->binding) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pBindings->descriptorCount=" + std::to_string(pCreateInfo->pBindings->descriptorCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pBindings->stageFlags=" + ptrToString((void**)std::addressof(pCreateInfo->pBindings->stageFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pBindings->pImmutableSamplers=" + ptrToString((void**)std::addressof(pCreateInfo->pBindings->pImmutableSamplers)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBindings=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pSupport != VK_NULL_HANDLE && pSupport != NULL) {
-winsockSendToUI(&ConnectSocket,"pSupport->pNext=" + ptrToString((void**)std::addressof(pSupport->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSupport->supported=" + bool_as_text(pSupport->supported) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSupport=VK_NULL_HANDLE!");
-}
 #ifdef GETDESCRIPTORSETLAYOUTSUPPORT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDescriptorSetLayoutSupport_after(device, pCreateInfo, pSupport);
@@ -13772,11 +10069,6 @@ layer_GetSwapchainGrallocUsageANDROID_before(device, format, imageUsage, gralloc
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSwapchainGrallocUsageANDROID(device, format, imageUsage, grallocUsage);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"imageUsage=" + ptrToString((void**)std::addressof(imageUsage)) + '!');
-winsockSendToUI(&ConnectSocket,"grallocUsage=" + ptrToString((void**)std::addressof(grallocUsage)) + '!');
-}
 #ifdef GETSWAPCHAINGRALLOCUSAGEANDROID_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSwapchainGrallocUsageANDROID_after(device, format, imageUsage, grallocUsage);
@@ -13808,13 +10100,6 @@ layer_GetSwapchainGrallocUsage2ANDROID_before(device, format, imageUsage, swapch
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSwapchainGrallocUsage2ANDROID(device, format, imageUsage, swapchainImageUsage, grallocConsumerUsage, grallocProducerUsage);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"imageUsage=" + ptrToString((void**)std::addressof(imageUsage)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchainImageUsage=" + ptrToString((void**)std::addressof(swapchainImageUsage)) + '!');
-winsockSendToUI(&ConnectSocket,"grallocConsumerUsage=" + ptrToString((void**)std::addressof(grallocConsumerUsage)) + '!');
-winsockSendToUI(&ConnectSocket,"grallocProducerUsage=" + ptrToString((void**)std::addressof(grallocProducerUsage)) + '!');
-}
 #ifdef GETSWAPCHAINGRALLOCUSAGE2ANDROID_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSwapchainGrallocUsage2ANDROID_after(device, format, imageUsage, swapchainImageUsage, grallocConsumerUsage, grallocProducerUsage);
@@ -13846,13 +10131,6 @@ layer_AcquireImageANDROID_before(device, image, nativeFenceFd, semaphore, fence)
 #endif 
 auto ret = device_dispatch[GetKey(device)].AcquireImageANDROID(device, image, nativeFenceFd, semaphore, fence);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void**)std::addressof(image)) + '!');
-winsockSendToUI(&ConnectSocket,"nativeFenceFd=" + std::to_string(nativeFenceFd) + '!');
-winsockSendToUI(&ConnectSocket,"semaphore=" + ptrToString((void**)std::addressof(semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void**)std::addressof(fence)) + '!');
-}
 #ifdef ACQUIREIMAGEANDROID_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireImageANDROID_after(device, image, nativeFenceFd, semaphore, fence);
@@ -13884,13 +10162,6 @@ layer_QueueSignalReleaseImageANDROID_before(queue, waitSemaphoreCount, pWaitSema
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueueSignalReleaseImageANDROID(queue, waitSemaphoreCount, pWaitSemaphores, image, pNativeFenceFd);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void**)std::addressof(queue)) + '!');
-winsockSendToUI(&ConnectSocket,"waitSemaphoreCount=" + std::to_string(waitSemaphoreCount) + '!');
-winsockSendToUI(&ConnectSocket,"pWaitSemaphores=" + ptrToString((void**)std::addressof(pWaitSemaphores)) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void**)std::addressof(image)) + '!');
-winsockSendToUI(&ConnectSocket,"pNativeFenceFd=" + ptrToString((void**)std::addressof(pNativeFenceFd)) + '!');
-}
 #ifdef QUEUESIGNALRELEASEIMAGEANDROID_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueSignalReleaseImageANDROID_after(queue, waitSemaphoreCount, pWaitSemaphores, image, pNativeFenceFd);
@@ -13921,12 +10192,6 @@ layer_GetShaderInfoAMD_before(device, pipeline, shaderStage, infoType, pInfoSize
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetShaderInfoAMD(device, pipeline, shaderStage, infoType, pInfoSize, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void**)std::addressof(pipeline)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfoSize=" + ptrToString((void**)std::addressof(pInfoSize)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo=" + ptrToString((void**)std::addressof(pInfo)) + '!');
-}
 #ifdef GETSHADERINFOAMD_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetShaderInfoAMD_after(device, pipeline, shaderStage, infoType, pInfoSize, pInfo);
@@ -13955,11 +10220,6 @@ layer_SetLocalDimmingAMD_before(device, swapChain, localDimmingEnable);
 }
 #endif 
 device_dispatch[GetKey(device)].SetLocalDimmingAMD(device, swapChain, localDimmingEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapChain=" + ptrToString((void**)std::addressof(swapChain)) + '!');
-winsockSendToUI(&ConnectSocket,"localDimmingEnable=" + bool_as_text(localDimmingEnable) + '!');
-}
 #ifdef SETLOCALDIMMINGAMD_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetLocalDimmingAMD_after(device, swapChain, localDimmingEnable);
@@ -13986,15 +10246,6 @@ layer_GetCalibratedTimestampsKHR_before(device, timestampCount, pTimestampInfos,
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetCalibratedTimestampsKHR(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"timestampCount=" + std::to_string(timestampCount) + '!');
-if(pTimestampInfos != VK_NULL_HANDLE && pTimestampInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pTimestampInfos->pNext=" + ptrToString((void**)std::addressof(pTimestampInfos->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pTimestampInfos=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pTimestamps=" + ptrToString((void**)std::addressof(pTimestamps)) + '!');
-winsockSendToUI(&ConnectSocket,"pMaxDeviation=" + ptrToString((void**)std::addressof(pMaxDeviation)) + '!');
-}
 #ifdef GETCALIBRATEDTIMESTAMPSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetCalibratedTimestampsKHR_after(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
@@ -14024,14 +10275,6 @@ layer_SetDebugUtilsObjectNameEXT_before(device, pNameInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetDebugUtilsObjectNameEXT(device, pNameInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pNameInfo != VK_NULL_HANDLE && pNameInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pNameInfo->pNext=" + ptrToString((void**)std::addressof(pNameInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pNameInfo->objectHandle=" + std::to_string(pNameInfo->objectHandle) + '!');
-winsockSendToUI(&ConnectSocket,"pNameInfo->pObjectName=" + charToString((char*)pNameInfo->pObjectName) + '!');
-}else winsockSendToUI(&ConnectSocket, "pNameInfo=VK_NULL_HANDLE!");
-}
 #ifdef SETDEBUGUTILSOBJECTNAMEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetDebugUtilsObjectNameEXT_after(device, pNameInfo);
@@ -14061,16 +10304,6 @@ layer_SetDebugUtilsObjectTagEXT_before(device, pTagInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetDebugUtilsObjectTagEXT(device, pTagInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pTagInfo != VK_NULL_HANDLE && pTagInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pTagInfo->pNext=" + ptrToString((void**)std::addressof(pTagInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pTagInfo->objectHandle=" + std::to_string(pTagInfo->objectHandle) + '!');
-winsockSendToUI(&ConnectSocket,"pTagInfo->tagName=" + std::to_string(pTagInfo->tagName) + '!');
-winsockSendToUI(&ConnectSocket,"pTagInfo->tagSize=" + std::to_string(pTagInfo->tagSize) + '!');
-winsockSendToUI(&ConnectSocket,"pTagInfo->pTag=" + ptrToString((void**)std::addressof(pTagInfo->pTag)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pTagInfo=VK_NULL_HANDLE!");
-}
 #ifdef SETDEBUGUTILSOBJECTTAGEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetDebugUtilsObjectTagEXT_after(device, pTagInfo);
@@ -14099,14 +10332,6 @@ layer_QueueBeginDebugUtilsLabelEXT_before(queue, pLabelInfo);
 }
 #endif 
 device_dispatch[GetKey(queue)].QueueBeginDebugUtilsLabelEXT(queue, pLabelInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void**)std::addressof(queue)) + '!');
-if(pLabelInfo != VK_NULL_HANDLE && pLabelInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pLabelInfo->pNext=" + ptrToString((void**)std::addressof(pLabelInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pLabelInfo->pLabelName=" + charToString((char*)pLabelInfo->pLabelName) + '!');
-winsockSendToUI(&ConnectSocket,"pLabelInfo->color=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pLabelInfo=VK_NULL_HANDLE!");
-}
 #ifdef QUEUEBEGINDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueBeginDebugUtilsLabelEXT_after(queue, pLabelInfo);
@@ -14132,9 +10357,6 @@ layer_QueueEndDebugUtilsLabelEXT_before(queue);
 }
 #endif 
 device_dispatch[GetKey(queue)].QueueEndDebugUtilsLabelEXT(queue);
-if(connected){
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void**)std::addressof(queue)) + '!');
-}
 #ifdef QUEUEENDDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueEndDebugUtilsLabelEXT_after(queue);
@@ -14160,14 +10382,6 @@ layer_QueueInsertDebugUtilsLabelEXT_before(queue, pLabelInfo);
 }
 #endif 
 device_dispatch[GetKey(queue)].QueueInsertDebugUtilsLabelEXT(queue, pLabelInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void**)std::addressof(queue)) + '!');
-if(pLabelInfo != VK_NULL_HANDLE && pLabelInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pLabelInfo->pNext=" + ptrToString((void**)std::addressof(pLabelInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pLabelInfo->pLabelName=" + charToString((char*)pLabelInfo->pLabelName) + '!');
-winsockSendToUI(&ConnectSocket,"pLabelInfo->color=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pLabelInfo=VK_NULL_HANDLE!");
-}
 #ifdef QUEUEINSERTDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueInsertDebugUtilsLabelEXT_after(queue, pLabelInfo);
@@ -14193,14 +10407,6 @@ layer_CmdBeginDebugUtilsLabelEXT_before(commandBuffer, pLabelInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pLabelInfo != VK_NULL_HANDLE && pLabelInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pLabelInfo->pNext=" + ptrToString((void**)std::addressof(pLabelInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pLabelInfo->pLabelName=" + charToString((char*)pLabelInfo->pLabelName) + '!');
-winsockSendToUI(&ConnectSocket,"pLabelInfo->color=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pLabelInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDBEGINDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginDebugUtilsLabelEXT_after(commandBuffer, pLabelInfo);
@@ -14226,9 +10432,6 @@ layer_CmdEndDebugUtilsLabelEXT_before(commandBuffer);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndDebugUtilsLabelEXT(commandBuffer);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDENDDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndDebugUtilsLabelEXT_after(commandBuffer);
@@ -14254,14 +10457,6 @@ layer_CmdInsertDebugUtilsLabelEXT_before(commandBuffer, pLabelInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdInsertDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pLabelInfo != VK_NULL_HANDLE && pLabelInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pLabelInfo->pNext=" + ptrToString((void**)std::addressof(pLabelInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pLabelInfo->pLabelName=" + charToString((char*)pLabelInfo->pLabelName) + '!');
-winsockSendToUI(&ConnectSocket,"pLabelInfo->color=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pLabelInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDINSERTDEBUGUTILSLABELEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdInsertDebugUtilsLabelEXT_after(commandBuffer, pLabelInfo);
@@ -14288,14 +10483,6 @@ layer_GetMemoryHostPointerPropertiesEXT_before(device, handleType, pHostPointer,
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryHostPointerPropertiesEXT(device, handleType, pHostPointer, pMemoryHostPointerProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pHostPointer=" + ptrToString((void**)std::addressof(pHostPointer)) + '!');
-if(pMemoryHostPointerProperties != VK_NULL_HANDLE && pMemoryHostPointerProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryHostPointerProperties->pNext=" + ptrToString((void**)std::addressof(pMemoryHostPointerProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryHostPointerProperties->memoryTypeBits=" + std::to_string(pMemoryHostPointerProperties->memoryTypeBits) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryHostPointerProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETMEMORYHOSTPOINTERPROPERTIESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryHostPointerPropertiesEXT_after(device, handleType, pHostPointer, pMemoryHostPointerProperties);
@@ -14324,12 +10511,6 @@ layer_CmdWriteBufferMarkerAMD_before(commandBuffer, pipelineStage, dstBuffer, ds
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteBufferMarkerAMD(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"dstBuffer=" + ptrToString((void**)std::addressof(dstBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"dstOffset=" + std::to_string(dstOffset) + '!');
-winsockSendToUI(&ConnectSocket,"marker=" + std::to_string(marker) + '!');
-}
 #ifdef CMDWRITEBUFFERMARKERAMD_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteBufferMarkerAMD_after(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker);
@@ -14356,71 +10537,6 @@ layer_CreateRenderPass2_before(device, pCreateInfo, pAllocator, pRenderPass);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateRenderPass2(device, pCreateInfo, pAllocator, pRenderPass);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->attachmentCount=" + std::to_string(pCreateInfo->attachmentCount) + '!');
-if(pCreateInfo->pAttachments != VK_NULL_HANDLE && pCreateInfo->pAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pAttachments->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pAttachments->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pAttachments->flags=" + ptrToString((void**)std::addressof(pCreateInfo->pAttachments->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAttachments=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->subpassCount=" + std::to_string(pCreateInfo->subpassCount) + '!');
-if(pCreateInfo->pSubpasses != VK_NULL_HANDLE && pCreateInfo->pSubpasses != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->flags=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->viewMask=" + std::to_string(pCreateInfo->pSubpasses->viewMask) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->inputAttachmentCount=" + std::to_string(pCreateInfo->pSubpasses->inputAttachmentCount) + '!');
-if(pCreateInfo->pSubpasses->pInputAttachments != VK_NULL_HANDLE && pCreateInfo->pSubpasses->pInputAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pInputAttachments->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pInputAttachments->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pInputAttachments->attachment=" + std::to_string(pCreateInfo->pSubpasses->pInputAttachments->attachment) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pInputAttachments->aspectMask=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pInputAttachments->aspectMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInputAttachments=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->colorAttachmentCount=" + std::to_string(pCreateInfo->pSubpasses->colorAttachmentCount) + '!');
-if(pCreateInfo->pSubpasses->pColorAttachments != VK_NULL_HANDLE && pCreateInfo->pSubpasses->pColorAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pColorAttachments->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pColorAttachments->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pColorAttachments->attachment=" + std::to_string(pCreateInfo->pSubpasses->pColorAttachments->attachment) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pColorAttachments->aspectMask=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pColorAttachments->aspectMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pColorAttachments=VK_NULL_HANDLE!");
-if(pCreateInfo->pSubpasses->pResolveAttachments != VK_NULL_HANDLE && pCreateInfo->pSubpasses->pResolveAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pResolveAttachments->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pResolveAttachments->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pResolveAttachments->attachment=" + std::to_string(pCreateInfo->pSubpasses->pResolveAttachments->attachment) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pResolveAttachments->aspectMask=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pResolveAttachments->aspectMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pResolveAttachments=VK_NULL_HANDLE!");
-if(pCreateInfo->pSubpasses->pDepthStencilAttachment != VK_NULL_HANDLE && pCreateInfo->pSubpasses->pDepthStencilAttachment != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pDepthStencilAttachment->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pDepthStencilAttachment->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pDepthStencilAttachment->attachment=" + std::to_string(pCreateInfo->pSubpasses->pDepthStencilAttachment->attachment) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pDepthStencilAttachment->aspectMask=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pDepthStencilAttachment->aspectMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDepthStencilAttachment=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->preserveAttachmentCount=" + std::to_string(pCreateInfo->pSubpasses->preserveAttachmentCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pPreserveAttachments=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pPreserveAttachments)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubpasses=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->dependencyCount=" + std::to_string(pCreateInfo->dependencyCount) + '!');
-if(pCreateInfo->pDependencies != VK_NULL_HANDLE && pCreateInfo->pDependencies != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->srcSubpass=" + std::to_string(pCreateInfo->pDependencies->srcSubpass) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->dstSubpass=" + std::to_string(pCreateInfo->pDependencies->dstSubpass) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->srcStageMask=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->dstStageMask=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->srcAccessMask=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->dstAccessMask=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->dependencyFlags=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->dependencyFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->viewOffset=" + std::to_string(pCreateInfo->pDependencies->viewOffset) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDependencies=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->correlatedViewMaskCount=" + std::to_string(pCreateInfo->correlatedViewMaskCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pCorrelatedViewMasks=" + ptrToString((void**)std::addressof(pCreateInfo->pCorrelatedViewMasks)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pRenderPass=" + ptrToString((void**)std::addressof(pRenderPass)) + '!');
-}
 #ifdef CREATERENDERPASS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateRenderPass2_after(device, pCreateInfo, pAllocator, pRenderPass);
@@ -14449,20 +10565,6 @@ layer_CmdBeginRenderPass2_before(commandBuffer, pRenderPassBegin, pSubpassBeginI
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass2(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pRenderPassBegin != VK_NULL_HANDLE && pRenderPassBegin != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->pNext=" + ptrToString((void**)std::addressof(pRenderPassBegin->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->renderPass=" + ptrToString((void**)std::addressof(pRenderPassBegin->renderPass)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->framebuffer=" + ptrToString((void**)std::addressof(pRenderPassBegin->framebuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->renderArea=" + ptrToString((void**)std::addressof(pRenderPassBegin->renderArea)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->clearValueCount=" + std::to_string(pRenderPassBegin->clearValueCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->pClearValues=" + ptrToString((void**)std::addressof(pRenderPassBegin->pClearValues)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRenderPassBegin=VK_NULL_HANDLE!");
-if(pSubpassBeginInfo != VK_NULL_HANDLE && pSubpassBeginInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubpassBeginInfo->pNext=" + ptrToString((void**)std::addressof(pSubpassBeginInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubpassBeginInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDBEGINRENDERPASS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginRenderPass2_after(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
@@ -14488,15 +10590,6 @@ layer_CmdNextSubpass2_before(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdNextSubpass2(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pSubpassBeginInfo != VK_NULL_HANDLE && pSubpassBeginInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubpassBeginInfo->pNext=" + ptrToString((void**)std::addressof(pSubpassBeginInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubpassBeginInfo=VK_NULL_HANDLE!");
-if(pSubpassEndInfo != VK_NULL_HANDLE && pSubpassEndInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubpassEndInfo->pNext=" + ptrToString((void**)std::addressof(pSubpassEndInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubpassEndInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDNEXTSUBPASS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdNextSubpass2_after(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
@@ -14522,12 +10615,6 @@ layer_CmdEndRenderPass2_before(commandBuffer, pSubpassEndInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass2(commandBuffer, pSubpassEndInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pSubpassEndInfo != VK_NULL_HANDLE && pSubpassEndInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubpassEndInfo->pNext=" + ptrToString((void**)std::addressof(pSubpassEndInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubpassEndInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDENDRENDERPASS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndRenderPass2_after(commandBuffer, pSubpassEndInfo);
@@ -14554,11 +10641,6 @@ layer_GetSemaphoreCounterValue_before(device, semaphore, pValue);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreCounterValue(device, semaphore, pValue);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"semaphore=" + ptrToString((void**)std::addressof(semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"pValue=" + ptrToString((void**)std::addressof(pValue)) + '!');
-}
 #ifdef GETSEMAPHORECOUNTERVALUE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSemaphoreCounterValue_after(device, semaphore, pValue);
@@ -14588,17 +10670,6 @@ layer_WaitSemaphores_before(device, pWaitInfo, timeout);
 #endif 
 auto ret = device_dispatch[GetKey(device)].WaitSemaphores(device, pWaitInfo, timeout);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pWaitInfo != VK_NULL_HANDLE && pWaitInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pWaitInfo->pNext=" + ptrToString((void**)std::addressof(pWaitInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pWaitInfo->flags=" + ptrToString((void**)std::addressof(pWaitInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pWaitInfo->semaphoreCount=" + std::to_string(pWaitInfo->semaphoreCount) + '!');
-winsockSendToUI(&ConnectSocket,"pWaitInfo->pSemaphores=" + ptrToString((void**)std::addressof(pWaitInfo->pSemaphores)) + '!');
-winsockSendToUI(&ConnectSocket,"pWaitInfo->pValues=" + ptrToString((void**)std::addressof(pWaitInfo->pValues)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pWaitInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"timeout=" + std::to_string(timeout) + '!');
-}
 #ifdef WAITSEMAPHORES_AFTER_EXEC_EXISTS
 if(connected) {
 layer_WaitSemaphores_after(device, pWaitInfo, timeout);
@@ -14628,14 +10699,6 @@ layer_SignalSemaphore_before(device, pSignalInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].SignalSemaphore(device, pSignalInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pSignalInfo != VK_NULL_HANDLE && pSignalInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSignalInfo->pNext=" + ptrToString((void**)std::addressof(pSignalInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSignalInfo->semaphore=" + ptrToString((void**)std::addressof(pSignalInfo->semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"pSignalInfo->value=" + std::to_string(pSignalInfo->value) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSignalInfo=VK_NULL_HANDLE!");
-}
 #ifdef SIGNALSEMAPHORE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SignalSemaphore_after(device, pSignalInfo);
@@ -14666,15 +10729,6 @@ layer_GetAndroidHardwareBufferPropertiesANDROID_before(device, buffer, pProperti
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetAndroidHardwareBufferPropertiesANDROID(device, buffer, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->allocationSize=" + std::to_string(pProperties->allocationSize) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->memoryTypeBits=" + std::to_string(pProperties->memoryTypeBits) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETANDROIDHARDWAREBUFFERPROPERTIESANDROID_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetAndroidHardwareBufferPropertiesANDROID_after(device, buffer, pProperties);
@@ -14706,14 +10760,6 @@ layer_GetMemoryAndroidHardwareBufferANDROID_before(device, pInfo, pBuffer);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetMemoryAndroidHardwareBufferANDROID(device, pInfo, pBuffer);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->memory=" + ptrToString((void**)std::addressof(pInfo->memory)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pBuffer=" + ptrToString((void**)std::addressof(pBuffer)) + '!');
-}
 #ifdef GETMEMORYANDROIDHARDWAREBUFFERANDROID_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMemoryAndroidHardwareBufferANDROID_after(device, pInfo, pBuffer);
@@ -14743,15 +10789,6 @@ layer_CmdDrawIndirectCount_before(commandBuffer, buffer, offset, countBuffer, co
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void**)std::addressof(countBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + std::to_string(countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDDRAWINDIRECTCOUNT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndirectCount_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -14777,15 +10814,6 @@ layer_CmdDrawIndexedIndirectCount_before(commandBuffer, buffer, offset, countBuf
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void**)std::addressof(countBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + std::to_string(countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDDRAWINDEXEDINDIRECTCOUNT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndexedIndirectCount_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -14811,10 +10839,6 @@ layer_CmdSetCheckpointNV_before(commandBuffer, pCheckpointMarker);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCheckpointNV(commandBuffer, pCheckpointMarker);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pCheckpointMarker=" + ptrToString((void**)std::addressof(pCheckpointMarker)) + '!');
-}
 #ifdef CMDSETCHECKPOINTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCheckpointNV_after(commandBuffer, pCheckpointMarker);
@@ -14840,14 +10864,6 @@ layer_GetQueueCheckpointDataNV_before(queue, pCheckpointDataCount, pCheckpointDa
 }
 #endif 
 device_dispatch[GetKey(queue)].GetQueueCheckpointDataNV(queue, pCheckpointDataCount, pCheckpointData);
-if(connected){
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void**)std::addressof(queue)) + '!');
-winsockSendToUI(&ConnectSocket,"pCheckpointDataCount=" + ptrToString((void**)std::addressof(pCheckpointDataCount)) + '!');
-if(pCheckpointData != VK_NULL_HANDLE && pCheckpointData != NULL) {
-winsockSendToUI(&ConnectSocket,"pCheckpointData->pNext=" + ptrToString((void**)std::addressof(pCheckpointData->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCheckpointData->pCheckpointMarker=" + ptrToString((void**)std::addressof(pCheckpointData->pCheckpointMarker)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCheckpointData=VK_NULL_HANDLE!");
-}
 #ifdef GETQUEUECHECKPOINTDATANV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetQueueCheckpointDataNV_after(queue, pCheckpointDataCount, pCheckpointData);
@@ -14873,14 +10889,6 @@ layer_CmdBindTransformFeedbackBuffersEXT_before(commandBuffer, firstBinding, bin
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindTransformFeedbackBuffersEXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstBinding=" + std::to_string(firstBinding) + '!');
-winsockSendToUI(&ConnectSocket,"bindingCount=" + std::to_string(bindingCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBuffers=" + ptrToString((void**)std::addressof(pBuffers)) + '!');
-winsockSendToUI(&ConnectSocket,"pOffsets=" + ptrToString((void**)std::addressof(pOffsets)) + '!');
-winsockSendToUI(&ConnectSocket,"pSizes=" + ptrToString((void**)std::addressof(pSizes)) + '!');
-}
 #ifdef CMDBINDTRANSFORMFEEDBACKBUFFERSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindTransformFeedbackBuffersEXT_after(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes);
@@ -14906,13 +10914,6 @@ layer_CmdBeginTransformFeedbackEXT_before(commandBuffer, firstCounterBuffer, cou
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstCounterBuffer=" + std::to_string(firstCounterBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"counterBufferCount=" + std::to_string(counterBufferCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterBuffers=" + ptrToString((void**)std::addressof(pCounterBuffers)) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterBufferOffsets=" + ptrToString((void**)std::addressof(pCounterBufferOffsets)) + '!');
-}
 #ifdef CMDBEGINTRANSFORMFEEDBACKEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginTransformFeedbackEXT_after(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
@@ -14938,13 +10939,6 @@ layer_CmdEndTransformFeedbackEXT_before(commandBuffer, firstCounterBuffer, count
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstCounterBuffer=" + std::to_string(firstCounterBuffer) + '!');
-winsockSendToUI(&ConnectSocket,"counterBufferCount=" + std::to_string(counterBufferCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterBuffers=" + ptrToString((void**)std::addressof(pCounterBuffers)) + '!');
-winsockSendToUI(&ConnectSocket,"pCounterBufferOffsets=" + ptrToString((void**)std::addressof(pCounterBufferOffsets)) + '!');
-}
 #ifdef CMDENDTRANSFORMFEEDBACKEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndTransformFeedbackEXT_after(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
@@ -14970,13 +10964,6 @@ layer_CmdBeginQueryIndexedEXT_before(commandBuffer, queryPool, query, flags, ind
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginQueryIndexedEXT(commandBuffer, queryPool, query, flags, index);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"query=" + std::to_string(query) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void**)std::addressof(flags)) + '!');
-winsockSendToUI(&ConnectSocket,"index=" + std::to_string(index) + '!');
-}
 #ifdef CMDBEGINQUERYINDEXEDEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginQueryIndexedEXT_after(commandBuffer, queryPool, query, flags, index);
@@ -15002,12 +10989,6 @@ layer_CmdEndQueryIndexedEXT_before(commandBuffer, queryPool, query, index);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndQueryIndexedEXT(commandBuffer, queryPool, query, index);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"query=" + std::to_string(query) + '!');
-winsockSendToUI(&ConnectSocket,"index=" + std::to_string(index) + '!');
-}
 #ifdef CMDENDQUERYINDEXEDEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndQueryIndexedEXT_after(commandBuffer, queryPool, query, index);
@@ -15033,15 +11014,6 @@ layer_CmdDrawIndirectByteCountEXT_before(commandBuffer, instanceCount, firstInst
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectByteCountEXT(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"instanceCount=" + std::to_string(instanceCount) + '!');
-winsockSendToUI(&ConnectSocket,"firstInstance=" + std::to_string(firstInstance) + '!');
-winsockSendToUI(&ConnectSocket,"counterBuffer=" + ptrToString((void**)std::addressof(counterBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"counterBufferOffset=" + std::to_string(counterBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"counterOffset=" + std::to_string(counterOffset) + '!');
-winsockSendToUI(&ConnectSocket,"vertexStride=" + std::to_string(vertexStride) + '!');
-}
 #ifdef CMDDRAWINDIRECTBYTECOUNTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndirectByteCountEXT_after(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride);
@@ -15067,15 +11039,6 @@ layer_CmdSetExclusiveScissorNV_before(commandBuffer, firstExclusiveScissor, excl
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetExclusiveScissorNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstExclusiveScissor=" + std::to_string(firstExclusiveScissor) + '!');
-winsockSendToUI(&ConnectSocket,"exclusiveScissorCount=" + std::to_string(exclusiveScissorCount) + '!');
-if(pExclusiveScissors != VK_NULL_HANDLE && pExclusiveScissors != NULL) {
-winsockSendToUI(&ConnectSocket,"pExclusiveScissors->offset=" + ptrToString((void**)std::addressof(pExclusiveScissors->offset)) + '!');
-winsockSendToUI(&ConnectSocket,"pExclusiveScissors->extent=" + ptrToString((void**)std::addressof(pExclusiveScissors->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExclusiveScissors=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETEXCLUSIVESCISSORNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetExclusiveScissorNV_after(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors);
@@ -15101,12 +11064,6 @@ layer_CmdSetExclusiveScissorEnableNV_before(commandBuffer, firstExclusiveScissor
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetExclusiveScissorEnableNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstExclusiveScissor=" + std::to_string(firstExclusiveScissor) + '!');
-winsockSendToUI(&ConnectSocket,"exclusiveScissorCount=" + std::to_string(exclusiveScissorCount) + '!');
-winsockSendToUI(&ConnectSocket,"pExclusiveScissorEnables=" + ptrToString((void**)std::addressof(pExclusiveScissorEnables)) + '!');
-}
 #ifdef CMDSETEXCLUSIVESCISSORENABLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetExclusiveScissorEnableNV_after(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables);
@@ -15132,10 +11089,6 @@ layer_CmdBindShadingRateImageNV_before(commandBuffer, imageView, imageLayout);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindShadingRateImageNV(commandBuffer, imageView, imageLayout);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"imageView=" + ptrToString((void**)std::addressof(imageView)) + '!');
-}
 #ifdef CMDBINDSHADINGRATEIMAGENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindShadingRateImageNV_after(commandBuffer, imageView, imageLayout);
@@ -15161,15 +11114,6 @@ layer_CmdSetViewportShadingRatePaletteNV_before(commandBuffer, firstViewport, vi
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportShadingRatePaletteNV(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstViewport=" + std::to_string(firstViewport) + '!');
-winsockSendToUI(&ConnectSocket,"viewportCount=" + std::to_string(viewportCount) + '!');
-if(pShadingRatePalettes != VK_NULL_HANDLE && pShadingRatePalettes != NULL) {
-winsockSendToUI(&ConnectSocket,"pShadingRatePalettes->shadingRatePaletteEntryCount=" + std::to_string(pShadingRatePalettes->shadingRatePaletteEntryCount) + '!');
-winsockSendToUI(&ConnectSocket,"pShadingRatePalettes->pShadingRatePaletteEntries=" + ptrToString((void**)std::addressof(pShadingRatePalettes->pShadingRatePaletteEntries)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pShadingRatePalettes=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETVIEWPORTSHADINGRATEPALETTENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetViewportShadingRatePaletteNV_after(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes);
@@ -15195,19 +11139,6 @@ layer_CmdSetCoarseSampleOrderNV_before(commandBuffer, sampleOrderType, customSam
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCoarseSampleOrderNV(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"customSampleOrderCount=" + std::to_string(customSampleOrderCount) + '!');
-if(pCustomSampleOrders != VK_NULL_HANDLE && pCustomSampleOrders != NULL) {
-winsockSendToUI(&ConnectSocket,"pCustomSampleOrders->sampleCount=" + std::to_string(pCustomSampleOrders->sampleCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCustomSampleOrders->sampleLocationCount=" + std::to_string(pCustomSampleOrders->sampleLocationCount) + '!');
-if(pCustomSampleOrders->pSampleLocations != VK_NULL_HANDLE && pCustomSampleOrders->pSampleLocations != NULL) {
-winsockSendToUI(&ConnectSocket,"pCustomSampleOrders->pSampleLocations->pixelX=" + std::to_string(pCustomSampleOrders->pSampleLocations->pixelX) + '!');
-winsockSendToUI(&ConnectSocket,"pCustomSampleOrders->pSampleLocations->pixelY=" + std::to_string(pCustomSampleOrders->pSampleLocations->pixelY) + '!');
-winsockSendToUI(&ConnectSocket,"pCustomSampleOrders->pSampleLocations->sample=" + std::to_string(pCustomSampleOrders->pSampleLocations->sample) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSampleLocations=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCustomSampleOrders=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETCOARSESAMPLEORDERNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCoarseSampleOrderNV_after(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders);
@@ -15233,11 +11164,6 @@ layer_CmdDrawMeshTasksNV_before(commandBuffer, taskCount, firstTask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksNV(commandBuffer, taskCount, firstTask);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"taskCount=" + std::to_string(taskCount) + '!');
-winsockSendToUI(&ConnectSocket,"firstTask=" + std::to_string(firstTask) + '!');
-}
 #ifdef CMDDRAWMESHTASKSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMeshTasksNV_after(commandBuffer, taskCount, firstTask);
@@ -15263,13 +11189,6 @@ layer_CmdDrawMeshTasksIndirectNV_before(commandBuffer, buffer, offset, drawCount
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectNV(commandBuffer, buffer, offset, drawCount, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"drawCount=" + std::to_string(drawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDDRAWMESHTASKSINDIRECTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMeshTasksIndirectNV_after(commandBuffer, buffer, offset, drawCount, stride);
@@ -15295,15 +11214,6 @@ layer_CmdDrawMeshTasksIndirectCountNV_before(commandBuffer, buffer, offset, coun
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectCountNV(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void**)std::addressof(countBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + std::to_string(countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDDRAWMESHTASKSINDIRECTCOUNTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMeshTasksIndirectCountNV_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -15329,12 +11239,6 @@ layer_CmdDrawMeshTasksEXT_before(commandBuffer, groupCountX, groupCountY, groupC
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksEXT(commandBuffer, groupCountX, groupCountY, groupCountZ);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountX=" + std::to_string(groupCountX) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountY=" + std::to_string(groupCountY) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountZ=" + std::to_string(groupCountZ) + '!');
-}
 #ifdef CMDDRAWMESHTASKSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMeshTasksEXT_after(commandBuffer, groupCountX, groupCountY, groupCountZ);
@@ -15360,13 +11264,6 @@ layer_CmdDrawMeshTasksIndirectEXT_before(commandBuffer, buffer, offset, drawCoun
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectEXT(commandBuffer, buffer, offset, drawCount, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"drawCount=" + std::to_string(drawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDDRAWMESHTASKSINDIRECTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMeshTasksIndirectEXT_after(commandBuffer, buffer, offset, drawCount, stride);
@@ -15392,15 +11289,6 @@ layer_CmdDrawMeshTasksIndirectCountEXT_before(commandBuffer, buffer, offset, cou
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectCountEXT(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void**)std::addressof(countBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + std::to_string(countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDDRAWMESHTASKSINDIRECTCOUNTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawMeshTasksIndirectCountEXT_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -15427,11 +11315,6 @@ layer_CompileDeferredNV_before(device, pipeline, shader);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CompileDeferredNV(device, pipeline, shader);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void**)std::addressof(pipeline)) + '!');
-winsockSendToUI(&ConnectSocket,"shader=" + std::to_string(shader) + '!');
-}
 #ifdef COMPILEDEFERREDNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CompileDeferredNV_after(device, pipeline, shader);
@@ -15461,23 +11344,6 @@ layer_CreateAccelerationStructureNV_before(device, pCreateInfo, pAllocator, pAcc
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateAccelerationStructureNV(device, pCreateInfo, pAllocator, pAccelerationStructure);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->compactedSize=" + std::to_string(pCreateInfo->compactedSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->info=" + ptrToString((void**)std::addressof(pCreateInfo->info)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pAccelerationStructure=" + ptrToString((void**)std::addressof(pAccelerationStructure)) + '!');
-}
 #ifdef CREATEACCELERATIONSTRUCTURENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateAccelerationStructureNV_after(device, pCreateInfo, pAllocator, pAccelerationStructure);
@@ -15506,10 +11372,6 @@ layer_CmdBindInvocationMaskHUAWEI_before(commandBuffer, imageView, imageLayout);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindInvocationMaskHUAWEI(commandBuffer, imageView, imageLayout);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"imageView=" + ptrToString((void**)std::addressof(imageView)) + '!');
-}
 #ifdef CMDBINDINVOCATIONMASKHUAWEI_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindInvocationMaskHUAWEI_after(commandBuffer, imageView, imageLayout);
@@ -15535,18 +11397,6 @@ layer_DestroyAccelerationStructureKHR_before(device, accelerationStructure, pAll
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyAccelerationStructureKHR(device, accelerationStructure, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"accelerationStructure=" + ptrToString((void**)std::addressof(accelerationStructure)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyAccelerationStructureKHR_after(device, accelerationStructure, pAllocator);
@@ -15572,18 +11422,6 @@ layer_DestroyAccelerationStructureNV_before(device, accelerationStructure, pAllo
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyAccelerationStructureNV(device, accelerationStructure, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"accelerationStructure=" + ptrToString((void**)std::addressof(accelerationStructure)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYACCELERATIONSTRUCTURENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyAccelerationStructureNV_after(device, accelerationStructure, pAllocator);
@@ -15609,15 +11447,6 @@ layer_GetAccelerationStructureMemoryRequirementsNV_before(device, pInfo, pMemory
 }
 #endif 
 device_dispatch[GetKey(device)].GetAccelerationStructureMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->accelerationStructure=" + ptrToString((void**)std::addressof(pInfo->accelerationStructure)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-if(pMemoryRequirements != VK_NULL_HANDLE && pMemoryRequirements != NULL) {
-}else winsockSendToUI(&ConnectSocket, "pMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETACCELERATIONSTRUCTUREMEMORYREQUIREMENTSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetAccelerationStructureMemoryRequirementsNV_after(device, pInfo, pMemoryRequirements);
@@ -15644,18 +11473,6 @@ layer_BindAccelerationStructureMemoryNV_before(device, bindInfoCount, pBindInfos
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindAccelerationStructureMemoryNV(device, bindInfoCount, pBindInfos);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"bindInfoCount=" + std::to_string(bindInfoCount) + '!');
-if(pBindInfos != VK_NULL_HANDLE && pBindInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindInfos->pNext=" + ptrToString((void**)std::addressof(pBindInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->accelerationStructure=" + ptrToString((void**)std::addressof(pBindInfos->accelerationStructure)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->memory=" + ptrToString((void**)std::addressof(pBindInfos->memory)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->memoryOffset=" + std::to_string(pBindInfos->memoryOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->deviceIndexCount=" + std::to_string(pBindInfos->deviceIndexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->pDeviceIndices=" + ptrToString((void**)std::addressof(pBindInfos->pDeviceIndices)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBindInfos=VK_NULL_HANDLE!");
-}
 #ifdef BINDACCELERATIONSTRUCTUREMEMORYNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindAccelerationStructureMemoryNV_after(device, bindInfoCount, pBindInfos);
@@ -15684,11 +11501,6 @@ layer_CmdCopyAccelerationStructureNV_before(commandBuffer, dst, src, mode);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureNV(commandBuffer, dst, src, mode);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"dst=" + ptrToString((void**)std::addressof(dst)) + '!');
-winsockSendToUI(&ConnectSocket,"src=" + ptrToString((void**)std::addressof(src)) + '!');
-}
 #ifdef CMDCOPYACCELERATIONSTRUCTURENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyAccelerationStructureNV_after(commandBuffer, dst, src, mode);
@@ -15714,14 +11526,6 @@ layer_CmdCopyAccelerationStructureKHR_before(commandBuffer, pInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureKHR(commandBuffer, pInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->src=" + ptrToString((void**)std::addressof(pInfo->src)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->dst=" + ptrToString((void**)std::addressof(pInfo->dst)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyAccelerationStructureKHR_after(commandBuffer, pInfo);
@@ -15748,15 +11552,6 @@ layer_CopyAccelerationStructureKHR_before(device, deferredOperation, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyAccelerationStructureKHR(device, deferredOperation, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void**)std::addressof(deferredOperation)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->src=" + ptrToString((void**)std::addressof(pInfo->src)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->dst=" + ptrToString((void**)std::addressof(pInfo->dst)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef COPYACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyAccelerationStructureKHR_after(device, deferredOperation, pInfo);
@@ -15785,14 +11580,6 @@ layer_CmdCopyAccelerationStructureToMemoryKHR_before(commandBuffer, pInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureToMemoryKHR(commandBuffer, pInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->src=" + ptrToString((void**)std::addressof(pInfo->src)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->dst=" + ptrToString((void**)std::addressof(pInfo->dst)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYACCELERATIONSTRUCTURETOMEMORYKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyAccelerationStructureToMemoryKHR_after(commandBuffer, pInfo);
@@ -15819,15 +11606,6 @@ layer_CopyAccelerationStructureToMemoryKHR_before(device, deferredOperation, pIn
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyAccelerationStructureToMemoryKHR(device, deferredOperation, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void**)std::addressof(deferredOperation)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->src=" + ptrToString((void**)std::addressof(pInfo->src)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->dst=" + ptrToString((void**)std::addressof(pInfo->dst)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef COPYACCELERATIONSTRUCTURETOMEMORYKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyAccelerationStructureToMemoryKHR_after(device, deferredOperation, pInfo);
@@ -15856,14 +11634,6 @@ layer_CmdCopyMemoryToAccelerationStructureKHR_before(commandBuffer, pInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToAccelerationStructureKHR(commandBuffer, pInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->src=" + ptrToString((void**)std::addressof(pInfo->src)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->dst=" + ptrToString((void**)std::addressof(pInfo->dst)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYMEMORYTOACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyMemoryToAccelerationStructureKHR_after(commandBuffer, pInfo);
@@ -15890,15 +11660,6 @@ layer_CopyMemoryToAccelerationStructureKHR_before(device, deferredOperation, pIn
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyMemoryToAccelerationStructureKHR(device, deferredOperation, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void**)std::addressof(deferredOperation)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->src=" + ptrToString((void**)std::addressof(pInfo->src)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->dst=" + ptrToString((void**)std::addressof(pInfo->dst)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef COPYMEMORYTOACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyMemoryToAccelerationStructureKHR_after(device, deferredOperation, pInfo);
@@ -15927,13 +11688,6 @@ layer_CmdWriteAccelerationStructuresPropertiesKHR_before(commandBuffer, accelera
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteAccelerationStructuresPropertiesKHR(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"accelerationStructureCount=" + std::to_string(accelerationStructureCount) + '!');
-winsockSendToUI(&ConnectSocket,"pAccelerationStructures=" + ptrToString((void**)std::addressof(pAccelerationStructures)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
-}
 #ifdef CMDWRITEACCELERATIONSTRUCTURESPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteAccelerationStructuresPropertiesKHR_after(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
@@ -15959,13 +11713,6 @@ layer_CmdWriteAccelerationStructuresPropertiesNV_before(commandBuffer, accelerat
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteAccelerationStructuresPropertiesNV(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"accelerationStructureCount=" + std::to_string(accelerationStructureCount) + '!');
-winsockSendToUI(&ConnectSocket,"pAccelerationStructures=" + ptrToString((void**)std::addressof(pAccelerationStructures)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
-}
 #ifdef CMDWRITEACCELERATIONSTRUCTURESPROPERTIESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteAccelerationStructuresPropertiesNV_after(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
@@ -15991,28 +11738,6 @@ layer_CmdBuildAccelerationStructureNV_before(commandBuffer, pInfo, instanceData,
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructureNV(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->type=" + ptrToString((void**)std::addressof(pInfo->type)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->flags=" + ptrToString((void**)std::addressof(pInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->instanceCount=" + std::to_string(pInfo->instanceCount) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->geometryCount=" + std::to_string(pInfo->geometryCount) + '!');
-if(pInfo->pGeometries != VK_NULL_HANDLE && pInfo->pGeometries != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pGeometries->pNext=" + ptrToString((void**)std::addressof(pInfo->pGeometries->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pGeometries->geometry=" + ptrToString((void**)std::addressof(pInfo->pGeometries->geometry)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pGeometries->flags=" + ptrToString((void**)std::addressof(pInfo->pGeometries->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGeometries=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"instanceData=" + ptrToString((void**)std::addressof(instanceData)) + '!');
-winsockSendToUI(&ConnectSocket,"instanceOffset=" + std::to_string(instanceOffset) + '!');
-winsockSendToUI(&ConnectSocket,"update=" + bool_as_text(update) + '!');
-winsockSendToUI(&ConnectSocket,"dst=" + ptrToString((void**)std::addressof(dst)) + '!');
-winsockSendToUI(&ConnectSocket,"src=" + ptrToString((void**)std::addressof(src)) + '!');
-winsockSendToUI(&ConnectSocket,"scratch=" + ptrToString((void**)std::addressof(scratch)) + '!');
-winsockSendToUI(&ConnectSocket,"scratchOffset=" + std::to_string(scratchOffset) + '!');
-}
 #ifdef CMDBUILDACCELERATIONSTRUCTURENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBuildAccelerationStructureNV_after(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset);
@@ -16039,14 +11764,6 @@ layer_WriteAccelerationStructuresPropertiesKHR_before(device, accelerationStruct
 #endif 
 auto ret = device_dispatch[GetKey(device)].WriteAccelerationStructuresPropertiesKHR(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"accelerationStructureCount=" + std::to_string(accelerationStructureCount) + '!');
-winsockSendToUI(&ConnectSocket,"pAccelerationStructures=" + ptrToString((void**)std::addressof(pAccelerationStructures)) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef WRITEACCELERATIONSTRUCTURESPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_WriteAccelerationStructuresPropertiesKHR_after(device, accelerationStructureCount, pAccelerationStructures, queryType, dataSize, pData, stride);
@@ -16075,32 +11792,6 @@ layer_CmdTraceRaysKHR_before(commandBuffer, pRaygenShaderBindingTable, pMissShad
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pRaygenShaderBindingTable != VK_NULL_HANDLE && pRaygenShaderBindingTable != NULL) {
-winsockSendToUI(&ConnectSocket,"pRaygenShaderBindingTable->deviceAddress=" + ptrToString((void**)std::addressof(pRaygenShaderBindingTable->deviceAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"pRaygenShaderBindingTable->stride=" + std::to_string(pRaygenShaderBindingTable->stride) + '!');
-winsockSendToUI(&ConnectSocket,"pRaygenShaderBindingTable->size=" + std::to_string(pRaygenShaderBindingTable->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRaygenShaderBindingTable=VK_NULL_HANDLE!");
-if(pMissShaderBindingTable != VK_NULL_HANDLE && pMissShaderBindingTable != NULL) {
-winsockSendToUI(&ConnectSocket,"pMissShaderBindingTable->deviceAddress=" + ptrToString((void**)std::addressof(pMissShaderBindingTable->deviceAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"pMissShaderBindingTable->stride=" + std::to_string(pMissShaderBindingTable->stride) + '!');
-winsockSendToUI(&ConnectSocket,"pMissShaderBindingTable->size=" + std::to_string(pMissShaderBindingTable->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMissShaderBindingTable=VK_NULL_HANDLE!");
-if(pHitShaderBindingTable != VK_NULL_HANDLE && pHitShaderBindingTable != NULL) {
-winsockSendToUI(&ConnectSocket,"pHitShaderBindingTable->deviceAddress=" + ptrToString((void**)std::addressof(pHitShaderBindingTable->deviceAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"pHitShaderBindingTable->stride=" + std::to_string(pHitShaderBindingTable->stride) + '!');
-winsockSendToUI(&ConnectSocket,"pHitShaderBindingTable->size=" + std::to_string(pHitShaderBindingTable->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pHitShaderBindingTable=VK_NULL_HANDLE!");
-if(pCallableShaderBindingTable != VK_NULL_HANDLE && pCallableShaderBindingTable != NULL) {
-winsockSendToUI(&ConnectSocket,"pCallableShaderBindingTable->deviceAddress=" + ptrToString((void**)std::addressof(pCallableShaderBindingTable->deviceAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"pCallableShaderBindingTable->stride=" + std::to_string(pCallableShaderBindingTable->stride) + '!');
-winsockSendToUI(&ConnectSocket,"pCallableShaderBindingTable->size=" + std::to_string(pCallableShaderBindingTable->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCallableShaderBindingTable=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"width=" + std::to_string(width) + '!');
-winsockSendToUI(&ConnectSocket,"height=" + std::to_string(height) + '!');
-winsockSendToUI(&ConnectSocket,"depth=" + std::to_string(depth) + '!');
-}
 #ifdef CMDTRACERAYSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdTraceRaysKHR_after(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth);
@@ -16126,23 +11817,6 @@ layer_CmdTraceRaysNV_before(commandBuffer, raygenShaderBindingTableBuffer, rayge
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysNV(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"raygenShaderBindingTableBuffer=" + ptrToString((void**)std::addressof(raygenShaderBindingTableBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"raygenShaderBindingOffset=" + std::to_string(raygenShaderBindingOffset) + '!');
-winsockSendToUI(&ConnectSocket,"missShaderBindingTableBuffer=" + ptrToString((void**)std::addressof(missShaderBindingTableBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"missShaderBindingOffset=" + std::to_string(missShaderBindingOffset) + '!');
-winsockSendToUI(&ConnectSocket,"missShaderBindingStride=" + std::to_string(missShaderBindingStride) + '!');
-winsockSendToUI(&ConnectSocket,"hitShaderBindingTableBuffer=" + ptrToString((void**)std::addressof(hitShaderBindingTableBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"hitShaderBindingOffset=" + std::to_string(hitShaderBindingOffset) + '!');
-winsockSendToUI(&ConnectSocket,"hitShaderBindingStride=" + std::to_string(hitShaderBindingStride) + '!');
-winsockSendToUI(&ConnectSocket,"callableShaderBindingTableBuffer=" + ptrToString((void**)std::addressof(callableShaderBindingTableBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"callableShaderBindingOffset=" + std::to_string(callableShaderBindingOffset) + '!');
-winsockSendToUI(&ConnectSocket,"callableShaderBindingStride=" + std::to_string(callableShaderBindingStride) + '!');
-winsockSendToUI(&ConnectSocket,"width=" + std::to_string(width) + '!');
-winsockSendToUI(&ConnectSocket,"height=" + std::to_string(height) + '!');
-winsockSendToUI(&ConnectSocket,"depth=" + std::to_string(depth) + '!');
-}
 #ifdef CMDTRACERAYSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdTraceRaysNV_after(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth);
@@ -16169,14 +11843,6 @@ layer_GetRayTracingShaderGroupHandlesKHR_before(device, pipeline, firstGroup, gr
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetRayTracingShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void**)std::addressof(pipeline)) + '!');
-winsockSendToUI(&ConnectSocket,"firstGroup=" + std::to_string(firstGroup) + '!');
-winsockSendToUI(&ConnectSocket,"groupCount=" + std::to_string(groupCount) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETRAYTRACINGSHADERGROUPHANDLESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRayTracingShaderGroupHandlesKHR_after(device, pipeline, firstGroup, groupCount, dataSize, pData);
@@ -16206,14 +11872,6 @@ layer_GetRayTracingCaptureReplayShaderGroupHandlesKHR_before(device, pipeline, f
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetRayTracingCaptureReplayShaderGroupHandlesKHR(device, pipeline, firstGroup, groupCount, dataSize, pData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void**)std::addressof(pipeline)) + '!');
-winsockSendToUI(&ConnectSocket,"firstGroup=" + std::to_string(firstGroup) + '!');
-winsockSendToUI(&ConnectSocket,"groupCount=" + std::to_string(groupCount) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETRAYTRACINGCAPTUREREPLAYSHADERGROUPHANDLESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRayTracingCaptureReplayShaderGroupHandlesKHR_after(device, pipeline, firstGroup, groupCount, dataSize, pData);
@@ -16243,12 +11901,6 @@ layer_GetAccelerationStructureHandleNV_before(device, accelerationStructure, dat
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetAccelerationStructureHandleNV(device, accelerationStructure, dataSize, pData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"accelerationStructure=" + ptrToString((void**)std::addressof(accelerationStructure)) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETACCELERATIONSTRUCTUREHANDLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetAccelerationStructureHandleNV_after(device, accelerationStructure, dataSize, pData);
@@ -16278,49 +11930,6 @@ layer_CreateRayTracingPipelinesNV_before(device, pipelineCache, createInfoCount,
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateRayTracingPipelinesNV(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineCache=" + ptrToString((void**)std::addressof(pipelineCache)) + '!');
-winsockSendToUI(&ConnectSocket,"createInfoCount=" + std::to_string(createInfoCount) + '!');
-if(pCreateInfos != VK_NULL_HANDLE && pCreateInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->flags=" + ptrToString((void**)std::addressof(pCreateInfos->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->stageCount=" + std::to_string(pCreateInfos->stageCount) + '!');
-if(pCreateInfos->pStages != VK_NULL_HANDLE && pCreateInfos->pStages != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->module=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->module)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pName=" + charToString((char*)pCreateInfos->pStages->pName) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pName=" + charToString((char*)pCreateInfos->pStages->pName) + '!');
-if(pCreateInfos->pStages->pSpecializationInfo != VK_NULL_HANDLE && pCreateInfos->pStages->pSpecializationInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->mapEntryCount=" + std::to_string(pCreateInfos->pStages->pSpecializationInfo->mapEntryCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->dataSize=" + std::to_string(pCreateInfos->pStages->pSpecializationInfo->dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->pData=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->pSpecializationInfo->pData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSpecializationInfo=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pStages=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfos->groupCount=" + std::to_string(pCreateInfos->groupCount) + '!');
-if(pCreateInfos->pGroups != VK_NULL_HANDLE && pCreateInfos->pGroups != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pGroups->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pGroups->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pGroups->generalShader=" + std::to_string(pCreateInfos->pGroups->generalShader) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pGroups->closestHitShader=" + std::to_string(pCreateInfos->pGroups->closestHitShader) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pGroups->anyHitShader=" + std::to_string(pCreateInfos->pGroups->anyHitShader) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pGroups->intersectionShader=" + std::to_string(pCreateInfos->pGroups->intersectionShader) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGroups=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfos->maxRecursionDepth=" + std::to_string(pCreateInfos->maxRecursionDepth) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->layout=" + ptrToString((void**)std::addressof(pCreateInfos->layout)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->basePipelineHandle=" + ptrToString((void**)std::addressof(pCreateInfos->basePipelineHandle)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->basePipelineIndex=" + std::to_string(pCreateInfos->basePipelineIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfos=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pPipelines=" + ptrToString((void**)std::addressof(pPipelines)) + '!');
-}
 #ifdef CREATERAYTRACINGPIPELINESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateRayTracingPipelinesNV_after(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
@@ -16350,67 +11959,6 @@ layer_CreateRayTracingPipelinesKHR_before(device, deferredOperation, pipelineCac
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateRayTracingPipelinesKHR(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void**)std::addressof(deferredOperation)) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineCache=" + ptrToString((void**)std::addressof(pipelineCache)) + '!');
-winsockSendToUI(&ConnectSocket,"createInfoCount=" + std::to_string(createInfoCount) + '!');
-if(pCreateInfos != VK_NULL_HANDLE && pCreateInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->flags=" + ptrToString((void**)std::addressof(pCreateInfos->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->stageCount=" + std::to_string(pCreateInfos->stageCount) + '!');
-if(pCreateInfos->pStages != VK_NULL_HANDLE && pCreateInfos->pStages != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->module=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->module)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pName=" + charToString((char*)pCreateInfos->pStages->pName) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pName=" + charToString((char*)pCreateInfos->pStages->pName) + '!');
-if(pCreateInfos->pStages->pSpecializationInfo != VK_NULL_HANDLE && pCreateInfos->pStages->pSpecializationInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->mapEntryCount=" + std::to_string(pCreateInfos->pStages->pSpecializationInfo->mapEntryCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->dataSize=" + std::to_string(pCreateInfos->pStages->pSpecializationInfo->dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->pData=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->pSpecializationInfo->pData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSpecializationInfo=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pStages=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfos->groupCount=" + std::to_string(pCreateInfos->groupCount) + '!');
-if(pCreateInfos->pGroups != VK_NULL_HANDLE && pCreateInfos->pGroups != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pGroups->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pGroups->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pGroups->generalShader=" + std::to_string(pCreateInfos->pGroups->generalShader) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pGroups->closestHitShader=" + std::to_string(pCreateInfos->pGroups->closestHitShader) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pGroups->anyHitShader=" + std::to_string(pCreateInfos->pGroups->anyHitShader) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pGroups->intersectionShader=" + std::to_string(pCreateInfos->pGroups->intersectionShader) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pGroups->pShaderGroupCaptureReplayHandle=" + ptrToString((void**)std::addressof(pCreateInfos->pGroups->pShaderGroupCaptureReplayHandle)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGroups=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfos->maxPipelineRayRecursionDepth=" + std::to_string(pCreateInfos->maxPipelineRayRecursionDepth) + '!');
-if(pCreateInfos->pLibraryInfo != VK_NULL_HANDLE && pCreateInfos->pLibraryInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pLibraryInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pLibraryInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pLibraryInfo->libraryCount=" + std::to_string(pCreateInfos->pLibraryInfo->libraryCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pLibraryInfo->pLibraries=" + ptrToString((void**)std::addressof(pCreateInfos->pLibraryInfo->pLibraries)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pLibraryInfo=VK_NULL_HANDLE!");
-if(pCreateInfos->pLibraryInterface != VK_NULL_HANDLE && pCreateInfos->pLibraryInterface != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pLibraryInterface->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pLibraryInterface->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pLibraryInterface->maxPipelineRayPayloadSize=" + std::to_string(pCreateInfos->pLibraryInterface->maxPipelineRayPayloadSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pLibraryInterface->maxPipelineRayHitAttributeSize=" + std::to_string(pCreateInfos->pLibraryInterface->maxPipelineRayHitAttributeSize) + '!');
-}else winsockSendToUI(&ConnectSocket, "pLibraryInterface=VK_NULL_HANDLE!");
-if(pCreateInfos->pDynamicState != VK_NULL_HANDLE && pCreateInfos->pDynamicState != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDynamicState->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pDynamicState->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDynamicState->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pDynamicState->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDynamicState->dynamicStateCount=" + std::to_string(pCreateInfos->pDynamicState->dynamicStateCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pDynamicState->pDynamicStates=" + ptrToString((void**)std::addressof(pCreateInfos->pDynamicState->pDynamicStates)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDynamicState=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfos->layout=" + ptrToString((void**)std::addressof(pCreateInfos->layout)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->basePipelineHandle=" + ptrToString((void**)std::addressof(pCreateInfos->basePipelineHandle)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->basePipelineIndex=" + std::to_string(pCreateInfos->basePipelineIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfos=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pPipelines=" + ptrToString((void**)std::addressof(pPipelines)) + '!');
-}
 #ifdef CREATERAYTRACINGPIPELINESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateRayTracingPipelinesKHR_after(device, deferredOperation, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
@@ -16439,30 +11987,6 @@ layer_CmdTraceRaysIndirectKHR_before(commandBuffer, pRaygenShaderBindingTable, p
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysIndirectKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pRaygenShaderBindingTable != VK_NULL_HANDLE && pRaygenShaderBindingTable != NULL) {
-winsockSendToUI(&ConnectSocket,"pRaygenShaderBindingTable->deviceAddress=" + ptrToString((void**)std::addressof(pRaygenShaderBindingTable->deviceAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"pRaygenShaderBindingTable->stride=" + std::to_string(pRaygenShaderBindingTable->stride) + '!');
-winsockSendToUI(&ConnectSocket,"pRaygenShaderBindingTable->size=" + std::to_string(pRaygenShaderBindingTable->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRaygenShaderBindingTable=VK_NULL_HANDLE!");
-if(pMissShaderBindingTable != VK_NULL_HANDLE && pMissShaderBindingTable != NULL) {
-winsockSendToUI(&ConnectSocket,"pMissShaderBindingTable->deviceAddress=" + ptrToString((void**)std::addressof(pMissShaderBindingTable->deviceAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"pMissShaderBindingTable->stride=" + std::to_string(pMissShaderBindingTable->stride) + '!');
-winsockSendToUI(&ConnectSocket,"pMissShaderBindingTable->size=" + std::to_string(pMissShaderBindingTable->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMissShaderBindingTable=VK_NULL_HANDLE!");
-if(pHitShaderBindingTable != VK_NULL_HANDLE && pHitShaderBindingTable != NULL) {
-winsockSendToUI(&ConnectSocket,"pHitShaderBindingTable->deviceAddress=" + ptrToString((void**)std::addressof(pHitShaderBindingTable->deviceAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"pHitShaderBindingTable->stride=" + std::to_string(pHitShaderBindingTable->stride) + '!');
-winsockSendToUI(&ConnectSocket,"pHitShaderBindingTable->size=" + std::to_string(pHitShaderBindingTable->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pHitShaderBindingTable=VK_NULL_HANDLE!");
-if(pCallableShaderBindingTable != VK_NULL_HANDLE && pCallableShaderBindingTable != NULL) {
-winsockSendToUI(&ConnectSocket,"pCallableShaderBindingTable->deviceAddress=" + ptrToString((void**)std::addressof(pCallableShaderBindingTable->deviceAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"pCallableShaderBindingTable->stride=" + std::to_string(pCallableShaderBindingTable->stride) + '!');
-winsockSendToUI(&ConnectSocket,"pCallableShaderBindingTable->size=" + std::to_string(pCallableShaderBindingTable->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCallableShaderBindingTable=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"indirectDeviceAddress=" + ptrToString((void**)std::addressof(indirectDeviceAddress)) + '!');
-}
 #ifdef CMDTRACERAYSINDIRECTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdTraceRaysIndirectKHR_after(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress);
@@ -16488,10 +12012,6 @@ layer_CmdTraceRaysIndirect2KHR_before(commandBuffer, indirectDeviceAddress);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysIndirect2KHR(commandBuffer, indirectDeviceAddress);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"indirectDeviceAddress=" + ptrToString((void**)std::addressof(indirectDeviceAddress)) + '!');
-}
 #ifdef CMDTRACERAYSINDIRECT2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdTraceRaysIndirect2KHR_after(commandBuffer, indirectDeviceAddress);
@@ -16517,14 +12037,6 @@ layer_GetDeviceAccelerationStructureCompatibilityKHR_before(device, pVersionInfo
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceAccelerationStructureCompatibilityKHR(device, pVersionInfo, pCompatibility);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pVersionInfo != VK_NULL_HANDLE && pVersionInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pVersionInfo->pNext=" + ptrToString((void**)std::addressof(pVersionInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pVersionInfo->pVersionData=" + ptrToString((void**)std::addressof(pVersionInfo->pVersionData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pVersionInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCompatibility=" + ptrToString((void**)std::addressof(pCompatibility)) + '!');
-}
 #ifdef GETDEVICEACCELERATIONSTRUCTURECOMPATIBILITYKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceAccelerationStructureCompatibilityKHR_after(device, pVersionInfo, pCompatibility);
@@ -16551,11 +12063,6 @@ layer_GetRayTracingShaderGroupStackSizeKHR_before(device, pipeline, group, group
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetRayTracingShaderGroupStackSizeKHR(device, pipeline, group, groupShader);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void**)std::addressof(pipeline)) + '!');
-winsockSendToUI(&ConnectSocket,"group=" + std::to_string(group) + '!');
-}
 #ifdef GETRAYTRACINGSHADERGROUPSTACKSIZEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRayTracingShaderGroupStackSizeKHR_after(device, pipeline, group, groupShader);
@@ -16584,10 +12091,6 @@ layer_CmdSetRayTracingPipelineStackSizeKHR_before(commandBuffer, pipelineStackSi
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetRayTracingPipelineStackSizeKHR(commandBuffer, pipelineStackSize);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineStackSize=" + std::to_string(pipelineStackSize) + '!');
-}
 #ifdef CMDSETRAYTRACINGPIPELINESTACKSIZEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetRayTracingPipelineStackSizeKHR_after(commandBuffer, pipelineStackSize);
@@ -16614,14 +12117,6 @@ layer_GetImageViewHandleNVX_before(device, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetImageViewHandleNVX(device, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->imageView=" + ptrToString((void**)std::addressof(pInfo->imageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->sampler=" + ptrToString((void**)std::addressof(pInfo->sampler)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETIMAGEVIEWHANDLENVX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageViewHandleNVX_after(device, pInfo);
@@ -16651,15 +12146,6 @@ layer_GetImageViewAddressNVX_before(device, imageView, pProperties);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetImageViewAddressNVX(device, imageView, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"imageView=" + ptrToString((void**)std::addressof(imageView)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->deviceAddress=" + ptrToString((void**)std::addressof(pProperties->deviceAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->size=" + std::to_string(pProperties->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETIMAGEVIEWADDRESSNVX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageViewAddressNVX_after(device, imageView, pProperties);
@@ -16690,14 +12176,6 @@ layer_GetDeviceGroupSurfacePresentModes2EXT_before(device, pSurfaceInfo, pModes)
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeviceGroupSurfacePresentModes2EXT(device, pSurfaceInfo, pModes);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pSurfaceInfo != VK_NULL_HANDLE && pSurfaceInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSurfaceInfo->pNext=" + ptrToString((void**)std::addressof(pSurfaceInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSurfaceInfo->surface=" + ptrToString((void**)std::addressof(pSurfaceInfo->surface)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSurfaceInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pModes=" + ptrToString((void**)std::addressof(pModes)) + '!');
-}
 #ifdef GETDEVICEGROUPSURFACEPRESENTMODES2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceGroupSurfacePresentModes2EXT_after(device, pSurfaceInfo, pModes);
@@ -16729,10 +12207,6 @@ layer_AcquireFullScreenExclusiveModeEXT_before(device, swapchain);
 #endif 
 auto ret = device_dispatch[GetKey(device)].AcquireFullScreenExclusiveModeEXT(device, swapchain);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void**)std::addressof(swapchain)) + '!');
-}
 #ifdef ACQUIREFULLSCREENEXCLUSIVEMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireFullScreenExclusiveModeEXT_after(device, swapchain);
@@ -16764,10 +12238,6 @@ layer_ReleaseFullScreenExclusiveModeEXT_before(device, swapchain);
 #endif 
 auto ret = device_dispatch[GetKey(device)].ReleaseFullScreenExclusiveModeEXT(device, swapchain);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void**)std::addressof(swapchain)) + '!');
-}
 #ifdef RELEASEFULLSCREENEXCLUSIVEMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ReleaseFullScreenExclusiveModeEXT_after(device, swapchain);
@@ -16798,14 +12268,6 @@ layer_AcquireProfilingLockKHR_before(device, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].AcquireProfilingLockKHR(device, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->flags=" + ptrToString((void**)std::addressof(pInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->timeout=" + std::to_string(pInfo->timeout) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef ACQUIREPROFILINGLOCKKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquireProfilingLockKHR_after(device, pInfo);
@@ -16834,9 +12296,6 @@ layer_ReleaseProfilingLockKHR_before(device);
 }
 #endif 
 device_dispatch[GetKey(device)].ReleaseProfilingLockKHR(device);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-}
 #ifdef RELEASEPROFILINGLOCKKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ReleaseProfilingLockKHR_after(device);
@@ -16863,14 +12322,6 @@ layer_GetImageDrmFormatModifierPropertiesEXT_before(device, image, pProperties);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetImageDrmFormatModifierPropertiesEXT(device, image, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void**)std::addressof(image)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->drmFormatModifier=" + std::to_string(pProperties->drmFormatModifier) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETIMAGEDRMFORMATMODIFIERPROPERTIESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageDrmFormatModifierPropertiesEXT_after(device, image, pProperties);
@@ -16900,13 +12351,6 @@ layer_GetBufferOpaqueCaptureAddress_before(device, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetBufferOpaqueCaptureAddress(device, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->buffer=" + ptrToString((void**)std::addressof(pInfo->buffer)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETBUFFEROPAQUECAPTUREADDRESS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferOpaqueCaptureAddress_after(device, pInfo);
@@ -16936,13 +12380,6 @@ layer_GetBufferDeviceAddress_before(device, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetBufferDeviceAddress(device, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->buffer=" + ptrToString((void**)std::addressof(pInfo->buffer)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETBUFFERDEVICEADDRESS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferDeviceAddress_after(device, pInfo);
@@ -16972,13 +12409,6 @@ layer_InitializePerformanceApiINTEL_before(device, pInitializeInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].InitializePerformanceApiINTEL(device, pInitializeInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInitializeInfo != VK_NULL_HANDLE && pInitializeInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInitializeInfo->pNext=" + ptrToString((void**)std::addressof(pInitializeInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInitializeInfo->pUserData=" + ptrToString((void**)std::addressof(pInitializeInfo->pUserData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInitializeInfo=VK_NULL_HANDLE!");
-}
 #ifdef INITIALIZEPERFORMANCEAPIINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_InitializePerformanceApiINTEL_after(device, pInitializeInfo);
@@ -17007,9 +12437,6 @@ layer_UninitializePerformanceApiINTEL_before(device);
 }
 #endif 
 device_dispatch[GetKey(device)].UninitializePerformanceApiINTEL(device);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-}
 #ifdef UNINITIALIZEPERFORMANCEAPIINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_UninitializePerformanceApiINTEL_after(device);
@@ -17036,13 +12463,6 @@ layer_CmdSetPerformanceMarkerINTEL_before(commandBuffer, pMarkerInfo);
 #endif 
 auto ret = device_dispatch[GetKey(commandBuffer)].CmdSetPerformanceMarkerINTEL(commandBuffer, pMarkerInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pMarkerInfo != VK_NULL_HANDLE && pMarkerInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pMarkerInfo->pNext=" + ptrToString((void**)std::addressof(pMarkerInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMarkerInfo->marker=" + std::to_string(pMarkerInfo->marker) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMarkerInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETPERFORMANCEMARKERINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPerformanceMarkerINTEL_after(commandBuffer, pMarkerInfo);
@@ -17072,13 +12492,6 @@ layer_CmdSetPerformanceStreamMarkerINTEL_before(commandBuffer, pMarkerInfo);
 #endif 
 auto ret = device_dispatch[GetKey(commandBuffer)].CmdSetPerformanceStreamMarkerINTEL(commandBuffer, pMarkerInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pMarkerInfo != VK_NULL_HANDLE && pMarkerInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pMarkerInfo->pNext=" + ptrToString((void**)std::addressof(pMarkerInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMarkerInfo->marker=" + std::to_string(pMarkerInfo->marker) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMarkerInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETPERFORMANCESTREAMMARKERINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPerformanceStreamMarkerINTEL_after(commandBuffer, pMarkerInfo);
@@ -17108,14 +12521,6 @@ layer_CmdSetPerformanceOverrideINTEL_before(commandBuffer, pOverrideInfo);
 #endif 
 auto ret = device_dispatch[GetKey(commandBuffer)].CmdSetPerformanceOverrideINTEL(commandBuffer, pOverrideInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pOverrideInfo != VK_NULL_HANDLE && pOverrideInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pOverrideInfo->pNext=" + ptrToString((void**)std::addressof(pOverrideInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pOverrideInfo->enable=" + bool_as_text(pOverrideInfo->enable) + '!');
-winsockSendToUI(&ConnectSocket,"pOverrideInfo->parameter=" + std::to_string(pOverrideInfo->parameter) + '!');
-}else winsockSendToUI(&ConnectSocket, "pOverrideInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETPERFORMANCEOVERRIDEINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPerformanceOverrideINTEL_after(commandBuffer, pOverrideInfo);
@@ -17145,13 +12550,6 @@ layer_AcquirePerformanceConfigurationINTEL_before(device, pAcquireInfo, pConfigu
 #endif 
 auto ret = device_dispatch[GetKey(device)].AcquirePerformanceConfigurationINTEL(device, pAcquireInfo, pConfiguration);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pAcquireInfo != VK_NULL_HANDLE && pAcquireInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pAcquireInfo->pNext=" + ptrToString((void**)std::addressof(pAcquireInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAcquireInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pConfiguration=" + ptrToString((void**)std::addressof(pConfiguration)) + '!');
-}
 #ifdef ACQUIREPERFORMANCECONFIGURATIONINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_AcquirePerformanceConfigurationINTEL_after(device, pAcquireInfo, pConfiguration);
@@ -17181,10 +12579,6 @@ layer_ReleasePerformanceConfigurationINTEL_before(device, configuration);
 #endif 
 auto ret = device_dispatch[GetKey(device)].ReleasePerformanceConfigurationINTEL(device, configuration);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"configuration=" + ptrToString((void**)std::addressof(configuration)) + '!');
-}
 #ifdef RELEASEPERFORMANCECONFIGURATIONINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ReleasePerformanceConfigurationINTEL_after(device, configuration);
@@ -17214,10 +12608,6 @@ layer_QueueSetPerformanceConfigurationINTEL_before(queue, configuration);
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueueSetPerformanceConfigurationINTEL(queue, configuration);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void**)std::addressof(queue)) + '!');
-winsockSendToUI(&ConnectSocket,"configuration=" + ptrToString((void**)std::addressof(configuration)) + '!');
-}
 #ifdef QUEUESETPERFORMANCECONFIGURATIONINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueSetPerformanceConfigurationINTEL_after(queue, configuration);
@@ -17247,12 +12637,6 @@ layer_GetPerformanceParameterINTEL_before(device, parameter, pValue);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPerformanceParameterINTEL(device, parameter, pValue);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pValue != VK_NULL_HANDLE && pValue != NULL) {
-winsockSendToUI(&ConnectSocket,"pValue->data=" + ptrToString((void**)std::addressof(pValue->data)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pValue=VK_NULL_HANDLE!");
-}
 #ifdef GETPERFORMANCEPARAMETERINTEL_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPerformanceParameterINTEL_after(device, parameter, pValue);
@@ -17282,13 +12666,6 @@ layer_GetDeviceMemoryOpaqueCaptureAddress_before(device, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeviceMemoryOpaqueCaptureAddress(device, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->memory=" + ptrToString((void**)std::addressof(pInfo->memory)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETDEVICEMEMORYOPAQUECAPTUREADDRESS_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceMemoryOpaqueCaptureAddress_after(device, pInfo);
@@ -17318,21 +12695,6 @@ layer_GetPipelineExecutablePropertiesKHR_before(device, pPipelineInfo, pExecutab
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPipelineExecutablePropertiesKHR(device, pPipelineInfo, pExecutableCount, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pPipelineInfo != VK_NULL_HANDLE && pPipelineInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pPipelineInfo->pNext=" + ptrToString((void**)std::addressof(pPipelineInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pPipelineInfo->pipeline=" + ptrToString((void**)std::addressof(pPipelineInfo->pipeline)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPipelineInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pExecutableCount=" + ptrToString((void**)std::addressof(pExecutableCount)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->stages=" + ptrToString((void**)std::addressof(pProperties->stages)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->name=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->description=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->subgroupSize=" + std::to_string(pProperties->subgroupSize) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPIPELINEEXECUTABLEPROPERTIESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPipelineExecutablePropertiesKHR_after(device, pPipelineInfo, pExecutableCount, pProperties);
@@ -17362,21 +12724,6 @@ layer_GetPipelineExecutableStatisticsKHR_before(device, pExecutableInfo, pStatis
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPipelineExecutableStatisticsKHR(device, pExecutableInfo, pStatisticCount, pStatistics);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pExecutableInfo != VK_NULL_HANDLE && pExecutableInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pExecutableInfo->pNext=" + ptrToString((void**)std::addressof(pExecutableInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pExecutableInfo->pipeline=" + ptrToString((void**)std::addressof(pExecutableInfo->pipeline)) + '!');
-winsockSendToUI(&ConnectSocket,"pExecutableInfo->executableIndex=" + std::to_string(pExecutableInfo->executableIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExecutableInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pStatisticCount=" + ptrToString((void**)std::addressof(pStatisticCount)) + '!');
-if(pStatistics != VK_NULL_HANDLE && pStatistics != NULL) {
-winsockSendToUI(&ConnectSocket,"pStatistics->pNext=" + ptrToString((void**)std::addressof(pStatistics->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pStatistics->name=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pStatistics->description=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pStatistics->value=" + ptrToString((void**)std::addressof(pStatistics->value)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pStatistics=VK_NULL_HANDLE!");
-}
 #ifdef GETPIPELINEEXECUTABLESTATISTICSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPipelineExecutableStatisticsKHR_after(device, pExecutableInfo, pStatisticCount, pStatistics);
@@ -17406,23 +12753,6 @@ layer_GetPipelineExecutableInternalRepresentationsKHR_before(device, pExecutable
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPipelineExecutableInternalRepresentationsKHR(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pExecutableInfo != VK_NULL_HANDLE && pExecutableInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pExecutableInfo->pNext=" + ptrToString((void**)std::addressof(pExecutableInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pExecutableInfo->pipeline=" + ptrToString((void**)std::addressof(pExecutableInfo->pipeline)) + '!');
-winsockSendToUI(&ConnectSocket,"pExecutableInfo->executableIndex=" + std::to_string(pExecutableInfo->executableIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pExecutableInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pInternalRepresentationCount=" + ptrToString((void**)std::addressof(pInternalRepresentationCount)) + '!');
-if(pInternalRepresentations != VK_NULL_HANDLE && pInternalRepresentations != NULL) {
-winsockSendToUI(&ConnectSocket,"pInternalRepresentations->pNext=" + ptrToString((void**)std::addressof(pInternalRepresentations->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInternalRepresentations->name=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pInternalRepresentations->description=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pInternalRepresentations->isText=" + bool_as_text(pInternalRepresentations->isText) + '!');
-winsockSendToUI(&ConnectSocket,"pInternalRepresentations->dataSize=" + std::to_string(pInternalRepresentations->dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pInternalRepresentations->pData=" + ptrToString((void**)std::addressof(pInternalRepresentations->pData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInternalRepresentations=VK_NULL_HANDLE!");
-}
 #ifdef GETPIPELINEEXECUTABLEINTERNALREPRESENTATIONSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPipelineExecutableInternalRepresentationsKHR_after(device, pExecutableInfo, pInternalRepresentationCount, pInternalRepresentations);
@@ -17452,26 +12782,6 @@ layer_CreateAccelerationStructureKHR_before(device, pCreateInfo, pAllocator, pAc
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateAccelerationStructureKHR(device, pCreateInfo, pAllocator, pAccelerationStructure);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->createFlags=" + ptrToString((void**)std::addressof(pCreateInfo->createFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->buffer=" + ptrToString((void**)std::addressof(pCreateInfo->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->offset=" + std::to_string(pCreateInfo->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->size=" + std::to_string(pCreateInfo->size) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->deviceAddress=" + ptrToString((void**)std::addressof(pCreateInfo->deviceAddress)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pAccelerationStructure=" + ptrToString((void**)std::addressof(pAccelerationStructure)) + '!');
-}
 #ifdef CREATEACCELERATIONSTRUCTUREKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateAccelerationStructureKHR_after(device, pCreateInfo, pAllocator, pAccelerationStructure);
@@ -17500,24 +12810,6 @@ layer_CmdBuildAccelerationStructuresKHR_before(commandBuffer, infoCount, pInfos,
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructuresKHR(commandBuffer, infoCount, pInfos, ppBuildRangeInfos);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"infoCount=" + std::to_string(infoCount) + '!');
-if(pInfos != VK_NULL_HANDLE && pInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfos->pNext=" + ptrToString((void**)std::addressof(pInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->flags=" + ptrToString((void**)std::addressof(pInfos->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->srcAccelerationStructure=" + ptrToString((void**)std::addressof(pInfos->srcAccelerationStructure)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->dstAccelerationStructure=" + ptrToString((void**)std::addressof(pInfos->dstAccelerationStructure)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->geometryCount=" + std::to_string(pInfos->geometryCount) + '!');
-if(pInfos->pGeometries != VK_NULL_HANDLE && pInfos->pGeometries != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfos->pGeometries->pNext=" + ptrToString((void**)std::addressof(pInfos->pGeometries->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->pGeometries->geometry=" + ptrToString((void**)std::addressof(pInfos->pGeometries->geometry)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->pGeometries->flags=" + ptrToString((void**)std::addressof(pInfos->pGeometries->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGeometries=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pInfos->scratchData=" + ptrToString((void**)std::addressof(pInfos->scratchData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfos=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"ppBuildRangeInfos=" + ptrToString((void**)std::addressof(ppBuildRangeInfos)) + '!');
-}
 #ifdef CMDBUILDACCELERATIONSTRUCTURESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBuildAccelerationStructuresKHR_after(commandBuffer, infoCount, pInfos, ppBuildRangeInfos);
@@ -17543,26 +12835,6 @@ layer_CmdBuildAccelerationStructuresIndirectKHR_before(commandBuffer, infoCount,
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructuresIndirectKHR(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"infoCount=" + std::to_string(infoCount) + '!');
-if(pInfos != VK_NULL_HANDLE && pInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfos->pNext=" + ptrToString((void**)std::addressof(pInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->flags=" + ptrToString((void**)std::addressof(pInfos->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->srcAccelerationStructure=" + ptrToString((void**)std::addressof(pInfos->srcAccelerationStructure)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->dstAccelerationStructure=" + ptrToString((void**)std::addressof(pInfos->dstAccelerationStructure)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->geometryCount=" + std::to_string(pInfos->geometryCount) + '!');
-if(pInfos->pGeometries != VK_NULL_HANDLE && pInfos->pGeometries != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfos->pGeometries->pNext=" + ptrToString((void**)std::addressof(pInfos->pGeometries->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->pGeometries->geometry=" + ptrToString((void**)std::addressof(pInfos->pGeometries->geometry)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->pGeometries->flags=" + ptrToString((void**)std::addressof(pInfos->pGeometries->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGeometries=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pInfos->scratchData=" + ptrToString((void**)std::addressof(pInfos->scratchData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfos=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pIndirectDeviceAddresses=" + ptrToString((void**)std::addressof(pIndirectDeviceAddresses)) + '!');
-winsockSendToUI(&ConnectSocket,"pIndirectStrides=" + ptrToString((void**)std::addressof(pIndirectStrides)) + '!');
-winsockSendToUI(&ConnectSocket,"ppMaxPrimitiveCounts=" + ptrToString((void**)std::addressof(ppMaxPrimitiveCounts)) + '!');
-}
 #ifdef CMDBUILDACCELERATIONSTRUCTURESINDIRECTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBuildAccelerationStructuresIndirectKHR_after(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts);
@@ -17589,25 +12861,6 @@ layer_BuildAccelerationStructuresKHR_before(device, deferredOperation, infoCount
 #endif 
 auto ret = device_dispatch[GetKey(device)].BuildAccelerationStructuresKHR(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void**)std::addressof(deferredOperation)) + '!');
-winsockSendToUI(&ConnectSocket,"infoCount=" + std::to_string(infoCount) + '!');
-if(pInfos != VK_NULL_HANDLE && pInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfos->pNext=" + ptrToString((void**)std::addressof(pInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->flags=" + ptrToString((void**)std::addressof(pInfos->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->srcAccelerationStructure=" + ptrToString((void**)std::addressof(pInfos->srcAccelerationStructure)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->dstAccelerationStructure=" + ptrToString((void**)std::addressof(pInfos->dstAccelerationStructure)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->geometryCount=" + std::to_string(pInfos->geometryCount) + '!');
-if(pInfos->pGeometries != VK_NULL_HANDLE && pInfos->pGeometries != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfos->pGeometries->pNext=" + ptrToString((void**)std::addressof(pInfos->pGeometries->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->pGeometries->geometry=" + ptrToString((void**)std::addressof(pInfos->pGeometries->geometry)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->pGeometries->flags=" + ptrToString((void**)std::addressof(pInfos->pGeometries->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGeometries=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pInfos->scratchData=" + ptrToString((void**)std::addressof(pInfos->scratchData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfos=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"ppBuildRangeInfos=" + ptrToString((void**)std::addressof(ppBuildRangeInfos)) + '!');
-}
 #ifdef BUILDACCELERATIONSTRUCTURESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BuildAccelerationStructuresKHR_after(device, deferredOperation, infoCount, pInfos, ppBuildRangeInfos);
@@ -17637,13 +12890,6 @@ layer_GetAccelerationStructureDeviceAddressKHR_before(device, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetAccelerationStructureDeviceAddressKHR(device, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->accelerationStructure=" + ptrToString((void**)std::addressof(pInfo->accelerationStructure)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETACCELERATIONSTRUCTUREDEVICEADDRESSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetAccelerationStructureDeviceAddressKHR_after(device, pInfo);
@@ -17673,18 +12919,6 @@ layer_CreateDeferredOperationKHR_before(device, pAllocator, pDeferredOperation);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateDeferredOperationKHR(device, pAllocator, pDeferredOperation);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDeferredOperation=" + ptrToString((void**)std::addressof(pDeferredOperation)) + '!');
-}
 #ifdef CREATEDEFERREDOPERATIONKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDeferredOperationKHR_after(device, pAllocator, pDeferredOperation);
@@ -17713,18 +12947,6 @@ layer_DestroyDeferredOperationKHR_before(device, operation, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyDeferredOperationKHR(device, operation, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"operation=" + ptrToString((void**)std::addressof(operation)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYDEFERREDOPERATIONKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyDeferredOperationKHR_after(device, operation, pAllocator);
@@ -17751,10 +12973,6 @@ layer_GetDeferredOperationMaxConcurrencyKHR_before(device, operation);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeferredOperationMaxConcurrencyKHR(device, operation);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"operation=" + ptrToString((void**)std::addressof(operation)) + '!');
-}
 #ifdef GETDEFERREDOPERATIONMAXCONCURRENCYKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeferredOperationMaxConcurrencyKHR_after(device, operation);
@@ -17784,10 +13002,6 @@ layer_GetDeferredOperationResultKHR_before(device, operation);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeferredOperationResultKHR(device, operation);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"operation=" + ptrToString((void**)std::addressof(operation)) + '!');
-}
 #ifdef GETDEFERREDOPERATIONRESULTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeferredOperationResultKHR_after(device, operation);
@@ -17817,10 +13031,6 @@ layer_DeferredOperationJoinKHR_before(device, operation);
 #endif 
 auto ret = device_dispatch[GetKey(device)].DeferredOperationJoinKHR(device, operation);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"operation=" + ptrToString((void**)std::addressof(operation)) + '!');
-}
 #ifdef DEFERREDOPERATIONJOINKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DeferredOperationJoinKHR_after(device, operation);
@@ -17849,21 +13059,6 @@ layer_GetPipelineIndirectMemoryRequirementsNV_before(device, pCreateInfo, pMemor
 }
 #endif 
 device_dispatch[GetKey(device)].GetPipelineIndirectMemoryRequirementsNV(device, pCreateInfo, pMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->stage=" + ptrToString((void**)std::addressof(pCreateInfo->stage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->layout=" + ptrToString((void**)std::addressof(pCreateInfo->layout)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->basePipelineHandle=" + ptrToString((void**)std::addressof(pCreateInfo->basePipelineHandle)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->basePipelineIndex=" + std::to_string(pCreateInfo->basePipelineIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pMemoryRequirements != VK_NULL_HANDLE && pMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETPIPELINEINDIRECTMEMORYREQUIREMENTSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPipelineIndirectMemoryRequirementsNV_after(device, pCreateInfo, pMemoryRequirements);
@@ -17890,13 +13085,6 @@ layer_GetPipelineIndirectDeviceAddressNV_before(device, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPipelineIndirectDeviceAddressNV(device, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pipeline=" + ptrToString((void**)std::addressof(pInfo->pipeline)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETPIPELINEINDIRECTDEVICEADDRESSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPipelineIndirectDeviceAddressNV_after(device, pInfo);
@@ -17925,10 +13113,6 @@ layer_CmdSetCullMode_before(commandBuffer, cullMode);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCullMode(commandBuffer, cullMode);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"cullMode=" + ptrToString((void**)std::addressof(cullMode)) + '!');
-}
 #ifdef CMDSETCULLMODE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCullMode_after(commandBuffer, cullMode);
@@ -17954,9 +13138,6 @@ layer_CmdSetFrontFace_before(commandBuffer, frontFace);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetFrontFace(commandBuffer, frontFace);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETFRONTFACE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetFrontFace_after(commandBuffer, frontFace);
@@ -17982,9 +13163,6 @@ layer_CmdSetPrimitiveTopology_before(commandBuffer, primitiveTopology);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveTopology(commandBuffer, primitiveTopology);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETPRIMITIVETOPOLOGY_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPrimitiveTopology_after(commandBuffer, primitiveTopology);
@@ -18010,18 +13188,6 @@ layer_CmdSetViewportWithCount_before(commandBuffer, viewportCount, pViewports);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWithCount(commandBuffer, viewportCount, pViewports);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"viewportCount=" + std::to_string(viewportCount) + '!');
-if(pViewports != VK_NULL_HANDLE && pViewports != NULL) {
-winsockSendToUI(&ConnectSocket,"pViewports->x=" + std::to_string(pViewports->x) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->y=" + std::to_string(pViewports->y) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->width=" + std::to_string(pViewports->width) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->height=" + std::to_string(pViewports->height) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->minDepth=" + std::to_string(pViewports->minDepth) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->maxDepth=" + std::to_string(pViewports->maxDepth) + '!');
-}else winsockSendToUI(&ConnectSocket, "pViewports=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETVIEWPORTWITHCOUNT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetViewportWithCount_after(commandBuffer, viewportCount, pViewports);
@@ -18047,14 +13213,6 @@ layer_CmdSetScissorWithCount_before(commandBuffer, scissorCount, pScissors);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetScissorWithCount(commandBuffer, scissorCount, pScissors);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"scissorCount=" + std::to_string(scissorCount) + '!');
-if(pScissors != VK_NULL_HANDLE && pScissors != NULL) {
-winsockSendToUI(&ConnectSocket,"pScissors->offset=" + ptrToString((void**)std::addressof(pScissors->offset)) + '!');
-winsockSendToUI(&ConnectSocket,"pScissors->extent=" + ptrToString((void**)std::addressof(pScissors->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pScissors=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETSCISSORWITHCOUNT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetScissorWithCount_after(commandBuffer, scissorCount, pScissors);
@@ -18080,12 +13238,6 @@ layer_CmdBindIndexBuffer2KHR_before(commandBuffer, buffer, offset, size, indexTy
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindIndexBuffer2KHR(commandBuffer, buffer, offset, size, indexType);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"size=" + std::to_string(size) + '!');
-}
 #ifdef CMDBINDINDEXBUFFER2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindIndexBuffer2KHR_after(commandBuffer, buffer, offset, size, indexType);
@@ -18111,15 +13263,6 @@ layer_CmdBindVertexBuffers2_before(commandBuffer, firstBinding, bindingCount, pB
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers2(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstBinding=" + std::to_string(firstBinding) + '!');
-winsockSendToUI(&ConnectSocket,"bindingCount=" + std::to_string(bindingCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBuffers=" + ptrToString((void**)std::addressof(pBuffers)) + '!');
-winsockSendToUI(&ConnectSocket,"pOffsets=" + ptrToString((void**)std::addressof(pOffsets)) + '!');
-winsockSendToUI(&ConnectSocket,"pSizes=" + ptrToString((void**)std::addressof(pSizes)) + '!');
-winsockSendToUI(&ConnectSocket,"pStrides=" + ptrToString((void**)std::addressof(pStrides)) + '!');
-}
 #ifdef CMDBINDVERTEXBUFFERS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindVertexBuffers2_after(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
@@ -18145,10 +13288,6 @@ layer_CmdSetDepthTestEnable_before(commandBuffer, depthTestEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthTestEnable(commandBuffer, depthTestEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"depthTestEnable=" + bool_as_text(depthTestEnable) + '!');
-}
 #ifdef CMDSETDEPTHTESTENABLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthTestEnable_after(commandBuffer, depthTestEnable);
@@ -18174,10 +13313,6 @@ layer_CmdSetDepthWriteEnable_before(commandBuffer, depthWriteEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthWriteEnable(commandBuffer, depthWriteEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"depthWriteEnable=" + bool_as_text(depthWriteEnable) + '!');
-}
 #ifdef CMDSETDEPTHWRITEENABLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthWriteEnable_after(commandBuffer, depthWriteEnable);
@@ -18203,9 +13338,6 @@ layer_CmdSetDepthCompareOp_before(commandBuffer, depthCompareOp);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthCompareOp(commandBuffer, depthCompareOp);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETDEPTHCOMPAREOP_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthCompareOp_after(commandBuffer, depthCompareOp);
@@ -18231,10 +13363,6 @@ layer_CmdSetDepthBoundsTestEnable_before(commandBuffer, depthBoundsTestEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBoundsTestEnable(commandBuffer, depthBoundsTestEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"depthBoundsTestEnable=" + bool_as_text(depthBoundsTestEnable) + '!');
-}
 #ifdef CMDSETDEPTHBOUNDSTESTENABLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthBoundsTestEnable_after(commandBuffer, depthBoundsTestEnable);
@@ -18260,10 +13388,6 @@ layer_CmdSetStencilTestEnable_before(commandBuffer, stencilTestEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilTestEnable(commandBuffer, stencilTestEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"stencilTestEnable=" + bool_as_text(stencilTestEnable) + '!');
-}
 #ifdef CMDSETSTENCILTESTENABLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetStencilTestEnable_after(commandBuffer, stencilTestEnable);
@@ -18289,10 +13413,6 @@ layer_CmdSetStencilOp_before(commandBuffer, faceMask, failOp, passOp, depthFailO
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilOp(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"faceMask=" + ptrToString((void**)std::addressof(faceMask)) + '!');
-}
 #ifdef CMDSETSTENCILOP_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetStencilOp_after(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
@@ -18318,10 +13438,6 @@ layer_CmdSetPatchControlPointsEXT_before(commandBuffer, patchControlPoints);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetPatchControlPointsEXT(commandBuffer, patchControlPoints);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"patchControlPoints=" + std::to_string(patchControlPoints) + '!');
-}
 #ifdef CMDSETPATCHCONTROLPOINTSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPatchControlPointsEXT_after(commandBuffer, patchControlPoints);
@@ -18347,10 +13463,6 @@ layer_CmdSetRasterizerDiscardEnable_before(commandBuffer, rasterizerDiscardEnabl
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizerDiscardEnable(commandBuffer, rasterizerDiscardEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"rasterizerDiscardEnable=" + bool_as_text(rasterizerDiscardEnable) + '!');
-}
 #ifdef CMDSETRASTERIZERDISCARDENABLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetRasterizerDiscardEnable_after(commandBuffer, rasterizerDiscardEnable);
@@ -18376,10 +13488,6 @@ layer_CmdSetDepthBiasEnable_before(commandBuffer, depthBiasEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBiasEnable(commandBuffer, depthBiasEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"depthBiasEnable=" + bool_as_text(depthBiasEnable) + '!');
-}
 #ifdef CMDSETDEPTHBIASENABLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthBiasEnable_after(commandBuffer, depthBiasEnable);
@@ -18405,9 +13513,6 @@ layer_CmdSetLogicOpEXT_before(commandBuffer, logicOp);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetLogicOpEXT(commandBuffer, logicOp);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETLOGICOPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetLogicOpEXT_after(commandBuffer, logicOp);
@@ -18433,10 +13538,6 @@ layer_CmdSetPrimitiveRestartEnable_before(commandBuffer, primitiveRestartEnable)
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveRestartEnable(commandBuffer, primitiveRestartEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"primitiveRestartEnable=" + bool_as_text(primitiveRestartEnable) + '!');
-}
 #ifdef CMDSETPRIMITIVERESTARTENABLE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPrimitiveRestartEnable_after(commandBuffer, primitiveRestartEnable);
@@ -18462,9 +13563,6 @@ layer_CmdSetTessellationDomainOriginEXT_before(commandBuffer, domainOrigin);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetTessellationDomainOriginEXT(commandBuffer, domainOrigin);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETTESSELLATIONDOMAINORIGINEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetTessellationDomainOriginEXT_after(commandBuffer, domainOrigin);
@@ -18490,10 +13588,6 @@ layer_CmdSetDepthClampEnableEXT_before(commandBuffer, depthClampEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthClampEnableEXT(commandBuffer, depthClampEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"depthClampEnable=" + bool_as_text(depthClampEnable) + '!');
-}
 #ifdef CMDSETDEPTHCLAMPENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthClampEnableEXT_after(commandBuffer, depthClampEnable);
@@ -18519,9 +13613,6 @@ layer_CmdSetPolygonModeEXT_before(commandBuffer, polygonMode);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetPolygonModeEXT(commandBuffer, polygonMode);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETPOLYGONMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPolygonModeEXT_after(commandBuffer, polygonMode);
@@ -18547,9 +13638,6 @@ layer_CmdSetRasterizationSamplesEXT_before(commandBuffer, rasterizationSamples);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizationSamplesEXT(commandBuffer, rasterizationSamples);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETRASTERIZATIONSAMPLESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetRasterizationSamplesEXT_after(commandBuffer, rasterizationSamples);
@@ -18575,10 +13663,6 @@ layer_CmdSetSampleMaskEXT_before(commandBuffer, samples, pSampleMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetSampleMaskEXT(commandBuffer, samples, pSampleMask);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pSampleMask=" + ptrToString((void**)std::addressof(pSampleMask)) + '!');
-}
 #ifdef CMDSETSAMPLEMASKEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetSampleMaskEXT_after(commandBuffer, samples, pSampleMask);
@@ -18604,10 +13688,6 @@ layer_CmdSetAlphaToCoverageEnableEXT_before(commandBuffer, alphaToCoverageEnable
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetAlphaToCoverageEnableEXT(commandBuffer, alphaToCoverageEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"alphaToCoverageEnable=" + bool_as_text(alphaToCoverageEnable) + '!');
-}
 #ifdef CMDSETALPHATOCOVERAGEENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetAlphaToCoverageEnableEXT_after(commandBuffer, alphaToCoverageEnable);
@@ -18633,10 +13713,6 @@ layer_CmdSetAlphaToOneEnableEXT_before(commandBuffer, alphaToOneEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetAlphaToOneEnableEXT(commandBuffer, alphaToOneEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"alphaToOneEnable=" + bool_as_text(alphaToOneEnable) + '!');
-}
 #ifdef CMDSETALPHATOONEENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetAlphaToOneEnableEXT_after(commandBuffer, alphaToOneEnable);
@@ -18662,10 +13738,6 @@ layer_CmdSetLogicOpEnableEXT_before(commandBuffer, logicOpEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetLogicOpEnableEXT(commandBuffer, logicOpEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"logicOpEnable=" + bool_as_text(logicOpEnable) + '!');
-}
 #ifdef CMDSETLOGICOPENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetLogicOpEnableEXT_after(commandBuffer, logicOpEnable);
@@ -18691,12 +13763,6 @@ layer_CmdSetColorBlendEnableEXT_before(commandBuffer, firstAttachment, attachmen
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendEnableEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstAttachment=" + std::to_string(firstAttachment) + '!');
-winsockSendToUI(&ConnectSocket,"attachmentCount=" + std::to_string(attachmentCount) + '!');
-winsockSendToUI(&ConnectSocket,"pColorBlendEnables=" + ptrToString((void**)std::addressof(pColorBlendEnables)) + '!');
-}
 #ifdef CMDSETCOLORBLENDENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetColorBlendEnableEXT_after(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables);
@@ -18722,13 +13788,6 @@ layer_CmdSetColorBlendEquationEXT_before(commandBuffer, firstAttachment, attachm
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendEquationEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstAttachment=" + std::to_string(firstAttachment) + '!');
-winsockSendToUI(&ConnectSocket,"attachmentCount=" + std::to_string(attachmentCount) + '!');
-if(pColorBlendEquations != VK_NULL_HANDLE && pColorBlendEquations != NULL) {
-}else winsockSendToUI(&ConnectSocket, "pColorBlendEquations=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETCOLORBLENDEQUATIONEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetColorBlendEquationEXT_after(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations);
@@ -18754,12 +13813,6 @@ layer_CmdSetColorWriteMaskEXT_before(commandBuffer, firstAttachment, attachmentC
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetColorWriteMaskEXT(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstAttachment=" + std::to_string(firstAttachment) + '!');
-winsockSendToUI(&ConnectSocket,"attachmentCount=" + std::to_string(attachmentCount) + '!');
-winsockSendToUI(&ConnectSocket,"pColorWriteMasks=" + ptrToString((void**)std::addressof(pColorWriteMasks)) + '!');
-}
 #ifdef CMDSETCOLORWRITEMASKEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetColorWriteMaskEXT_after(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks);
@@ -18785,10 +13838,6 @@ layer_CmdSetRasterizationStreamEXT_before(commandBuffer, rasterizationStream);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizationStreamEXT(commandBuffer, rasterizationStream);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"rasterizationStream=" + std::to_string(rasterizationStream) + '!');
-}
 #ifdef CMDSETRASTERIZATIONSTREAMEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetRasterizationStreamEXT_after(commandBuffer, rasterizationStream);
@@ -18814,9 +13863,6 @@ layer_CmdSetConservativeRasterizationModeEXT_before(commandBuffer, conservativeR
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetConservativeRasterizationModeEXT(commandBuffer, conservativeRasterizationMode);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETCONSERVATIVERASTERIZATIONMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetConservativeRasterizationModeEXT_after(commandBuffer, conservativeRasterizationMode);
@@ -18842,10 +13888,6 @@ layer_CmdSetExtraPrimitiveOverestimationSizeEXT_before(commandBuffer, extraPrimi
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetExtraPrimitiveOverestimationSizeEXT(commandBuffer, extraPrimitiveOverestimationSize);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"extraPrimitiveOverestimationSize=" + std::to_string(extraPrimitiveOverestimationSize) + '!');
-}
 #ifdef CMDSETEXTRAPRIMITIVEOVERESTIMATIONSIZEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetExtraPrimitiveOverestimationSizeEXT_after(commandBuffer, extraPrimitiveOverestimationSize);
@@ -18871,10 +13913,6 @@ layer_CmdSetDepthClipEnableEXT_before(commandBuffer, depthClipEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthClipEnableEXT(commandBuffer, depthClipEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"depthClipEnable=" + bool_as_text(depthClipEnable) + '!');
-}
 #ifdef CMDSETDEPTHCLIPENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthClipEnableEXT_after(commandBuffer, depthClipEnable);
@@ -18900,10 +13938,6 @@ layer_CmdSetSampleLocationsEnableEXT_before(commandBuffer, sampleLocationsEnable
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetSampleLocationsEnableEXT(commandBuffer, sampleLocationsEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"sampleLocationsEnable=" + bool_as_text(sampleLocationsEnable) + '!');
-}
 #ifdef CMDSETSAMPLELOCATIONSENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetSampleLocationsEnableEXT_after(commandBuffer, sampleLocationsEnable);
@@ -18929,16 +13963,6 @@ layer_CmdSetColorBlendAdvancedEXT_before(commandBuffer, firstAttachment, attachm
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendAdvancedEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendAdvanced);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstAttachment=" + std::to_string(firstAttachment) + '!');
-winsockSendToUI(&ConnectSocket,"attachmentCount=" + std::to_string(attachmentCount) + '!');
-if(pColorBlendAdvanced != VK_NULL_HANDLE && pColorBlendAdvanced != NULL) {
-winsockSendToUI(&ConnectSocket,"pColorBlendAdvanced->srcPremultiplied=" + bool_as_text(pColorBlendAdvanced->srcPremultiplied) + '!');
-winsockSendToUI(&ConnectSocket,"pColorBlendAdvanced->dstPremultiplied=" + bool_as_text(pColorBlendAdvanced->dstPremultiplied) + '!');
-winsockSendToUI(&ConnectSocket,"pColorBlendAdvanced->clampResults=" + bool_as_text(pColorBlendAdvanced->clampResults) + '!');
-}else winsockSendToUI(&ConnectSocket, "pColorBlendAdvanced=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETCOLORBLENDADVANCEDEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetColorBlendAdvancedEXT_after(commandBuffer, firstAttachment, attachmentCount, pColorBlendAdvanced);
@@ -18964,9 +13988,6 @@ layer_CmdSetProvokingVertexModeEXT_before(commandBuffer, provokingVertexMode);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetProvokingVertexModeEXT(commandBuffer, provokingVertexMode);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETPROVOKINGVERTEXMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetProvokingVertexModeEXT_after(commandBuffer, provokingVertexMode);
@@ -18992,10 +14013,6 @@ layer_CmdSetLineRasterizationModeEXT_before(commandBuffer, lineRasterizationMode
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetLineRasterizationModeEXT(commandBuffer, lineRasterizationMode);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"lineRasterizationMode=" + ptrToString((void**)std::addressof(lineRasterizationMode)) + '!');
-}
 #ifdef CMDSETLINERASTERIZATIONMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetLineRasterizationModeEXT_after(commandBuffer, lineRasterizationMode);
@@ -19021,10 +14038,6 @@ layer_CmdSetLineStippleEnableEXT_before(commandBuffer, stippledLineEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetLineStippleEnableEXT(commandBuffer, stippledLineEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"stippledLineEnable=" + bool_as_text(stippledLineEnable) + '!');
-}
 #ifdef CMDSETLINESTIPPLEENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetLineStippleEnableEXT_after(commandBuffer, stippledLineEnable);
@@ -19050,10 +14063,6 @@ layer_CmdSetDepthClipNegativeOneToOneEXT_before(commandBuffer, negativeOneToOne)
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthClipNegativeOneToOneEXT(commandBuffer, negativeOneToOne);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"negativeOneToOne=" + bool_as_text(negativeOneToOne) + '!');
-}
 #ifdef CMDSETDEPTHCLIPNEGATIVEONETOONEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthClipNegativeOneToOneEXT_after(commandBuffer, negativeOneToOne);
@@ -19079,10 +14088,6 @@ layer_CmdSetViewportWScalingEnableNV_before(commandBuffer, viewportWScalingEnabl
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWScalingEnableNV(commandBuffer, viewportWScalingEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"viewportWScalingEnable=" + bool_as_text(viewportWScalingEnable) + '!');
-}
 #ifdef CMDSETVIEWPORTWSCALINGENABLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetViewportWScalingEnableNV_after(commandBuffer, viewportWScalingEnable);
@@ -19108,13 +14113,6 @@ layer_CmdSetViewportSwizzleNV_before(commandBuffer, firstViewport, viewportCount
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportSwizzleNV(commandBuffer, firstViewport, viewportCount, pViewportSwizzles);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstViewport=" + std::to_string(firstViewport) + '!');
-winsockSendToUI(&ConnectSocket,"viewportCount=" + std::to_string(viewportCount) + '!');
-if(pViewportSwizzles != VK_NULL_HANDLE && pViewportSwizzles != NULL) {
-}else winsockSendToUI(&ConnectSocket, "pViewportSwizzles=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETVIEWPORTSWIZZLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetViewportSwizzleNV_after(commandBuffer, firstViewport, viewportCount, pViewportSwizzles);
@@ -19140,10 +14138,6 @@ layer_CmdSetCoverageToColorEnableNV_before(commandBuffer, coverageToColorEnable)
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageToColorEnableNV(commandBuffer, coverageToColorEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"coverageToColorEnable=" + bool_as_text(coverageToColorEnable) + '!');
-}
 #ifdef CMDSETCOVERAGETOCOLORENABLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCoverageToColorEnableNV_after(commandBuffer, coverageToColorEnable);
@@ -19169,10 +14163,6 @@ layer_CmdSetCoverageToColorLocationNV_before(commandBuffer, coverageToColorLocat
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageToColorLocationNV(commandBuffer, coverageToColorLocation);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"coverageToColorLocation=" + std::to_string(coverageToColorLocation) + '!');
-}
 #ifdef CMDSETCOVERAGETOCOLORLOCATIONNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCoverageToColorLocationNV_after(commandBuffer, coverageToColorLocation);
@@ -19198,9 +14188,6 @@ layer_CmdSetCoverageModulationModeNV_before(commandBuffer, coverageModulationMod
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationModeNV(commandBuffer, coverageModulationMode);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETCOVERAGEMODULATIONMODENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCoverageModulationModeNV_after(commandBuffer, coverageModulationMode);
@@ -19226,10 +14213,6 @@ layer_CmdSetCoverageModulationTableEnableNV_before(commandBuffer, coverageModula
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationTableEnableNV(commandBuffer, coverageModulationTableEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"coverageModulationTableEnable=" + bool_as_text(coverageModulationTableEnable) + '!');
-}
 #ifdef CMDSETCOVERAGEMODULATIONTABLEENABLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCoverageModulationTableEnableNV_after(commandBuffer, coverageModulationTableEnable);
@@ -19255,11 +14238,6 @@ layer_CmdSetCoverageModulationTableNV_before(commandBuffer, coverageModulationTa
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationTableNV(commandBuffer, coverageModulationTableCount, pCoverageModulationTable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"coverageModulationTableCount=" + std::to_string(coverageModulationTableCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCoverageModulationTable=" + ptrToString((void**)std::addressof(pCoverageModulationTable)) + '!');
-}
 #ifdef CMDSETCOVERAGEMODULATIONTABLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCoverageModulationTableNV_after(commandBuffer, coverageModulationTableCount, pCoverageModulationTable);
@@ -19285,10 +14263,6 @@ layer_CmdSetShadingRateImageEnableNV_before(commandBuffer, shadingRateImageEnabl
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetShadingRateImageEnableNV(commandBuffer, shadingRateImageEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"shadingRateImageEnable=" + bool_as_text(shadingRateImageEnable) + '!');
-}
 #ifdef CMDSETSHADINGRATEIMAGEENABLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetShadingRateImageEnableNV_after(commandBuffer, shadingRateImageEnable);
@@ -19314,9 +14288,6 @@ layer_CmdSetCoverageReductionModeNV_before(commandBuffer, coverageReductionMode)
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageReductionModeNV(commandBuffer, coverageReductionMode);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETCOVERAGEREDUCTIONMODENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCoverageReductionModeNV_after(commandBuffer, coverageReductionMode);
@@ -19342,10 +14313,6 @@ layer_CmdSetRepresentativeFragmentTestEnableNV_before(commandBuffer, representat
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetRepresentativeFragmentTestEnableNV(commandBuffer, representativeFragmentTestEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"representativeFragmentTestEnable=" + bool_as_text(representativeFragmentTestEnable) + '!');
-}
 #ifdef CMDSETREPRESENTATIVEFRAGMENTTESTENABLENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetRepresentativeFragmentTestEnableNV_after(commandBuffer, representativeFragmentTestEnable);
@@ -19372,22 +14339,6 @@ layer_CreatePrivateDataSlot_before(device, pCreateInfo, pAllocator, pPrivateData
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreatePrivateDataSlot(device, pCreateInfo, pAllocator, pPrivateDataSlot);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pPrivateDataSlot=" + ptrToString((void**)std::addressof(pPrivateDataSlot)) + '!');
-}
 #ifdef CREATEPRIVATEDATASLOT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreatePrivateDataSlot_after(device, pCreateInfo, pAllocator, pPrivateDataSlot);
@@ -19416,18 +14367,6 @@ layer_DestroyPrivateDataSlot_before(device, privateDataSlot, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyPrivateDataSlot(device, privateDataSlot, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"privateDataSlot=" + ptrToString((void**)std::addressof(privateDataSlot)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYPRIVATEDATASLOT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyPrivateDataSlot_after(device, privateDataSlot, pAllocator);
@@ -19454,12 +14393,6 @@ layer_SetPrivateData_before(device, objectType, objectHandle, privateDataSlot, d
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetPrivateData(device, objectType, objectHandle, privateDataSlot, data);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"objectHandle=" + std::to_string(objectHandle) + '!');
-winsockSendToUI(&ConnectSocket,"privateDataSlot=" + ptrToString((void**)std::addressof(privateDataSlot)) + '!');
-winsockSendToUI(&ConnectSocket,"data=" + std::to_string(data) + '!');
-}
 #ifdef SETPRIVATEDATA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetPrivateData_after(device, objectType, objectHandle, privateDataSlot, data);
@@ -19488,12 +14421,6 @@ layer_GetPrivateData_before(device, objectType, objectHandle, privateDataSlot, p
 }
 #endif 
 device_dispatch[GetKey(device)].GetPrivateData(device, objectType, objectHandle, privateDataSlot, pData);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"objectHandle=" + std::to_string(objectHandle) + '!');
-winsockSendToUI(&ConnectSocket,"privateDataSlot=" + ptrToString((void**)std::addressof(privateDataSlot)) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETPRIVATEDATA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPrivateData_after(device, objectType, objectHandle, privateDataSlot, pData);
@@ -19519,21 +14446,6 @@ layer_CmdCopyBuffer2_before(commandBuffer, pCopyBufferInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer2(commandBuffer, pCopyBufferInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pCopyBufferInfo != VK_NULL_HANDLE && pCopyBufferInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->pNext=" + ptrToString((void**)std::addressof(pCopyBufferInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->srcBuffer=" + ptrToString((void**)std::addressof(pCopyBufferInfo->srcBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->dstBuffer=" + ptrToString((void**)std::addressof(pCopyBufferInfo->dstBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->regionCount=" + std::to_string(pCopyBufferInfo->regionCount) + '!');
-if(pCopyBufferInfo->pRegions != VK_NULL_HANDLE && pCopyBufferInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pCopyBufferInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->pRegions->srcOffset=" + std::to_string(pCopyBufferInfo->pRegions->srcOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->pRegions->dstOffset=" + std::to_string(pCopyBufferInfo->pRegions->dstOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->pRegions->size=" + std::to_string(pCopyBufferInfo->pRegions->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCopyBufferInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYBUFFER2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyBuffer2_after(commandBuffer, pCopyBufferInfo);
@@ -19559,23 +14471,6 @@ layer_CmdCopyImage2_before(commandBuffer, pCopyImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyImage2(commandBuffer, pCopyImageInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pCopyImageInfo != VK_NULL_HANDLE && pCopyImageInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->pNext=" + ptrToString((void**)std::addressof(pCopyImageInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->srcImage=" + ptrToString((void**)std::addressof(pCopyImageInfo->srcImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->dstImage=" + ptrToString((void**)std::addressof(pCopyImageInfo->dstImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->regionCount=" + std::to_string(pCopyImageInfo->regionCount) + '!');
-if(pCopyImageInfo->pRegions != VK_NULL_HANDLE && pCopyImageInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pCopyImageInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->pRegions->srcSubresource=" + ptrToString((void**)std::addressof(pCopyImageInfo->pRegions->srcSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->pRegions->srcOffset=" + ptrToString((void**)std::addressof(pCopyImageInfo->pRegions->srcOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->pRegions->dstSubresource=" + ptrToString((void**)std::addressof(pCopyImageInfo->pRegions->dstSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->pRegions->dstOffset=" + ptrToString((void**)std::addressof(pCopyImageInfo->pRegions->dstOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->pRegions->extent=" + ptrToString((void**)std::addressof(pCopyImageInfo->pRegions->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCopyImageInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYIMAGE2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyImage2_after(commandBuffer, pCopyImageInfo);
@@ -19601,22 +14496,6 @@ layer_CmdBlitImage2_before(commandBuffer, pBlitImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBlitImage2(commandBuffer, pBlitImageInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pBlitImageInfo != VK_NULL_HANDLE && pBlitImageInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->pNext=" + ptrToString((void**)std::addressof(pBlitImageInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->srcImage=" + ptrToString((void**)std::addressof(pBlitImageInfo->srcImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->dstImage=" + ptrToString((void**)std::addressof(pBlitImageInfo->dstImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->regionCount=" + std::to_string(pBlitImageInfo->regionCount) + '!');
-if(pBlitImageInfo->pRegions != VK_NULL_HANDLE && pBlitImageInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pBlitImageInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->pRegions->srcSubresource=" + ptrToString((void**)std::addressof(pBlitImageInfo->pRegions->srcSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->pRegions->srcOffsets=" + ptrToString((void**)std::addressof(pBlitImageInfo->pRegions->srcOffsets)) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->pRegions->dstSubresource=" + ptrToString((void**)std::addressof(pBlitImageInfo->pRegions->dstSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->pRegions->dstOffsets=" + ptrToString((void**)std::addressof(pBlitImageInfo->pRegions->dstOffsets)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pBlitImageInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDBLITIMAGE2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBlitImage2_after(commandBuffer, pBlitImageInfo);
@@ -19642,24 +14521,6 @@ layer_CmdCopyBufferToImage2_before(commandBuffer, pCopyBufferToImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage2(commandBuffer, pCopyBufferToImageInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pCopyBufferToImageInfo != VK_NULL_HANDLE && pCopyBufferToImageInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pNext=" + ptrToString((void**)std::addressof(pCopyBufferToImageInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->srcBuffer=" + ptrToString((void**)std::addressof(pCopyBufferToImageInfo->srcBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->dstImage=" + ptrToString((void**)std::addressof(pCopyBufferToImageInfo->dstImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->regionCount=" + std::to_string(pCopyBufferToImageInfo->regionCount) + '!');
-if(pCopyBufferToImageInfo->pRegions != VK_NULL_HANDLE && pCopyBufferToImageInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pCopyBufferToImageInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pRegions->bufferOffset=" + std::to_string(pCopyBufferToImageInfo->pRegions->bufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pRegions->bufferRowLength=" + std::to_string(pCopyBufferToImageInfo->pRegions->bufferRowLength) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pRegions->bufferImageHeight=" + std::to_string(pCopyBufferToImageInfo->pRegions->bufferImageHeight) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pRegions->imageSubresource=" + ptrToString((void**)std::addressof(pCopyBufferToImageInfo->pRegions->imageSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pRegions->imageOffset=" + ptrToString((void**)std::addressof(pCopyBufferToImageInfo->pRegions->imageOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pRegions->imageExtent=" + ptrToString((void**)std::addressof(pCopyBufferToImageInfo->pRegions->imageExtent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCopyBufferToImageInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYBUFFERTOIMAGE2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyBufferToImage2_after(commandBuffer, pCopyBufferToImageInfo);
@@ -19685,24 +14546,6 @@ layer_CmdCopyImageToBuffer2_before(commandBuffer, pCopyImageToBufferInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer2(commandBuffer, pCopyImageToBufferInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pCopyImageToBufferInfo != VK_NULL_HANDLE && pCopyImageToBufferInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pNext=" + ptrToString((void**)std::addressof(pCopyImageToBufferInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->srcImage=" + ptrToString((void**)std::addressof(pCopyImageToBufferInfo->srcImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->dstBuffer=" + ptrToString((void**)std::addressof(pCopyImageToBufferInfo->dstBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->regionCount=" + std::to_string(pCopyImageToBufferInfo->regionCount) + '!');
-if(pCopyImageToBufferInfo->pRegions != VK_NULL_HANDLE && pCopyImageToBufferInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pCopyImageToBufferInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pRegions->bufferOffset=" + std::to_string(pCopyImageToBufferInfo->pRegions->bufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pRegions->bufferRowLength=" + std::to_string(pCopyImageToBufferInfo->pRegions->bufferRowLength) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pRegions->bufferImageHeight=" + std::to_string(pCopyImageToBufferInfo->pRegions->bufferImageHeight) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pRegions->imageSubresource=" + ptrToString((void**)std::addressof(pCopyImageToBufferInfo->pRegions->imageSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pRegions->imageOffset=" + ptrToString((void**)std::addressof(pCopyImageToBufferInfo->pRegions->imageOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pRegions->imageExtent=" + ptrToString((void**)std::addressof(pCopyImageToBufferInfo->pRegions->imageExtent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCopyImageToBufferInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYIMAGETOBUFFER2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyImageToBuffer2_after(commandBuffer, pCopyImageToBufferInfo);
@@ -19728,23 +14571,6 @@ layer_CmdResolveImage2_before(commandBuffer, pResolveImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdResolveImage2(commandBuffer, pResolveImageInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pResolveImageInfo != VK_NULL_HANDLE && pResolveImageInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->pNext=" + ptrToString((void**)std::addressof(pResolveImageInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->srcImage=" + ptrToString((void**)std::addressof(pResolveImageInfo->srcImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->dstImage=" + ptrToString((void**)std::addressof(pResolveImageInfo->dstImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->regionCount=" + std::to_string(pResolveImageInfo->regionCount) + '!');
-if(pResolveImageInfo->pRegions != VK_NULL_HANDLE && pResolveImageInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pResolveImageInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->pRegions->srcSubresource=" + ptrToString((void**)std::addressof(pResolveImageInfo->pRegions->srcSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->pRegions->srcOffset=" + ptrToString((void**)std::addressof(pResolveImageInfo->pRegions->srcOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->pRegions->dstSubresource=" + ptrToString((void**)std::addressof(pResolveImageInfo->pRegions->dstSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->pRegions->dstOffset=" + ptrToString((void**)std::addressof(pResolveImageInfo->pRegions->dstOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->pRegions->extent=" + ptrToString((void**)std::addressof(pResolveImageInfo->pRegions->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pResolveImageInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDRESOLVEIMAGE2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdResolveImage2_after(commandBuffer, pResolveImageInfo);
@@ -19770,14 +14596,6 @@ layer_CmdSetFragmentShadingRateKHR_before(commandBuffer, pFragmentSize, combiner
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetFragmentShadingRateKHR(commandBuffer, pFragmentSize, combinerOps);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pFragmentSize != VK_NULL_HANDLE && pFragmentSize != NULL) {
-winsockSendToUI(&ConnectSocket,"pFragmentSize->width=" + std::to_string(pFragmentSize->width) + '!');
-winsockSendToUI(&ConnectSocket,"pFragmentSize->height=" + std::to_string(pFragmentSize->height) + '!');
-}else winsockSendToUI(&ConnectSocket, "pFragmentSize=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"combinerOps=" + ptrToString((void**)std::addressof(combinerOps)) + '!');
-}
 #ifdef CMDSETFRAGMENTSHADINGRATEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetFragmentShadingRateKHR_after(commandBuffer, pFragmentSize, combinerOps);
@@ -19803,10 +14621,6 @@ layer_CmdSetFragmentShadingRateEnumNV_before(commandBuffer, shadingRate, combine
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetFragmentShadingRateEnumNV(commandBuffer, shadingRate, combinerOps);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"combinerOps=" + ptrToString((void**)std::addressof(combinerOps)) + '!');
-}
 #ifdef CMDSETFRAGMENTSHADINGRATEENUMNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetFragmentShadingRateEnumNV_after(commandBuffer, shadingRate, combinerOps);
@@ -19832,29 +14646,6 @@ layer_GetAccelerationStructureBuildSizesKHR_before(device, buildType, pBuildInfo
 }
 #endif 
 device_dispatch[GetKey(device)].GetAccelerationStructureBuildSizesKHR(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pBuildInfo != VK_NULL_HANDLE && pBuildInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pBuildInfo->pNext=" + ptrToString((void**)std::addressof(pBuildInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo->flags=" + ptrToString((void**)std::addressof(pBuildInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo->srcAccelerationStructure=" + ptrToString((void**)std::addressof(pBuildInfo->srcAccelerationStructure)) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo->dstAccelerationStructure=" + ptrToString((void**)std::addressof(pBuildInfo->dstAccelerationStructure)) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo->geometryCount=" + std::to_string(pBuildInfo->geometryCount) + '!');
-if(pBuildInfo->pGeometries != VK_NULL_HANDLE && pBuildInfo->pGeometries != NULL) {
-winsockSendToUI(&ConnectSocket,"pBuildInfo->pGeometries->pNext=" + ptrToString((void**)std::addressof(pBuildInfo->pGeometries->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo->pGeometries->geometry=" + ptrToString((void**)std::addressof(pBuildInfo->pGeometries->geometry)) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo->pGeometries->flags=" + ptrToString((void**)std::addressof(pBuildInfo->pGeometries->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pGeometries=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pBuildInfo->scratchData=" + ptrToString((void**)std::addressof(pBuildInfo->scratchData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBuildInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pMaxPrimitiveCounts=" + ptrToString((void**)std::addressof(pMaxPrimitiveCounts)) + '!');
-if(pSizeInfo != VK_NULL_HANDLE && pSizeInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSizeInfo->pNext=" + ptrToString((void**)std::addressof(pSizeInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSizeInfo->accelerationStructureSize=" + std::to_string(pSizeInfo->accelerationStructureSize) + '!');
-winsockSendToUI(&ConnectSocket,"pSizeInfo->updateScratchSize=" + std::to_string(pSizeInfo->updateScratchSize) + '!');
-winsockSendToUI(&ConnectSocket,"pSizeInfo->buildScratchSize=" + std::to_string(pSizeInfo->buildScratchSize) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSizeInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETACCELERATIONSTRUCTUREBUILDSIZESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetAccelerationStructureBuildSizesKHR_after(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo);
@@ -19880,23 +14671,6 @@ layer_CmdSetVertexInputEXT_before(commandBuffer, vertexBindingDescriptionCount, 
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetVertexInputEXT(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"vertexBindingDescriptionCount=" + std::to_string(vertexBindingDescriptionCount) + '!');
-if(pVertexBindingDescriptions != VK_NULL_HANDLE && pVertexBindingDescriptions != NULL) {
-winsockSendToUI(&ConnectSocket,"pVertexBindingDescriptions->pNext=" + ptrToString((void**)std::addressof(pVertexBindingDescriptions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pVertexBindingDescriptions->binding=" + std::to_string(pVertexBindingDescriptions->binding) + '!');
-winsockSendToUI(&ConnectSocket,"pVertexBindingDescriptions->stride=" + std::to_string(pVertexBindingDescriptions->stride) + '!');
-winsockSendToUI(&ConnectSocket,"pVertexBindingDescriptions->divisor=" + std::to_string(pVertexBindingDescriptions->divisor) + '!');
-}else winsockSendToUI(&ConnectSocket, "pVertexBindingDescriptions=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"vertexAttributeDescriptionCount=" + std::to_string(vertexAttributeDescriptionCount) + '!');
-if(pVertexAttributeDescriptions != VK_NULL_HANDLE && pVertexAttributeDescriptions != NULL) {
-winsockSendToUI(&ConnectSocket,"pVertexAttributeDescriptions->pNext=" + ptrToString((void**)std::addressof(pVertexAttributeDescriptions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pVertexAttributeDescriptions->location=" + std::to_string(pVertexAttributeDescriptions->location) + '!');
-winsockSendToUI(&ConnectSocket,"pVertexAttributeDescriptions->binding=" + std::to_string(pVertexAttributeDescriptions->binding) + '!');
-winsockSendToUI(&ConnectSocket,"pVertexAttributeDescriptions->offset=" + std::to_string(pVertexAttributeDescriptions->offset) + '!');
-}else winsockSendToUI(&ConnectSocket, "pVertexAttributeDescriptions=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETVERTEXINPUTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetVertexInputEXT_after(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions);
@@ -19922,11 +14696,6 @@ layer_CmdSetColorWriteEnableEXT_before(commandBuffer, attachmentCount, pColorWri
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetColorWriteEnableEXT(commandBuffer, attachmentCount, pColorWriteEnables);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"attachmentCount=" + std::to_string(attachmentCount) + '!');
-winsockSendToUI(&ConnectSocket,"pColorWriteEnables=" + ptrToString((void**)std::addressof(pColorWriteEnables)) + '!');
-}
 #ifdef CMDSETCOLORWRITEENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetColorWriteEnableEXT_after(commandBuffer, attachmentCount, pColorWriteEnables);
@@ -19952,47 +14721,6 @@ layer_CmdSetEvent2_before(commandBuffer, event, pDependencyInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetEvent2(commandBuffer, event, pDependencyInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void**)std::addressof(event)) + '!');
-if(pDependencyInfo != VK_NULL_HANDLE && pDependencyInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->dependencyFlags=" + ptrToString((void**)std::addressof(pDependencyInfo->dependencyFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->memoryBarrierCount=" + std::to_string(pDependencyInfo->memoryBarrierCount) + '!');
-if(pDependencyInfo->pMemoryBarriers != VK_NULL_HANDLE && pDependencyInfo->pMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->dstAccessMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->bufferMemoryBarrierCount=" + std::to_string(pDependencyInfo->bufferMemoryBarrierCount) + '!');
-if(pDependencyInfo->pBufferMemoryBarriers != VK_NULL_HANDLE && pDependencyInfo->pBufferMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->buffer=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->offset=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->size=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBufferMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->imageMemoryBarrierCount=" + std::to_string(pDependencyInfo->imageMemoryBarrierCount) + '!');
-if(pDependencyInfo->pImageMemoryBarriers != VK_NULL_HANDLE && pDependencyInfo->pImageMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pDependencyInfo->pImageMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pDependencyInfo->pImageMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->image=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->image)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->subresourceRange=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->subresourceRange)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageMemoryBarriers=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pDependencyInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETEVENT2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetEvent2_after(commandBuffer, event, pDependencyInfo);
@@ -20018,11 +14746,6 @@ layer_CmdResetEvent2_before(commandBuffer, event, stageMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdResetEvent2(commandBuffer, event, stageMask);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void**)std::addressof(event)) + '!');
-winsockSendToUI(&ConnectSocket,"stageMask=" + ptrToString((void**)std::addressof(stageMask)) + '!');
-}
 #ifdef CMDRESETEVENT2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdResetEvent2_after(commandBuffer, event, stageMask);
@@ -20048,48 +14771,6 @@ layer_CmdWaitEvents2_before(commandBuffer, eventCount, pEvents, pDependencyInfos
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWaitEvents2(commandBuffer, eventCount, pEvents, pDependencyInfos);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"eventCount=" + std::to_string(eventCount) + '!');
-winsockSendToUI(&ConnectSocket,"pEvents=" + ptrToString((void**)std::addressof(pEvents)) + '!');
-if(pDependencyInfos != VK_NULL_HANDLE && pDependencyInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pNext=" + ptrToString((void**)std::addressof(pDependencyInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->dependencyFlags=" + ptrToString((void**)std::addressof(pDependencyInfos->dependencyFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->memoryBarrierCount=" + std::to_string(pDependencyInfos->memoryBarrierCount) + '!');
-if(pDependencyInfos->pMemoryBarriers != VK_NULL_HANDLE && pDependencyInfos->pMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfos->pMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pMemoryBarriers->dstAccessMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->bufferMemoryBarrierCount=" + std::to_string(pDependencyInfos->bufferMemoryBarrierCount) + '!');
-if(pDependencyInfos->pBufferMemoryBarriers != VK_NULL_HANDLE && pDependencyInfos->pBufferMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfos->pBufferMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pBufferMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pBufferMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pBufferMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pBufferMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pDependencyInfos->pBufferMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pDependencyInfos->pBufferMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->buffer=" + ptrToString((void**)std::addressof(pDependencyInfos->pBufferMemoryBarriers->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->offset=" + std::to_string(pDependencyInfos->pBufferMemoryBarriers->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->size=" + std::to_string(pDependencyInfos->pBufferMemoryBarriers->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBufferMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->imageMemoryBarrierCount=" + std::to_string(pDependencyInfos->imageMemoryBarrierCount) + '!');
-if(pDependencyInfos->pImageMemoryBarriers != VK_NULL_HANDLE && pDependencyInfos->pImageMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfos->pImageMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pImageMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pImageMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pImageMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pImageMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pDependencyInfos->pImageMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pDependencyInfos->pImageMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->image=" + ptrToString((void**)std::addressof(pDependencyInfos->pImageMemoryBarriers->image)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->subresourceRange=" + ptrToString((void**)std::addressof(pDependencyInfos->pImageMemoryBarriers->subresourceRange)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageMemoryBarriers=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pDependencyInfos=VK_NULL_HANDLE!");
-}
 #ifdef CMDWAITEVENTS2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWaitEvents2_after(commandBuffer, eventCount, pEvents, pDependencyInfos);
@@ -20115,46 +14796,6 @@ layer_CmdPipelineBarrier2_before(commandBuffer, pDependencyInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier2(commandBuffer, pDependencyInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pDependencyInfo != VK_NULL_HANDLE && pDependencyInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->dependencyFlags=" + ptrToString((void**)std::addressof(pDependencyInfo->dependencyFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->memoryBarrierCount=" + std::to_string(pDependencyInfo->memoryBarrierCount) + '!');
-if(pDependencyInfo->pMemoryBarriers != VK_NULL_HANDLE && pDependencyInfo->pMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->dstAccessMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->bufferMemoryBarrierCount=" + std::to_string(pDependencyInfo->bufferMemoryBarrierCount) + '!');
-if(pDependencyInfo->pBufferMemoryBarriers != VK_NULL_HANDLE && pDependencyInfo->pBufferMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->buffer=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->offset=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->size=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBufferMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->imageMemoryBarrierCount=" + std::to_string(pDependencyInfo->imageMemoryBarrierCount) + '!');
-if(pDependencyInfo->pImageMemoryBarriers != VK_NULL_HANDLE && pDependencyInfo->pImageMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pDependencyInfo->pImageMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pDependencyInfo->pImageMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->image=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->image)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->subresourceRange=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->subresourceRange)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageMemoryBarriers=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pDependencyInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDPIPELINEBARRIER2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPipelineBarrier2_after(commandBuffer, pDependencyInfo);
@@ -20181,37 +14822,6 @@ layer_QueueSubmit2_before(queue, submitCount, pSubmits, fence);
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueueSubmit2(queue, submitCount, pSubmits, fence);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void**)std::addressof(queue)) + '!');
-winsockSendToUI(&ConnectSocket,"submitCount=" + std::to_string(submitCount) + '!');
-if(pSubmits != VK_NULL_HANDLE && pSubmits != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubmits->pNext=" + ptrToString((void**)std::addressof(pSubmits->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->flags=" + ptrToString((void**)std::addressof(pSubmits->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->waitSemaphoreInfoCount=" + std::to_string(pSubmits->waitSemaphoreInfoCount) + '!');
-if(pSubmits->pWaitSemaphoreInfos != VK_NULL_HANDLE && pSubmits->pWaitSemaphoreInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubmits->pWaitSemaphoreInfos->pNext=" + ptrToString((void**)std::addressof(pSubmits->pWaitSemaphoreInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pWaitSemaphoreInfos->semaphore=" + ptrToString((void**)std::addressof(pSubmits->pWaitSemaphoreInfos->semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pWaitSemaphoreInfos->value=" + std::to_string(pSubmits->pWaitSemaphoreInfos->value) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pWaitSemaphoreInfos->stageMask=" + ptrToString((void**)std::addressof(pSubmits->pWaitSemaphoreInfos->stageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pWaitSemaphoreInfos->deviceIndex=" + std::to_string(pSubmits->pWaitSemaphoreInfos->deviceIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pWaitSemaphoreInfos=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSubmits->commandBufferInfoCount=" + std::to_string(pSubmits->commandBufferInfoCount) + '!');
-if(pSubmits->pCommandBufferInfos != VK_NULL_HANDLE && pSubmits->pCommandBufferInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubmits->pCommandBufferInfos->pNext=" + ptrToString((void**)std::addressof(pSubmits->pCommandBufferInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pCommandBufferInfos->commandBuffer=" + ptrToString((void**)std::addressof(pSubmits->pCommandBufferInfos->commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pCommandBufferInfos->deviceMask=" + std::to_string(pSubmits->pCommandBufferInfos->deviceMask) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCommandBufferInfos=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSubmits->signalSemaphoreInfoCount=" + std::to_string(pSubmits->signalSemaphoreInfoCount) + '!');
-if(pSubmits->pSignalSemaphoreInfos != VK_NULL_HANDLE && pSubmits->pSignalSemaphoreInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubmits->pSignalSemaphoreInfos->pNext=" + ptrToString((void**)std::addressof(pSubmits->pSignalSemaphoreInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pSignalSemaphoreInfos->semaphore=" + ptrToString((void**)std::addressof(pSubmits->pSignalSemaphoreInfos->semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pSignalSemaphoreInfos->value=" + std::to_string(pSubmits->pSignalSemaphoreInfos->value) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pSignalSemaphoreInfos->stageMask=" + ptrToString((void**)std::addressof(pSubmits->pSignalSemaphoreInfos->stageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pSignalSemaphoreInfos->deviceIndex=" + std::to_string(pSubmits->pSignalSemaphoreInfos->deviceIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSignalSemaphoreInfos=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pSubmits=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void**)std::addressof(fence)) + '!');
-}
 #ifdef QUEUESUBMIT2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueSubmit2_after(queue, submitCount, pSubmits, fence);
@@ -20240,12 +14850,6 @@ layer_CmdWriteTimestamp2_before(commandBuffer, stage, queryPool, query);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp2(commandBuffer, stage, queryPool, query);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"stage=" + ptrToString((void**)std::addressof(stage)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"query=" + std::to_string(query) + '!');
-}
 #ifdef CMDWRITETIMESTAMP2_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteTimestamp2_after(commandBuffer, stage, queryPool, query);
@@ -20271,13 +14875,6 @@ layer_CmdWriteBufferMarker2AMD_before(commandBuffer, stage, dstBuffer, dstOffset
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteBufferMarker2AMD(commandBuffer, stage, dstBuffer, dstOffset, marker);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"stage=" + ptrToString((void**)std::addressof(stage)) + '!');
-winsockSendToUI(&ConnectSocket,"dstBuffer=" + ptrToString((void**)std::addressof(dstBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"dstOffset=" + std::to_string(dstOffset) + '!');
-winsockSendToUI(&ConnectSocket,"marker=" + std::to_string(marker) + '!');
-}
 #ifdef CMDWRITEBUFFERMARKER2AMD_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteBufferMarker2AMD_after(commandBuffer, stage, dstBuffer, dstOffset, marker);
@@ -20303,15 +14900,6 @@ layer_GetQueueCheckpointData2NV_before(queue, pCheckpointDataCount, pCheckpointD
 }
 #endif 
 device_dispatch[GetKey(queue)].GetQueueCheckpointData2NV(queue, pCheckpointDataCount, pCheckpointData);
-if(connected){
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void**)std::addressof(queue)) + '!');
-winsockSendToUI(&ConnectSocket,"pCheckpointDataCount=" + ptrToString((void**)std::addressof(pCheckpointDataCount)) + '!');
-if(pCheckpointData != VK_NULL_HANDLE && pCheckpointData != NULL) {
-winsockSendToUI(&ConnectSocket,"pCheckpointData->pNext=" + ptrToString((void**)std::addressof(pCheckpointData->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCheckpointData->stage=" + ptrToString((void**)std::addressof(pCheckpointData->stage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCheckpointData->pCheckpointMarker=" + ptrToString((void**)std::addressof(pCheckpointData->pCheckpointMarker)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCheckpointData=VK_NULL_HANDLE!");
-}
 #ifdef GETQUEUECHECKPOINTDATA2NV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetQueueCheckpointData2NV_after(queue, pCheckpointDataCount, pCheckpointData);
@@ -20338,24 +14926,6 @@ layer_CopyMemoryToImageEXT_before(device, pCopyMemoryToImageInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyMemoryToImageEXT(device, pCopyMemoryToImageInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCopyMemoryToImageInfo != VK_NULL_HANDLE && pCopyMemoryToImageInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyMemoryToImageInfo->pNext=" + ptrToString((void**)std::addressof(pCopyMemoryToImageInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyMemoryToImageInfo->flags=" + ptrToString((void**)std::addressof(pCopyMemoryToImageInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyMemoryToImageInfo->dstImage=" + ptrToString((void**)std::addressof(pCopyMemoryToImageInfo->dstImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyMemoryToImageInfo->regionCount=" + std::to_string(pCopyMemoryToImageInfo->regionCount) + '!');
-if(pCopyMemoryToImageInfo->pRegions != VK_NULL_HANDLE && pCopyMemoryToImageInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyMemoryToImageInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pCopyMemoryToImageInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyMemoryToImageInfo->pRegions->pHostPointer=" + ptrToString((void**)std::addressof(pCopyMemoryToImageInfo->pRegions->pHostPointer)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyMemoryToImageInfo->pRegions->memoryRowLength=" + std::to_string(pCopyMemoryToImageInfo->pRegions->memoryRowLength) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyMemoryToImageInfo->pRegions->memoryImageHeight=" + std::to_string(pCopyMemoryToImageInfo->pRegions->memoryImageHeight) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyMemoryToImageInfo->pRegions->imageSubresource=" + ptrToString((void**)std::addressof(pCopyMemoryToImageInfo->pRegions->imageSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyMemoryToImageInfo->pRegions->imageOffset=" + ptrToString((void**)std::addressof(pCopyMemoryToImageInfo->pRegions->imageOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyMemoryToImageInfo->pRegions->imageExtent=" + ptrToString((void**)std::addressof(pCopyMemoryToImageInfo->pRegions->imageExtent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCopyMemoryToImageInfo=VK_NULL_HANDLE!");
-}
 #ifdef COPYMEMORYTOIMAGEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyMemoryToImageEXT_after(device, pCopyMemoryToImageInfo);
@@ -20385,24 +14955,6 @@ layer_CopyImageToMemoryEXT_before(device, pCopyImageToMemoryInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyImageToMemoryEXT(device, pCopyImageToMemoryInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCopyImageToMemoryInfo != VK_NULL_HANDLE && pCopyImageToMemoryInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyImageToMemoryInfo->pNext=" + ptrToString((void**)std::addressof(pCopyImageToMemoryInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToMemoryInfo->flags=" + ptrToString((void**)std::addressof(pCopyImageToMemoryInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToMemoryInfo->srcImage=" + ptrToString((void**)std::addressof(pCopyImageToMemoryInfo->srcImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToMemoryInfo->regionCount=" + std::to_string(pCopyImageToMemoryInfo->regionCount) + '!');
-if(pCopyImageToMemoryInfo->pRegions != VK_NULL_HANDLE && pCopyImageToMemoryInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyImageToMemoryInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pCopyImageToMemoryInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToMemoryInfo->pRegions->pHostPointer=" + ptrToString((void**)std::addressof(pCopyImageToMemoryInfo->pRegions->pHostPointer)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToMemoryInfo->pRegions->memoryRowLength=" + std::to_string(pCopyImageToMemoryInfo->pRegions->memoryRowLength) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToMemoryInfo->pRegions->memoryImageHeight=" + std::to_string(pCopyImageToMemoryInfo->pRegions->memoryImageHeight) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToMemoryInfo->pRegions->imageSubresource=" + ptrToString((void**)std::addressof(pCopyImageToMemoryInfo->pRegions->imageSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToMemoryInfo->pRegions->imageOffset=" + ptrToString((void**)std::addressof(pCopyImageToMemoryInfo->pRegions->imageOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToMemoryInfo->pRegions->imageExtent=" + ptrToString((void**)std::addressof(pCopyImageToMemoryInfo->pRegions->imageExtent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCopyImageToMemoryInfo=VK_NULL_HANDLE!");
-}
 #ifdef COPYIMAGETOMEMORYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyImageToMemoryEXT_after(device, pCopyImageToMemoryInfo);
@@ -20432,24 +14984,6 @@ layer_CopyImageToImageEXT_before(device, pCopyImageToImageInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyImageToImageEXT(device, pCopyImageToImageInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCopyImageToImageInfo != VK_NULL_HANDLE && pCopyImageToImageInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyImageToImageInfo->pNext=" + ptrToString((void**)std::addressof(pCopyImageToImageInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToImageInfo->flags=" + ptrToString((void**)std::addressof(pCopyImageToImageInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToImageInfo->srcImage=" + ptrToString((void**)std::addressof(pCopyImageToImageInfo->srcImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToImageInfo->dstImage=" + ptrToString((void**)std::addressof(pCopyImageToImageInfo->dstImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToImageInfo->regionCount=" + std::to_string(pCopyImageToImageInfo->regionCount) + '!');
-if(pCopyImageToImageInfo->pRegions != VK_NULL_HANDLE && pCopyImageToImageInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyImageToImageInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pCopyImageToImageInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToImageInfo->pRegions->srcSubresource=" + ptrToString((void**)std::addressof(pCopyImageToImageInfo->pRegions->srcSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToImageInfo->pRegions->srcOffset=" + ptrToString((void**)std::addressof(pCopyImageToImageInfo->pRegions->srcOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToImageInfo->pRegions->dstSubresource=" + ptrToString((void**)std::addressof(pCopyImageToImageInfo->pRegions->dstSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToImageInfo->pRegions->dstOffset=" + ptrToString((void**)std::addressof(pCopyImageToImageInfo->pRegions->dstOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToImageInfo->pRegions->extent=" + ptrToString((void**)std::addressof(pCopyImageToImageInfo->pRegions->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCopyImageToImageInfo=VK_NULL_HANDLE!");
-}
 #ifdef COPYIMAGETOIMAGEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyImageToImageEXT_after(device, pCopyImageToImageInfo);
@@ -20479,15 +15013,6 @@ layer_TransitionImageLayoutEXT_before(device, transitionCount, pTransitions);
 #endif 
 auto ret = device_dispatch[GetKey(device)].TransitionImageLayoutEXT(device, transitionCount, pTransitions);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"transitionCount=" + std::to_string(transitionCount) + '!');
-if(pTransitions != VK_NULL_HANDLE && pTransitions != NULL) {
-winsockSendToUI(&ConnectSocket,"pTransitions->pNext=" + ptrToString((void**)std::addressof(pTransitions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pTransitions->image=" + ptrToString((void**)std::addressof(pTransitions->image)) + '!');
-winsockSendToUI(&ConnectSocket,"pTransitions->subresourceRange=" + ptrToString((void**)std::addressof(pTransitions->subresourceRange)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pTransitions=VK_NULL_HANDLE!");
-}
 #ifdef TRANSITIONIMAGELAYOUTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_TransitionImageLayoutEXT_after(device, transitionCount, pTransitions);
@@ -20517,36 +15042,6 @@ layer_CreateVideoSessionKHR_before(device, pCreateInfo, pAllocator, pVideoSessio
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateVideoSessionKHR(device, pCreateInfo, pAllocator, pVideoSession);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->queueFamilyIndex=" + std::to_string(pCreateInfo->queueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-if(pCreateInfo->pVideoProfile != VK_NULL_HANDLE && pCreateInfo->pVideoProfile != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pVideoProfile->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pVideoProfile->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pVideoProfile->chromaSubsampling=" + ptrToString((void**)std::addressof(pCreateInfo->pVideoProfile->chromaSubsampling)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pVideoProfile->lumaBitDepth=" + ptrToString((void**)std::addressof(pCreateInfo->pVideoProfile->lumaBitDepth)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pVideoProfile->chromaBitDepth=" + ptrToString((void**)std::addressof(pCreateInfo->pVideoProfile->chromaBitDepth)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pVideoProfile=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->maxCodedExtent=" + ptrToString((void**)std::addressof(pCreateInfo->maxCodedExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->maxDpbSlots=" + std::to_string(pCreateInfo->maxDpbSlots) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->maxActiveReferencePictures=" + std::to_string(pCreateInfo->maxActiveReferencePictures) + '!');
-if(pCreateInfo->pStdHeaderVersion != VK_NULL_HANDLE && pCreateInfo->pStdHeaderVersion != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pStdHeaderVersion->extensionName=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pStdHeaderVersion->specVersion=" + std::to_string(pCreateInfo->pStdHeaderVersion->specVersion) + '!');
-}else winsockSendToUI(&ConnectSocket, "pStdHeaderVersion=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pVideoSession=" + ptrToString((void**)std::addressof(pVideoSession)) + '!');
-}
 #ifdef CREATEVIDEOSESSIONKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateVideoSessionKHR_after(device, pCreateInfo, pAllocator, pVideoSession);
@@ -20575,18 +15070,6 @@ layer_DestroyVideoSessionKHR_before(device, videoSession, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyVideoSessionKHR(device, videoSession, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"videoSession=" + ptrToString((void**)std::addressof(videoSession)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYVIDEOSESSIONKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyVideoSessionKHR_after(device, videoSession, pAllocator);
@@ -20613,24 +15096,6 @@ layer_CreateVideoSessionParametersKHR_before(device, pCreateInfo, pAllocator, pV
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateVideoSessionParametersKHR(device, pCreateInfo, pAllocator, pVideoSessionParameters);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->videoSessionParametersTemplate=" + ptrToString((void**)std::addressof(pCreateInfo->videoSessionParametersTemplate)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->videoSession=" + ptrToString((void**)std::addressof(pCreateInfo->videoSession)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pVideoSessionParameters=" + ptrToString((void**)std::addressof(pVideoSessionParameters)) + '!');
-}
 #ifdef CREATEVIDEOSESSIONPARAMETERSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateVideoSessionParametersKHR_after(device, pCreateInfo, pAllocator, pVideoSessionParameters);
@@ -20660,14 +15125,6 @@ layer_UpdateVideoSessionParametersKHR_before(device, videoSessionParameters, pUp
 #endif 
 auto ret = device_dispatch[GetKey(device)].UpdateVideoSessionParametersKHR(device, videoSessionParameters, pUpdateInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"videoSessionParameters=" + ptrToString((void**)std::addressof(videoSessionParameters)) + '!');
-if(pUpdateInfo != VK_NULL_HANDLE && pUpdateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pUpdateInfo->pNext=" + ptrToString((void**)std::addressof(pUpdateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pUpdateInfo->updateSequenceCount=" + std::to_string(pUpdateInfo->updateSequenceCount) + '!');
-}else winsockSendToUI(&ConnectSocket, "pUpdateInfo=VK_NULL_HANDLE!");
-}
 #ifdef UPDATEVIDEOSESSIONPARAMETERSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_UpdateVideoSessionParametersKHR_after(device, videoSessionParameters, pUpdateInfo);
@@ -20697,19 +15154,6 @@ layer_GetEncodedVideoSessionParametersKHR_before(device, pVideoSessionParameters
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetEncodedVideoSessionParametersKHR(device, pVideoSessionParametersInfo, pFeedbackInfo, pDataSize, pData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pVideoSessionParametersInfo != VK_NULL_HANDLE && pVideoSessionParametersInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pVideoSessionParametersInfo->pNext=" + ptrToString((void**)std::addressof(pVideoSessionParametersInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pVideoSessionParametersInfo->videoSessionParameters=" + ptrToString((void**)std::addressof(pVideoSessionParametersInfo->videoSessionParameters)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pVideoSessionParametersInfo=VK_NULL_HANDLE!");
-if(pFeedbackInfo != VK_NULL_HANDLE && pFeedbackInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pFeedbackInfo->pNext=" + ptrToString((void**)std::addressof(pFeedbackInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pFeedbackInfo->hasOverrides=" + bool_as_text(pFeedbackInfo->hasOverrides) + '!');
-}else winsockSendToUI(&ConnectSocket, "pFeedbackInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDataSize=" + ptrToString((void**)std::addressof(pDataSize)) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETENCODEDVIDEOSESSIONPARAMETERSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetEncodedVideoSessionParametersKHR_after(device, pVideoSessionParametersInfo, pFeedbackInfo, pDataSize, pData);
@@ -20738,18 +15182,6 @@ layer_DestroyVideoSessionParametersKHR_before(device, videoSessionParameters, pA
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyVideoSessionParametersKHR(device, videoSessionParameters, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"videoSessionParameters=" + ptrToString((void**)std::addressof(videoSessionParameters)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYVIDEOSESSIONPARAMETERSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyVideoSessionParametersKHR_after(device, videoSessionParameters, pAllocator);
@@ -20776,16 +15208,6 @@ layer_GetVideoSessionMemoryRequirementsKHR_before(device, videoSession, pMemoryR
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetVideoSessionMemoryRequirementsKHR(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"videoSession=" + ptrToString((void**)std::addressof(videoSession)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirementsCount=" + ptrToString((void**)std::addressof(pMemoryRequirementsCount)) + '!');
-if(pMemoryRequirements != VK_NULL_HANDLE && pMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->memoryBindIndex=" + std::to_string(pMemoryRequirements->memoryBindIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETVIDEOSESSIONMEMORYREQUIREMENTSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetVideoSessionMemoryRequirementsKHR_after(device, videoSession, pMemoryRequirementsCount, pMemoryRequirements);
@@ -20815,18 +15237,6 @@ layer_BindVideoSessionMemoryKHR_before(device, videoSession, bindSessionMemoryIn
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindVideoSessionMemoryKHR(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"videoSession=" + ptrToString((void**)std::addressof(videoSession)) + '!');
-winsockSendToUI(&ConnectSocket,"bindSessionMemoryInfoCount=" + std::to_string(bindSessionMemoryInfoCount) + '!');
-if(pBindSessionMemoryInfos != VK_NULL_HANDLE && pBindSessionMemoryInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindSessionMemoryInfos->pNext=" + ptrToString((void**)std::addressof(pBindSessionMemoryInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindSessionMemoryInfos->memoryBindIndex=" + std::to_string(pBindSessionMemoryInfos->memoryBindIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pBindSessionMemoryInfos->memory=" + ptrToString((void**)std::addressof(pBindSessionMemoryInfos->memory)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindSessionMemoryInfos->memoryOffset=" + std::to_string(pBindSessionMemoryInfos->memoryOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pBindSessionMemoryInfos->memorySize=" + std::to_string(pBindSessionMemoryInfos->memorySize) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBindSessionMemoryInfos=VK_NULL_HANDLE!");
-}
 #ifdef BINDVIDEOSESSIONMEMORYKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindVideoSessionMemoryKHR_after(device, videoSession, bindSessionMemoryInfoCount, pBindSessionMemoryInfos);
@@ -20855,40 +15265,6 @@ layer_CmdDecodeVideoKHR_before(commandBuffer, pDecodeInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDecodeVideoKHR(commandBuffer, pDecodeInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pDecodeInfo != VK_NULL_HANDLE && pDecodeInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pNext=" + ptrToString((void**)std::addressof(pDecodeInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->flags=" + ptrToString((void**)std::addressof(pDecodeInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->srcBuffer=" + ptrToString((void**)std::addressof(pDecodeInfo->srcBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->srcBufferOffset=" + std::to_string(pDecodeInfo->srcBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->srcBufferRange=" + std::to_string(pDecodeInfo->srcBufferRange) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->dstPictureResource=" + ptrToString((void**)std::addressof(pDecodeInfo->dstPictureResource)) + '!');
-if(pDecodeInfo->pSetupReferenceSlot != VK_NULL_HANDLE && pDecodeInfo->pSetupReferenceSlot != NULL) {
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pSetupReferenceSlot->pNext=" + ptrToString((void**)std::addressof(pDecodeInfo->pSetupReferenceSlot->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pSetupReferenceSlot->slotIndex=" + std::to_string(pDecodeInfo->pSetupReferenceSlot->slotIndex) + '!');
-if(pDecodeInfo->pSetupReferenceSlot->pPictureResource != VK_NULL_HANDLE && pDecodeInfo->pSetupReferenceSlot->pPictureResource != NULL) {
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pSetupReferenceSlot->pPictureResource->pNext=" + ptrToString((void**)std::addressof(pDecodeInfo->pSetupReferenceSlot->pPictureResource->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pSetupReferenceSlot->pPictureResource->codedOffset=" + ptrToString((void**)std::addressof(pDecodeInfo->pSetupReferenceSlot->pPictureResource->codedOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pSetupReferenceSlot->pPictureResource->codedExtent=" + ptrToString((void**)std::addressof(pDecodeInfo->pSetupReferenceSlot->pPictureResource->codedExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pSetupReferenceSlot->pPictureResource->baseArrayLayer=" + std::to_string(pDecodeInfo->pSetupReferenceSlot->pPictureResource->baseArrayLayer) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pSetupReferenceSlot->pPictureResource->imageViewBinding=" + ptrToString((void**)std::addressof(pDecodeInfo->pSetupReferenceSlot->pPictureResource->imageViewBinding)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPictureResource=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pSetupReferenceSlot=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->referenceSlotCount=" + std::to_string(pDecodeInfo->referenceSlotCount) + '!');
-if(pDecodeInfo->pReferenceSlots != VK_NULL_HANDLE && pDecodeInfo->pReferenceSlots != NULL) {
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pReferenceSlots->pNext=" + ptrToString((void**)std::addressof(pDecodeInfo->pReferenceSlots->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pReferenceSlots->slotIndex=" + std::to_string(pDecodeInfo->pReferenceSlots->slotIndex) + '!');
-if(pDecodeInfo->pReferenceSlots->pPictureResource != VK_NULL_HANDLE && pDecodeInfo->pReferenceSlots->pPictureResource != NULL) {
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pReferenceSlots->pPictureResource->pNext=" + ptrToString((void**)std::addressof(pDecodeInfo->pReferenceSlots->pPictureResource->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pReferenceSlots->pPictureResource->codedOffset=" + ptrToString((void**)std::addressof(pDecodeInfo->pReferenceSlots->pPictureResource->codedOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pReferenceSlots->pPictureResource->codedExtent=" + ptrToString((void**)std::addressof(pDecodeInfo->pReferenceSlots->pPictureResource->codedExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pReferenceSlots->pPictureResource->baseArrayLayer=" + std::to_string(pDecodeInfo->pReferenceSlots->pPictureResource->baseArrayLayer) + '!');
-winsockSendToUI(&ConnectSocket,"pDecodeInfo->pReferenceSlots->pPictureResource->imageViewBinding=" + ptrToString((void**)std::addressof(pDecodeInfo->pReferenceSlots->pPictureResource->imageViewBinding)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPictureResource=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pReferenceSlots=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pDecodeInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDDECODEVIDEOKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDecodeVideoKHR_after(commandBuffer, pDecodeInfo);
@@ -20914,27 +15290,6 @@ layer_CmdBeginVideoCodingKHR_before(commandBuffer, pBeginInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginVideoCodingKHR(commandBuffer, pBeginInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pBeginInfo != VK_NULL_HANDLE && pBeginInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pNext=" + ptrToString((void**)std::addressof(pBeginInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->flags=" + ptrToString((void**)std::addressof(pBeginInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->videoSession=" + ptrToString((void**)std::addressof(pBeginInfo->videoSession)) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->videoSessionParameters=" + ptrToString((void**)std::addressof(pBeginInfo->videoSessionParameters)) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->referenceSlotCount=" + std::to_string(pBeginInfo->referenceSlotCount) + '!');
-if(pBeginInfo->pReferenceSlots != VK_NULL_HANDLE && pBeginInfo->pReferenceSlots != NULL) {
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pReferenceSlots->pNext=" + ptrToString((void**)std::addressof(pBeginInfo->pReferenceSlots->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pReferenceSlots->slotIndex=" + std::to_string(pBeginInfo->pReferenceSlots->slotIndex) + '!');
-if(pBeginInfo->pReferenceSlots->pPictureResource != VK_NULL_HANDLE && pBeginInfo->pReferenceSlots->pPictureResource != NULL) {
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pReferenceSlots->pPictureResource->pNext=" + ptrToString((void**)std::addressof(pBeginInfo->pReferenceSlots->pPictureResource->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pReferenceSlots->pPictureResource->codedOffset=" + ptrToString((void**)std::addressof(pBeginInfo->pReferenceSlots->pPictureResource->codedOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pReferenceSlots->pPictureResource->codedExtent=" + ptrToString((void**)std::addressof(pBeginInfo->pReferenceSlots->pPictureResource->codedExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pReferenceSlots->pPictureResource->baseArrayLayer=" + std::to_string(pBeginInfo->pReferenceSlots->pPictureResource->baseArrayLayer) + '!');
-winsockSendToUI(&ConnectSocket,"pBeginInfo->pReferenceSlots->pPictureResource->imageViewBinding=" + ptrToString((void**)std::addressof(pBeginInfo->pReferenceSlots->pPictureResource->imageViewBinding)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPictureResource=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pReferenceSlots=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pBeginInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDBEGINVIDEOCODINGKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginVideoCodingKHR_after(commandBuffer, pBeginInfo);
@@ -20960,13 +15315,6 @@ layer_CmdControlVideoCodingKHR_before(commandBuffer, pCodingControlInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdControlVideoCodingKHR(commandBuffer, pCodingControlInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pCodingControlInfo != VK_NULL_HANDLE && pCodingControlInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCodingControlInfo->pNext=" + ptrToString((void**)std::addressof(pCodingControlInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCodingControlInfo->flags=" + ptrToString((void**)std::addressof(pCodingControlInfo->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCodingControlInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCONTROLVIDEOCODINGKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdControlVideoCodingKHR_after(commandBuffer, pCodingControlInfo);
@@ -20992,13 +15340,6 @@ layer_CmdEndVideoCodingKHR_before(commandBuffer, pEndCodingInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndVideoCodingKHR(commandBuffer, pEndCodingInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pEndCodingInfo != VK_NULL_HANDLE && pEndCodingInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pEndCodingInfo->pNext=" + ptrToString((void**)std::addressof(pEndCodingInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pEndCodingInfo->flags=" + ptrToString((void**)std::addressof(pEndCodingInfo->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pEndCodingInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDENDVIDEOCODINGKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndVideoCodingKHR_after(commandBuffer, pEndCodingInfo);
@@ -21024,41 +15365,6 @@ layer_CmdEncodeVideoKHR_before(commandBuffer, pEncodeInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEncodeVideoKHR(commandBuffer, pEncodeInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pEncodeInfo != VK_NULL_HANDLE && pEncodeInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pNext=" + ptrToString((void**)std::addressof(pEncodeInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->flags=" + ptrToString((void**)std::addressof(pEncodeInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->dstBuffer=" + ptrToString((void**)std::addressof(pEncodeInfo->dstBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->dstBufferOffset=" + std::to_string(pEncodeInfo->dstBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->dstBufferRange=" + std::to_string(pEncodeInfo->dstBufferRange) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->srcPictureResource=" + ptrToString((void**)std::addressof(pEncodeInfo->srcPictureResource)) + '!');
-if(pEncodeInfo->pSetupReferenceSlot != VK_NULL_HANDLE && pEncodeInfo->pSetupReferenceSlot != NULL) {
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pSetupReferenceSlot->pNext=" + ptrToString((void**)std::addressof(pEncodeInfo->pSetupReferenceSlot->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pSetupReferenceSlot->slotIndex=" + std::to_string(pEncodeInfo->pSetupReferenceSlot->slotIndex) + '!');
-if(pEncodeInfo->pSetupReferenceSlot->pPictureResource != VK_NULL_HANDLE && pEncodeInfo->pSetupReferenceSlot->pPictureResource != NULL) {
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pSetupReferenceSlot->pPictureResource->pNext=" + ptrToString((void**)std::addressof(pEncodeInfo->pSetupReferenceSlot->pPictureResource->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pSetupReferenceSlot->pPictureResource->codedOffset=" + ptrToString((void**)std::addressof(pEncodeInfo->pSetupReferenceSlot->pPictureResource->codedOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pSetupReferenceSlot->pPictureResource->codedExtent=" + ptrToString((void**)std::addressof(pEncodeInfo->pSetupReferenceSlot->pPictureResource->codedExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pSetupReferenceSlot->pPictureResource->baseArrayLayer=" + std::to_string(pEncodeInfo->pSetupReferenceSlot->pPictureResource->baseArrayLayer) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pSetupReferenceSlot->pPictureResource->imageViewBinding=" + ptrToString((void**)std::addressof(pEncodeInfo->pSetupReferenceSlot->pPictureResource->imageViewBinding)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPictureResource=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pSetupReferenceSlot=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->referenceSlotCount=" + std::to_string(pEncodeInfo->referenceSlotCount) + '!');
-if(pEncodeInfo->pReferenceSlots != VK_NULL_HANDLE && pEncodeInfo->pReferenceSlots != NULL) {
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pReferenceSlots->pNext=" + ptrToString((void**)std::addressof(pEncodeInfo->pReferenceSlots->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pReferenceSlots->slotIndex=" + std::to_string(pEncodeInfo->pReferenceSlots->slotIndex) + '!');
-if(pEncodeInfo->pReferenceSlots->pPictureResource != VK_NULL_HANDLE && pEncodeInfo->pReferenceSlots->pPictureResource != NULL) {
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pReferenceSlots->pPictureResource->pNext=" + ptrToString((void**)std::addressof(pEncodeInfo->pReferenceSlots->pPictureResource->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pReferenceSlots->pPictureResource->codedOffset=" + ptrToString((void**)std::addressof(pEncodeInfo->pReferenceSlots->pPictureResource->codedOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pReferenceSlots->pPictureResource->codedExtent=" + ptrToString((void**)std::addressof(pEncodeInfo->pReferenceSlots->pPictureResource->codedExtent)) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pReferenceSlots->pPictureResource->baseArrayLayer=" + std::to_string(pEncodeInfo->pReferenceSlots->pPictureResource->baseArrayLayer) + '!');
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->pReferenceSlots->pPictureResource->imageViewBinding=" + ptrToString((void**)std::addressof(pEncodeInfo->pReferenceSlots->pPictureResource->imageViewBinding)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPictureResource=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pReferenceSlots=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pEncodeInfo->precedingExternallyEncodedBytes=" + std::to_string(pEncodeInfo->precedingExternallyEncodedBytes) + '!');
-}else winsockSendToUI(&ConnectSocket, "pEncodeInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDENCODEVIDEOKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEncodeVideoKHR_after(commandBuffer, pEncodeInfo);
@@ -21084,17 +15390,6 @@ layer_CmdDecompressMemoryNV_before(commandBuffer, decompressRegionCount, pDecomp
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDecompressMemoryNV(commandBuffer, decompressRegionCount, pDecompressMemoryRegions);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"decompressRegionCount=" + std::to_string(decompressRegionCount) + '!');
-if(pDecompressMemoryRegions != VK_NULL_HANDLE && pDecompressMemoryRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pDecompressMemoryRegions->srcAddress=" + ptrToString((void**)std::addressof(pDecompressMemoryRegions->srcAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"pDecompressMemoryRegions->dstAddress=" + ptrToString((void**)std::addressof(pDecompressMemoryRegions->dstAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"pDecompressMemoryRegions->compressedSize=" + std::to_string(pDecompressMemoryRegions->compressedSize) + '!');
-winsockSendToUI(&ConnectSocket,"pDecompressMemoryRegions->decompressedSize=" + std::to_string(pDecompressMemoryRegions->decompressedSize) + '!');
-winsockSendToUI(&ConnectSocket,"pDecompressMemoryRegions->decompressionMethod=" + ptrToString((void**)std::addressof(pDecompressMemoryRegions->decompressionMethod)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDecompressMemoryRegions=VK_NULL_HANDLE!");
-}
 #ifdef CMDDECOMPRESSMEMORYNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDecompressMemoryNV_after(commandBuffer, decompressRegionCount, pDecompressMemoryRegions);
@@ -21120,12 +15415,6 @@ layer_CmdDecompressMemoryIndirectCountNV_before(commandBuffer, indirectCommandsA
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDecompressMemoryIndirectCountNV(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"indirectCommandsAddress=" + ptrToString((void**)std::addressof(indirectCommandsAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"indirectCommandsCountAddress=" + ptrToString((void**)std::addressof(indirectCommandsCountAddress)) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDDECOMPRESSMEMORYINDIRECTCOUNTNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDecompressMemoryIndirectCountNV_after(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride);
@@ -21152,23 +15441,6 @@ layer_CreateCuModuleNVX_before(device, pCreateInfo, pAllocator, pModule);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateCuModuleNVX(device, pCreateInfo, pAllocator, pModule);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->dataSize=" + std::to_string(pCreateInfo->dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pData=" + ptrToString((void**)std::addressof(pCreateInfo->pData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pModule=" + ptrToString((void**)std::addressof(pModule)) + '!');
-}
 #ifdef CREATECUMODULENVX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateCuModuleNVX_after(device, pCreateInfo, pAllocator, pModule);
@@ -21198,23 +15470,6 @@ layer_CreateCuFunctionNVX_before(device, pCreateInfo, pAllocator, pFunction);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateCuFunctionNVX(device, pCreateInfo, pAllocator, pFunction);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->module=" + ptrToString((void**)std::addressof(pCreateInfo->module)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pName=" + charToString((char*)pCreateInfo->pName) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pFunction=" + ptrToString((void**)std::addressof(pFunction)) + '!');
-}
 #ifdef CREATECUFUNCTIONNVX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateCuFunctionNVX_after(device, pCreateInfo, pAllocator, pFunction);
@@ -21243,18 +15498,6 @@ layer_DestroyCuModuleNVX_before(device, module, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyCuModuleNVX(device, module, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"module=" + ptrToString((void**)std::addressof(module)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYCUMODULENVX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyCuModuleNVX_after(device, module, pAllocator);
@@ -21280,18 +15523,6 @@ layer_DestroyCuFunctionNVX_before(device, function, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyCuFunctionNVX(device, function, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"function=" + ptrToString((void**)std::addressof(function)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYCUFUNCTIONNVX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyCuFunctionNVX_after(device, function, pAllocator);
@@ -21317,24 +15548,6 @@ layer_CmdCuLaunchKernelNVX_before(commandBuffer, pLaunchInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCuLaunchKernelNVX(commandBuffer, pLaunchInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pLaunchInfo != VK_NULL_HANDLE && pLaunchInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->pNext=" + ptrToString((void**)std::addressof(pLaunchInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->function=" + ptrToString((void**)std::addressof(pLaunchInfo->function)) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->gridDimX=" + std::to_string(pLaunchInfo->gridDimX) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->gridDimY=" + std::to_string(pLaunchInfo->gridDimY) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->gridDimZ=" + std::to_string(pLaunchInfo->gridDimZ) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->blockDimX=" + std::to_string(pLaunchInfo->blockDimX) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->blockDimY=" + std::to_string(pLaunchInfo->blockDimY) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->blockDimZ=" + std::to_string(pLaunchInfo->blockDimZ) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->sharedMemBytes=" + std::to_string(pLaunchInfo->sharedMemBytes) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->paramCount=" + std::to_string(pLaunchInfo->paramCount) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->pParams=" + ptrToString((void**)std::addressof(pLaunchInfo->pParams)) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->extraCount=" + std::to_string(pLaunchInfo->extraCount) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->pExtras=" + ptrToString((void**)std::addressof(pLaunchInfo->pExtras)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pLaunchInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCULAUNCHKERNELNVX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCuLaunchKernelNVX_after(commandBuffer, pLaunchInfo);
@@ -21360,11 +15573,6 @@ layer_GetDescriptorSetLayoutSizeEXT_before(device, layout, pLayoutSizeInBytes);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutSizeEXT(device, layout, pLayoutSizeInBytes);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void**)std::addressof(layout)) + '!');
-winsockSendToUI(&ConnectSocket,"pLayoutSizeInBytes=" + ptrToString((void**)std::addressof(pLayoutSizeInBytes)) + '!');
-}
 #ifdef GETDESCRIPTORSETLAYOUTSIZEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDescriptorSetLayoutSizeEXT_after(device, layout, pLayoutSizeInBytes);
@@ -21390,12 +15598,6 @@ layer_GetDescriptorSetLayoutBindingOffsetEXT_before(device, layout, binding, pOf
 }
 #endif 
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutBindingOffsetEXT(device, layout, binding, pOffset);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void**)std::addressof(layout)) + '!');
-winsockSendToUI(&ConnectSocket,"binding=" + std::to_string(binding) + '!');
-winsockSendToUI(&ConnectSocket,"pOffset=" + ptrToString((void**)std::addressof(pOffset)) + '!');
-}
 #ifdef GETDESCRIPTORSETLAYOUTBINDINGOFFSETEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDescriptorSetLayoutBindingOffsetEXT_after(device, layout, binding, pOffset);
@@ -21421,15 +15623,6 @@ layer_GetDescriptorEXT_before(device, pDescriptorInfo, dataSize, pDescriptor);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDescriptorEXT(device, pDescriptorInfo, dataSize, pDescriptor);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pDescriptorInfo != VK_NULL_HANDLE && pDescriptorInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDescriptorInfo->pNext=" + ptrToString((void**)std::addressof(pDescriptorInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptorInfo->data=" + ptrToString((void**)std::addressof(pDescriptorInfo->data)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDescriptorInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pDescriptor=" + ptrToString((void**)std::addressof(pDescriptor)) + '!');
-}
 #ifdef GETDESCRIPTOREXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDescriptorEXT_after(device, pDescriptorInfo, dataSize, pDescriptor);
@@ -21455,15 +15648,6 @@ layer_CmdBindDescriptorBuffersEXT_before(commandBuffer, bufferCount, pBindingInf
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBuffersEXT(commandBuffer, bufferCount, pBindingInfos);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"bufferCount=" + std::to_string(bufferCount) + '!');
-if(pBindingInfos != VK_NULL_HANDLE && pBindingInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindingInfos->pNext=" + ptrToString((void**)std::addressof(pBindingInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindingInfos->address=" + ptrToString((void**)std::addressof(pBindingInfos->address)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindingInfos->usage=" + ptrToString((void**)std::addressof(pBindingInfos->usage)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBindingInfos=VK_NULL_HANDLE!");
-}
 #ifdef CMDBINDDESCRIPTORBUFFERSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindDescriptorBuffersEXT_after(commandBuffer, bufferCount, pBindingInfos);
@@ -21489,14 +15673,6 @@ layer_CmdSetDescriptorBufferOffsetsEXT_before(commandBuffer, pipelineBindPoint, 
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDescriptorBufferOffsetsEXT(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void**)std::addressof(layout)) + '!');
-winsockSendToUI(&ConnectSocket,"firstSet=" + std::to_string(firstSet) + '!');
-winsockSendToUI(&ConnectSocket,"setCount=" + std::to_string(setCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferIndices=" + ptrToString((void**)std::addressof(pBufferIndices)) + '!');
-winsockSendToUI(&ConnectSocket,"pOffsets=" + ptrToString((void**)std::addressof(pOffsets)) + '!');
-}
 #ifdef CMDSETDESCRIPTORBUFFEROFFSETSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDescriptorBufferOffsetsEXT_after(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets);
@@ -21522,11 +15698,6 @@ layer_CmdBindDescriptorBufferEmbeddedSamplersEXT_before(commandBuffer, pipelineB
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBufferEmbeddedSamplersEXT(commandBuffer, pipelineBindPoint, layout, set);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"layout=" + ptrToString((void**)std::addressof(layout)) + '!');
-winsockSendToUI(&ConnectSocket,"set=" + std::to_string(set) + '!');
-}
 #ifdef CMDBINDDESCRIPTORBUFFEREMBEDDEDSAMPLERSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindDescriptorBufferEmbeddedSamplersEXT_after(commandBuffer, pipelineBindPoint, layout, set);
@@ -21553,14 +15724,6 @@ layer_GetBufferOpaqueCaptureDescriptorDataEXT_before(device, pInfo, pData);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetBufferOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->buffer=" + ptrToString((void**)std::addressof(pInfo->buffer)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETBUFFEROPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
@@ -21590,14 +15753,6 @@ layer_GetImageOpaqueCaptureDescriptorDataEXT_before(device, pInfo, pData);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetImageOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->image=" + ptrToString((void**)std::addressof(pInfo->image)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETIMAGEOPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
@@ -21627,14 +15782,6 @@ layer_GetImageViewOpaqueCaptureDescriptorDataEXT_before(device, pInfo, pData);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetImageViewOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->imageView=" + ptrToString((void**)std::addressof(pInfo->imageView)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETIMAGEVIEWOPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageViewOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
@@ -21664,14 +15811,6 @@ layer_GetSamplerOpaqueCaptureDescriptorDataEXT_before(device, pInfo, pData);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSamplerOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->sampler=" + ptrToString((void**)std::addressof(pInfo->sampler)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETSAMPLEROPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSamplerOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
@@ -21701,15 +15840,6 @@ layer_GetAccelerationStructureOpaqueCaptureDescriptorDataEXT_before(device, pInf
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetAccelerationStructureOpaqueCaptureDescriptorDataEXT(device, pInfo, pData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->accelerationStructure=" + ptrToString((void**)std::addressof(pInfo->accelerationStructure)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->accelerationStructureNV=" + ptrToString((void**)std::addressof(pInfo->accelerationStructureNV)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETACCELERATIONSTRUCTUREOPAQUECAPTUREDESCRIPTORDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetAccelerationStructureOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
@@ -21738,11 +15868,6 @@ layer_SetDeviceMemoryPriorityEXT_before(device, memory, priority);
 }
 #endif 
 device_dispatch[GetKey(device)].SetDeviceMemoryPriorityEXT(device, memory, priority);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"memory=" + ptrToString((void**)std::addressof(memory)) + '!');
-winsockSendToUI(&ConnectSocket,"priority=" + std::to_string(priority) + '!');
-}
 #ifdef SETDEVICEMEMORYPRIORITYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetDeviceMemoryPriorityEXT_after(device, memory, priority);
@@ -21769,12 +15894,6 @@ layer_WaitForPresentKHR_before(device, swapchain, presentId, timeout);
 #endif 
 auto ret = device_dispatch[GetKey(device)].WaitForPresentKHR(device, swapchain, presentId, timeout);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void**)std::addressof(swapchain)) + '!');
-winsockSendToUI(&ConnectSocket,"presentId=" + std::to_string(presentId) + '!');
-winsockSendToUI(&ConnectSocket,"timeout=" + std::to_string(timeout) + '!');
-}
 #ifdef WAITFORPRESENTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_WaitForPresentKHR_after(device, swapchain, presentId, timeout);
@@ -21805,22 +15924,6 @@ layer_CreateBufferCollectionFUCHSIA_before(device, pCreateInfo, pAllocator, pCol
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateBufferCollectionFUCHSIA(device, pCreateInfo, pAllocator, pCollection);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->collectionToken=" + ptrToString((void**)std::addressof(pCreateInfo->collectionToken)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCollection=" + ptrToString((void**)std::addressof(pCollection)) + '!');
-}
 #ifdef CREATEBUFFERCOLLECTIONFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateBufferCollectionFUCHSIA_after(device, pCreateInfo, pAllocator, pCollection);
@@ -21852,16 +15955,6 @@ layer_SetBufferCollectionBufferConstraintsFUCHSIA_before(device, collection, pBu
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetBufferCollectionBufferConstraintsFUCHSIA(device, collection, pBufferConstraintsInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"collection=" + ptrToString((void**)std::addressof(collection)) + '!');
-if(pBufferConstraintsInfo != VK_NULL_HANDLE && pBufferConstraintsInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pBufferConstraintsInfo->pNext=" + ptrToString((void**)std::addressof(pBufferConstraintsInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferConstraintsInfo->createInfo=" + ptrToString((void**)std::addressof(pBufferConstraintsInfo->createInfo)) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferConstraintsInfo->requiredFormatFeatures=" + ptrToString((void**)std::addressof(pBufferConstraintsInfo->requiredFormatFeatures)) + '!');
-winsockSendToUI(&ConnectSocket,"pBufferConstraintsInfo->bufferCollectionConstraints=" + ptrToString((void**)std::addressof(pBufferConstraintsInfo->bufferCollectionConstraints)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBufferConstraintsInfo=VK_NULL_HANDLE!");
-}
 #ifdef SETBUFFERCOLLECTIONBUFFERCONSTRAINTSFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetBufferCollectionBufferConstraintsFUCHSIA_after(device, collection, pBufferConstraintsInfo);
@@ -21893,28 +15986,6 @@ layer_SetBufferCollectionImageConstraintsFUCHSIA_before(device, collection, pIma
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetBufferCollectionImageConstraintsFUCHSIA(device, collection, pImageConstraintsInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"collection=" + ptrToString((void**)std::addressof(collection)) + '!');
-if(pImageConstraintsInfo != VK_NULL_HANDLE && pImageConstraintsInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pImageConstraintsInfo->pNext=" + ptrToString((void**)std::addressof(pImageConstraintsInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageConstraintsInfo->formatConstraintsCount=" + std::to_string(pImageConstraintsInfo->formatConstraintsCount) + '!');
-if(pImageConstraintsInfo->pFormatConstraints != VK_NULL_HANDLE && pImageConstraintsInfo->pFormatConstraints != NULL) {
-winsockSendToUI(&ConnectSocket,"pImageConstraintsInfo->pFormatConstraints->pNext=" + ptrToString((void**)std::addressof(pImageConstraintsInfo->pFormatConstraints->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageConstraintsInfo->pFormatConstraints->imageCreateInfo=" + ptrToString((void**)std::addressof(pImageConstraintsInfo->pFormatConstraints->imageCreateInfo)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageConstraintsInfo->pFormatConstraints->requiredFormatFeatures=" + ptrToString((void**)std::addressof(pImageConstraintsInfo->pFormatConstraints->requiredFormatFeatures)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageConstraintsInfo->pFormatConstraints->flags=" + ptrToString((void**)std::addressof(pImageConstraintsInfo->pFormatConstraints->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageConstraintsInfo->pFormatConstraints->sysmemPixelFormat=" + std::to_string(pImageConstraintsInfo->pFormatConstraints->sysmemPixelFormat) + '!');
-winsockSendToUI(&ConnectSocket,"pImageConstraintsInfo->pFormatConstraints->colorSpaceCount=" + std::to_string(pImageConstraintsInfo->pFormatConstraints->colorSpaceCount) + '!');
-if(pImageConstraintsInfo->pFormatConstraints->pColorSpaces != VK_NULL_HANDLE && pImageConstraintsInfo->pFormatConstraints->pColorSpaces != NULL) {
-winsockSendToUI(&ConnectSocket,"pImageConstraintsInfo->pFormatConstraints->pColorSpaces->pNext=" + ptrToString((void**)std::addressof(pImageConstraintsInfo->pFormatConstraints->pColorSpaces->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageConstraintsInfo->pFormatConstraints->pColorSpaces->colorSpace=" + std::to_string(pImageConstraintsInfo->pFormatConstraints->pColorSpaces->colorSpace) + '!');
-}else winsockSendToUI(&ConnectSocket, "pColorSpaces=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pFormatConstraints=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pImageConstraintsInfo->bufferCollectionConstraints=" + ptrToString((void**)std::addressof(pImageConstraintsInfo->bufferCollectionConstraints)) + '!');
-winsockSendToUI(&ConnectSocket,"pImageConstraintsInfo->flags=" + ptrToString((void**)std::addressof(pImageConstraintsInfo->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageConstraintsInfo=VK_NULL_HANDLE!");
-}
 #ifdef SETBUFFERCOLLECTIONIMAGECONSTRAINTSFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetBufferCollectionImageConstraintsFUCHSIA_after(device, collection, pImageConstraintsInfo);
@@ -21945,18 +16016,6 @@ layer_DestroyBufferCollectionFUCHSIA_before(device, collection, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyBufferCollectionFUCHSIA(device, collection, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"collection=" + ptrToString((void**)std::addressof(collection)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYBUFFERCOLLECTIONFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyBufferCollectionFUCHSIA_after(device, collection, pAllocator);
@@ -21985,20 +16044,6 @@ layer_GetBufferCollectionPropertiesFUCHSIA_before(device, collection, pPropertie
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetBufferCollectionPropertiesFUCHSIA(device, collection, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"collection=" + ptrToString((void**)std::addressof(collection)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->memoryTypeBits=" + std::to_string(pProperties->memoryTypeBits) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->bufferCount=" + std::to_string(pProperties->bufferCount) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->createInfoIndex=" + std::to_string(pProperties->createInfoIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->sysmemPixelFormat=" + std::to_string(pProperties->sysmemPixelFormat) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->formatFeatures=" + ptrToString((void**)std::addressof(pProperties->formatFeatures)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->sysmemColorSpaceIndex=" + ptrToString((void**)std::addressof(pProperties->sysmemColorSpaceIndex)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->samplerYcbcrConversionComponents=" + ptrToString((void**)std::addressof(pProperties->samplerYcbcrConversionComponents)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETBUFFERCOLLECTIONPROPERTIESFUCHSIA_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferCollectionPropertiesFUCHSIA_after(device, collection, pProperties);
@@ -22029,23 +16074,6 @@ layer_CreateCudaModuleNV_before(device, pCreateInfo, pAllocator, pModule);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateCudaModuleNV(device, pCreateInfo, pAllocator, pModule);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->dataSize=" + std::to_string(pCreateInfo->dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pData=" + ptrToString((void**)std::addressof(pCreateInfo->pData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pModule=" + ptrToString((void**)std::addressof(pModule)) + '!');
-}
 #ifdef CREATECUDAMODULENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateCudaModuleNV_after(device, pCreateInfo, pAllocator, pModule);
@@ -22075,12 +16103,6 @@ layer_GetCudaModuleCacheNV_before(device, module, pCacheSize, pCacheData);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetCudaModuleCacheNV(device, module, pCacheSize, pCacheData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"module=" + ptrToString((void**)std::addressof(module)) + '!');
-winsockSendToUI(&ConnectSocket,"pCacheSize=" + ptrToString((void**)std::addressof(pCacheSize)) + '!');
-winsockSendToUI(&ConnectSocket,"pCacheData=" + ptrToString((void**)std::addressof(pCacheData)) + '!');
-}
 #ifdef GETCUDAMODULECACHENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetCudaModuleCacheNV_after(device, module, pCacheSize, pCacheData);
@@ -22110,23 +16132,6 @@ layer_CreateCudaFunctionNV_before(device, pCreateInfo, pAllocator, pFunction);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateCudaFunctionNV(device, pCreateInfo, pAllocator, pFunction);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->module=" + ptrToString((void**)std::addressof(pCreateInfo->module)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pName=" + charToString((char*)pCreateInfo->pName) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pFunction=" + ptrToString((void**)std::addressof(pFunction)) + '!');
-}
 #ifdef CREATECUDAFUNCTIONNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateCudaFunctionNV_after(device, pCreateInfo, pAllocator, pFunction);
@@ -22155,18 +16160,6 @@ layer_DestroyCudaModuleNV_before(device, module, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyCudaModuleNV(device, module, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"module=" + ptrToString((void**)std::addressof(module)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYCUDAMODULENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyCudaModuleNV_after(device, module, pAllocator);
@@ -22192,18 +16185,6 @@ layer_DestroyCudaFunctionNV_before(device, function, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyCudaFunctionNV(device, function, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"function=" + ptrToString((void**)std::addressof(function)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYCUDAFUNCTIONNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyCudaFunctionNV_after(device, function, pAllocator);
@@ -22229,24 +16210,6 @@ layer_CmdCudaLaunchKernelNV_before(commandBuffer, pLaunchInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCudaLaunchKernelNV(commandBuffer, pLaunchInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pLaunchInfo != VK_NULL_HANDLE && pLaunchInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->pNext=" + ptrToString((void**)std::addressof(pLaunchInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->function=" + ptrToString((void**)std::addressof(pLaunchInfo->function)) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->gridDimX=" + std::to_string(pLaunchInfo->gridDimX) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->gridDimY=" + std::to_string(pLaunchInfo->gridDimY) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->gridDimZ=" + std::to_string(pLaunchInfo->gridDimZ) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->blockDimX=" + std::to_string(pLaunchInfo->blockDimX) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->blockDimY=" + std::to_string(pLaunchInfo->blockDimY) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->blockDimZ=" + std::to_string(pLaunchInfo->blockDimZ) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->sharedMemBytes=" + std::to_string(pLaunchInfo->sharedMemBytes) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->paramCount=" + std::to_string(pLaunchInfo->paramCount) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->pParams=" + ptrToString((void**)std::addressof(pLaunchInfo->pParams)) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->extraCount=" + std::to_string(pLaunchInfo->extraCount) + '!');
-winsockSendToUI(&ConnectSocket,"pLaunchInfo->pExtras=" + ptrToString((void**)std::addressof(pLaunchInfo->pExtras)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pLaunchInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCUDALAUNCHKERNELNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCudaLaunchKernelNV_after(commandBuffer, pLaunchInfo);
@@ -22272,35 +16235,6 @@ layer_CmdBeginRendering_before(commandBuffer, pRenderingInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginRendering(commandBuffer, pRenderingInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pRenderingInfo != VK_NULL_HANDLE && pRenderingInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pNext=" + ptrToString((void**)std::addressof(pRenderingInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->flags=" + ptrToString((void**)std::addressof(pRenderingInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->renderArea=" + ptrToString((void**)std::addressof(pRenderingInfo->renderArea)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->layerCount=" + std::to_string(pRenderingInfo->layerCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->viewMask=" + std::to_string(pRenderingInfo->viewMask) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->colorAttachmentCount=" + std::to_string(pRenderingInfo->colorAttachmentCount) + '!');
-if(pRenderingInfo->pColorAttachments != VK_NULL_HANDLE && pRenderingInfo->pColorAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pColorAttachments->pNext=" + ptrToString((void**)std::addressof(pRenderingInfo->pColorAttachments->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pColorAttachments->imageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pColorAttachments->imageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pColorAttachments->resolveImageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pColorAttachments->resolveImageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pColorAttachments->clearValue=" + ptrToString((void**)std::addressof(pRenderingInfo->pColorAttachments->clearValue)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pColorAttachments=VK_NULL_HANDLE!");
-if(pRenderingInfo->pDepthAttachment != VK_NULL_HANDLE && pRenderingInfo->pDepthAttachment != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pDepthAttachment->pNext=" + ptrToString((void**)std::addressof(pRenderingInfo->pDepthAttachment->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pDepthAttachment->imageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pDepthAttachment->imageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pDepthAttachment->resolveImageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pDepthAttachment->resolveImageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pDepthAttachment->clearValue=" + ptrToString((void**)std::addressof(pRenderingInfo->pDepthAttachment->clearValue)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDepthAttachment=VK_NULL_HANDLE!");
-if(pRenderingInfo->pStencilAttachment != VK_NULL_HANDLE && pRenderingInfo->pStencilAttachment != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pStencilAttachment->pNext=" + ptrToString((void**)std::addressof(pRenderingInfo->pStencilAttachment->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pStencilAttachment->imageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pStencilAttachment->imageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pStencilAttachment->resolveImageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pStencilAttachment->resolveImageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pStencilAttachment->clearValue=" + ptrToString((void**)std::addressof(pRenderingInfo->pStencilAttachment->clearValue)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pStencilAttachment=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pRenderingInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDBEGINRENDERING_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginRendering_after(commandBuffer, pRenderingInfo);
@@ -22326,9 +16260,6 @@ layer_CmdEndRendering_before(commandBuffer);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndRendering(commandBuffer);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDENDRENDERING_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndRendering_after(commandBuffer);
@@ -22354,19 +16285,6 @@ layer_GetDescriptorSetLayoutHostMappingInfoVALVE_before(device, pBindingReferenc
 }
 #endif 
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutHostMappingInfoVALVE(device, pBindingReference, pHostMapping);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pBindingReference != VK_NULL_HANDLE && pBindingReference != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindingReference->pNext=" + ptrToString((void**)std::addressof(pBindingReference->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindingReference->descriptorSetLayout=" + ptrToString((void**)std::addressof(pBindingReference->descriptorSetLayout)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindingReference->binding=" + std::to_string(pBindingReference->binding) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBindingReference=VK_NULL_HANDLE!");
-if(pHostMapping != VK_NULL_HANDLE && pHostMapping != NULL) {
-winsockSendToUI(&ConnectSocket,"pHostMapping->pNext=" + ptrToString((void**)std::addressof(pHostMapping->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pHostMapping->descriptorOffset=" + std::to_string(pHostMapping->descriptorOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pHostMapping->descriptorSize=" + std::to_string(pHostMapping->descriptorSize) + '!');
-}else winsockSendToUI(&ConnectSocket, "pHostMapping=VK_NULL_HANDLE!");
-}
 #ifdef GETDESCRIPTORSETLAYOUTHOSTMAPPINGINFOVALVE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDescriptorSetLayoutHostMappingInfoVALVE_after(device, pBindingReference, pHostMapping);
@@ -22392,11 +16310,6 @@ layer_GetDescriptorSetHostMappingVALVE_before(device, descriptorSet, ppData);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDescriptorSetHostMappingVALVE(device, descriptorSet, ppData);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorSet=" + ptrToString((void**)std::addressof(descriptorSet)) + '!');
-winsockSendToUI(&ConnectSocket,"ppData=" + ptrToString((void**)std::addressof(ppData)) + '!');
-}
 #ifdef GETDESCRIPTORSETHOSTMAPPINGVALVE_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDescriptorSetHostMappingVALVE_after(device, descriptorSet, ppData);
@@ -22423,26 +16336,6 @@ layer_CreateMicromapEXT_before(device, pCreateInfo, pAllocator, pMicromap);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateMicromapEXT(device, pCreateInfo, pAllocator, pMicromap);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->createFlags=" + ptrToString((void**)std::addressof(pCreateInfo->createFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->buffer=" + ptrToString((void**)std::addressof(pCreateInfo->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->offset=" + std::to_string(pCreateInfo->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->size=" + std::to_string(pCreateInfo->size) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->deviceAddress=" + ptrToString((void**)std::addressof(pCreateInfo->deviceAddress)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pMicromap=" + ptrToString((void**)std::addressof(pMicromap)) + '!');
-}
 #ifdef CREATEMICROMAPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateMicromapEXT_after(device, pCreateInfo, pAllocator, pMicromap);
@@ -22471,25 +16364,6 @@ layer_CmdBuildMicromapsEXT_before(commandBuffer, infoCount, pInfos);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBuildMicromapsEXT(commandBuffer, infoCount, pInfos);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"infoCount=" + std::to_string(infoCount) + '!');
-if(pInfos != VK_NULL_HANDLE && pInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfos->pNext=" + ptrToString((void**)std::addressof(pInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->flags=" + ptrToString((void**)std::addressof(pInfos->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->dstMicromap=" + ptrToString((void**)std::addressof(pInfos->dstMicromap)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->usageCountsCount=" + std::to_string(pInfos->usageCountsCount) + '!');
-if(pInfos->pUsageCounts != VK_NULL_HANDLE && pInfos->pUsageCounts != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfos->pUsageCounts->count=" + std::to_string(pInfos->pUsageCounts->count) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->pUsageCounts->subdivisionLevel=" + std::to_string(pInfos->pUsageCounts->subdivisionLevel) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->pUsageCounts->format=" + std::to_string(pInfos->pUsageCounts->format) + '!');
-}else winsockSendToUI(&ConnectSocket, "pUsageCounts=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pInfos->data=" + ptrToString((void**)std::addressof(pInfos->data)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->scratchData=" + ptrToString((void**)std::addressof(pInfos->scratchData)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->triangleArray=" + ptrToString((void**)std::addressof(pInfos->triangleArray)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->triangleArrayStride=" + std::to_string(pInfos->triangleArrayStride) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfos=VK_NULL_HANDLE!");
-}
 #ifdef CMDBUILDMICROMAPSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBuildMicromapsEXT_after(commandBuffer, infoCount, pInfos);
@@ -22516,26 +16390,6 @@ layer_BuildMicromapsEXT_before(device, deferredOperation, infoCount, pInfos);
 #endif 
 auto ret = device_dispatch[GetKey(device)].BuildMicromapsEXT(device, deferredOperation, infoCount, pInfos);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void**)std::addressof(deferredOperation)) + '!');
-winsockSendToUI(&ConnectSocket,"infoCount=" + std::to_string(infoCount) + '!');
-if(pInfos != VK_NULL_HANDLE && pInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfos->pNext=" + ptrToString((void**)std::addressof(pInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->flags=" + ptrToString((void**)std::addressof(pInfos->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->dstMicromap=" + ptrToString((void**)std::addressof(pInfos->dstMicromap)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->usageCountsCount=" + std::to_string(pInfos->usageCountsCount) + '!');
-if(pInfos->pUsageCounts != VK_NULL_HANDLE && pInfos->pUsageCounts != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfos->pUsageCounts->count=" + std::to_string(pInfos->pUsageCounts->count) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->pUsageCounts->subdivisionLevel=" + std::to_string(pInfos->pUsageCounts->subdivisionLevel) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->pUsageCounts->format=" + std::to_string(pInfos->pUsageCounts->format) + '!');
-}else winsockSendToUI(&ConnectSocket, "pUsageCounts=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pInfos->data=" + ptrToString((void**)std::addressof(pInfos->data)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->scratchData=" + ptrToString((void**)std::addressof(pInfos->scratchData)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->triangleArray=" + ptrToString((void**)std::addressof(pInfos->triangleArray)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfos->triangleArrayStride=" + std::to_string(pInfos->triangleArrayStride) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfos=VK_NULL_HANDLE!");
-}
 #ifdef BUILDMICROMAPSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BuildMicromapsEXT_after(device, deferredOperation, infoCount, pInfos);
@@ -22564,18 +16418,6 @@ layer_DestroyMicromapEXT_before(device, micromap, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyMicromapEXT(device, micromap, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"micromap=" + ptrToString((void**)std::addressof(micromap)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYMICROMAPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyMicromapEXT_after(device, micromap, pAllocator);
@@ -22601,14 +16443,6 @@ layer_CmdCopyMicromapEXT_before(commandBuffer, pInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyMicromapEXT(commandBuffer, pInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->src=" + ptrToString((void**)std::addressof(pInfo->src)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->dst=" + ptrToString((void**)std::addressof(pInfo->dst)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYMICROMAPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyMicromapEXT_after(commandBuffer, pInfo);
@@ -22635,15 +16469,6 @@ layer_CopyMicromapEXT_before(device, deferredOperation, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyMicromapEXT(device, deferredOperation, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void**)std::addressof(deferredOperation)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->src=" + ptrToString((void**)std::addressof(pInfo->src)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->dst=" + ptrToString((void**)std::addressof(pInfo->dst)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef COPYMICROMAPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyMicromapEXT_after(device, deferredOperation, pInfo);
@@ -22672,14 +16497,6 @@ layer_CmdCopyMicromapToMemoryEXT_before(commandBuffer, pInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyMicromapToMemoryEXT(commandBuffer, pInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->src=" + ptrToString((void**)std::addressof(pInfo->src)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->dst=" + ptrToString((void**)std::addressof(pInfo->dst)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYMICROMAPTOMEMORYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyMicromapToMemoryEXT_after(commandBuffer, pInfo);
@@ -22706,15 +16523,6 @@ layer_CopyMicromapToMemoryEXT_before(device, deferredOperation, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyMicromapToMemoryEXT(device, deferredOperation, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void**)std::addressof(deferredOperation)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->src=" + ptrToString((void**)std::addressof(pInfo->src)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->dst=" + ptrToString((void**)std::addressof(pInfo->dst)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef COPYMICROMAPTOMEMORYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyMicromapToMemoryEXT_after(device, deferredOperation, pInfo);
@@ -22743,14 +16551,6 @@ layer_CmdCopyMemoryToMicromapEXT_before(commandBuffer, pInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToMicromapEXT(commandBuffer, pInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->src=" + ptrToString((void**)std::addressof(pInfo->src)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->dst=" + ptrToString((void**)std::addressof(pInfo->dst)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYMEMORYTOMICROMAPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyMemoryToMicromapEXT_after(commandBuffer, pInfo);
@@ -22777,15 +16577,6 @@ layer_CopyMemoryToMicromapEXT_before(device, deferredOperation, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CopyMemoryToMicromapEXT(device, deferredOperation, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"deferredOperation=" + ptrToString((void**)std::addressof(deferredOperation)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->src=" + ptrToString((void**)std::addressof(pInfo->src)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->dst=" + ptrToString((void**)std::addressof(pInfo->dst)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef COPYMEMORYTOMICROMAPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CopyMemoryToMicromapEXT_after(device, deferredOperation, pInfo);
@@ -22814,13 +16605,6 @@ layer_CmdWriteMicromapsPropertiesEXT_before(commandBuffer, micromapCount, pMicro
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteMicromapsPropertiesEXT(commandBuffer, micromapCount, pMicromaps, queryType, queryPool, firstQuery);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"micromapCount=" + std::to_string(micromapCount) + '!');
-winsockSendToUI(&ConnectSocket,"pMicromaps=" + ptrToString((void**)std::addressof(pMicromaps)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
-}
 #ifdef CMDWRITEMICROMAPSPROPERTIESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteMicromapsPropertiesEXT_after(commandBuffer, micromapCount, pMicromaps, queryType, queryPool, firstQuery);
@@ -22847,14 +16631,6 @@ layer_WriteMicromapsPropertiesEXT_before(device, micromapCount, pMicromaps, quer
 #endif 
 auto ret = device_dispatch[GetKey(device)].WriteMicromapsPropertiesEXT(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"micromapCount=" + std::to_string(micromapCount) + '!');
-winsockSendToUI(&ConnectSocket,"pMicromaps=" + ptrToString((void**)std::addressof(pMicromaps)) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef WRITEMICROMAPSPROPERTIESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_WriteMicromapsPropertiesEXT_after(device, micromapCount, pMicromaps, queryType, dataSize, pData, stride);
@@ -22883,14 +16659,6 @@ layer_GetDeviceMicromapCompatibilityEXT_before(device, pVersionInfo, pCompatibil
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceMicromapCompatibilityEXT(device, pVersionInfo, pCompatibility);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pVersionInfo != VK_NULL_HANDLE && pVersionInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pVersionInfo->pNext=" + ptrToString((void**)std::addressof(pVersionInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pVersionInfo->pVersionData=" + ptrToString((void**)std::addressof(pVersionInfo->pVersionData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pVersionInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCompatibility=" + ptrToString((void**)std::addressof(pCompatibility)) + '!');
-}
 #ifdef GETDEVICEMICROMAPCOMPATIBILITYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceMicromapCompatibilityEXT_after(device, pVersionInfo, pCompatibility);
@@ -22916,30 +16684,6 @@ layer_GetMicromapBuildSizesEXT_before(device, buildType, pBuildInfo, pSizeInfo);
 }
 #endif 
 device_dispatch[GetKey(device)].GetMicromapBuildSizesEXT(device, buildType, pBuildInfo, pSizeInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pBuildInfo != VK_NULL_HANDLE && pBuildInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pBuildInfo->pNext=" + ptrToString((void**)std::addressof(pBuildInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo->flags=" + ptrToString((void**)std::addressof(pBuildInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo->dstMicromap=" + ptrToString((void**)std::addressof(pBuildInfo->dstMicromap)) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo->usageCountsCount=" + std::to_string(pBuildInfo->usageCountsCount) + '!');
-if(pBuildInfo->pUsageCounts != VK_NULL_HANDLE && pBuildInfo->pUsageCounts != NULL) {
-winsockSendToUI(&ConnectSocket,"pBuildInfo->pUsageCounts->count=" + std::to_string(pBuildInfo->pUsageCounts->count) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo->pUsageCounts->subdivisionLevel=" + std::to_string(pBuildInfo->pUsageCounts->subdivisionLevel) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo->pUsageCounts->format=" + std::to_string(pBuildInfo->pUsageCounts->format) + '!');
-}else winsockSendToUI(&ConnectSocket, "pUsageCounts=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pBuildInfo->data=" + ptrToString((void**)std::addressof(pBuildInfo->data)) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo->scratchData=" + ptrToString((void**)std::addressof(pBuildInfo->scratchData)) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo->triangleArray=" + ptrToString((void**)std::addressof(pBuildInfo->triangleArray)) + '!');
-winsockSendToUI(&ConnectSocket,"pBuildInfo->triangleArrayStride=" + std::to_string(pBuildInfo->triangleArrayStride) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBuildInfo=VK_NULL_HANDLE!");
-if(pSizeInfo != VK_NULL_HANDLE && pSizeInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSizeInfo->pNext=" + ptrToString((void**)std::addressof(pSizeInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSizeInfo->micromapSize=" + std::to_string(pSizeInfo->micromapSize) + '!');
-winsockSendToUI(&ConnectSocket,"pSizeInfo->buildScratchSize=" + std::to_string(pSizeInfo->buildScratchSize) + '!');
-winsockSendToUI(&ConnectSocket,"pSizeInfo->discardable=" + bool_as_text(pSizeInfo->discardable) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSizeInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETMICROMAPBUILDSIZESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetMicromapBuildSizesEXT_after(device, buildType, pBuildInfo, pSizeInfo);
@@ -22965,15 +16709,6 @@ layer_GetShaderModuleIdentifierEXT_before(device, shaderModule, pIdentifier);
 }
 #endif 
 device_dispatch[GetKey(device)].GetShaderModuleIdentifierEXT(device, shaderModule, pIdentifier);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"shaderModule=" + ptrToString((void**)std::addressof(shaderModule)) + '!');
-if(pIdentifier != VK_NULL_HANDLE && pIdentifier != NULL) {
-winsockSendToUI(&ConnectSocket,"pIdentifier->pNext=" + ptrToString((void**)std::addressof(pIdentifier->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pIdentifier->identifierSize=" + std::to_string(pIdentifier->identifierSize) + '!');
-winsockSendToUI(&ConnectSocket,"pIdentifier->identifier=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pIdentifier=VK_NULL_HANDLE!");
-}
 #ifdef GETSHADERMODULEIDENTIFIEREXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetShaderModuleIdentifierEXT_after(device, shaderModule, pIdentifier);
@@ -22999,20 +16734,6 @@ layer_GetShaderModuleCreateInfoIdentifierEXT_before(device, pCreateInfo, pIdenti
 }
 #endif 
 device_dispatch[GetKey(device)].GetShaderModuleCreateInfoIdentifierEXT(device, pCreateInfo, pIdentifier);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->codeSize=" + std::to_string(pCreateInfo->codeSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pCode=" + ptrToString((void**)std::addressof(pCreateInfo->pCode)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pIdentifier != VK_NULL_HANDLE && pIdentifier != NULL) {
-winsockSendToUI(&ConnectSocket,"pIdentifier->pNext=" + ptrToString((void**)std::addressof(pIdentifier->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pIdentifier->identifierSize=" + std::to_string(pIdentifier->identifierSize) + '!');
-winsockSendToUI(&ConnectSocket,"pIdentifier->identifier=[array]" + '!');
-}else winsockSendToUI(&ConnectSocket, "pIdentifier=VK_NULL_HANDLE!");
-}
 #ifdef GETSHADERMODULECREATEINFOIDENTIFIEREXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetShaderModuleCreateInfoIdentifierEXT_after(device, pCreateInfo, pIdentifier);
@@ -23038,18 +16759,6 @@ layer_GetImageSubresourceLayout2KHR_before(device, image, pSubresource, pLayout)
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageSubresourceLayout2KHR(device, image, pSubresource, pLayout);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void**)std::addressof(image)) + '!');
-if(pSubresource != VK_NULL_HANDLE && pSubresource != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubresource->pNext=" + ptrToString((void**)std::addressof(pSubresource->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubresource->imageSubresource=" + ptrToString((void**)std::addressof(pSubresource->imageSubresource)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubresource=VK_NULL_HANDLE!");
-if(pLayout != VK_NULL_HANDLE && pLayout != NULL) {
-winsockSendToUI(&ConnectSocket,"pLayout->pNext=" + ptrToString((void**)std::addressof(pLayout->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pLayout->subresourceLayout=" + ptrToString((void**)std::addressof(pLayout->subresourceLayout)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pLayout=VK_NULL_HANDLE!");
-}
 #ifdef GETIMAGESUBRESOURCELAYOUT2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageSubresourceLayout2KHR_after(device, image, pSubresource, pLayout);
@@ -23076,17 +16785,6 @@ layer_GetPipelinePropertiesEXT_before(device, pPipelineInfo, pPipelineProperties
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetPipelinePropertiesEXT(device, pPipelineInfo, pPipelineProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pPipelineInfo != VK_NULL_HANDLE && pPipelineInfo != NULL) {
-}else winsockSendToUI(&ConnectSocket, "pPipelineInfo=VK_NULL_HANDLE!");
-if(pPipelineProperties != VK_NULL_HANDLE && pPipelineProperties != NULL) {
-if(pPipelineProperties->pNext != VK_NULL_HANDLE && pPipelineProperties->pNext != NULL) {
-if(pPipelineProperties->pNext->pNext != VK_NULL_HANDLE && pPipelineProperties->pNext->pNext != NULL) {
-}else winsockSendToUI(&ConnectSocket, "pNext=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pNext=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pPipelineProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETPIPELINEPROPERTIESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPipelinePropertiesEXT_after(device, pPipelineInfo, pPipelineProperties);
@@ -23116,12 +16814,6 @@ layer_ExportMetalObjectsEXT_before(device, pMetalObjectsInfo);
 }
 #endif 
 device_dispatch[GetKey(device)].ExportMetalObjectsEXT(device, pMetalObjectsInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pMetalObjectsInfo != VK_NULL_HANDLE && pMetalObjectsInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pMetalObjectsInfo->pNext=" + ptrToString((void**)std::addressof(pMetalObjectsInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMetalObjectsInfo=VK_NULL_HANDLE!");
-}
 #ifdef EXPORTMETALOBJECTSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ExportMetalObjectsEXT_after(device, pMetalObjectsInfo);
@@ -23149,17 +16841,6 @@ layer_GetFramebufferTilePropertiesQCOM_before(device, framebuffer, pPropertiesCo
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetFramebufferTilePropertiesQCOM(device, framebuffer, pPropertiesCount, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"framebuffer=" + ptrToString((void**)std::addressof(framebuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pPropertiesCount=" + ptrToString((void**)std::addressof(pPropertiesCount)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->tileSize=" + ptrToString((void**)std::addressof(pProperties->tileSize)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->apronSize=" + ptrToString((void**)std::addressof(pProperties->apronSize)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->origin=" + ptrToString((void**)std::addressof(pProperties->origin)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETFRAMEBUFFERTILEPROPERTIESQCOM_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetFramebufferTilePropertiesQCOM_after(device, framebuffer, pPropertiesCount, pProperties);
@@ -23189,41 +16870,6 @@ layer_GetDynamicRenderingTilePropertiesQCOM_before(device, pRenderingInfo, pProp
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDynamicRenderingTilePropertiesQCOM(device, pRenderingInfo, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pRenderingInfo != VK_NULL_HANDLE && pRenderingInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pNext=" + ptrToString((void**)std::addressof(pRenderingInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->flags=" + ptrToString((void**)std::addressof(pRenderingInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->renderArea=" + ptrToString((void**)std::addressof(pRenderingInfo->renderArea)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->layerCount=" + std::to_string(pRenderingInfo->layerCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->viewMask=" + std::to_string(pRenderingInfo->viewMask) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->colorAttachmentCount=" + std::to_string(pRenderingInfo->colorAttachmentCount) + '!');
-if(pRenderingInfo->pColorAttachments != VK_NULL_HANDLE && pRenderingInfo->pColorAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pColorAttachments->pNext=" + ptrToString((void**)std::addressof(pRenderingInfo->pColorAttachments->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pColorAttachments->imageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pColorAttachments->imageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pColorAttachments->resolveImageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pColorAttachments->resolveImageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pColorAttachments->clearValue=" + ptrToString((void**)std::addressof(pRenderingInfo->pColorAttachments->clearValue)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pColorAttachments=VK_NULL_HANDLE!");
-if(pRenderingInfo->pDepthAttachment != VK_NULL_HANDLE && pRenderingInfo->pDepthAttachment != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pDepthAttachment->pNext=" + ptrToString((void**)std::addressof(pRenderingInfo->pDepthAttachment->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pDepthAttachment->imageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pDepthAttachment->imageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pDepthAttachment->resolveImageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pDepthAttachment->resolveImageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pDepthAttachment->clearValue=" + ptrToString((void**)std::addressof(pRenderingInfo->pDepthAttachment->clearValue)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDepthAttachment=VK_NULL_HANDLE!");
-if(pRenderingInfo->pStencilAttachment != VK_NULL_HANDLE && pRenderingInfo->pStencilAttachment != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pStencilAttachment->pNext=" + ptrToString((void**)std::addressof(pRenderingInfo->pStencilAttachment->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pStencilAttachment->imageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pStencilAttachment->imageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pStencilAttachment->resolveImageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pStencilAttachment->resolveImageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pStencilAttachment->clearValue=" + ptrToString((void**)std::addressof(pRenderingInfo->pStencilAttachment->clearValue)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pStencilAttachment=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pRenderingInfo=VK_NULL_HANDLE!");
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->tileSize=" + ptrToString((void**)std::addressof(pProperties->tileSize)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->apronSize=" + ptrToString((void**)std::addressof(pProperties->apronSize)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->origin=" + ptrToString((void**)std::addressof(pProperties->origin)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETDYNAMICRENDERINGTILEPROPERTIESQCOM_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDynamicRenderingTilePropertiesQCOM_after(device, pRenderingInfo, pProperties);
@@ -23253,26 +16899,6 @@ layer_CreateOpticalFlowSessionNV_before(device, pCreateInfo, pAllocator, pSessio
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateOpticalFlowSessionNV(device, pCreateInfo, pAllocator, pSession);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->width=" + std::to_string(pCreateInfo->width) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->height=" + std::to_string(pCreateInfo->height) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->outputGridSize=" + ptrToString((void**)std::addressof(pCreateInfo->outputGridSize)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->hintGridSize=" + ptrToString((void**)std::addressof(pCreateInfo->hintGridSize)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSession=" + ptrToString((void**)std::addressof(pSession)) + '!');
-}
 #ifdef CREATEOPTICALFLOWSESSIONNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateOpticalFlowSessionNV_after(device, pCreateInfo, pAllocator, pSession);
@@ -23301,18 +16927,6 @@ layer_DestroyOpticalFlowSessionNV_before(device, session, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyOpticalFlowSessionNV(device, session, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"session=" + ptrToString((void**)std::addressof(session)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYOPTICALFLOWSESSIONNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyOpticalFlowSessionNV_after(device, session, pAllocator);
@@ -23339,11 +16953,6 @@ layer_BindOpticalFlowSessionImageNV_before(device, session, bindingPoint, view, 
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindOpticalFlowSessionImageNV(device, session, bindingPoint, view, layout);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"session=" + ptrToString((void**)std::addressof(session)) + '!');
-winsockSendToUI(&ConnectSocket,"view=" + ptrToString((void**)std::addressof(view)) + '!');
-}
 #ifdef BINDOPTICALFLOWSESSIONIMAGENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindOpticalFlowSessionImageNV_after(device, session, bindingPoint, view, layout);
@@ -23372,19 +16981,6 @@ layer_CmdOpticalFlowExecuteNV_before(commandBuffer, session, pExecuteInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdOpticalFlowExecuteNV(commandBuffer, session, pExecuteInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"session=" + ptrToString((void**)std::addressof(session)) + '!');
-if(pExecuteInfo != VK_NULL_HANDLE && pExecuteInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pExecuteInfo->pNext=" + ptrToString((void**)std::addressof(pExecuteInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pExecuteInfo->flags=" + ptrToString((void**)std::addressof(pExecuteInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pExecuteInfo->regionCount=" + std::to_string(pExecuteInfo->regionCount) + '!');
-if(pExecuteInfo->pRegions != VK_NULL_HANDLE && pExecuteInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pExecuteInfo->pRegions->offset=" + ptrToString((void**)std::addressof(pExecuteInfo->pRegions->offset)) + '!');
-winsockSendToUI(&ConnectSocket,"pExecuteInfo->pRegions->extent=" + ptrToString((void**)std::addressof(pExecuteInfo->pRegions->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pExecuteInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDOPTICALFLOWEXECUTENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdOpticalFlowExecuteNV_after(commandBuffer, session, pExecuteInfo);
@@ -23411,22 +17007,6 @@ layer_GetDeviceFaultInfoEXT_before(device, pFaultCounts, pFaultInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeviceFaultInfoEXT(device, pFaultCounts, pFaultInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pFaultCounts != VK_NULL_HANDLE && pFaultCounts != NULL) {
-winsockSendToUI(&ConnectSocket,"pFaultCounts->pNext=" + ptrToString((void**)std::addressof(pFaultCounts->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pFaultCounts->addressInfoCount=" + std::to_string(pFaultCounts->addressInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pFaultCounts->vendorInfoCount=" + std::to_string(pFaultCounts->vendorInfoCount) + '!');
-winsockSendToUI(&ConnectSocket,"pFaultCounts->vendorBinarySize=" + std::to_string(pFaultCounts->vendorBinarySize) + '!');
-}else winsockSendToUI(&ConnectSocket, "pFaultCounts=VK_NULL_HANDLE!");
-if(pFaultInfo != VK_NULL_HANDLE && pFaultInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pFaultInfo->pNext=" + ptrToString((void**)std::addressof(pFaultInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pFaultInfo->description=[array]" + '!');
-winsockSendToUI(&ConnectSocket,"pFaultInfo->pAddressInfos=" + ptrToString((void**)std::addressof(pFaultInfo->pAddressInfos)) + '!');
-winsockSendToUI(&ConnectSocket,"pFaultInfo->pVendorInfos=" + ptrToString((void**)std::addressof(pFaultInfo->pVendorInfos)) + '!');
-winsockSendToUI(&ConnectSocket,"pFaultInfo->pVendorBinaryData=" + ptrToString((void**)std::addressof(pFaultInfo->pVendorBinaryData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pFaultInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETDEVICEFAULTINFOEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceFaultInfoEXT_after(device, pFaultCounts, pFaultInfo);
@@ -23455,15 +17035,6 @@ layer_CmdSetDepthBias2EXT_before(commandBuffer, pDepthBiasInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBias2EXT(commandBuffer, pDepthBiasInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pDepthBiasInfo != VK_NULL_HANDLE && pDepthBiasInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDepthBiasInfo->pNext=" + ptrToString((void**)std::addressof(pDepthBiasInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDepthBiasInfo->depthBiasConstantFactor=" + std::to_string(pDepthBiasInfo->depthBiasConstantFactor) + '!');
-winsockSendToUI(&ConnectSocket,"pDepthBiasInfo->depthBiasClamp=" + std::to_string(pDepthBiasInfo->depthBiasClamp) + '!');
-winsockSendToUI(&ConnectSocket,"pDepthBiasInfo->depthBiasSlopeFactor=" + std::to_string(pDepthBiasInfo->depthBiasSlopeFactor) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDepthBiasInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETDEPTHBIAS2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthBias2EXT_after(commandBuffer, pDepthBiasInfo);
@@ -23490,15 +17061,6 @@ layer_ReleaseSwapchainImagesEXT_before(device, pReleaseInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].ReleaseSwapchainImagesEXT(device, pReleaseInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pReleaseInfo != VK_NULL_HANDLE && pReleaseInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pReleaseInfo->pNext=" + ptrToString((void**)std::addressof(pReleaseInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pReleaseInfo->swapchain=" + ptrToString((void**)std::addressof(pReleaseInfo->swapchain)) + '!');
-winsockSendToUI(&ConnectSocket,"pReleaseInfo->imageIndexCount=" + std::to_string(pReleaseInfo->imageIndexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pReleaseInfo->pImageIndices=" + ptrToString((void**)std::addressof(pReleaseInfo->pImageIndices)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pReleaseInfo=VK_NULL_HANDLE!");
-}
 #ifdef RELEASESWAPCHAINIMAGESEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ReleaseSwapchainImagesEXT_after(device, pReleaseInfo);
@@ -23527,30 +17089,6 @@ layer_GetDeviceImageSubresourceLayoutKHR_before(device, pInfo, pLayout);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceImageSubresourceLayoutKHR(device, pInfo, pLayout);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-if(pInfo->pCreateInfo != VK_NULL_HANDLE && pInfo->pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->flags=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->extent=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->extent)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->mipLevels=" + std::to_string(pInfo->pCreateInfo->mipLevels) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->arrayLayers=" + std::to_string(pInfo->pCreateInfo->arrayLayers) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->usage=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->usage)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->queueFamilyIndexCount=" + std::to_string(pInfo->pCreateInfo->queueFamilyIndexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->pQueueFamilyIndices=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->pQueueFamilyIndices)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pInfo->pSubresource != VK_NULL_HANDLE && pInfo->pSubresource != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pSubresource->pNext=" + ptrToString((void**)std::addressof(pInfo->pSubresource->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pSubresource->imageSubresource=" + ptrToString((void**)std::addressof(pInfo->pSubresource->imageSubresource)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubresource=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-if(pLayout != VK_NULL_HANDLE && pLayout != NULL) {
-winsockSendToUI(&ConnectSocket,"pLayout->pNext=" + ptrToString((void**)std::addressof(pLayout->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pLayout->subresourceLayout=" + ptrToString((void**)std::addressof(pLayout->subresourceLayout)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pLayout=VK_NULL_HANDLE!");
-}
 #ifdef GETDEVICEIMAGESUBRESOURCELAYOUTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceImageSubresourceLayoutKHR_after(device, pInfo, pLayout);
@@ -23577,17 +17115,6 @@ layer_MapMemory2KHR_before(device, pMemoryMapInfo, ppData);
 #endif 
 auto ret = device_dispatch[GetKey(device)].MapMemory2KHR(device, pMemoryMapInfo, ppData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pMemoryMapInfo != VK_NULL_HANDLE && pMemoryMapInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryMapInfo->pNext=" + ptrToString((void**)std::addressof(pMemoryMapInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryMapInfo->flags=" + ptrToString((void**)std::addressof(pMemoryMapInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryMapInfo->memory=" + ptrToString((void**)std::addressof(pMemoryMapInfo->memory)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryMapInfo->offset=" + std::to_string(pMemoryMapInfo->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryMapInfo->size=" + std::to_string(pMemoryMapInfo->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryMapInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"ppData=" + ptrToString((void**)std::addressof(ppData)) + '!');
-}
 #ifdef MAPMEMORY2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_MapMemory2KHR_after(device, pMemoryMapInfo, ppData);
@@ -23617,14 +17144,6 @@ layer_UnmapMemory2KHR_before(device, pMemoryUnmapInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].UnmapMemory2KHR(device, pMemoryUnmapInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pMemoryUnmapInfo != VK_NULL_HANDLE && pMemoryUnmapInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryUnmapInfo->pNext=" + ptrToString((void**)std::addressof(pMemoryUnmapInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryUnmapInfo->flags=" + ptrToString((void**)std::addressof(pMemoryUnmapInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryUnmapInfo->memory=" + ptrToString((void**)std::addressof(pMemoryUnmapInfo->memory)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryUnmapInfo=VK_NULL_HANDLE!");
-}
 #ifdef UNMAPMEMORY2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_UnmapMemory2KHR_after(device, pMemoryUnmapInfo);
@@ -23654,45 +17173,6 @@ layer_CreateShadersEXT_before(device, createInfoCount, pCreateInfos, pAllocator,
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateShadersEXT(device, createInfoCount, pCreateInfos, pAllocator, pShaders);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"createInfoCount=" + std::to_string(createInfoCount) + '!');
-if(pCreateInfos != VK_NULL_HANDLE && pCreateInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->flags=" + ptrToString((void**)std::addressof(pCreateInfos->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->nextStage=" + ptrToString((void**)std::addressof(pCreateInfos->nextStage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->codeSize=" + std::to_string(pCreateInfos->codeSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pCode=" + ptrToString((void**)std::addressof(pCreateInfos->pCode)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pName=" + charToString((char*)pCreateInfos->pName) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->setLayoutCount=" + std::to_string(pCreateInfos->setLayoutCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pSetLayouts=" + ptrToString((void**)std::addressof(pCreateInfos->pSetLayouts)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pushConstantRangeCount=" + std::to_string(pCreateInfos->pushConstantRangeCount) + '!');
-if(pCreateInfos->pPushConstantRanges != VK_NULL_HANDLE && pCreateInfos->pPushConstantRanges != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pPushConstantRanges->stageFlags=" + ptrToString((void**)std::addressof(pCreateInfos->pPushConstantRanges->stageFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pPushConstantRanges->offset=" + std::to_string(pCreateInfos->pPushConstantRanges->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pPushConstantRanges->size=" + std::to_string(pCreateInfos->pPushConstantRanges->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPushConstantRanges=VK_NULL_HANDLE!");
-if(pCreateInfos->pSpecializationInfo != VK_NULL_HANDLE && pCreateInfos->pSpecializationInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pSpecializationInfo->mapEntryCount=" + std::to_string(pCreateInfos->pSpecializationInfo->mapEntryCount) + '!');
-if(pCreateInfos->pSpecializationInfo->pMapEntries != VK_NULL_HANDLE && pCreateInfos->pSpecializationInfo->pMapEntries != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pSpecializationInfo->pMapEntries->constantID=" + std::to_string(pCreateInfos->pSpecializationInfo->pMapEntries->constantID) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pSpecializationInfo->pMapEntries->offset=" + std::to_string(pCreateInfos->pSpecializationInfo->pMapEntries->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pSpecializationInfo->pMapEntries->size=" + std::to_string(pCreateInfos->pSpecializationInfo->pMapEntries->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMapEntries=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pSpecializationInfo->dataSize=" + std::to_string(pCreateInfos->pSpecializationInfo->dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pSpecializationInfo->pData=" + ptrToString((void**)std::addressof(pCreateInfos->pSpecializationInfo->pData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSpecializationInfo=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCreateInfos=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pShaders=" + ptrToString((void**)std::addressof(pShaders)) + '!');
-}
 #ifdef CREATESHADERSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateShadersEXT_after(device, createInfoCount, pCreateInfos, pAllocator, pShaders);
@@ -23721,18 +17201,6 @@ layer_DestroyShaderEXT_before(device, shader, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyShaderEXT(device, shader, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"shader=" + ptrToString((void**)std::addressof(shader)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYSHADEREXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyShaderEXT_after(device, shader, pAllocator);
@@ -23759,12 +17227,6 @@ layer_GetShaderBinaryDataEXT_before(device, shader, pDataSize, pData);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetShaderBinaryDataEXT(device, shader, pDataSize, pData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"shader=" + ptrToString((void**)std::addressof(shader)) + '!');
-winsockSendToUI(&ConnectSocket,"pDataSize=" + ptrToString((void**)std::addressof(pDataSize)) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETSHADERBINARYDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetShaderBinaryDataEXT_after(device, shader, pDataSize, pData);
@@ -23793,12 +17255,6 @@ layer_CmdBindShadersEXT_before(commandBuffer, stageCount, pStages, pShaders);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindShadersEXT(commandBuffer, stageCount, pStages, pShaders);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"stageCount=" + std::to_string(stageCount) + '!');
-winsockSendToUI(&ConnectSocket,"pStages=" + ptrToString((void**)std::addressof(pStages)) + '!');
-winsockSendToUI(&ConnectSocket,"pShaders=" + ptrToString((void**)std::addressof(pShaders)) + '!');
-}
 #ifdef CMDBINDSHADERSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindShadersEXT_after(commandBuffer, stageCount, pStages, pShaders);
@@ -23826,15 +17282,6 @@ layer_GetScreenBufferPropertiesQNX_before(device, buffer, pProperties);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetScreenBufferPropertiesQNX(device, buffer, pProperties);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-if(pProperties != VK_NULL_HANDLE && pProperties != NULL) {
-winsockSendToUI(&ConnectSocket,"pProperties->pNext=" + ptrToString((void**)std::addressof(pProperties->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->allocationSize=" + std::to_string(pProperties->allocationSize) + '!');
-winsockSendToUI(&ConnectSocket,"pProperties->memoryTypeBits=" + std::to_string(pProperties->memoryTypeBits) + '!');
-}else winsockSendToUI(&ConnectSocket, "pProperties=VK_NULL_HANDLE!");
-}
 #ifdef GETSCREENBUFFERPROPERTIESQNX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetScreenBufferPropertiesQNX_after(device, buffer, pProperties);
@@ -23866,14 +17313,6 @@ layer_GetExecutionGraphPipelineScratchSizeAMDX_before(device, executionGraph, pS
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetExecutionGraphPipelineScratchSizeAMDX(device, executionGraph, pSizeInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"executionGraph=" + ptrToString((void**)std::addressof(executionGraph)) + '!');
-if(pSizeInfo != VK_NULL_HANDLE && pSizeInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSizeInfo->pNext=" + ptrToString((void**)std::addressof(pSizeInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSizeInfo->size=" + std::to_string(pSizeInfo->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSizeInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETEXECUTIONGRAPHPIPELINESCRATCHSIZEAMDX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetExecutionGraphPipelineScratchSizeAMDX_after(device, executionGraph, pSizeInfo);
@@ -23905,16 +17344,6 @@ layer_GetExecutionGraphPipelineNodeIndexAMDX_before(device, executionGraph, pNod
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetExecutionGraphPipelineNodeIndexAMDX(device, executionGraph, pNodeInfo, pNodeIndex);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"executionGraph=" + ptrToString((void**)std::addressof(executionGraph)) + '!');
-if(pNodeInfo != VK_NULL_HANDLE && pNodeInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pNodeInfo->pNext=" + ptrToString((void**)std::addressof(pNodeInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pNodeInfo->pName=" + charToString((char*)pNodeInfo->pName) + '!');
-winsockSendToUI(&ConnectSocket,"pNodeInfo->index=" + std::to_string(pNodeInfo->index) + '!');
-}else winsockSendToUI(&ConnectSocket, "pNodeInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pNodeIndex=" + ptrToString((void**)std::addressof(pNodeIndex)) + '!');
-}
 #ifdef GETEXECUTIONGRAPHPIPELINENODEINDEXAMDX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetExecutionGraphPipelineNodeIndexAMDX_after(device, executionGraph, pNodeInfo, pNodeIndex);
@@ -23946,45 +17375,6 @@ layer_CreateExecutionGraphPipelinesAMDX_before(device, pipelineCache, createInfo
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateExecutionGraphPipelinesAMDX(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pipelineCache=" + ptrToString((void**)std::addressof(pipelineCache)) + '!');
-winsockSendToUI(&ConnectSocket,"createInfoCount=" + std::to_string(createInfoCount) + '!');
-if(pCreateInfos != VK_NULL_HANDLE && pCreateInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->flags=" + ptrToString((void**)std::addressof(pCreateInfos->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->stageCount=" + std::to_string(pCreateInfos->stageCount) + '!');
-if(pCreateInfos->pStages != VK_NULL_HANDLE && pCreateInfos->pStages != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->flags=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->module=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->module)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pName=" + charToString((char*)pCreateInfos->pStages->pName) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pName=" + charToString((char*)pCreateInfos->pStages->pName) + '!');
-if(pCreateInfos->pStages->pSpecializationInfo != VK_NULL_HANDLE && pCreateInfos->pStages->pSpecializationInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->mapEntryCount=" + std::to_string(pCreateInfos->pStages->pSpecializationInfo->mapEntryCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->dataSize=" + std::to_string(pCreateInfos->pStages->pSpecializationInfo->dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pStages->pSpecializationInfo->pData=" + ptrToString((void**)std::addressof(pCreateInfos->pStages->pSpecializationInfo->pData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSpecializationInfo=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pStages=VK_NULL_HANDLE!");
-if(pCreateInfos->pLibraryInfo != VK_NULL_HANDLE && pCreateInfos->pLibraryInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pLibraryInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfos->pLibraryInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pLibraryInfo->libraryCount=" + std::to_string(pCreateInfos->pLibraryInfo->libraryCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->pLibraryInfo->pLibraries=" + ptrToString((void**)std::addressof(pCreateInfos->pLibraryInfo->pLibraries)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pLibraryInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfos->layout=" + ptrToString((void**)std::addressof(pCreateInfos->layout)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->basePipelineHandle=" + ptrToString((void**)std::addressof(pCreateInfos->basePipelineHandle)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfos->basePipelineIndex=" + std::to_string(pCreateInfos->basePipelineIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfos=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pPipelines=" + ptrToString((void**)std::addressof(pPipelines)) + '!');
-}
 #ifdef CREATEEXECUTIONGRAPHPIPELINESAMDX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateExecutionGraphPipelinesAMDX_after(device, pipelineCache, createInfoCount, pCreateInfos, pAllocator, pPipelines);
@@ -24015,10 +17405,6 @@ layer_CmdInitializeGraphScratchMemoryAMDX_before(commandBuffer, scratch);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdInitializeGraphScratchMemoryAMDX(commandBuffer, scratch);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"scratch=" + ptrToString((void**)std::addressof(scratch)) + '!');
-}
 #ifdef CMDINITIALIZEGRAPHSCRATCHMEMORYAMDX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdInitializeGraphScratchMemoryAMDX_after(commandBuffer, scratch);
@@ -24046,15 +17432,6 @@ layer_CmdDispatchGraphAMDX_before(commandBuffer, scratch, pCountInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphAMDX(commandBuffer, scratch, pCountInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"scratch=" + ptrToString((void**)std::addressof(scratch)) + '!');
-if(pCountInfo != VK_NULL_HANDLE && pCountInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCountInfo->count=" + std::to_string(pCountInfo->count) + '!');
-winsockSendToUI(&ConnectSocket,"pCountInfo->infos=" + ptrToString((void**)std::addressof(pCountInfo->infos)) + '!');
-winsockSendToUI(&ConnectSocket,"pCountInfo->stride=" + std::to_string(pCountInfo->stride) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCountInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDDISPATCHGRAPHAMDX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDispatchGraphAMDX_after(commandBuffer, scratch, pCountInfo);
@@ -24082,15 +17459,6 @@ layer_CmdDispatchGraphIndirectAMDX_before(commandBuffer, scratch, pCountInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphIndirectAMDX(commandBuffer, scratch, pCountInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"scratch=" + ptrToString((void**)std::addressof(scratch)) + '!');
-if(pCountInfo != VK_NULL_HANDLE && pCountInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCountInfo->count=" + std::to_string(pCountInfo->count) + '!');
-winsockSendToUI(&ConnectSocket,"pCountInfo->infos=" + ptrToString((void**)std::addressof(pCountInfo->infos)) + '!');
-winsockSendToUI(&ConnectSocket,"pCountInfo->stride=" + std::to_string(pCountInfo->stride) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCountInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDDISPATCHGRAPHINDIRECTAMDX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDispatchGraphIndirectAMDX_after(commandBuffer, scratch, pCountInfo);
@@ -24118,11 +17486,6 @@ layer_CmdDispatchGraphIndirectCountAMDX_before(commandBuffer, scratch, countInfo
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphIndirectCountAMDX(commandBuffer, scratch, countInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"scratch=" + ptrToString((void**)std::addressof(scratch)) + '!');
-winsockSendToUI(&ConnectSocket,"countInfo=" + ptrToString((void**)std::addressof(countInfo)) + '!');
-}
 #ifdef CMDDISPATCHGRAPHINDIRECTCOUNTAMDX_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDispatchGraphIndirectCountAMDX_after(commandBuffer, scratch, countInfo);
@@ -24149,19 +17512,6 @@ layer_CmdBindDescriptorSets2KHR_before(commandBuffer, pBindDescriptorSetsInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorSets2KHR(commandBuffer, pBindDescriptorSetsInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pBindDescriptorSetsInfo != VK_NULL_HANDLE && pBindDescriptorSetsInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindDescriptorSetsInfo->pNext=" + ptrToString((void**)std::addressof(pBindDescriptorSetsInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindDescriptorSetsInfo->stageFlags=" + ptrToString((void**)std::addressof(pBindDescriptorSetsInfo->stageFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindDescriptorSetsInfo->layout=" + ptrToString((void**)std::addressof(pBindDescriptorSetsInfo->layout)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindDescriptorSetsInfo->firstSet=" + std::to_string(pBindDescriptorSetsInfo->firstSet) + '!');
-winsockSendToUI(&ConnectSocket,"pBindDescriptorSetsInfo->descriptorSetCount=" + std::to_string(pBindDescriptorSetsInfo->descriptorSetCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBindDescriptorSetsInfo->pDescriptorSets=" + ptrToString((void**)std::addressof(pBindDescriptorSetsInfo->pDescriptorSets)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindDescriptorSetsInfo->dynamicOffsetCount=" + std::to_string(pBindDescriptorSetsInfo->dynamicOffsetCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBindDescriptorSetsInfo->pDynamicOffsets=" + ptrToString((void**)std::addressof(pBindDescriptorSetsInfo->pDynamicOffsets)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBindDescriptorSetsInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDBINDDESCRIPTORSETS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindDescriptorSets2KHR_after(commandBuffer, pBindDescriptorSetsInfo);
@@ -24187,17 +17537,6 @@ layer_CmdPushConstants2KHR_before(commandBuffer, pPushConstantsInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPushConstants2KHR(commandBuffer, pPushConstantsInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pPushConstantsInfo != VK_NULL_HANDLE && pPushConstantsInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pPushConstantsInfo->pNext=" + ptrToString((void**)std::addressof(pPushConstantsInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pPushConstantsInfo->layout=" + ptrToString((void**)std::addressof(pPushConstantsInfo->layout)) + '!');
-winsockSendToUI(&ConnectSocket,"pPushConstantsInfo->stageFlags=" + ptrToString((void**)std::addressof(pPushConstantsInfo->stageFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pPushConstantsInfo->offset=" + std::to_string(pPushConstantsInfo->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pPushConstantsInfo->size=" + std::to_string(pPushConstantsInfo->size) + '!');
-winsockSendToUI(&ConnectSocket,"pPushConstantsInfo->pValues=" + ptrToString((void**)std::addressof(pPushConstantsInfo->pValues)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPushConstantsInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDPUSHCONSTANTS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPushConstants2KHR_after(commandBuffer, pPushConstantsInfo);
@@ -24223,33 +17562,6 @@ layer_CmdPushDescriptorSet2KHR_before(commandBuffer, pPushDescriptorSetInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSet2KHR(commandBuffer, pPushDescriptorSetInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pPushDescriptorSetInfo != VK_NULL_HANDLE && pPushDescriptorSetInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->pNext=" + ptrToString((void**)std::addressof(pPushDescriptorSetInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->stageFlags=" + ptrToString((void**)std::addressof(pPushDescriptorSetInfo->stageFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->layout=" + ptrToString((void**)std::addressof(pPushDescriptorSetInfo->layout)) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->set=" + std::to_string(pPushDescriptorSetInfo->set) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->descriptorWriteCount=" + std::to_string(pPushDescriptorSetInfo->descriptorWriteCount) + '!');
-if(pPushDescriptorSetInfo->pDescriptorWrites != VK_NULL_HANDLE && pPushDescriptorSetInfo->pDescriptorWrites != NULL) {
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->pDescriptorWrites->pNext=" + ptrToString((void**)std::addressof(pPushDescriptorSetInfo->pDescriptorWrites->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->pDescriptorWrites->dstSet=" + ptrToString((void**)std::addressof(pPushDescriptorSetInfo->pDescriptorWrites->dstSet)) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->pDescriptorWrites->dstBinding=" + std::to_string(pPushDescriptorSetInfo->pDescriptorWrites->dstBinding) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->pDescriptorWrites->dstArrayElement=" + std::to_string(pPushDescriptorSetInfo->pDescriptorWrites->dstArrayElement) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->pDescriptorWrites->descriptorCount=" + std::to_string(pPushDescriptorSetInfo->pDescriptorWrites->descriptorCount) + '!');
-if(pPushDescriptorSetInfo->pDescriptorWrites->pImageInfo != VK_NULL_HANDLE && pPushDescriptorSetInfo->pDescriptorWrites->pImageInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->pDescriptorWrites->pImageInfo->sampler=" + ptrToString((void**)std::addressof(pPushDescriptorSetInfo->pDescriptorWrites->pImageInfo->sampler)) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->pDescriptorWrites->pImageInfo->imageView=" + ptrToString((void**)std::addressof(pPushDescriptorSetInfo->pDescriptorWrites->pImageInfo->imageView)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageInfo=VK_NULL_HANDLE!");
-if(pPushDescriptorSetInfo->pDescriptorWrites->pBufferInfo != VK_NULL_HANDLE && pPushDescriptorSetInfo->pDescriptorWrites->pBufferInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->pDescriptorWrites->pBufferInfo->buffer=" + ptrToString((void**)std::addressof(pPushDescriptorSetInfo->pDescriptorWrites->pBufferInfo->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->pDescriptorWrites->pBufferInfo->offset=" + std::to_string(pPushDescriptorSetInfo->pDescriptorWrites->pBufferInfo->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->pDescriptorWrites->pBufferInfo->range=" + std::to_string(pPushDescriptorSetInfo->pDescriptorWrites->pBufferInfo->range) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBufferInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetInfo->pDescriptorWrites->pTexelBufferView=" + ptrToString((void**)std::addressof(pPushDescriptorSetInfo->pDescriptorWrites->pTexelBufferView)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDescriptorWrites=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pPushDescriptorSetInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDPUSHDESCRIPTORSET2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPushDescriptorSet2KHR_after(commandBuffer, pPushDescriptorSetInfo);
@@ -24275,16 +17587,6 @@ layer_CmdPushDescriptorSetWithTemplate2KHR_before(commandBuffer, pPushDescriptor
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetWithTemplate2KHR(commandBuffer, pPushDescriptorSetWithTemplateInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pPushDescriptorSetWithTemplateInfo != VK_NULL_HANDLE && pPushDescriptorSetWithTemplateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetWithTemplateInfo->pNext=" + ptrToString((void**)std::addressof(pPushDescriptorSetWithTemplateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetWithTemplateInfo->descriptorUpdateTemplate=" + ptrToString((void**)std::addressof(pPushDescriptorSetWithTemplateInfo->descriptorUpdateTemplate)) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetWithTemplateInfo->layout=" + ptrToString((void**)std::addressof(pPushDescriptorSetWithTemplateInfo->layout)) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetWithTemplateInfo->set=" + std::to_string(pPushDescriptorSetWithTemplateInfo->set) + '!');
-winsockSendToUI(&ConnectSocket,"pPushDescriptorSetWithTemplateInfo->pData=" + ptrToString((void**)std::addressof(pPushDescriptorSetWithTemplateInfo->pData)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pPushDescriptorSetWithTemplateInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDPUSHDESCRIPTORSETWITHTEMPLATE2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPushDescriptorSetWithTemplate2KHR_after(commandBuffer, pPushDescriptorSetWithTemplateInfo);
@@ -24310,18 +17612,6 @@ layer_CmdSetDescriptorBufferOffsets2EXT_before(commandBuffer, pSetDescriptorBuff
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDescriptorBufferOffsets2EXT(commandBuffer, pSetDescriptorBufferOffsetsInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pSetDescriptorBufferOffsetsInfo != VK_NULL_HANDLE && pSetDescriptorBufferOffsetsInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSetDescriptorBufferOffsetsInfo->pNext=" + ptrToString((void**)std::addressof(pSetDescriptorBufferOffsetsInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSetDescriptorBufferOffsetsInfo->stageFlags=" + ptrToString((void**)std::addressof(pSetDescriptorBufferOffsetsInfo->stageFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pSetDescriptorBufferOffsetsInfo->layout=" + ptrToString((void**)std::addressof(pSetDescriptorBufferOffsetsInfo->layout)) + '!');
-winsockSendToUI(&ConnectSocket,"pSetDescriptorBufferOffsetsInfo->firstSet=" + std::to_string(pSetDescriptorBufferOffsetsInfo->firstSet) + '!');
-winsockSendToUI(&ConnectSocket,"pSetDescriptorBufferOffsetsInfo->setCount=" + std::to_string(pSetDescriptorBufferOffsetsInfo->setCount) + '!');
-winsockSendToUI(&ConnectSocket,"pSetDescriptorBufferOffsetsInfo->pBufferIndices=" + ptrToString((void**)std::addressof(pSetDescriptorBufferOffsetsInfo->pBufferIndices)) + '!');
-winsockSendToUI(&ConnectSocket,"pSetDescriptorBufferOffsetsInfo->pOffsets=" + ptrToString((void**)std::addressof(pSetDescriptorBufferOffsetsInfo->pOffsets)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSetDescriptorBufferOffsetsInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETDESCRIPTORBUFFEROFFSETS2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDescriptorBufferOffsets2EXT_after(commandBuffer, pSetDescriptorBufferOffsetsInfo);
@@ -24347,15 +17637,6 @@ layer_CmdBindDescriptorBufferEmbeddedSamplers2EXT_before(commandBuffer, pBindDes
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBufferEmbeddedSamplers2EXT(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pBindDescriptorBufferEmbeddedSamplersInfo != VK_NULL_HANDLE && pBindDescriptorBufferEmbeddedSamplersInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindDescriptorBufferEmbeddedSamplersInfo->pNext=" + ptrToString((void**)std::addressof(pBindDescriptorBufferEmbeddedSamplersInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindDescriptorBufferEmbeddedSamplersInfo->stageFlags=" + ptrToString((void**)std::addressof(pBindDescriptorBufferEmbeddedSamplersInfo->stageFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindDescriptorBufferEmbeddedSamplersInfo->layout=" + ptrToString((void**)std::addressof(pBindDescriptorBufferEmbeddedSamplersInfo->layout)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindDescriptorBufferEmbeddedSamplersInfo->set=" + std::to_string(pBindDescriptorBufferEmbeddedSamplersInfo->set) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBindDescriptorBufferEmbeddedSamplersInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDBINDDESCRIPTORBUFFEREMBEDDEDSAMPLERS2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindDescriptorBufferEmbeddedSamplers2EXT_after(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo);
@@ -24382,16 +17663,6 @@ layer_SetLatencySleepModeNV_before(device, swapchain, pSleepModeInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetLatencySleepModeNV(device, swapchain, pSleepModeInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void**)std::addressof(swapchain)) + '!');
-if(pSleepModeInfo != VK_NULL_HANDLE && pSleepModeInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSleepModeInfo->pNext=" + ptrToString((void**)std::addressof(pSleepModeInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSleepModeInfo->lowLatencyMode=" + bool_as_text(pSleepModeInfo->lowLatencyMode) + '!');
-winsockSendToUI(&ConnectSocket,"pSleepModeInfo->lowLatencyBoost=" + bool_as_text(pSleepModeInfo->lowLatencyBoost) + '!');
-winsockSendToUI(&ConnectSocket,"pSleepModeInfo->minimumIntervalUs=" + std::to_string(pSleepModeInfo->minimumIntervalUs) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSleepModeInfo=VK_NULL_HANDLE!");
-}
 #ifdef SETLATENCYSLEEPMODENV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetLatencySleepModeNV_after(device, swapchain, pSleepModeInfo);
@@ -24421,15 +17692,6 @@ layer_LatencySleepNV_before(device, swapchain, pSleepInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].LatencySleepNV(device, swapchain, pSleepInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void**)std::addressof(swapchain)) + '!');
-if(pSleepInfo != VK_NULL_HANDLE && pSleepInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSleepInfo->pNext=" + ptrToString((void**)std::addressof(pSleepInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSleepInfo->signalSemaphore=" + ptrToString((void**)std::addressof(pSleepInfo->signalSemaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"pSleepInfo->value=" + std::to_string(pSleepInfo->value) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSleepInfo=VK_NULL_HANDLE!");
-}
 #ifdef LATENCYSLEEPNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_LatencySleepNV_after(device, swapchain, pSleepInfo);
@@ -24458,14 +17720,6 @@ layer_SetLatencyMarkerNV_before(device, swapchain, pLatencyMarkerInfo);
 }
 #endif 
 device_dispatch[GetKey(device)].SetLatencyMarkerNV(device, swapchain, pLatencyMarkerInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void**)std::addressof(swapchain)) + '!');
-if(pLatencyMarkerInfo != VK_NULL_HANDLE && pLatencyMarkerInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pLatencyMarkerInfo->pNext=" + ptrToString((void**)std::addressof(pLatencyMarkerInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pLatencyMarkerInfo->presentID=" + std::to_string(pLatencyMarkerInfo->presentID) + '!');
-}else winsockSendToUI(&ConnectSocket, "pLatencyMarkerInfo=VK_NULL_HANDLE!");
-}
 #ifdef SETLATENCYMARKERNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetLatencyMarkerNV_after(device, swapchain, pLatencyMarkerInfo);
@@ -24491,15 +17745,6 @@ layer_GetLatencyTimingsNV_before(device, swapchain, pLatencyMarkerInfo);
 }
 #endif 
 device_dispatch[GetKey(device)].GetLatencyTimingsNV(device, swapchain, pLatencyMarkerInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"swapchain=" + ptrToString((void**)std::addressof(swapchain)) + '!');
-if(pLatencyMarkerInfo != VK_NULL_HANDLE && pLatencyMarkerInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pLatencyMarkerInfo->pNext=" + ptrToString((void**)std::addressof(pLatencyMarkerInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pLatencyMarkerInfo->timingCount=" + std::to_string(pLatencyMarkerInfo->timingCount) + '!');
-winsockSendToUI(&ConnectSocket,"pLatencyMarkerInfo->pTimings=" + ptrToString((void**)std::addressof(pLatencyMarkerInfo->pTimings)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pLatencyMarkerInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETLATENCYTIMINGSNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetLatencyTimingsNV_after(device, swapchain, pLatencyMarkerInfo);
@@ -24525,12 +17770,6 @@ layer_QueueNotifyOutOfBandNV_before(queue, pQueueTypeInfo);
 }
 #endif 
 device_dispatch[GetKey(queue)].QueueNotifyOutOfBandNV(queue, pQueueTypeInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void**)std::addressof(queue)) + '!');
-if(pQueueTypeInfo != VK_NULL_HANDLE && pQueueTypeInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pQueueTypeInfo->pNext=" + ptrToString((void**)std::addressof(pQueueTypeInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pQueueTypeInfo=VK_NULL_HANDLE!");
-}
 #ifdef QUEUENOTIFYOUTOFBANDNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueNotifyOutOfBandNV_after(queue, pQueueTypeInfo);
@@ -24556,12 +17795,6 @@ layer_ResetQueryPoolEXT_before(device, queryPool, firstQuery, queryCount);
 }
 #endif 
 device_dispatch[GetKey(device)].ResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"firstQuery=" + std::to_string(firstQuery) + '!');
-winsockSendToUI(&ConnectSocket,"queryCount=" + std::to_string(queryCount) + '!');
-}
 #ifdef RESETQUERYPOOLEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_ResetQueryPoolEXT_after(device, queryPool, firstQuery, queryCount);
@@ -24587,11 +17820,6 @@ layer_TrimCommandPoolKHR_before(device, commandPool, flags);
 }
 #endif 
 device_dispatch[GetKey(device)].TrimCommandPoolKHR(device, commandPool, flags);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"commandPool=" + ptrToString((void**)std::addressof(commandPool)) + '!');
-winsockSendToUI(&ConnectSocket,"flags=" + ptrToString((void**)std::addressof(flags)) + '!');
-}
 #ifdef TRIMCOMMANDPOOLKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_TrimCommandPoolKHR_after(device, commandPool, flags);
@@ -24617,13 +17845,6 @@ layer_GetDeviceGroupPeerMemoryFeaturesKHR_before(device, heapIndex, localDeviceI
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceGroupPeerMemoryFeaturesKHR(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"heapIndex=" + std::to_string(heapIndex) + '!');
-winsockSendToUI(&ConnectSocket,"localDeviceIndex=" + std::to_string(localDeviceIndex) + '!');
-winsockSendToUI(&ConnectSocket,"remoteDeviceIndex=" + std::to_string(remoteDeviceIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pPeerMemoryFeatures=" + ptrToString((void**)std::addressof(pPeerMemoryFeatures)) + '!');
-}
 #ifdef GETDEVICEGROUPPEERMEMORYFEATURESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceGroupPeerMemoryFeaturesKHR_after(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
@@ -24650,16 +17871,6 @@ layer_BindBufferMemory2KHR_before(device, bindInfoCount, pBindInfos);
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindBufferMemory2KHR(device, bindInfoCount, pBindInfos);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"bindInfoCount=" + std::to_string(bindInfoCount) + '!');
-if(pBindInfos != VK_NULL_HANDLE && pBindInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindInfos->pNext=" + ptrToString((void**)std::addressof(pBindInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->buffer=" + ptrToString((void**)std::addressof(pBindInfos->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->memory=" + ptrToString((void**)std::addressof(pBindInfos->memory)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->memoryOffset=" + std::to_string(pBindInfos->memoryOffset) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBindInfos=VK_NULL_HANDLE!");
-}
 #ifdef BINDBUFFERMEMORY2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindBufferMemory2KHR_after(device, bindInfoCount, pBindInfos);
@@ -24689,16 +17900,6 @@ layer_BindImageMemory2KHR_before(device, bindInfoCount, pBindInfos);
 #endif 
 auto ret = device_dispatch[GetKey(device)].BindImageMemory2KHR(device, bindInfoCount, pBindInfos);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"bindInfoCount=" + std::to_string(bindInfoCount) + '!');
-if(pBindInfos != VK_NULL_HANDLE && pBindInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pBindInfos->pNext=" + ptrToString((void**)std::addressof(pBindInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->image=" + ptrToString((void**)std::addressof(pBindInfos->image)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->memory=" + ptrToString((void**)std::addressof(pBindInfos->memory)) + '!');
-winsockSendToUI(&ConnectSocket,"pBindInfos->memoryOffset=" + std::to_string(pBindInfos->memoryOffset) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBindInfos=VK_NULL_HANDLE!");
-}
 #ifdef BINDIMAGEMEMORY2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_BindImageMemory2KHR_after(device, bindInfoCount, pBindInfos);
@@ -24727,10 +17928,6 @@ layer_CmdSetDeviceMaskKHR_before(commandBuffer, deviceMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDeviceMaskKHR(commandBuffer, deviceMask);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"deviceMask=" + std::to_string(deviceMask) + '!');
-}
 #ifdef CMDSETDEVICEMASKKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDeviceMaskKHR_after(commandBuffer, deviceMask);
@@ -24756,15 +17953,6 @@ layer_CmdDispatchBaseKHR_before(commandBuffer, baseGroupX, baseGroupY, baseGroup
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDispatchBaseKHR(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"baseGroupX=" + std::to_string(baseGroupX) + '!');
-winsockSendToUI(&ConnectSocket,"baseGroupY=" + std::to_string(baseGroupY) + '!');
-winsockSendToUI(&ConnectSocket,"baseGroupZ=" + std::to_string(baseGroupZ) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountX=" + std::to_string(groupCountX) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountY=" + std::to_string(groupCountY) + '!');
-winsockSendToUI(&ConnectSocket,"groupCountZ=" + std::to_string(groupCountZ) + '!');
-}
 #ifdef CMDDISPATCHBASEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDispatchBaseKHR_after(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
@@ -24791,33 +17979,6 @@ layer_CreateDescriptorUpdateTemplateKHR_before(device, pCreateInfo, pAllocator, 
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateDescriptorUpdateTemplateKHR(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->descriptorUpdateEntryCount=" + std::to_string(pCreateInfo->descriptorUpdateEntryCount) + '!');
-if(pCreateInfo->pDescriptorUpdateEntries != VK_NULL_HANDLE && pCreateInfo->pDescriptorUpdateEntries != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDescriptorUpdateEntries->dstBinding=" + std::to_string(pCreateInfo->pDescriptorUpdateEntries->dstBinding) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDescriptorUpdateEntries->dstArrayElement=" + std::to_string(pCreateInfo->pDescriptorUpdateEntries->dstArrayElement) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDescriptorUpdateEntries->descriptorCount=" + std::to_string(pCreateInfo->pDescriptorUpdateEntries->descriptorCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDescriptorUpdateEntries->offset=" + std::to_string(pCreateInfo->pDescriptorUpdateEntries->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDescriptorUpdateEntries->stride=" + std::to_string(pCreateInfo->pDescriptorUpdateEntries->stride) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDescriptorUpdateEntries=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->descriptorSetLayout=" + ptrToString((void**)std::addressof(pCreateInfo->descriptorSetLayout)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pipelineLayout=" + ptrToString((void**)std::addressof(pCreateInfo->pipelineLayout)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->set=" + std::to_string(pCreateInfo->set) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDescriptorUpdateTemplate=" + ptrToString((void**)std::addressof(pDescriptorUpdateTemplate)) + '!');
-}
 #ifdef CREATEDESCRIPTORUPDATETEMPLATEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateDescriptorUpdateTemplateKHR_after(device, pCreateInfo, pAllocator, pDescriptorUpdateTemplate);
@@ -24846,18 +18007,6 @@ layer_DestroyDescriptorUpdateTemplateKHR_before(device, descriptorUpdateTemplate
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyDescriptorUpdateTemplateKHR(device, descriptorUpdateTemplate, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorUpdateTemplate=" + ptrToString((void**)std::addressof(descriptorUpdateTemplate)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYDESCRIPTORUPDATETEMPLATEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyDescriptorUpdateTemplateKHR_after(device, descriptorUpdateTemplate, pAllocator);
@@ -24883,12 +18032,6 @@ layer_UpdateDescriptorSetWithTemplateKHR_before(device, descriptorSet, descripto
 }
 #endif 
 device_dispatch[GetKey(device)].UpdateDescriptorSetWithTemplateKHR(device, descriptorSet, descriptorUpdateTemplate, pData);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorSet=" + ptrToString((void**)std::addressof(descriptorSet)) + '!');
-winsockSendToUI(&ConnectSocket,"descriptorUpdateTemplate=" + ptrToString((void**)std::addressof(descriptorUpdateTemplate)) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef UPDATEDESCRIPTORSETWITHTEMPLATEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_UpdateDescriptorSetWithTemplateKHR_after(device, descriptorSet, descriptorUpdateTemplate, pData);
@@ -24914,17 +18057,6 @@ layer_GetBufferMemoryRequirements2KHR_before(device, pInfo, pMemoryRequirements)
 }
 #endif 
 device_dispatch[GetKey(device)].GetBufferMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->buffer=" + ptrToString((void**)std::addressof(pInfo->buffer)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-if(pMemoryRequirements != VK_NULL_HANDLE && pMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETBUFFERMEMORYREQUIREMENTS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferMemoryRequirements2KHR_after(device, pInfo, pMemoryRequirements);
@@ -24950,17 +18082,6 @@ layer_GetImageMemoryRequirements2KHR_before(device, pInfo, pMemoryRequirements);
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->image=" + ptrToString((void**)std::addressof(pInfo->image)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-if(pMemoryRequirements != VK_NULL_HANDLE && pMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETIMAGEMEMORYREQUIREMENTS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageMemoryRequirements2KHR_after(device, pInfo, pMemoryRequirements);
@@ -24986,18 +18107,6 @@ layer_GetImageSparseMemoryRequirements2KHR_before(device, pInfo, pSparseMemoryRe
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements2KHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->image=" + ptrToString((void**)std::addressof(pInfo->image)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirementCount=" + ptrToString((void**)std::addressof(pSparseMemoryRequirementCount)) + '!');
-if(pSparseMemoryRequirements != VK_NULL_HANDLE && pSparseMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pSparseMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pSparseMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSparseMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETIMAGESPARSEMEMORYREQUIREMENTS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageSparseMemoryRequirements2KHR_after(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -25023,24 +18132,6 @@ layer_GetDeviceBufferMemoryRequirementsKHR_before(device, pInfo, pMemoryRequirem
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceBufferMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-if(pInfo->pCreateInfo != VK_NULL_HANDLE && pInfo->pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->flags=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->size=" + std::to_string(pInfo->pCreateInfo->size) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->usage=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->usage)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->queueFamilyIndexCount=" + std::to_string(pInfo->pCreateInfo->queueFamilyIndexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->pQueueFamilyIndices=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->pQueueFamilyIndices)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-if(pMemoryRequirements != VK_NULL_HANDLE && pMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETDEVICEBUFFERMEMORYREQUIREMENTSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceBufferMemoryRequirementsKHR_after(device, pInfo, pMemoryRequirements);
@@ -25066,26 +18157,6 @@ layer_GetDeviceImageMemoryRequirementsKHR_before(device, pInfo, pMemoryRequireme
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceImageMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-if(pInfo->pCreateInfo != VK_NULL_HANDLE && pInfo->pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->flags=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->extent=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->extent)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->mipLevels=" + std::to_string(pInfo->pCreateInfo->mipLevels) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->arrayLayers=" + std::to_string(pInfo->pCreateInfo->arrayLayers) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->usage=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->usage)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->queueFamilyIndexCount=" + std::to_string(pInfo->pCreateInfo->queueFamilyIndexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->pQueueFamilyIndices=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->pQueueFamilyIndices)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-if(pMemoryRequirements != VK_NULL_HANDLE && pMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETDEVICEIMAGEMEMORYREQUIREMENTSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceImageMemoryRequirementsKHR_after(device, pInfo, pMemoryRequirements);
@@ -25111,27 +18182,6 @@ layer_GetDeviceImageSparseMemoryRequirementsKHR_before(device, pInfo, pSparseMem
 }
 #endif 
 device_dispatch[GetKey(device)].GetDeviceImageSparseMemoryRequirementsKHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-if(pInfo->pCreateInfo != VK_NULL_HANDLE && pInfo->pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->flags=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->extent=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->extent)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->mipLevels=" + std::to_string(pInfo->pCreateInfo->mipLevels) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->arrayLayers=" + std::to_string(pInfo->pCreateInfo->arrayLayers) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->usage=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->usage)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->queueFamilyIndexCount=" + std::to_string(pInfo->pCreateInfo->queueFamilyIndexCount) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->pCreateInfo->pQueueFamilyIndices=" + ptrToString((void**)std::addressof(pInfo->pCreateInfo->pQueueFamilyIndices)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirementCount=" + ptrToString((void**)std::addressof(pSparseMemoryRequirementCount)) + '!');
-if(pSparseMemoryRequirements != VK_NULL_HANDLE && pSparseMemoryRequirements != NULL) {
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements->pNext=" + ptrToString((void**)std::addressof(pSparseMemoryRequirements->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSparseMemoryRequirements->memoryRequirements=" + ptrToString((void**)std::addressof(pSparseMemoryRequirements->memoryRequirements)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSparseMemoryRequirements=VK_NULL_HANDLE!");
-}
 #ifdef GETDEVICEIMAGESPARSEMEMORYREQUIREMENTSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceImageSparseMemoryRequirementsKHR_after(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -25158,23 +18208,6 @@ layer_CreateSamplerYcbcrConversionKHR_before(device, pCreateInfo, pAllocator, pY
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateSamplerYcbcrConversionKHR(device, pCreateInfo, pAllocator, pYcbcrConversion);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->components=" + ptrToString((void**)std::addressof(pCreateInfo->components)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->forceExplicitReconstruction=" + bool_as_text(pCreateInfo->forceExplicitReconstruction) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pYcbcrConversion=" + ptrToString((void**)std::addressof(pYcbcrConversion)) + '!');
-}
 #ifdef CREATESAMPLERYCBCRCONVERSIONKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateSamplerYcbcrConversionKHR_after(device, pCreateInfo, pAllocator, pYcbcrConversion);
@@ -25203,18 +18236,6 @@ layer_DestroySamplerYcbcrConversionKHR_before(device, ycbcrConversion, pAllocato
 }
 #endif 
 device_dispatch[GetKey(device)].DestroySamplerYcbcrConversionKHR(device, ycbcrConversion, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"ycbcrConversion=" + ptrToString((void**)std::addressof(ycbcrConversion)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYSAMPLERYCBCRCONVERSIONKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroySamplerYcbcrConversionKHR_after(device, ycbcrConversion, pAllocator);
@@ -25240,24 +18261,6 @@ layer_GetDescriptorSetLayoutSupportKHR_before(device, pCreateInfo, pSupport);
 }
 #endif 
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutSupportKHR(device, pCreateInfo, pSupport);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->bindingCount=" + std::to_string(pCreateInfo->bindingCount) + '!');
-if(pCreateInfo->pBindings != VK_NULL_HANDLE && pCreateInfo->pBindings != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pBindings->binding=" + std::to_string(pCreateInfo->pBindings->binding) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pBindings->descriptorCount=" + std::to_string(pCreateInfo->pBindings->descriptorCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pBindings->stageFlags=" + ptrToString((void**)std::addressof(pCreateInfo->pBindings->stageFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pBindings->pImmutableSamplers=" + ptrToString((void**)std::addressof(pCreateInfo->pBindings->pImmutableSamplers)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBindings=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pSupport != VK_NULL_HANDLE && pSupport != NULL) {
-winsockSendToUI(&ConnectSocket,"pSupport->pNext=" + ptrToString((void**)std::addressof(pSupport->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSupport->supported=" + bool_as_text(pSupport->supported) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSupport=VK_NULL_HANDLE!");
-}
 #ifdef GETDESCRIPTORSETLAYOUTSUPPORTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDescriptorSetLayoutSupportKHR_after(device, pCreateInfo, pSupport);
@@ -25284,15 +18287,6 @@ layer_GetCalibratedTimestampsEXT_before(device, timestampCount, pTimestampInfos,
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetCalibratedTimestampsEXT(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"timestampCount=" + std::to_string(timestampCount) + '!');
-if(pTimestampInfos != VK_NULL_HANDLE && pTimestampInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pTimestampInfos->pNext=" + ptrToString((void**)std::addressof(pTimestampInfos->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pTimestampInfos=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pTimestamps=" + ptrToString((void**)std::addressof(pTimestamps)) + '!');
-winsockSendToUI(&ConnectSocket,"pMaxDeviation=" + ptrToString((void**)std::addressof(pMaxDeviation)) + '!');
-}
 #ifdef GETCALIBRATEDTIMESTAMPSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetCalibratedTimestampsEXT_after(device, timestampCount, pTimestampInfos, pTimestamps, pMaxDeviation);
@@ -25322,71 +18316,6 @@ layer_CreateRenderPass2KHR_before(device, pCreateInfo, pAllocator, pRenderPass);
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreateRenderPass2KHR(device, pCreateInfo, pAllocator, pRenderPass);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->attachmentCount=" + std::to_string(pCreateInfo->attachmentCount) + '!');
-if(pCreateInfo->pAttachments != VK_NULL_HANDLE && pCreateInfo->pAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pAttachments->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pAttachments->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pAttachments->flags=" + ptrToString((void**)std::addressof(pCreateInfo->pAttachments->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAttachments=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->subpassCount=" + std::to_string(pCreateInfo->subpassCount) + '!');
-if(pCreateInfo->pSubpasses != VK_NULL_HANDLE && pCreateInfo->pSubpasses != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->flags=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->viewMask=" + std::to_string(pCreateInfo->pSubpasses->viewMask) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->inputAttachmentCount=" + std::to_string(pCreateInfo->pSubpasses->inputAttachmentCount) + '!');
-if(pCreateInfo->pSubpasses->pInputAttachments != VK_NULL_HANDLE && pCreateInfo->pSubpasses->pInputAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pInputAttachments->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pInputAttachments->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pInputAttachments->attachment=" + std::to_string(pCreateInfo->pSubpasses->pInputAttachments->attachment) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pInputAttachments->aspectMask=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pInputAttachments->aspectMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInputAttachments=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->colorAttachmentCount=" + std::to_string(pCreateInfo->pSubpasses->colorAttachmentCount) + '!');
-if(pCreateInfo->pSubpasses->pColorAttachments != VK_NULL_HANDLE && pCreateInfo->pSubpasses->pColorAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pColorAttachments->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pColorAttachments->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pColorAttachments->attachment=" + std::to_string(pCreateInfo->pSubpasses->pColorAttachments->attachment) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pColorAttachments->aspectMask=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pColorAttachments->aspectMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pColorAttachments=VK_NULL_HANDLE!");
-if(pCreateInfo->pSubpasses->pResolveAttachments != VK_NULL_HANDLE && pCreateInfo->pSubpasses->pResolveAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pResolveAttachments->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pResolveAttachments->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pResolveAttachments->attachment=" + std::to_string(pCreateInfo->pSubpasses->pResolveAttachments->attachment) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pResolveAttachments->aspectMask=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pResolveAttachments->aspectMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pResolveAttachments=VK_NULL_HANDLE!");
-if(pCreateInfo->pSubpasses->pDepthStencilAttachment != VK_NULL_HANDLE && pCreateInfo->pSubpasses->pDepthStencilAttachment != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pDepthStencilAttachment->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pDepthStencilAttachment->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pDepthStencilAttachment->attachment=" + std::to_string(pCreateInfo->pSubpasses->pDepthStencilAttachment->attachment) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pDepthStencilAttachment->aspectMask=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pDepthStencilAttachment->aspectMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDepthStencilAttachment=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->preserveAttachmentCount=" + std::to_string(pCreateInfo->pSubpasses->preserveAttachmentCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pSubpasses->pPreserveAttachments=" + ptrToString((void**)std::addressof(pCreateInfo->pSubpasses->pPreserveAttachments)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubpasses=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->dependencyCount=" + std::to_string(pCreateInfo->dependencyCount) + '!');
-if(pCreateInfo->pDependencies != VK_NULL_HANDLE && pCreateInfo->pDependencies != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->srcSubpass=" + std::to_string(pCreateInfo->pDependencies->srcSubpass) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->dstSubpass=" + std::to_string(pCreateInfo->pDependencies->dstSubpass) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->srcStageMask=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->dstStageMask=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->srcAccessMask=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->dstAccessMask=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->dependencyFlags=" + ptrToString((void**)std::addressof(pCreateInfo->pDependencies->dependencyFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pDependencies->viewOffset=" + std::to_string(pCreateInfo->pDependencies->viewOffset) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDependencies=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pCreateInfo->correlatedViewMaskCount=" + std::to_string(pCreateInfo->correlatedViewMaskCount) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pCorrelatedViewMasks=" + ptrToString((void**)std::addressof(pCreateInfo->pCorrelatedViewMasks)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pRenderPass=" + ptrToString((void**)std::addressof(pRenderPass)) + '!');
-}
 #ifdef CREATERENDERPASS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreateRenderPass2KHR_after(device, pCreateInfo, pAllocator, pRenderPass);
@@ -25415,20 +18344,6 @@ layer_CmdBeginRenderPass2KHR_before(commandBuffer, pRenderPassBegin, pSubpassBeg
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass2KHR(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pRenderPassBegin != VK_NULL_HANDLE && pRenderPassBegin != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->pNext=" + ptrToString((void**)std::addressof(pRenderPassBegin->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->renderPass=" + ptrToString((void**)std::addressof(pRenderPassBegin->renderPass)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->framebuffer=" + ptrToString((void**)std::addressof(pRenderPassBegin->framebuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->renderArea=" + ptrToString((void**)std::addressof(pRenderPassBegin->renderArea)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->clearValueCount=" + std::to_string(pRenderPassBegin->clearValueCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderPassBegin->pClearValues=" + ptrToString((void**)std::addressof(pRenderPassBegin->pClearValues)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRenderPassBegin=VK_NULL_HANDLE!");
-if(pSubpassBeginInfo != VK_NULL_HANDLE && pSubpassBeginInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubpassBeginInfo->pNext=" + ptrToString((void**)std::addressof(pSubpassBeginInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubpassBeginInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDBEGINRENDERPASS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginRenderPass2KHR_after(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
@@ -25454,15 +18369,6 @@ layer_CmdNextSubpass2KHR_before(commandBuffer, pSubpassBeginInfo, pSubpassEndInf
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdNextSubpass2KHR(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pSubpassBeginInfo != VK_NULL_HANDLE && pSubpassBeginInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubpassBeginInfo->pNext=" + ptrToString((void**)std::addressof(pSubpassBeginInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubpassBeginInfo=VK_NULL_HANDLE!");
-if(pSubpassEndInfo != VK_NULL_HANDLE && pSubpassEndInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubpassEndInfo->pNext=" + ptrToString((void**)std::addressof(pSubpassEndInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubpassEndInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDNEXTSUBPASS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdNextSubpass2KHR_after(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
@@ -25488,12 +18394,6 @@ layer_CmdEndRenderPass2KHR_before(commandBuffer, pSubpassEndInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass2KHR(commandBuffer, pSubpassEndInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pSubpassEndInfo != VK_NULL_HANDLE && pSubpassEndInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubpassEndInfo->pNext=" + ptrToString((void**)std::addressof(pSubpassEndInfo->pNext)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubpassEndInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDENDRENDERPASS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndRenderPass2KHR_after(commandBuffer, pSubpassEndInfo);
@@ -25520,11 +18420,6 @@ layer_GetSemaphoreCounterValueKHR_before(device, semaphore, pValue);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetSemaphoreCounterValueKHR(device, semaphore, pValue);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"semaphore=" + ptrToString((void**)std::addressof(semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"pValue=" + ptrToString((void**)std::addressof(pValue)) + '!');
-}
 #ifdef GETSEMAPHORECOUNTERVALUEKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetSemaphoreCounterValueKHR_after(device, semaphore, pValue);
@@ -25554,17 +18449,6 @@ layer_WaitSemaphoresKHR_before(device, pWaitInfo, timeout);
 #endif 
 auto ret = device_dispatch[GetKey(device)].WaitSemaphoresKHR(device, pWaitInfo, timeout);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pWaitInfo != VK_NULL_HANDLE && pWaitInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pWaitInfo->pNext=" + ptrToString((void**)std::addressof(pWaitInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pWaitInfo->flags=" + ptrToString((void**)std::addressof(pWaitInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pWaitInfo->semaphoreCount=" + std::to_string(pWaitInfo->semaphoreCount) + '!');
-winsockSendToUI(&ConnectSocket,"pWaitInfo->pSemaphores=" + ptrToString((void**)std::addressof(pWaitInfo->pSemaphores)) + '!');
-winsockSendToUI(&ConnectSocket,"pWaitInfo->pValues=" + ptrToString((void**)std::addressof(pWaitInfo->pValues)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pWaitInfo=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"timeout=" + std::to_string(timeout) + '!');
-}
 #ifdef WAITSEMAPHORESKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_WaitSemaphoresKHR_after(device, pWaitInfo, timeout);
@@ -25594,14 +18478,6 @@ layer_SignalSemaphoreKHR_before(device, pSignalInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].SignalSemaphoreKHR(device, pSignalInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pSignalInfo != VK_NULL_HANDLE && pSignalInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pSignalInfo->pNext=" + ptrToString((void**)std::addressof(pSignalInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSignalInfo->semaphore=" + ptrToString((void**)std::addressof(pSignalInfo->semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"pSignalInfo->value=" + std::to_string(pSignalInfo->value) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSignalInfo=VK_NULL_HANDLE!");
-}
 #ifdef SIGNALSEMAPHOREKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SignalSemaphoreKHR_after(device, pSignalInfo);
@@ -25630,15 +18506,6 @@ layer_CmdDrawIndirectCountKHR_before(commandBuffer, buffer, offset, countBuffer,
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCountKHR(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void**)std::addressof(countBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + std::to_string(countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDDRAWINDIRECTCOUNTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndirectCountKHR_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -25664,15 +18531,6 @@ layer_CmdDrawIndirectCountAMD_before(commandBuffer, buffer, offset, countBuffer,
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void**)std::addressof(countBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + std::to_string(countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDDRAWINDIRECTCOUNTAMD_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndirectCountAMD_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -25698,15 +18556,6 @@ layer_CmdDrawIndexedIndirectCountKHR_before(commandBuffer, buffer, offset, count
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCountKHR(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void**)std::addressof(countBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + std::to_string(countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDDRAWINDEXEDINDIRECTCOUNTKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndexedIndirectCountKHR_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -25732,15 +18581,6 @@ layer_CmdDrawIndexedIndirectCountAMD_before(commandBuffer, buffer, offset, count
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"buffer=" + ptrToString((void**)std::addressof(buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"offset=" + std::to_string(offset) + '!');
-winsockSendToUI(&ConnectSocket,"countBuffer=" + ptrToString((void**)std::addressof(countBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"countBufferOffset=" + std::to_string(countBufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"maxDrawCount=" + std::to_string(maxDrawCount) + '!');
-winsockSendToUI(&ConnectSocket,"stride=" + std::to_string(stride) + '!');
-}
 #ifdef CMDDRAWINDEXEDINDIRECTCOUNTAMD_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdDrawIndexedIndirectCountAMD_after(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -25767,14 +18607,6 @@ layer_GetRayTracingShaderGroupHandlesNV_before(device, pipeline, firstGroup, gro
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetRayTracingShaderGroupHandlesNV(device, pipeline, firstGroup, groupCount, dataSize, pData);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"pipeline=" + ptrToString((void**)std::addressof(pipeline)) + '!');
-winsockSendToUI(&ConnectSocket,"firstGroup=" + std::to_string(firstGroup) + '!');
-winsockSendToUI(&ConnectSocket,"groupCount=" + std::to_string(groupCount) + '!');
-winsockSendToUI(&ConnectSocket,"dataSize=" + std::to_string(dataSize) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETRAYTRACINGSHADERGROUPHANDLESNV_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetRayTracingShaderGroupHandlesNV_after(device, pipeline, firstGroup, groupCount, dataSize, pData);
@@ -25804,13 +18636,6 @@ layer_GetBufferOpaqueCaptureAddressKHR_before(device, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetBufferOpaqueCaptureAddressKHR(device, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->buffer=" + ptrToString((void**)std::addressof(pInfo->buffer)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETBUFFEROPAQUECAPTUREADDRESSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferOpaqueCaptureAddressKHR_after(device, pInfo);
@@ -25840,13 +18665,6 @@ layer_GetBufferDeviceAddressKHR_before(device, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetBufferDeviceAddressKHR(device, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->buffer=" + ptrToString((void**)std::addressof(pInfo->buffer)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETBUFFERDEVICEADDRESSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferDeviceAddressKHR_after(device, pInfo);
@@ -25876,13 +18694,6 @@ layer_GetBufferDeviceAddressEXT_before(device, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetBufferDeviceAddressEXT(device, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->buffer=" + ptrToString((void**)std::addressof(pInfo->buffer)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETBUFFERDEVICEADDRESSEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetBufferDeviceAddressEXT_after(device, pInfo);
@@ -25912,13 +18723,6 @@ layer_GetDeviceMemoryOpaqueCaptureAddressKHR_before(device, pInfo);
 #endif 
 auto ret = device_dispatch[GetKey(device)].GetDeviceMemoryOpaqueCaptureAddressKHR(device, pInfo);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pInfo != VK_NULL_HANDLE && pInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pInfo->pNext=" + ptrToString((void**)std::addressof(pInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pInfo->memory=" + ptrToString((void**)std::addressof(pInfo->memory)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pInfo=VK_NULL_HANDLE!");
-}
 #ifdef GETDEVICEMEMORYOPAQUECAPTUREADDRESSKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetDeviceMemoryOpaqueCaptureAddressKHR_after(device, pInfo);
@@ -25947,11 +18751,6 @@ layer_CmdSetLineStippleEXT_before(commandBuffer, lineStippleFactor, lineStippleP
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetLineStippleEXT(commandBuffer, lineStippleFactor, lineStipplePattern);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"lineStippleFactor=" + std::to_string(lineStippleFactor) + '!');
-winsockSendToUI(&ConnectSocket,"lineStipplePattern=" + ptrToString((void**)std::addressof(lineStipplePattern)) + '!');
-}
 #ifdef CMDSETLINESTIPPLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetLineStippleEXT_after(commandBuffer, lineStippleFactor, lineStipplePattern);
@@ -25977,10 +18776,6 @@ layer_CmdSetCullModeEXT_before(commandBuffer, cullMode);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetCullModeEXT(commandBuffer, cullMode);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"cullMode=" + ptrToString((void**)std::addressof(cullMode)) + '!');
-}
 #ifdef CMDSETCULLMODEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetCullModeEXT_after(commandBuffer, cullMode);
@@ -26006,9 +18801,6 @@ layer_CmdSetFrontFaceEXT_before(commandBuffer, frontFace);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetFrontFaceEXT(commandBuffer, frontFace);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETFRONTFACEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetFrontFaceEXT_after(commandBuffer, frontFace);
@@ -26034,9 +18826,6 @@ layer_CmdSetPrimitiveTopologyEXT_before(commandBuffer, primitiveTopology);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveTopologyEXT(commandBuffer, primitiveTopology);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETPRIMITIVETOPOLOGYEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPrimitiveTopologyEXT_after(commandBuffer, primitiveTopology);
@@ -26062,18 +18851,6 @@ layer_CmdSetViewportWithCountEXT_before(commandBuffer, viewportCount, pViewports
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWithCountEXT(commandBuffer, viewportCount, pViewports);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"viewportCount=" + std::to_string(viewportCount) + '!');
-if(pViewports != VK_NULL_HANDLE && pViewports != NULL) {
-winsockSendToUI(&ConnectSocket,"pViewports->x=" + std::to_string(pViewports->x) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->y=" + std::to_string(pViewports->y) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->width=" + std::to_string(pViewports->width) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->height=" + std::to_string(pViewports->height) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->minDepth=" + std::to_string(pViewports->minDepth) + '!');
-winsockSendToUI(&ConnectSocket,"pViewports->maxDepth=" + std::to_string(pViewports->maxDepth) + '!');
-}else winsockSendToUI(&ConnectSocket, "pViewports=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETVIEWPORTWITHCOUNTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetViewportWithCountEXT_after(commandBuffer, viewportCount, pViewports);
@@ -26099,14 +18876,6 @@ layer_CmdSetScissorWithCountEXT_before(commandBuffer, scissorCount, pScissors);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetScissorWithCountEXT(commandBuffer, scissorCount, pScissors);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"scissorCount=" + std::to_string(scissorCount) + '!');
-if(pScissors != VK_NULL_HANDLE && pScissors != NULL) {
-winsockSendToUI(&ConnectSocket,"pScissors->offset=" + ptrToString((void**)std::addressof(pScissors->offset)) + '!');
-winsockSendToUI(&ConnectSocket,"pScissors->extent=" + ptrToString((void**)std::addressof(pScissors->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pScissors=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETSCISSORWITHCOUNTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetScissorWithCountEXT_after(commandBuffer, scissorCount, pScissors);
@@ -26132,15 +18901,6 @@ layer_CmdBindVertexBuffers2EXT_before(commandBuffer, firstBinding, bindingCount,
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers2EXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"firstBinding=" + std::to_string(firstBinding) + '!');
-winsockSendToUI(&ConnectSocket,"bindingCount=" + std::to_string(bindingCount) + '!');
-winsockSendToUI(&ConnectSocket,"pBuffers=" + ptrToString((void**)std::addressof(pBuffers)) + '!');
-winsockSendToUI(&ConnectSocket,"pOffsets=" + ptrToString((void**)std::addressof(pOffsets)) + '!');
-winsockSendToUI(&ConnectSocket,"pSizes=" + ptrToString((void**)std::addressof(pSizes)) + '!');
-winsockSendToUI(&ConnectSocket,"pStrides=" + ptrToString((void**)std::addressof(pStrides)) + '!');
-}
 #ifdef CMDBINDVERTEXBUFFERS2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBindVertexBuffers2EXT_after(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
@@ -26166,10 +18926,6 @@ layer_CmdSetDepthTestEnableEXT_before(commandBuffer, depthTestEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthTestEnableEXT(commandBuffer, depthTestEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"depthTestEnable=" + bool_as_text(depthTestEnable) + '!');
-}
 #ifdef CMDSETDEPTHTESTENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthTestEnableEXT_after(commandBuffer, depthTestEnable);
@@ -26195,10 +18951,6 @@ layer_CmdSetDepthWriteEnableEXT_before(commandBuffer, depthWriteEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthWriteEnableEXT(commandBuffer, depthWriteEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"depthWriteEnable=" + bool_as_text(depthWriteEnable) + '!');
-}
 #ifdef CMDSETDEPTHWRITEENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthWriteEnableEXT_after(commandBuffer, depthWriteEnable);
@@ -26224,9 +18976,6 @@ layer_CmdSetDepthCompareOpEXT_before(commandBuffer, depthCompareOp);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthCompareOpEXT(commandBuffer, depthCompareOp);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDSETDEPTHCOMPAREOPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthCompareOpEXT_after(commandBuffer, depthCompareOp);
@@ -26252,10 +19001,6 @@ layer_CmdSetDepthBoundsTestEnableEXT_before(commandBuffer, depthBoundsTestEnable
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBoundsTestEnableEXT(commandBuffer, depthBoundsTestEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"depthBoundsTestEnable=" + bool_as_text(depthBoundsTestEnable) + '!');
-}
 #ifdef CMDSETDEPTHBOUNDSTESTENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthBoundsTestEnableEXT_after(commandBuffer, depthBoundsTestEnable);
@@ -26281,10 +19026,6 @@ layer_CmdSetStencilTestEnableEXT_before(commandBuffer, stencilTestEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilTestEnableEXT(commandBuffer, stencilTestEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"stencilTestEnable=" + bool_as_text(stencilTestEnable) + '!');
-}
 #ifdef CMDSETSTENCILTESTENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetStencilTestEnableEXT_after(commandBuffer, stencilTestEnable);
@@ -26310,10 +19051,6 @@ layer_CmdSetStencilOpEXT_before(commandBuffer, faceMask, failOp, passOp, depthFa
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilOpEXT(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"faceMask=" + ptrToString((void**)std::addressof(faceMask)) + '!');
-}
 #ifdef CMDSETSTENCILOPEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetStencilOpEXT_after(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
@@ -26339,10 +19076,6 @@ layer_CmdSetRasterizerDiscardEnableEXT_before(commandBuffer, rasterizerDiscardEn
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizerDiscardEnableEXT(commandBuffer, rasterizerDiscardEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"rasterizerDiscardEnable=" + bool_as_text(rasterizerDiscardEnable) + '!');
-}
 #ifdef CMDSETRASTERIZERDISCARDENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetRasterizerDiscardEnableEXT_after(commandBuffer, rasterizerDiscardEnable);
@@ -26368,10 +19101,6 @@ layer_CmdSetDepthBiasEnableEXT_before(commandBuffer, depthBiasEnable);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBiasEnableEXT(commandBuffer, depthBiasEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"depthBiasEnable=" + bool_as_text(depthBiasEnable) + '!');
-}
 #ifdef CMDSETDEPTHBIASENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetDepthBiasEnableEXT_after(commandBuffer, depthBiasEnable);
@@ -26397,10 +19126,6 @@ layer_CmdSetPrimitiveRestartEnableEXT_before(commandBuffer, primitiveRestartEnab
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveRestartEnableEXT(commandBuffer, primitiveRestartEnable);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"primitiveRestartEnable=" + bool_as_text(primitiveRestartEnable) + '!');
-}
 #ifdef CMDSETPRIMITIVERESTARTENABLEEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetPrimitiveRestartEnableEXT_after(commandBuffer, primitiveRestartEnable);
@@ -26427,22 +19152,6 @@ layer_CreatePrivateDataSlotEXT_before(device, pCreateInfo, pAllocator, pPrivateD
 #endif 
 auto ret = device_dispatch[GetKey(device)].CreatePrivateDataSlotEXT(device, pCreateInfo, pAllocator, pPrivateDataSlot);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-if(pCreateInfo != VK_NULL_HANDLE && pCreateInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCreateInfo->pNext=" + ptrToString((void**)std::addressof(pCreateInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCreateInfo->flags=" + ptrToString((void**)std::addressof(pCreateInfo->flags)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCreateInfo=VK_NULL_HANDLE!");
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pPrivateDataSlot=" + ptrToString((void**)std::addressof(pPrivateDataSlot)) + '!');
-}
 #ifdef CREATEPRIVATEDATASLOTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CreatePrivateDataSlotEXT_after(device, pCreateInfo, pAllocator, pPrivateDataSlot);
@@ -26471,18 +19180,6 @@ layer_DestroyPrivateDataSlotEXT_before(device, privateDataSlot, pAllocator);
 }
 #endif 
 device_dispatch[GetKey(device)].DestroyPrivateDataSlotEXT(device, privateDataSlot, pAllocator);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"privateDataSlot=" + ptrToString((void**)std::addressof(privateDataSlot)) + '!');
-if(pAllocator != VK_NULL_HANDLE && pAllocator != NULL) {
-winsockSendToUI(&ConnectSocket,"pAllocator->pUserData=" + ptrToString((void**)std::addressof(pAllocator->pUserData)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnReallocation=" + ptrToString((void**)std::addressof(pAllocator->pfnReallocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnFree=" + ptrToString((void**)std::addressof(pAllocator->pfnFree)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalAllocation=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalAllocation)) + '!');
-winsockSendToUI(&ConnectSocket,"pAllocator->pfnInternalFree=" + ptrToString((void**)std::addressof(pAllocator->pfnInternalFree)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pAllocator=VK_NULL_HANDLE!");
-}
 #ifdef DESTROYPRIVATEDATASLOTEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_DestroyPrivateDataSlotEXT_after(device, privateDataSlot, pAllocator);
@@ -26509,12 +19206,6 @@ layer_SetPrivateDataEXT_before(device, objectType, objectHandle, privateDataSlot
 #endif 
 auto ret = device_dispatch[GetKey(device)].SetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, data);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"objectHandle=" + std::to_string(objectHandle) + '!');
-winsockSendToUI(&ConnectSocket,"privateDataSlot=" + ptrToString((void**)std::addressof(privateDataSlot)) + '!');
-winsockSendToUI(&ConnectSocket,"data=" + std::to_string(data) + '!');
-}
 #ifdef SETPRIVATEDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_SetPrivateDataEXT_after(device, objectType, objectHandle, privateDataSlot, data);
@@ -26543,12 +19234,6 @@ layer_GetPrivateDataEXT_before(device, objectType, objectHandle, privateDataSlot
 }
 #endif 
 device_dispatch[GetKey(device)].GetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, pData);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"objectHandle=" + std::to_string(objectHandle) + '!');
-winsockSendToUI(&ConnectSocket,"privateDataSlot=" + ptrToString((void**)std::addressof(privateDataSlot)) + '!');
-winsockSendToUI(&ConnectSocket,"pData=" + ptrToString((void**)std::addressof(pData)) + '!');
-}
 #ifdef GETPRIVATEDATAEXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetPrivateDataEXT_after(device, objectType, objectHandle, privateDataSlot, pData);
@@ -26574,21 +19259,6 @@ layer_CmdCopyBuffer2KHR_before(commandBuffer, pCopyBufferInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer2KHR(commandBuffer, pCopyBufferInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pCopyBufferInfo != VK_NULL_HANDLE && pCopyBufferInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->pNext=" + ptrToString((void**)std::addressof(pCopyBufferInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->srcBuffer=" + ptrToString((void**)std::addressof(pCopyBufferInfo->srcBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->dstBuffer=" + ptrToString((void**)std::addressof(pCopyBufferInfo->dstBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->regionCount=" + std::to_string(pCopyBufferInfo->regionCount) + '!');
-if(pCopyBufferInfo->pRegions != VK_NULL_HANDLE && pCopyBufferInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pCopyBufferInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->pRegions->srcOffset=" + std::to_string(pCopyBufferInfo->pRegions->srcOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->pRegions->dstOffset=" + std::to_string(pCopyBufferInfo->pRegions->dstOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferInfo->pRegions->size=" + std::to_string(pCopyBufferInfo->pRegions->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCopyBufferInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYBUFFER2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyBuffer2KHR_after(commandBuffer, pCopyBufferInfo);
@@ -26614,23 +19284,6 @@ layer_CmdCopyImage2KHR_before(commandBuffer, pCopyImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyImage2KHR(commandBuffer, pCopyImageInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pCopyImageInfo != VK_NULL_HANDLE && pCopyImageInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->pNext=" + ptrToString((void**)std::addressof(pCopyImageInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->srcImage=" + ptrToString((void**)std::addressof(pCopyImageInfo->srcImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->dstImage=" + ptrToString((void**)std::addressof(pCopyImageInfo->dstImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->regionCount=" + std::to_string(pCopyImageInfo->regionCount) + '!');
-if(pCopyImageInfo->pRegions != VK_NULL_HANDLE && pCopyImageInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pCopyImageInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->pRegions->srcSubresource=" + ptrToString((void**)std::addressof(pCopyImageInfo->pRegions->srcSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->pRegions->srcOffset=" + ptrToString((void**)std::addressof(pCopyImageInfo->pRegions->srcOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->pRegions->dstSubresource=" + ptrToString((void**)std::addressof(pCopyImageInfo->pRegions->dstSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->pRegions->dstOffset=" + ptrToString((void**)std::addressof(pCopyImageInfo->pRegions->dstOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageInfo->pRegions->extent=" + ptrToString((void**)std::addressof(pCopyImageInfo->pRegions->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCopyImageInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYIMAGE2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyImage2KHR_after(commandBuffer, pCopyImageInfo);
@@ -26656,22 +19309,6 @@ layer_CmdBlitImage2KHR_before(commandBuffer, pBlitImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBlitImage2KHR(commandBuffer, pBlitImageInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pBlitImageInfo != VK_NULL_HANDLE && pBlitImageInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->pNext=" + ptrToString((void**)std::addressof(pBlitImageInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->srcImage=" + ptrToString((void**)std::addressof(pBlitImageInfo->srcImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->dstImage=" + ptrToString((void**)std::addressof(pBlitImageInfo->dstImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->regionCount=" + std::to_string(pBlitImageInfo->regionCount) + '!');
-if(pBlitImageInfo->pRegions != VK_NULL_HANDLE && pBlitImageInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pBlitImageInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->pRegions->srcSubresource=" + ptrToString((void**)std::addressof(pBlitImageInfo->pRegions->srcSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->pRegions->srcOffsets=" + ptrToString((void**)std::addressof(pBlitImageInfo->pRegions->srcOffsets)) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->pRegions->dstSubresource=" + ptrToString((void**)std::addressof(pBlitImageInfo->pRegions->dstSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pBlitImageInfo->pRegions->dstOffsets=" + ptrToString((void**)std::addressof(pBlitImageInfo->pRegions->dstOffsets)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pBlitImageInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDBLITIMAGE2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBlitImage2KHR_after(commandBuffer, pBlitImageInfo);
@@ -26697,24 +19334,6 @@ layer_CmdCopyBufferToImage2KHR_before(commandBuffer, pCopyBufferToImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage2KHR(commandBuffer, pCopyBufferToImageInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pCopyBufferToImageInfo != VK_NULL_HANDLE && pCopyBufferToImageInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pNext=" + ptrToString((void**)std::addressof(pCopyBufferToImageInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->srcBuffer=" + ptrToString((void**)std::addressof(pCopyBufferToImageInfo->srcBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->dstImage=" + ptrToString((void**)std::addressof(pCopyBufferToImageInfo->dstImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->regionCount=" + std::to_string(pCopyBufferToImageInfo->regionCount) + '!');
-if(pCopyBufferToImageInfo->pRegions != VK_NULL_HANDLE && pCopyBufferToImageInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pCopyBufferToImageInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pRegions->bufferOffset=" + std::to_string(pCopyBufferToImageInfo->pRegions->bufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pRegions->bufferRowLength=" + std::to_string(pCopyBufferToImageInfo->pRegions->bufferRowLength) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pRegions->bufferImageHeight=" + std::to_string(pCopyBufferToImageInfo->pRegions->bufferImageHeight) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pRegions->imageSubresource=" + ptrToString((void**)std::addressof(pCopyBufferToImageInfo->pRegions->imageSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pRegions->imageOffset=" + ptrToString((void**)std::addressof(pCopyBufferToImageInfo->pRegions->imageOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyBufferToImageInfo->pRegions->imageExtent=" + ptrToString((void**)std::addressof(pCopyBufferToImageInfo->pRegions->imageExtent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCopyBufferToImageInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYBUFFERTOIMAGE2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyBufferToImage2KHR_after(commandBuffer, pCopyBufferToImageInfo);
@@ -26740,24 +19359,6 @@ layer_CmdCopyImageToBuffer2KHR_before(commandBuffer, pCopyImageToBufferInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer2KHR(commandBuffer, pCopyImageToBufferInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pCopyImageToBufferInfo != VK_NULL_HANDLE && pCopyImageToBufferInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pNext=" + ptrToString((void**)std::addressof(pCopyImageToBufferInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->srcImage=" + ptrToString((void**)std::addressof(pCopyImageToBufferInfo->srcImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->dstBuffer=" + ptrToString((void**)std::addressof(pCopyImageToBufferInfo->dstBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->regionCount=" + std::to_string(pCopyImageToBufferInfo->regionCount) + '!');
-if(pCopyImageToBufferInfo->pRegions != VK_NULL_HANDLE && pCopyImageToBufferInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pCopyImageToBufferInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pRegions->bufferOffset=" + std::to_string(pCopyImageToBufferInfo->pRegions->bufferOffset) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pRegions->bufferRowLength=" + std::to_string(pCopyImageToBufferInfo->pRegions->bufferRowLength) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pRegions->bufferImageHeight=" + std::to_string(pCopyImageToBufferInfo->pRegions->bufferImageHeight) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pRegions->imageSubresource=" + ptrToString((void**)std::addressof(pCopyImageToBufferInfo->pRegions->imageSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pRegions->imageOffset=" + ptrToString((void**)std::addressof(pCopyImageToBufferInfo->pRegions->imageOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pCopyImageToBufferInfo->pRegions->imageExtent=" + ptrToString((void**)std::addressof(pCopyImageToBufferInfo->pRegions->imageExtent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pCopyImageToBufferInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDCOPYIMAGETOBUFFER2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdCopyImageToBuffer2KHR_after(commandBuffer, pCopyImageToBufferInfo);
@@ -26783,23 +19384,6 @@ layer_CmdResolveImage2KHR_before(commandBuffer, pResolveImageInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdResolveImage2KHR(commandBuffer, pResolveImageInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pResolveImageInfo != VK_NULL_HANDLE && pResolveImageInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->pNext=" + ptrToString((void**)std::addressof(pResolveImageInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->srcImage=" + ptrToString((void**)std::addressof(pResolveImageInfo->srcImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->dstImage=" + ptrToString((void**)std::addressof(pResolveImageInfo->dstImage)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->regionCount=" + std::to_string(pResolveImageInfo->regionCount) + '!');
-if(pResolveImageInfo->pRegions != VK_NULL_HANDLE && pResolveImageInfo->pRegions != NULL) {
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->pRegions->pNext=" + ptrToString((void**)std::addressof(pResolveImageInfo->pRegions->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->pRegions->srcSubresource=" + ptrToString((void**)std::addressof(pResolveImageInfo->pRegions->srcSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->pRegions->srcOffset=" + ptrToString((void**)std::addressof(pResolveImageInfo->pRegions->srcOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->pRegions->dstSubresource=" + ptrToString((void**)std::addressof(pResolveImageInfo->pRegions->dstSubresource)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->pRegions->dstOffset=" + ptrToString((void**)std::addressof(pResolveImageInfo->pRegions->dstOffset)) + '!');
-winsockSendToUI(&ConnectSocket,"pResolveImageInfo->pRegions->extent=" + ptrToString((void**)std::addressof(pResolveImageInfo->pRegions->extent)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pRegions=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pResolveImageInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDRESOLVEIMAGE2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdResolveImage2KHR_after(commandBuffer, pResolveImageInfo);
@@ -26825,47 +19409,6 @@ layer_CmdSetEvent2KHR_before(commandBuffer, event, pDependencyInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdSetEvent2KHR(commandBuffer, event, pDependencyInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void**)std::addressof(event)) + '!');
-if(pDependencyInfo != VK_NULL_HANDLE && pDependencyInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->dependencyFlags=" + ptrToString((void**)std::addressof(pDependencyInfo->dependencyFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->memoryBarrierCount=" + std::to_string(pDependencyInfo->memoryBarrierCount) + '!');
-if(pDependencyInfo->pMemoryBarriers != VK_NULL_HANDLE && pDependencyInfo->pMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->dstAccessMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->bufferMemoryBarrierCount=" + std::to_string(pDependencyInfo->bufferMemoryBarrierCount) + '!');
-if(pDependencyInfo->pBufferMemoryBarriers != VK_NULL_HANDLE && pDependencyInfo->pBufferMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->buffer=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->offset=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->size=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBufferMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->imageMemoryBarrierCount=" + std::to_string(pDependencyInfo->imageMemoryBarrierCount) + '!');
-if(pDependencyInfo->pImageMemoryBarriers != VK_NULL_HANDLE && pDependencyInfo->pImageMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pDependencyInfo->pImageMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pDependencyInfo->pImageMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->image=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->image)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->subresourceRange=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->subresourceRange)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageMemoryBarriers=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pDependencyInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDSETEVENT2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdSetEvent2KHR_after(commandBuffer, event, pDependencyInfo);
@@ -26891,11 +19434,6 @@ layer_CmdResetEvent2KHR_before(commandBuffer, event, stageMask);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdResetEvent2KHR(commandBuffer, event, stageMask);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"event=" + ptrToString((void**)std::addressof(event)) + '!');
-winsockSendToUI(&ConnectSocket,"stageMask=" + ptrToString((void**)std::addressof(stageMask)) + '!');
-}
 #ifdef CMDRESETEVENT2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdResetEvent2KHR_after(commandBuffer, event, stageMask);
@@ -26921,48 +19459,6 @@ layer_CmdWaitEvents2KHR_before(commandBuffer, eventCount, pEvents, pDependencyIn
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWaitEvents2KHR(commandBuffer, eventCount, pEvents, pDependencyInfos);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"eventCount=" + std::to_string(eventCount) + '!');
-winsockSendToUI(&ConnectSocket,"pEvents=" + ptrToString((void**)std::addressof(pEvents)) + '!');
-if(pDependencyInfos != VK_NULL_HANDLE && pDependencyInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pNext=" + ptrToString((void**)std::addressof(pDependencyInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->dependencyFlags=" + ptrToString((void**)std::addressof(pDependencyInfos->dependencyFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->memoryBarrierCount=" + std::to_string(pDependencyInfos->memoryBarrierCount) + '!');
-if(pDependencyInfos->pMemoryBarriers != VK_NULL_HANDLE && pDependencyInfos->pMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfos->pMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pMemoryBarriers->dstAccessMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->bufferMemoryBarrierCount=" + std::to_string(pDependencyInfos->bufferMemoryBarrierCount) + '!');
-if(pDependencyInfos->pBufferMemoryBarriers != VK_NULL_HANDLE && pDependencyInfos->pBufferMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfos->pBufferMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pBufferMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pBufferMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pBufferMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pBufferMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pDependencyInfos->pBufferMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pDependencyInfos->pBufferMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->buffer=" + ptrToString((void**)std::addressof(pDependencyInfos->pBufferMemoryBarriers->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->offset=" + std::to_string(pDependencyInfos->pBufferMemoryBarriers->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pBufferMemoryBarriers->size=" + std::to_string(pDependencyInfos->pBufferMemoryBarriers->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBufferMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->imageMemoryBarrierCount=" + std::to_string(pDependencyInfos->imageMemoryBarrierCount) + '!');
-if(pDependencyInfos->pImageMemoryBarriers != VK_NULL_HANDLE && pDependencyInfos->pImageMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfos->pImageMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pImageMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pImageMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pImageMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfos->pImageMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pDependencyInfos->pImageMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pDependencyInfos->pImageMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->image=" + ptrToString((void**)std::addressof(pDependencyInfos->pImageMemoryBarriers->image)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfos->pImageMemoryBarriers->subresourceRange=" + ptrToString((void**)std::addressof(pDependencyInfos->pImageMemoryBarriers->subresourceRange)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageMemoryBarriers=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pDependencyInfos=VK_NULL_HANDLE!");
-}
 #ifdef CMDWAITEVENTS2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWaitEvents2KHR_after(commandBuffer, eventCount, pEvents, pDependencyInfos);
@@ -26988,46 +19484,6 @@ layer_CmdPipelineBarrier2KHR_before(commandBuffer, pDependencyInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier2KHR(commandBuffer, pDependencyInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pDependencyInfo != VK_NULL_HANDLE && pDependencyInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->dependencyFlags=" + ptrToString((void**)std::addressof(pDependencyInfo->dependencyFlags)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->memoryBarrierCount=" + std::to_string(pDependencyInfo->memoryBarrierCount) + '!');
-if(pDependencyInfo->pMemoryBarriers != VK_NULL_HANDLE && pDependencyInfo->pMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pMemoryBarriers->dstAccessMask)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->bufferMemoryBarrierCount=" + std::to_string(pDependencyInfo->bufferMemoryBarrierCount) + '!');
-if(pDependencyInfo->pBufferMemoryBarriers != VK_NULL_HANDLE && pDependencyInfo->pBufferMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->buffer=" + ptrToString((void**)std::addressof(pDependencyInfo->pBufferMemoryBarriers->buffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->offset=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->offset) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pBufferMemoryBarriers->size=" + std::to_string(pDependencyInfo->pBufferMemoryBarriers->size) + '!');
-}else winsockSendToUI(&ConnectSocket, "pBufferMemoryBarriers=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->imageMemoryBarrierCount=" + std::to_string(pDependencyInfo->imageMemoryBarrierCount) + '!');
-if(pDependencyInfo->pImageMemoryBarriers != VK_NULL_HANDLE && pDependencyInfo->pImageMemoryBarriers != NULL) {
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->pNext=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->srcStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->srcStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->srcAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->srcAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->dstStageMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->dstStageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->dstAccessMask=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->dstAccessMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->srcQueueFamilyIndex=" + std::to_string(pDependencyInfo->pImageMemoryBarriers->srcQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->dstQueueFamilyIndex=" + std::to_string(pDependencyInfo->pImageMemoryBarriers->dstQueueFamilyIndex) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->image=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->image)) + '!');
-winsockSendToUI(&ConnectSocket,"pDependencyInfo->pImageMemoryBarriers->subresourceRange=" + ptrToString((void**)std::addressof(pDependencyInfo->pImageMemoryBarriers->subresourceRange)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pImageMemoryBarriers=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pDependencyInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDPIPELINEBARRIER2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdPipelineBarrier2KHR_after(commandBuffer, pDependencyInfo);
@@ -27054,37 +19510,6 @@ layer_QueueSubmit2KHR_before(queue, submitCount, pSubmits, fence);
 #endif 
 auto ret = device_dispatch[GetKey(queue)].QueueSubmit2KHR(queue, submitCount, pSubmits, fence);
 winsockSendToUI(&ConnectSocket, "vkResult=" + std::to_string(ret) + '!');
-if(connected){
-winsockSendToUI(&ConnectSocket,"queue=" + ptrToString((void**)std::addressof(queue)) + '!');
-winsockSendToUI(&ConnectSocket,"submitCount=" + std::to_string(submitCount) + '!');
-if(pSubmits != VK_NULL_HANDLE && pSubmits != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubmits->pNext=" + ptrToString((void**)std::addressof(pSubmits->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->flags=" + ptrToString((void**)std::addressof(pSubmits->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->waitSemaphoreInfoCount=" + std::to_string(pSubmits->waitSemaphoreInfoCount) + '!');
-if(pSubmits->pWaitSemaphoreInfos != VK_NULL_HANDLE && pSubmits->pWaitSemaphoreInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubmits->pWaitSemaphoreInfos->pNext=" + ptrToString((void**)std::addressof(pSubmits->pWaitSemaphoreInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pWaitSemaphoreInfos->semaphore=" + ptrToString((void**)std::addressof(pSubmits->pWaitSemaphoreInfos->semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pWaitSemaphoreInfos->value=" + std::to_string(pSubmits->pWaitSemaphoreInfos->value) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pWaitSemaphoreInfos->stageMask=" + ptrToString((void**)std::addressof(pSubmits->pWaitSemaphoreInfos->stageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pWaitSemaphoreInfos->deviceIndex=" + std::to_string(pSubmits->pWaitSemaphoreInfos->deviceIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pWaitSemaphoreInfos=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSubmits->commandBufferInfoCount=" + std::to_string(pSubmits->commandBufferInfoCount) + '!');
-if(pSubmits->pCommandBufferInfos != VK_NULL_HANDLE && pSubmits->pCommandBufferInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubmits->pCommandBufferInfos->pNext=" + ptrToString((void**)std::addressof(pSubmits->pCommandBufferInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pCommandBufferInfos->commandBuffer=" + ptrToString((void**)std::addressof(pSubmits->pCommandBufferInfos->commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pCommandBufferInfos->deviceMask=" + std::to_string(pSubmits->pCommandBufferInfos->deviceMask) + '!');
-}else winsockSendToUI(&ConnectSocket, "pCommandBufferInfos=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"pSubmits->signalSemaphoreInfoCount=" + std::to_string(pSubmits->signalSemaphoreInfoCount) + '!');
-if(pSubmits->pSignalSemaphoreInfos != VK_NULL_HANDLE && pSubmits->pSignalSemaphoreInfos != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubmits->pSignalSemaphoreInfos->pNext=" + ptrToString((void**)std::addressof(pSubmits->pSignalSemaphoreInfos->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pSignalSemaphoreInfos->semaphore=" + ptrToString((void**)std::addressof(pSubmits->pSignalSemaphoreInfos->semaphore)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pSignalSemaphoreInfos->value=" + std::to_string(pSubmits->pSignalSemaphoreInfos->value) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pSignalSemaphoreInfos->stageMask=" + ptrToString((void**)std::addressof(pSubmits->pSignalSemaphoreInfos->stageMask)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubmits->pSignalSemaphoreInfos->deviceIndex=" + std::to_string(pSubmits->pSignalSemaphoreInfos->deviceIndex) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSignalSemaphoreInfos=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pSubmits=VK_NULL_HANDLE!");
-winsockSendToUI(&ConnectSocket,"fence=" + ptrToString((void**)std::addressof(fence)) + '!');
-}
 #ifdef QUEUESUBMIT2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_QueueSubmit2KHR_after(queue, submitCount, pSubmits, fence);
@@ -27113,12 +19538,6 @@ layer_CmdWriteTimestamp2KHR_before(commandBuffer, stage, queryPool, query);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp2KHR(commandBuffer, stage, queryPool, query);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-winsockSendToUI(&ConnectSocket,"stage=" + ptrToString((void**)std::addressof(stage)) + '!');
-winsockSendToUI(&ConnectSocket,"queryPool=" + ptrToString((void**)std::addressof(queryPool)) + '!');
-winsockSendToUI(&ConnectSocket,"query=" + std::to_string(query) + '!');
-}
 #ifdef CMDWRITETIMESTAMP2KHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdWriteTimestamp2KHR_after(commandBuffer, stage, queryPool, query);
@@ -27144,35 +19563,6 @@ layer_CmdBeginRenderingKHR_before(commandBuffer, pRenderingInfo);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderingKHR(commandBuffer, pRenderingInfo);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-if(pRenderingInfo != VK_NULL_HANDLE && pRenderingInfo != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pNext=" + ptrToString((void**)std::addressof(pRenderingInfo->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->flags=" + ptrToString((void**)std::addressof(pRenderingInfo->flags)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->renderArea=" + ptrToString((void**)std::addressof(pRenderingInfo->renderArea)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->layerCount=" + std::to_string(pRenderingInfo->layerCount) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->viewMask=" + std::to_string(pRenderingInfo->viewMask) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->colorAttachmentCount=" + std::to_string(pRenderingInfo->colorAttachmentCount) + '!');
-if(pRenderingInfo->pColorAttachments != VK_NULL_HANDLE && pRenderingInfo->pColorAttachments != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pColorAttachments->pNext=" + ptrToString((void**)std::addressof(pRenderingInfo->pColorAttachments->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pColorAttachments->imageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pColorAttachments->imageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pColorAttachments->resolveImageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pColorAttachments->resolveImageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pColorAttachments->clearValue=" + ptrToString((void**)std::addressof(pRenderingInfo->pColorAttachments->clearValue)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pColorAttachments=VK_NULL_HANDLE!");
-if(pRenderingInfo->pDepthAttachment != VK_NULL_HANDLE && pRenderingInfo->pDepthAttachment != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pDepthAttachment->pNext=" + ptrToString((void**)std::addressof(pRenderingInfo->pDepthAttachment->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pDepthAttachment->imageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pDepthAttachment->imageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pDepthAttachment->resolveImageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pDepthAttachment->resolveImageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pDepthAttachment->clearValue=" + ptrToString((void**)std::addressof(pRenderingInfo->pDepthAttachment->clearValue)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pDepthAttachment=VK_NULL_HANDLE!");
-if(pRenderingInfo->pStencilAttachment != VK_NULL_HANDLE && pRenderingInfo->pStencilAttachment != NULL) {
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pStencilAttachment->pNext=" + ptrToString((void**)std::addressof(pRenderingInfo->pStencilAttachment->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pStencilAttachment->imageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pStencilAttachment->imageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pStencilAttachment->resolveImageView=" + ptrToString((void**)std::addressof(pRenderingInfo->pStencilAttachment->resolveImageView)) + '!');
-winsockSendToUI(&ConnectSocket,"pRenderingInfo->pStencilAttachment->clearValue=" + ptrToString((void**)std::addressof(pRenderingInfo->pStencilAttachment->clearValue)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pStencilAttachment=VK_NULL_HANDLE!");
-}else winsockSendToUI(&ConnectSocket, "pRenderingInfo=VK_NULL_HANDLE!");
-}
 #ifdef CMDBEGINRENDERINGKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdBeginRenderingKHR_after(commandBuffer, pRenderingInfo);
@@ -27198,9 +19588,6 @@ layer_CmdEndRenderingKHR_before(commandBuffer);
 }
 #endif 
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderingKHR(commandBuffer);
-if(connected){
-winsockSendToUI(&ConnectSocket,"commandBuffer=" + ptrToString((void**)std::addressof(commandBuffer)) + '!');
-}
 #ifdef CMDENDRENDERINGKHR_AFTER_EXEC_EXISTS
 if(connected) {
 layer_CmdEndRenderingKHR_after(commandBuffer);
@@ -27226,18 +19613,6 @@ layer_GetImageSubresourceLayout2EXT_before(device, image, pSubresource, pLayout)
 }
 #endif 
 device_dispatch[GetKey(device)].GetImageSubresourceLayout2EXT(device, image, pSubresource, pLayout);
-if(connected){
-winsockSendToUI(&ConnectSocket,"device=" + ptrToString((void**)std::addressof(device)) + '!');
-winsockSendToUI(&ConnectSocket,"image=" + ptrToString((void**)std::addressof(image)) + '!');
-if(pSubresource != VK_NULL_HANDLE && pSubresource != NULL) {
-winsockSendToUI(&ConnectSocket,"pSubresource->pNext=" + ptrToString((void**)std::addressof(pSubresource->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pSubresource->imageSubresource=" + ptrToString((void**)std::addressof(pSubresource->imageSubresource)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pSubresource=VK_NULL_HANDLE!");
-if(pLayout != VK_NULL_HANDLE && pLayout != NULL) {
-winsockSendToUI(&ConnectSocket,"pLayout->pNext=" + ptrToString((void**)std::addressof(pLayout->pNext)) + '!');
-winsockSendToUI(&ConnectSocket,"pLayout->subresourceLayout=" + ptrToString((void**)std::addressof(pLayout->subresourceLayout)) + '!');
-}else winsockSendToUI(&ConnectSocket, "pLayout=VK_NULL_HANDLE!");
-}
 #ifdef GETIMAGESUBRESOURCELAYOUT2EXT_AFTER_EXEC_EXISTS
 if(connected) {
 layer_GetImageSubresourceLayout2EXT_after(device, image, pSubresource, pLayout);
