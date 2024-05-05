@@ -41,7 +41,7 @@ namespace details {
 
         if (image_data == NULL)
         {
-            std::cout << "image_data NULL" <<  std::endl;
+            //std::cout << "image_data NULL" <<  std::endl;
             return false;
         }
         // Calculate allocation size (in number of bytes)

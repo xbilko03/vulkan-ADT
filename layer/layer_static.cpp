@@ -140,8 +140,11 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateInstance(const VkInstance
         winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledLayerNames=" + charToString((char*)pCreateInfo->ppEnabledLayerNames) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->enabledExtensionCount=" + std::to_string(pCreateInfo->enabledExtensionCount) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledExtensionNames=" + charToString((char*)pCreateInfo->ppEnabledExtensionNames) + '!');
-
+        
         winsockSendToUI(&ConnectSocket, "end_vkCreateInstance!");
+
+        if (callEveryBreak || callAtBreak)
+            newCall();
     }
 
     return ret;
@@ -176,6 +179,9 @@ VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyInstance(VkInstance instance
     /* send call after loader */
     if (connected) {
         winsockSendToUI(&ConnectSocket, "end_vkDestroyInstance!");
+
+        if (callEveryBreak || callAtBreak)
+            newCall();
     }
 
     /* Disconnect from the VkDetails */
@@ -249,6 +255,9 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDevice(VkPhysicalDevice p
         winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledExtensionNames=" + charToString((char*)pCreateInfo->ppEnabledExtensionNames) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->pNext=" + ptrToString((void**)pCreateInfo->pEnabledFeatures) + '!');
         winsockSendToUI(&ConnectSocket, "end_vkCreateDevice!");
+
+        if (callEveryBreak || callAtBreak)
+            newCall();
     }
 
     /* fetch our own dispatch table for the functions we need, into the next layer */
@@ -285,6 +294,9 @@ VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDevice(VkDevice device, cons
     /* send call after loader */
     if (connected) {
         winsockSendToUI(&ConnectSocket, "end_vkDestroyDevice!");
+
+        if (callEveryBreak || callAtBreak)
+            newCall();
     }
 }
 
@@ -310,6 +322,13 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateInstanceLayerPropertie
         strcpy_s(pProperties->description, "https://github.com/xbilko03/ADT_VAPI");
         pProperties->implementationVersion = 1;
         pProperties->specVersion = VK_API_VERSION_1_0;
+    }
+
+    /* send call before loader */
+    if (connected) {
+        winsockSendToUI(&ConnectSocket, "end_vkEnumerateInstanceLayerProperties!");
+        if (callEveryBreak || callAtBreak)
+            newCall();
     }
 
     return VK_SUCCESS;
@@ -339,6 +358,13 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateDeviceLayerProperties(
         pProperties->implementationVersion = 1;
         pProperties->specVersion = VK_API_VERSION_1_0;
     }
+
+    if (connected) {
+        winsockSendToUI(&ConnectSocket, "end_vkEnumerateDeviceLayerProperties!");
+        if (callEveryBreak || callAtBreak)
+            newCall();
+    }
+
     return VK_SUCCESS;
 }
 
@@ -355,6 +381,13 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateInstanceExtensionPrope
         layer_EnumerateInstanceExtensionProperties_before(pLayerName, pPropertyCount, pProperties);
     }
     #endif
+
+    if (connected) {
+        winsockSendToUI(&ConnectSocket, "end_vkEnumerateInstanceExtensionProperties!");
+
+        if (callEveryBreak || callAtBreak)
+            newCall();
+    }
 
     if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DetailsLayer"))
         return VK_ERROR_LAYER_NOT_PRESENT;
@@ -379,6 +412,16 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateDeviceExtensionPropert
     }
     #endif
 
+    /* send call before loader */
+    if (connected) {
+        winsockSendToUI(&ConnectSocket, "end_vkEnumerateDeviceExtensionProperties!");
+
+
+        if (callEveryBreak || callAtBreak)
+            newCall();
+    }
+
+
     /*  pass through any queries that aren't to us */
     if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DetailsLayer"))
     {
@@ -391,6 +434,8 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateDeviceExtensionPropert
 
     /* don't expose any extensions */
     if (pPropertyCount) *pPropertyCount = 0;
+
+
     return VK_SUCCESS;
 }
 

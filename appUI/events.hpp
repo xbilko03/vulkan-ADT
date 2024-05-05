@@ -50,12 +50,30 @@ namespace details {
 		std::string getImageCulpritName(unsigned long long ID) { return imgMan->GetCulprit(ID)->getName(); }
 		unsigned long long getImageCulpritID(unsigned long long ID) { return imgMan->GetCulprit(ID)->getID(); }
 
+		bool getCallsSettings() { return logCalls; }
+		bool getBuffersSettings() { return logBuffers; }
+		bool getImagesSettings() { return logImages; }
+		bool getMemorySettings() { return logMemory; }
+		bool getWarningsSettings() { return logWarnings; }
+		bool getBreaksSettings() { return logBreaks; }
+
 		void loadTexture(unsigned long long ID);
 
 		std::list<std::string>* getWarningsList() { return &warningsList; }
+		std::list<std::string>* getBreaksList() { return &breaksList; }
 		std::list<std::string> getAppInfo() { return sysMan->getAppInfo(); }
 		std::list<std::string> getVkInfo() { return sysMan->getVkInfo(); }
 	private:
+
+
+		bool logCalls;
+		bool logBuffers;
+		bool logImages;
+		bool logMemory;
+
+		bool logWarnings;
+		bool logBreaks;
+
 		SOCKET ConnectSocket = INVALID_SOCKET;
 		#define DEFAULT_BUFLEN 500
 
@@ -68,6 +86,7 @@ namespace details {
 		std::string omitValue(std::string input);
 
 		std::list<std::string> warningsList;
+		std::list<std::string> breaksList;
 		std::map<unsigned long long, std::list<apiCall*>> frames;
 		vkMemoryManager* memMan;
 		vkBufferManager* bufMan;

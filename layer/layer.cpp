@@ -9,6 +9,7 @@
 
 #include "layer.hpp"
 #include "layer_data.hpp"
+#include <chrono>
 
 #define CUSTOM_PARAM_PREFIX "layer_"
 #define CUSTOM_DATA_PREFIX "data_"
@@ -17,15 +18,66 @@ SOCKET ConnectSocket = INVALID_SOCKET;
 void* map;
 uint64_t image_size;
 
-
 #include <iostream>
 /* Enviroment Variables */
 
 std::map <std::string, std::string> envVar;
 
 bool warnings = false;
-bool frameEveryOption = false;
-unsigned long long frameEveryValue;
+bool fpsBelowOption = false;
+bool fpsEveryOption = false;
+unsigned long long fpsBelowTrigger;
+unsigned long long fpsEveryTrigger;
+
+bool breaks = false;
+bool fpsBelowOptionBreak = false;
+bool frameAtBreak = false;
+bool frameEveryBreak = false;
+bool callAtBreak = false;
+bool callEveryBreak = false;
+bool memoryNewBreak = false;
+bool bufferNewBreak = false;
+bool imageNewBreak = false;
+unsigned long long fpsBelowBreakTrigger;
+unsigned long long frameEveryBreakTrigger;
+unsigned long long frameAtBreakTrigger;
+unsigned long long callEveryBreakTrigger;
+unsigned long long callAtBreakTrigger;
+
+bool logBuffers;
+bool logImages;
+bool logMemory;
+
+int frameDelim;
+enum delim
+{
+    enum_vkAcquireNextImageKHR = 0,
+    enum_vkQueueSubmit = 1,
+    enum_vkCmdDraw = 2
+};
+
+unsigned long long callCount = 0;
+void newCall()
+{
+    callCount++;
+    if (callAtBreak)
+    {
+        if (callCount == callAtBreakTrigger)
+        {
+            winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "callAtBreakTrigger=", std::to_string(callCount)));
+            system("pause");
+        }
+    }
+    if (callEveryBreak)
+    {
+        if (callCount % callEveryBreakTrigger == 0)
+        {
+            winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "callEveryBreakTrigger=", std::to_string(callCount)));
+            system("pause");
+        }
+    }
+}
+
 void SetMemoryVariables(std::string configContent)
 {
     std::string token;
@@ -39,11 +91,9 @@ void SetMemoryVariables(std::string configContent)
         if (token[0] == '#' || token[0] == '\0')
             continue;
 
-        
         auto pos1 = token.find(".");
         auto pos2 = token.substr(pos1 + 1, token.size()).find("=");
         std::string t1 = token.substr(pos1 + 1, pos2 - 1);
-
 
         pos2 = token.find("=");
         std::string t2 = token.substr(pos2 + 2, token.size());
@@ -51,47 +101,168 @@ void SetMemoryVariables(std::string configContent)
         envVar[t1] = t2;
     }
 
-    /*
-    * default variables settings
-    * 
-    * vut_detailslayer.app_path = default
-    * vut_detailslayer.enable_message_logging = false
-    * vut_detailslayer.output_path = none
-    * vut_detailslayer.enable_warnings = false
-    * vut_detailslayer.frame_every = 0
-    * vut_detailslayer.frame_at = 0
-    * vut_detailslayer.fps_below = 0
-    * vut_detailslayer.fps_every = 0
-    * vut_detailslayer.triangles_over = 0
-    * vut_detailslayer.triangles_every = 0
-    */
 
-    /*
-    * for example, envVar["app_path"] is 'detault' - correspondes to vut_detailslayer.app_path = default
-    */
     if (envVar["enable_warnings"] == "true")
     {
         warnings = true;
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "warnings=", "true"));
     }
-    if (std::stol(envVar["frame_every"]) > 0 && warnings == true)
+    else
     {
-        frameEveryOption = true;
-        frameEveryValue = std::stol(envVar["frame_every"]);
+        warnings = false;
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "warnings=", "false"));
+    }
+    if (envVar["log_calls"] == "true")
+    {
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "log_calls=", "true"));
+    }
+    else
+    {
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "log_calls=", "false"));
+    }
+    if (envVar["log_buffers"] == "true")
+    {
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "log_buffers=", "true"));
+        logBuffers = true;
+    }
+    else
+    {
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "log_buffers=", "false"));
+        logBuffers = false;
+    }
+    if (envVar["log_images"] == "true")
+    {
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "log_images=", "true"));
+        logImages = true;
+    }
+    else
+    {
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "log_images=", "false"));
+        logImages = false;
+    }
+    if (envVar["log_memory"] == "true")
+    {
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "log_memory=", "true"));
+        logMemory = true;
+    }
+    else
+    {
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "log_memory=", "false"));
+        logMemory = false;
+    }
+    if (envVar["enable_breaks"] == "true")
+    {
+        breaks = true;
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "breaks=", "true"));
+    }
+    else
+    {
+        breaks = false;
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "breaks=", "false"));
+    }
+    if (breaks == true)
+    {
+        if (std::stol(envVar["break_fps_below"]) > 0)
+        {
+            fpsBelowOptionBreak = true;
+            fpsBelowBreakTrigger = std::stol(envVar["break_fps_below"]);
+        }
+    }
+    if (breaks == true)
+    {
+        if (std::stol(envVar["break_frame_at"]) > 0)
+        {
+            frameAtBreak = true;
+            frameAtBreakTrigger = std::stol(envVar["break_frame_at"]);
+        }
+    }
+    if (breaks == true)
+    {
+        if (std::stol(envVar["break_frame_every"]) > 0)
+        {
+            frameEveryBreak = true;
+            frameEveryBreakTrigger = std::stol(envVar["break_frame_every"]);
+        }
+    }
+    if (breaks == true)
+    {
+        if (std::stol(envVar["break_call_at"]) > 0)
+        {
+            callAtBreak = true;
+            callAtBreakTrigger = std::stol(envVar["break_call_at"]);
+        }
+    }
+    if (breaks == true)
+    {
+        if (std::stol(envVar["break_call_every"]) > 0)
+        {
+            callEveryBreak = true;
+            callEveryBreakTrigger = std::stol(envVar["break_call_every"]);
+        }
+    }
+    if (envVar["break_memory_at"] == "true" && breaks == true)
+    {
+        memoryNewBreak = true;
+    }
+    if (envVar["break_buffer_at"] == "true" && breaks == true)
+    {
+        bufferNewBreak = true;
+    }
+    if (envVar["break_image_at"] == "true" && breaks == true)
+    {
+        imageNewBreak = true;
+    }
+
+    if (envVar["frame_delim"] == "delim_vkAcquireNextImageKHR")
+    {
+        frameDelim = enum_vkAcquireNextImageKHR;
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "delim=", "vkAcquireNextImageKHR"));
+    }
+    else if (envVar["frame_delim"] == "delim_vkQueueSubmit")
+    {
+        frameDelim = enum_vkQueueSubmit;
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "delim=", "vkQueueSubmit"));
+    }
+    else if (envVar["frame_delim"] == "delim_vkCmdDraw")
+    {
+        frameDelim = enum_vkCmdDraw;
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "delim=", "vkCmdDraw"));
+    }
+
+    if (std::stol(envVar["fps_below"]) > 0 && warnings == true)
+    {
+        fpsBelowOption = true;
+        fpsBelowTrigger = std::stol(envVar["fps_below"]);
+    }
+    if (std::stol(envVar["fps_every"]) > 0 && warnings == true)
+    {
+        fpsEveryOption = true;
+        fpsEveryTrigger = std::stol(envVar["fps_every"]);
     }
 }
-
 
 details::layerData* data;
 bool readerReady = false;
 
 void layer_AllocateMemory_after(VkDevice device, VkMemoryAllocateInfo* pAllocateInfo, VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory)
 {
+    if (logMemory == false)
+        return;
+    if (memoryNewBreak)
+    {
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "memoryNewBreak=", "new"));
+        system("pause");
+    }
+
     data->newMemoryObj(*pMemory, (*pAllocateInfo).allocationSize);
 
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", ptrToString((void**)pMemory)));
+
 }
 void layer_FreeMemory_before(VkDevice device, VkDeviceMemory memory, VkAllocationCallbacks* pAllocator)
 {
+    if (logMemory == false)
+        return;
     data->freeMemoryObj(memory);
 
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", addrToString((void*)memory)));
@@ -106,22 +277,45 @@ void layer_CreateInstance_after(const VkInstanceCreateInfo* pCreateInfo, const V
 }
 void layer_BindBufferMemory_after(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset)
 {
-    data->newBinding(memory, buffer);
-    data->setState(buffer, "bound");
+    if (logBuffers == false)
+        return;
 
-    winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "memPtr=", addrToString((void*)memory)));
+    if (logMemory)
+    {
+        data->newBinding(memory, buffer);
+        data->setState(buffer, "bound");
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "memPtr=", addrToString((void*)memory)));
+    }
+    else
+    {
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "memPtr=", "Logging VkMemory is disabled."));
+    }
+
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "bufPtr=", addrToString((void*)buffer)));
 }
 void layer_BindImageMemory_after(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset)
 {
-    data->newBinding(memory, image);
-    data->setState(image, "bound");
+    if (logImages == false)
+        return;
 
-    winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "memPtr=", addrToString((void*)memory)));
+
+    if (logMemory)
+    {
+        data->newBinding(memory, image);
+        data->setState(image, "bound");
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "memPtr=", addrToString((void*)memory)));
+    }
+    else
+    {
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "memPtr=", "Logging VkMemory is disabled."));
+    }
+
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "imgPtr=", addrToString((void*)image)));
 }
 void layer_MapMemory_after(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData)
 {
+    if (logMemory == false)
+        return;
     data->memoryMapping(memory, size, ppData);
 
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", ptrToString((void**)memory)));
@@ -136,6 +330,8 @@ void layer_CreateCommandPool_after(VkDevice device, VkCommandPoolCreateInfo* pCr
 }
 void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
 {
+    if (logMemory == false)
+        return;
     data->memoryUnMapping(memory);
     
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", addrToString((void*)memory)));
@@ -150,6 +346,13 @@ void layer_UnmapMemory_before(VkDevice device, VkDeviceMemory memory)
 }
 void layer_CreateImage_after(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage)
 {
+    if (logImages == false)
+        return;
+    if (imageNewBreak)
+    {
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "imageNewBreak=", "new"));
+        system("pause");
+    }
     data->newImage(*pImage, pCreateInfo->initialLayout, pCreateInfo->extent);
 
     if (readerReady == false)
@@ -163,9 +366,17 @@ void layer_CreateImage_after(VkDevice device, VkImageCreateInfo* pCreateInfo, Vk
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", ptrToString((void**)pImage)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "width=", std::to_string(pCreateInfo->extent.width)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "height=", std::to_string(pCreateInfo->extent.height)));
+
 }
 void layer_CreateBuffer_after(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer)
 {
+    if (logBuffers == false)
+        return;
+    if (bufferNewBreak)
+    {
+        winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "bufferNewBreak=", "new"));
+        system("pause");
+    }
 
     if (readerReady == false)
     {
@@ -176,35 +387,52 @@ void layer_CreateBuffer_after(VkDevice device, VkBufferCreateInfo* pCreateInfo, 
     }
 
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", ptrToString((void**)pBuffer)));
+
 }
 void layer_DestroyImage_before(VkDevice device, VkImage image, VkAllocationCallbacks* pAllocator)
 {
+    if (logImages == false)
+        return;
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", addrToString((void*)image)));
 }
 void layer_DestroyBuffer_before(VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pAllocator)
 {
+    if (logBuffers == false)
+        return;
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "ptr=", addrToString((void*)buffer)));
 }
 void layer_CmdCopyImageToBuffer_before(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, VkBufferImageCopy* pRegions)
 {
+    if (logImages == false)
+        return;
+    if (logBuffers == false)
+        return;
     //data->setState(dstBuffer, "copied");
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "dstBuf=", addrToString((void*)dstBuffer)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "srcImg=", addrToString((void*)srcImage)));
 }
 void layer_CmdCopyBufferToImage_before(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkBufferImageCopy* pRegions)
 {
+    if (logImages == false)
+        return;
+    if (logBuffers == false)
+        return;
     //data->setState(dstImage, "copied");
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "srcBuf=", addrToString((void*)srcBuffer)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "dstImg=", addrToString((void*)dstImage)));
 }
 void layer_CmdCopyBuffer_before(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, VkBufferCopy* pRegions)
 {
+    if (logBuffers == false)
+        return;
     //data->setState(dstBuffer, "copied");
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "srcBuf=", addrToString((void*)srcBuffer)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "dstBuf=", addrToString((void*)dstBuffer)));
 }
 void layer_CmdCopyImage_before(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageCopy* pRegions)
 {
+    if (logImages == false)
+        return;
     //data->setState(dstImage, "copied");
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "srcImg=", addrToString((void*)srcImage)));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "dstImg=", addrToString((void*)dstImage)));
@@ -213,9 +441,96 @@ void layer_CreateDevice_after(VkPhysicalDevice physicalDevice, const VkDeviceCre
 {
     data->newDevice(*pDevice);
 }
+
+
+/* before new frame hits */
+typedef std::chrono::steady_clock FPSclock;
+typedef std::chrono::duration<float, std::milli> FPSduration;
+
+unsigned long long frameCount = 0;
+unsigned long long unbiasedFrameCount = 0;
+
+FPSduration startTime;
+FPSduration lastTime;
+
+std::chrono::nanoseconds timeTotal = {};
+std::chrono::nanoseconds timeDiff;
+double FPS;
+
+void frameWarnBreak()
+{
+    if (frameAtBreak || frameEveryBreak)
+    {
+        unbiasedFrameCount++;
+        if (frameAtBreak && unbiasedFrameCount == frameAtBreakTrigger)
+        {
+            winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "frameAtBreakTrigger=", std::to_string(frameAtBreakTrigger)));
+            system("pause");
+        }
+        if (frameEveryBreak && unbiasedFrameCount % (frameEveryBreakTrigger) == 0)
+        {
+            winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "frameEveryBreakTrigger=", std::to_string(frameEveryBreakTrigger)));
+            system("pause");
+        }
+    }
+    if (fpsEveryOption || fpsBelowOption || fpsBelowOptionBreak)
+    {
+        startTime = FPSclock::now().time_since_epoch();
+        frameCount++;
+    }
+
+    if ((fpsEveryOption || fpsBelowOption || fpsBelowOptionBreak) && lastTime != std::chrono::nanoseconds::zero())
+    {
+        timeDiff = std::chrono::duration_cast<std::chrono::nanoseconds>(startTime - lastTime);
+        timeTotal += timeDiff;
+
+        double sec = (double)std::chrono::duration_cast<std::chrono::milliseconds>(timeTotal).count() / 1000;
+        FPS = (double)frameCount / sec;
+
+        if (fpsEveryOption && frameCount >= fpsEveryTrigger)
+        {
+            winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "fpsEveryTrigger=", std::to_string(FPS)));
+            timeTotal = {};
+            frameCount = 0;
+        }
+        if (fpsBelowOption && FPS < fpsBelowTrigger)
+        {
+            winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "fpsBelowTrigger=", std::to_string(FPS)));
+            if (fpsEveryOption == false)
+            {
+                timeTotal = {};
+                frameCount = 0;
+            }
+        }
+        if (fpsBelowOptionBreak && FPS < fpsBelowBreakTrigger)
+        {
+            winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "fpsBelowOptionBreak=", std::to_string(FPS)));
+            system("pause");
+            if (fpsEveryOption == false)
+            {
+                timeTotal = {};
+                frameCount = 0;
+            }
+        }
+    }
+
+    if (fpsEveryOption || fpsBelowOption || fpsBelowOptionBreak)
+        lastTime = FPSclock::now().time_since_epoch();
+}
+
+void layer_AcquireNextImageKHR_before(VkDevice device, VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex)
+{
+    if(frameDelim == enum_vkAcquireNextImageKHR)
+        frameWarnBreak();
+}
+
+void layer_CmdDraw_after(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
+{
+    if (frameDelim == enum_vkCmdDraw)
+        frameWarnBreak();
+}
 void layer_QueueSubmit_after(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence)
 {
-    //waitdeviceidle
     for (const auto& [key, value] : *(data->getMemoryMap())) {
         if (value.status == "mapped")
         {
@@ -232,7 +547,7 @@ void layer_QueueSubmit_after(VkQueue queue, uint32_t submitCount, VkSubmitInfo* 
             winsockSendToUI(&ConnectSocket, dataMessage);
             winsockSendToUIraw(&ConnectSocket, reinterpret_cast<char*>(*tarObject.data), tarObject.size);
         }
-        else if(value.status == "bound")
+        else if (value.status == "bound")
         {
             if (value.boundTo == "image")
             {
@@ -262,24 +577,7 @@ void layer_QueueSubmit_after(VkQueue queue, uint32_t submitCount, VkSubmitInfo* 
             free(limitedData);
         }
     }
-}
 
-/* before new frame hits */
-unsigned long long frameCount = 0;
-void layer_AcquireNextImageKHR_before(VkDevice device, VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex)
-{
-    frameCount++;
-
-    if (frameEveryOption)
-    {
-        if (frameCount % frameEveryValue == 0)
-        {
-            winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "warning_frameCount=", std::to_string(frameCount)));
-        }
-    }
-}
-
-void layer_CreateImageView_after(VkDevice device, VkImageViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImageView* pView)
-{
-    //empty
+    if (frameDelim == enum_vkQueueSubmit)
+        frameWarnBreak();
 }

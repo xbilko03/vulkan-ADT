@@ -28,6 +28,19 @@ namespace details {
 
         ImGui::End();
     }
+    void appUI::ShowBreaks(details::appWindow* window, details::events* dataObject)
+    {
+        ImGui::Begin("Breakpoints");
+
+        auto breaksList = (*dataObject).getBreaksList();
+
+        for (auto item : *breaksList)
+        {
+            ImGui::Text(item.c_str());
+        }
+
+        ImGui::End();
+    }
     void appUI::ShowMemories(details::appWindow* window, details::events* dataObject)
     {
         ImGui::Begin("Memory");
@@ -43,10 +56,13 @@ namespace details {
                 output = (*dataObject).getMemoryPointer(i);
                 ImGui::Text(output.c_str());
 
-                output = std::to_string((*dataObject).getMemoryCulpritID(i));
-                output += ":";
-                output += (*dataObject).getMemoryCulpritName(i);
-                ImGui::Text(output.c_str());
+                if (dataObject->getCallsSettings() && output != "new")
+                {
+                    output = std::to_string((*dataObject).getMemoryCulpritID(i));
+                    output += ":";
+                    output += (*dataObject).getMemoryCulpritName(i);
+                    ImGui::Text(output.c_str());
+                }
 
                 ImGui::Text((*dataObject).getMemoryData(i).c_str());
             }
@@ -70,10 +86,13 @@ namespace details {
                 output = (*dataObject).getImagePointer(i);
                 ImGui::Text(output.c_str());
 
-                output = std::to_string((*dataObject).getImageCulpritID(i));
-                output += ":";
-                output += (*dataObject).getImageCulpritName(i);
-                ImGui::Text(output.c_str());
+                if (dataObject->getCallsSettings() && output != "")
+                {
+                    output = std::to_string((*dataObject).getImageCulpritID(i));
+                    output += ":";
+                    output += (*dataObject).getImageCulpritName(i);
+                    ImGui::Text(output.c_str());
+                }
 
                 ImGui::Text((*dataObject).getImageData(i).c_str());
                 ImGui::Text("pointer = %p", (*window).getImageDS(i));
@@ -129,10 +148,13 @@ namespace details {
                 output = (*dataObject).getBufferPointer(i);
                 ImGui::Text(output.c_str());
 
-                output = std::to_string((*dataObject).getBufferCulpritID(i));
-                output += ":";
-                output += (*dataObject).getBufferCulpritName(i);
-                ImGui::Text(output.c_str());
+                if (dataObject->getCallsSettings() && output != "new")
+                {
+                    output = std::to_string((*dataObject).getBufferCulpritID(i));
+                    output += ":";
+                    output += (*dataObject).getBufferCulpritName(i);
+                    ImGui::Text(output.c_str());
+                }
 
                 ImGui::Text((*dataObject).getBufferData(i).c_str());
             }
@@ -311,6 +333,8 @@ namespace details {
         bool images = false;
         bool memories = false;
         bool warnings = false;
+        bool breaks = false;
+
         /* window render loop */
         while (!glfwWindowShouldClose(window.window))
         {
@@ -321,12 +345,18 @@ namespace details {
             /* imGui menu */            
             {
                 ImGui::Begin("Menu");
-                ImGui::Checkbox("Api_Calls", &apiCalls);
-                ImGui::Checkbox("Vk_Buffers", &buffers);
-                ImGui::Checkbox("Vk_Images", &images);
-                ImGui::Checkbox("Vk_Memory", &memories);
-
-                ImGui::Checkbox("Warnings", &warnings);
+                if(eventManager.getCallsSettings())
+                    ImGui::Checkbox("Api_Calls", &apiCalls);
+                if (eventManager.getBuffersSettings())
+                    ImGui::Checkbox("Vk_Buffers", &buffers);
+                if (eventManager.getImagesSettings())
+                    ImGui::Checkbox("Vk_Images", &images);
+                if (eventManager.getMemorySettings())
+                    ImGui::Checkbox("Vk_Memory", &memories);
+                if (eventManager.getWarningsSettings())
+                    ImGui::Checkbox("Warnings", &warnings);
+                if (eventManager.getBreaksSettings())
+                    ImGui::Checkbox("Breakpoints", &breaks);
 
                 ImGui::Checkbox("App_Info", &appInfo);
                 ImGui::Checkbox("Demo_Window", &demo);
@@ -341,6 +371,8 @@ namespace details {
                 ImGui::ShowDemoWindow(&demo);
             if (warnings == true)
                 ShowWarnings(&window, &eventManager);
+            if (breaks == true)
+                ShowBreaks(&window, &eventManager);
             if (appInfo == true)
                 ShowAppInfo(&window, &eventManager);
             if (images == true)

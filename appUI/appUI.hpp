@@ -15,5 +15,6 @@ namespace details {
 		void ShowImages(details::appWindow* window, details::events* dataObject);
 		void ShowMemories(details::appWindow* window, details::events* dataObject);
 		void ShowWarnings(details::appWindow* window, details::events* dataObject);
+		void ShowBreaks(details::appWindow* window, details::events* dataObject);
 	};
 }

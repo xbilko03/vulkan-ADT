@@ -39,6 +39,7 @@ namespace details {
     details::appWindow* winMan;
     bool dataLoad = false;
 
+
     /* Init objects that hold the data */
     void events::createDataManagers()
     {
@@ -49,10 +50,12 @@ namespace details {
     }
     void events::loadTexture(unsigned long long ID )
     { 
-        winMan->LoadImageTexture(ID, imgMan->GetWidth(ID), imgMan->GetHeight(ID), 4, imgMan->GetMemory(ID)->memoryData); 
+        if(imgMan->GetData(ID) != NULL)
+            winMan->LoadImageTexture(ID, imgMan->GetWidth(ID), imgMan->GetHeight(ID), 4, imgMan->GetMemory(ID)->memoryData); 
     }
 
     /* Remove the message prefix before = */
+    std::string delimStr = "XXX";
     std::string events::omitMessage(std::string input)
     {
         auto pos = input.find("=");
@@ -87,30 +90,24 @@ namespace details {
             modifiedBufferID[1] = bufMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID[0]));
             modifiedImageID[1] = imgMan->GetFromPointerID(memMan->GetBoundObj(modifiedMemoryID[0]));
 
-            if (modifiedBufferID[1] != -1)
-            {
-                //bufMan->AssignMemory(modifiedBufferID[1], memMan->GetMemory(modifiedMemoryID[0]));
-            }
-            if (modifiedImageID[1] != -1)
-            {
-                //imgMan->AssignMemory(modifiedImageID[1], memMan->GetMemory(modifiedMemoryID[0]));
-                //winMan->LoadImageTexture(modifiedImageID[1], imgMan->GetWidth(modifiedImageID[1]), imgMan->GetHeight(modifiedImageID[1]), 4, imgMan->GetMemory(modifiedImageID[1])->memoryData);
-            }
             dataLoad = false;
             return;
         }
 
-        /* begin of an api call */
+        /* beginning of an api call */
         if (input.substr(0, 6) == "begin_")
         {
             receptionState = input;
-            currentCall = new apiCall(callID++);
-            /* api command begin message */
-            currentCall->assignName(input);
-            if (receptionState == "begin_vkAcquireNextImageKHR")
+            if (logCalls)
+            {
+                currentCall = new apiCall(callID++);
+                currentCall->assignName(input);
+            }
+            if (receptionState == "begin_" + delimStr)
             {
                 frameID++;
-                currentCallList = {};
+                if(logCalls)
+                    currentCallList = {};
             }
             else if (receptionState == "begin_vkAllocateMemory")
             {
@@ -130,28 +127,142 @@ namespace details {
         {
             receptionState = input;
             /* finish reading and save call */
-            currentCallList.push_back(currentCall);
-            frames[frameID] = currentCallList;
+            if (logCalls)
+            {
+                currentCallList.push_back(currentCall);
+                frames[frameID] = currentCallList;
+            }
 
             if (receptionState == "end_vkAllocateMemory")
             {
-                memMan->AssignCulprit(memoryID,currentCall);
+                if(logCalls)
+                    memMan->AssignCulprit(memoryID,currentCall);
                 memoryID++;
             }
             else if (receptionState == "end_vkCreateImage")
             {
-                imgMan->AssignCulprit(imageID, currentCall);
+                if(logCalls)
+                    imgMan->AssignCulprit(imageID, currentCall);
                 imageID++;
             }
             else if (receptionState == "end_vkCreateBuffer")
             {
-                bufMan->AssignCulprit(bufferID, currentCall);
+                if(logCalls)
+                    bufMan->AssignCulprit(bufferID, currentCall);
                 bufferID++;
             }
         }
         else if (input.substr(0, 6) == "layer_")
         {
             /* instructions sent by layer.cpp */
+
+            if (omitValue(input) == "layer_callAtBreakTrigger")
+            {
+                breaksList.push_back("Breakpoint: triggered at Xth API call - call[" + omitMessage(input) + "]");
+            }
+
+            else if (omitValue(input) == "layer_callEveryBreakTrigger")
+            {
+                breaksList.push_back("Breakpoint: triggered every Xth API call - call[" + omitMessage(input) + "]");
+            }
+
+            else if (omitValue(input) == "layer_imageNewBreak")
+            {
+                breaksList.push_back("Breakpoint: triggered at new VkImage creation - call[" + std::to_string(callID) + "]");
+            }
+
+            else if (omitValue(input) == "layer_bufferNewBreak")
+            {
+                breaksList.push_back("Breakpoint: triggered at new VkBuffer creation - call[" + std::to_string(callID) + "]");
+            }
+
+            else if (omitValue(input) == "layer_memoryNewBreak")
+            {
+                breaksList.push_back("Breakpoint: triggered at new VkMemory allocation - call[" + std::to_string(callID) + "]");
+            }
+
+            else if (omitValue(input) == "layer_fpsBelowOptionBreak")
+            {
+                breaksList.push_back("Breakpoint: triggered when below X fps - FPS[" + omitMessage(input) + "] - call[" + std::to_string(callID) + "]");
+            }
+
+            else if (omitValue(input) == "layer_frameAtBreakTrigger")
+            {
+                breaksList.push_back("Breakpoint: triggered when at frame - frame[" + std::to_string(frameID) + "] - call[" + std::to_string(callID) + "]");
+            }
+
+            else if (omitValue(input) == "layer_frameEveryBreakTrigger")
+            {
+                breaksList.push_back("Breakpoint: triggered every Xth frame - frame[" + std::to_string(frameID) + "] - call[" + std::to_string(callID) + "]");
+            }
+
+            else if (omitValue(input) == "layer_fpsEveryTrigger")
+            {
+                warningsList.push_back("Warning: FPS report every Xth frame - FPS[" + omitMessage(input) + "] - frame[" + std::to_string(frameID) + "]");
+            }
+
+            else if (omitValue(input) == "layer_fpsBelowTrigger")
+            {
+                warningsList.push_back("Warning: FPS report below FPS - FPS[" + omitMessage(input) + "] - frame[" + std::to_string(frameID) + "]");
+            }
+
+            else if (omitValue(input) == "layer_log_calls")
+            {
+                if (omitMessage(input) == "false")
+                    logCalls = false;
+                else if (omitMessage(input) == "true")
+                    logCalls = true;
+            }
+
+            else if (omitValue(input) == "layer_log_buffers")
+            {
+                if (omitMessage(input) == "false")
+                    logBuffers = false;
+                else if (omitMessage(input) == "true")
+                    logBuffers = true;
+            }
+
+            else if (omitValue(input) == "layer_log_images")
+            {
+                if (omitMessage(input) == "false")
+                    logImages = false;
+                else if (omitMessage(input) == "true")
+                    logImages = true;
+            }
+
+            else if (omitValue(input) == "layer_log_memory")
+            {
+                if (omitMessage(input) == "false")
+                    logMemory = false;
+                else if (omitMessage(input) == "true")
+                    logMemory = true;
+            }
+
+            else if (omitValue(input) == "layer_warnings")
+            {
+                if (omitMessage(input) == "false")
+                    logWarnings = false;
+                else if (omitMessage(input) == "true")
+                    logWarnings = true;
+            }
+
+            else if (omitValue(input) == "layer_breaks")
+            {
+                if (omitMessage(input) == "false")
+                    logBreaks = false;
+                else if (omitMessage(input) == "true")
+                    logBreaks = true;
+            }
+
+            else if (omitValue(input) == "layer_delim")
+            {
+                if (omitMessage(input) == "vkAcquireNextImageKHR")
+                    delimStr = "vkAcquireNextImageKHR";
+                else if (omitMessage(input) == "vkQueueSubmit")
+                    delimStr = "vkQueueSubmit";
+                else if (omitMessage(input) == "vkCmdDraw")
+                    delimStr = "vkCmdDraw";
+            }
 
             if (input.substr(0, 14) == "layer_warning_")
             {
@@ -413,7 +524,7 @@ namespace details {
                 }
             }
         }
-        else
+        else if(logCalls)
         {
             if (omitValue(input) == "result")
                 currentCall->assignRetVal(omitMessage(input));

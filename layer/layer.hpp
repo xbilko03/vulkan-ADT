@@ -12,6 +12,10 @@
 extern SOCKET ConnectSocket;
 extern bool connected;
 extern bool skipLock;
+extern bool callAtBreak;
+extern bool callEveryBreak;
+
+void newCall();
 
 std::string GetWindowName();
 void SetMemoryVariables(std::string configContent);
@@ -65,9 +69,6 @@ void layer_AcquireNextImageKHR_before(VkDevice device, VkSwapchainKHR swapchain,
 #define QUEUESUBMIT_AFTER_EXEC_EXISTS
 void layer_QueueSubmit_after(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence);
 
-#define CREATEIMAGEVIEW_AFTER_EXEC_EXISTS
-void layer_CreateImageView_after(VkDevice device, VkImageViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImageView* pView);
-
 #define GETPHYSICALDEVICESURFACESUPPORTKHR_BEFORE_EXEC_EXISTS
 void layer_GetPhysicalDeviceSurfaceSupportKHR_before(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, VkSurfaceKHR surface, VkBool32* pSupported);
 
@@ -76,6 +77,9 @@ void layer_CreateCommandPool_after(VkDevice device, VkCommandPoolCreateInfo* pCr
 
 #define CREATEDEVICE_AFTER_EXEC_EXISTS
 void layer_CreateDevice_after(VkPhysicalDevice physicalDevice, const VkDeviceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDevice* pDevice);
+
+#define CMDDRAW_AFTER_EXEC_EXISTS
+void layer_CmdDraw_after(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance);
 
 
 //#pragma comment(lib, "Ws2_32.lib")

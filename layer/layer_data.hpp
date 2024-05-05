@@ -1,10 +1,9 @@
 #pragma once
 
 #include <vulkan/vulkan.h>
-#include <iostream>
 #include <map>
 #include <vector>
-
+#include <string>
 
 namespace details {
     class layerData {
@@ -29,7 +28,7 @@ namespace details {
         void mapImageToBuffer(VkDeviceMemory memory);
         void mapBufferToBuffer(VkDeviceMemory memory);
 
-        void setState(VkImage image, std::string input) { memoryMap[imageMap[image].boundTo].status = input; std::cout << "status of memory " << imageMap[image].boundTo << " is " << memoryMap[imageMap[image].boundTo].status << std::endl; }
+        void setState(VkImage image, std::string input) { memoryMap[imageMap[image].boundTo].status = input; }
         void setState(VkBuffer buffer, std::string input) { memoryMap[bufferMap[buffer].boundTo].status = input; }
 
         VkDeviceSize getSize(VkDeviceMemory memory) { return memoryMap[memory].size; }

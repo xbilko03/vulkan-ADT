@@ -548,6 +548,10 @@ namespace laygen
             */
             generatedLayerFile << "if(connected) {" << std::endl;
             PrintSendToUI(&generatedLayerFile, "end_" + item.functName);
+
+            generatedLayerFile << "if (callEveryBreak || callAtBreak)" << std::endl;
+            generatedLayerFile << "\tnewCall();" << std::endl;
+
             generatedLayerFile << "}" << std::endl;
 
             if (strcmp(item.functType.c_str(), "void") != 0)

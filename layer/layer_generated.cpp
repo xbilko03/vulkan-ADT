@@ -1000,8 +1000,11 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateInstance(const VkInstance
         winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledLayerNames=" + charToString((char*)pCreateInfo->ppEnabledLayerNames) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->enabledExtensionCount=" + std::to_string(pCreateInfo->enabledExtensionCount) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledExtensionNames=" + charToString((char*)pCreateInfo->ppEnabledExtensionNames) + '!');
-
+        
         winsockSendToUI(&ConnectSocket, "end_vkCreateInstance!");
+
+        if (callEveryBreak || callAtBreak)
+            newCall();
     }
 
     return ret;
@@ -1036,6 +1039,9 @@ VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyInstance(VkInstance instance
     /* send call after loader */
     if (connected) {
         winsockSendToUI(&ConnectSocket, "end_vkDestroyInstance!");
+
+        if (callEveryBreak || callAtBreak)
+            newCall();
     }
 
     /* Disconnect from the VkDetails */
@@ -1109,6 +1115,9 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDevice(VkPhysicalDevice p
         winsockSendToUI(&ConnectSocket, "pCreateInfo->ppEnabledExtensionNames=" + charToString((char*)pCreateInfo->ppEnabledExtensionNames) + '!');
         winsockSendToUI(&ConnectSocket, "pCreateInfo->pNext=" + ptrToString((void**)pCreateInfo->pEnabledFeatures) + '!');
         winsockSendToUI(&ConnectSocket, "end_vkCreateDevice!");
+
+        if (callEveryBreak || callAtBreak)
+            newCall();
     }
 
     /* fetch our own dispatch table for the functions we need, into the next layer */
@@ -1145,6 +1154,9 @@ VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDevice(VkDevice device, cons
     /* send call after loader */
     if (connected) {
         winsockSendToUI(&ConnectSocket, "end_vkDestroyDevice!");
+
+        if (callEveryBreak || callAtBreak)
+            newCall();
     }
 }
 
@@ -1170,6 +1182,13 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateInstanceLayerPropertie
         strcpy_s(pProperties->description, "https://github.com/xbilko03/ADT_VAPI");
         pProperties->implementationVersion = 1;
         pProperties->specVersion = VK_API_VERSION_1_0;
+    }
+
+    /* send call before loader */
+    if (connected) {
+        winsockSendToUI(&ConnectSocket, "end_vkEnumerateInstanceLayerProperties!");
+        if (callEveryBreak || callAtBreak)
+            newCall();
     }
 
     return VK_SUCCESS;
@@ -1199,6 +1218,13 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateDeviceLayerProperties(
         pProperties->implementationVersion = 1;
         pProperties->specVersion = VK_API_VERSION_1_0;
     }
+
+    if (connected) {
+        winsockSendToUI(&ConnectSocket, "end_vkEnumerateDeviceLayerProperties!");
+        if (callEveryBreak || callAtBreak)
+            newCall();
+    }
+
     return VK_SUCCESS;
 }
 
@@ -1215,6 +1241,13 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateInstanceExtensionPrope
         layer_EnumerateInstanceExtensionProperties_before(pLayerName, pPropertyCount, pProperties);
     }
     #endif
+
+    if (connected) {
+        winsockSendToUI(&ConnectSocket, "end_vkEnumerateInstanceExtensionProperties!");
+
+        if (callEveryBreak || callAtBreak)
+            newCall();
+    }
 
     if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DetailsLayer"))
         return VK_ERROR_LAYER_NOT_PRESENT;
@@ -1239,6 +1272,16 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateDeviceExtensionPropert
     }
     #endif
 
+    /* send call before loader */
+    if (connected) {
+        winsockSendToUI(&ConnectSocket, "end_vkEnumerateDeviceExtensionProperties!");
+
+
+        if (callEveryBreak || callAtBreak)
+            newCall();
+    }
+
+
     /*  pass through any queries that aren't to us */
     if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DetailsLayer"))
     {
@@ -1251,6 +1294,8 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateDeviceExtensionPropert
 
     /* don't expose any extensions */
     if (pPropertyCount) *pPropertyCount = 0;
+
+
     return VK_SUCCESS;
 }
 
@@ -1276,6 +1321,8 @@ layer_EnumeratePhysicalDevices_after(instance, pPhysicalDeviceCount, pPhysicalDe
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkEnumeratePhysicalDevices!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1304,6 +1351,8 @@ layer_GetPhysicalDeviceProperties_after(physicalDevice, pProperties);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceProperties!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties(physicalDevice, pProperties);
@@ -1329,6 +1378,8 @@ layer_GetPhysicalDeviceQueueFamilyProperties_after(physicalDevice, pQueueFamilyP
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceQueueFamilyProperties!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
@@ -1354,6 +1405,8 @@ layer_GetPhysicalDeviceMemoryProperties_after(physicalDevice, pMemoryProperties)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceMemoryProperties!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties(physicalDevice, pMemoryProperties);
@@ -1379,6 +1432,8 @@ layer_GetPhysicalDeviceFeatures_after(physicalDevice, pFeatures);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceFeatures!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures(physicalDevice, pFeatures);
@@ -1404,6 +1459,8 @@ layer_GetPhysicalDeviceFormatProperties_after(physicalDevice, format, pFormatPro
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceFormatProperties!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties(physicalDevice, format, pFormatProperties);
@@ -1430,6 +1487,8 @@ layer_GetPhysicalDeviceImageFormatProperties_after(physicalDevice, format, type,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceImageFormatProperties!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1458,6 +1517,8 @@ layer_GetPhysicalDeviceSparseImageFormatProperties_after(physicalDevice, format,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSparseImageFormatProperties!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProperties(physicalDevice, format, type, samples, usage, tiling, pPropertyCount, pProperties);
@@ -1485,6 +1546,8 @@ layer_CreateAndroidSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateAndroidSurfaceKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1515,6 +1578,8 @@ layer_GetPhysicalDeviceDisplayPropertiesKHR_after(physicalDevice, pPropertyCount
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceDisplayPropertiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1544,6 +1609,8 @@ layer_GetPhysicalDeviceDisplayPlanePropertiesKHR_after(physicalDevice, pProperty
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceDisplayPlanePropertiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1573,6 +1640,8 @@ layer_GetDisplayPlaneSupportedDisplaysKHR_after(physicalDevice, planeIndex, pDis
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDisplayPlaneSupportedDisplaysKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1602,6 +1671,8 @@ layer_GetDisplayModePropertiesKHR_after(physicalDevice, display, pPropertyCount,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDisplayModePropertiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1631,6 +1702,8 @@ layer_CreateDisplayModeKHR_after(physicalDevice, display, pCreateInfo, pAllocato
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateDisplayModeKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1660,6 +1733,8 @@ layer_GetDisplayPlaneCapabilitiesKHR_after(physicalDevice, mode, planeIndex, pCa
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDisplayPlaneCapabilitiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1689,6 +1764,8 @@ layer_CreateDisplayPlaneSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSur
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateDisplayPlaneSurfaceKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1717,6 +1794,8 @@ layer_DestroySurfaceKHR_after(instance, surface, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroySurfaceKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(instance)].DestroySurfaceKHR(instance, surface, pAllocator);
@@ -1743,6 +1822,8 @@ layer_GetPhysicalDeviceSurfaceSupportKHR_after(physicalDevice, queueFamilyIndex,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSurfaceSupportKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1772,6 +1853,8 @@ layer_GetPhysicalDeviceSurfaceCapabilitiesKHR_after(physicalDevice, surface, pSu
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSurfaceCapabilitiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1801,6 +1884,8 @@ layer_GetPhysicalDeviceSurfaceFormatsKHR_after(physicalDevice, surface, pSurface
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSurfaceFormatsKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1830,6 +1915,8 @@ layer_GetPhysicalDeviceSurfacePresentModesKHR_after(physicalDevice, surface, pPr
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSurfacePresentModesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1860,6 +1947,8 @@ layer_CreateViSurfaceNN_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateViSurfaceNN!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1891,6 +1980,8 @@ layer_CreateWaylandSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateWaylandSurfaceKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1922,6 +2013,8 @@ layer_GetPhysicalDeviceWaylandPresentationSupportKHR_after(physicalDevice, queue
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceWaylandPresentationSupportKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1953,6 +2046,8 @@ layer_CreateWin32SurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateWin32SurfaceKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -1984,6 +2079,8 @@ layer_GetPhysicalDeviceWin32PresentationSupportKHR_after(physicalDevice, queueFa
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceWin32PresentationSupportKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2015,6 +2112,8 @@ layer_CreateXlibSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateXlibSurfaceKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2046,6 +2145,8 @@ layer_GetPhysicalDeviceXlibPresentationSupportKHR_after(physicalDevice, queueFam
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceXlibPresentationSupportKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2077,6 +2178,8 @@ layer_CreateXcbSurfaceKHR_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateXcbSurfaceKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2108,6 +2211,8 @@ layer_GetPhysicalDeviceXcbPresentationSupportKHR_after(physicalDevice, queueFami
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceXcbPresentationSupportKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2139,6 +2244,8 @@ layer_CreateDirectFBSurfaceEXT_after(instance, pCreateInfo, pAllocator, pSurface
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateDirectFBSurfaceEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2170,6 +2277,8 @@ layer_GetPhysicalDeviceDirectFBPresentationSupportEXT_after(physicalDevice, queu
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceDirectFBPresentationSupportEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2201,6 +2310,8 @@ layer_CreateImagePipeSurfaceFUCHSIA_after(instance, pCreateInfo, pAllocator, pSu
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateImagePipeSurfaceFUCHSIA!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2232,6 +2343,8 @@ layer_CreateStreamDescriptorSurfaceGGP_after(instance, pCreateInfo, pAllocator, 
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateStreamDescriptorSurfaceGGP!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2263,6 +2376,8 @@ layer_CreateScreenSurfaceQNX_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateScreenSurfaceQNX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2294,6 +2409,8 @@ layer_GetPhysicalDeviceScreenPresentationSupportQNX_after(physicalDevice, queueF
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceScreenPresentationSupportQNX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2324,6 +2441,8 @@ layer_CreateDebugReportCallbackEXT_after(instance, pCreateInfo, pAllocator, pCal
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateDebugReportCallbackEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2352,6 +2471,8 @@ layer_DestroyDebugReportCallbackEXT_after(instance, callback, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyDebugReportCallbackEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(instance)].DestroyDebugReportCallbackEXT(instance, callback, pAllocator);
@@ -2377,6 +2498,8 @@ layer_DebugReportMessageEXT_after(instance, flags, objectType, object, location,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDebugReportMessageEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(instance)].DebugReportMessageEXT(instance, flags, objectType, object, location, messageCode, pLayerPrefix, pMessage);
@@ -2403,6 +2526,8 @@ layer_GetPhysicalDeviceExternalImageFormatPropertiesNV_after(physicalDevice, for
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceExternalImageFormatPropertiesNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2431,6 +2556,8 @@ layer_GetPhysicalDeviceFeatures2_after(physicalDevice, pFeatures);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceFeatures2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures2(physicalDevice, pFeatures);
@@ -2456,6 +2583,8 @@ layer_GetPhysicalDeviceProperties2_after(physicalDevice, pProperties);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceProperties2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties2(physicalDevice, pProperties);
@@ -2481,6 +2610,8 @@ layer_GetPhysicalDeviceFormatProperties2_after(physicalDevice, format, pFormatPr
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceFormatProperties2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties2(physicalDevice, format, pFormatProperties);
@@ -2507,6 +2638,8 @@ layer_GetPhysicalDeviceImageFormatProperties2_after(physicalDevice, pImageFormat
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceImageFormatProperties2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2535,6 +2668,8 @@ layer_GetPhysicalDeviceQueueFamilyProperties2_after(physicalDevice, pQueueFamily
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceQueueFamilyProperties2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties2(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
@@ -2560,6 +2695,8 @@ layer_GetPhysicalDeviceMemoryProperties2_after(physicalDevice, pMemoryProperties
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceMemoryProperties2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties2(physicalDevice, pMemoryProperties);
@@ -2585,6 +2722,8 @@ layer_GetPhysicalDeviceSparseImageFormatProperties2_after(physicalDevice, pForma
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSparseImageFormatProperties2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
@@ -2610,6 +2749,8 @@ layer_GetPhysicalDeviceExternalBufferProperties_after(physicalDevice, pExternalB
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceExternalBufferProperties!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalBufferProperties(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
@@ -2637,6 +2778,8 @@ layer_GetPhysicalDeviceExternalMemorySciBufPropertiesNV_after(physicalDevice, ha
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceExternalMemorySciBufPropertiesNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2668,6 +2811,8 @@ layer_GetPhysicalDeviceSciBufAttributesNV_after(physicalDevice, pAttributes);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSciBufAttributesNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2697,6 +2842,8 @@ layer_GetPhysicalDeviceExternalSemaphoreProperties_after(physicalDevice, pExtern
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceExternalSemaphoreProperties!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
@@ -2722,6 +2869,8 @@ layer_GetPhysicalDeviceExternalFenceProperties_after(physicalDevice, pExternalFe
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceExternalFenceProperties!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalFenceProperties(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
@@ -2749,6 +2898,8 @@ layer_GetPhysicalDeviceSciSyncAttributesNV_after(physicalDevice, pSciSyncAttribu
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSciSyncAttributesNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2779,6 +2930,8 @@ layer_ReleaseDisplayEXT_after(physicalDevice, display);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkReleaseDisplayEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2809,6 +2962,8 @@ layer_AcquireXlibDisplayEXT_after(physicalDevice, dpy, display);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkAcquireXlibDisplayEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2840,6 +2995,8 @@ layer_GetRandROutputDisplayEXT_after(physicalDevice, dpy, rrOutput, pDisplay);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetRandROutputDisplayEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2871,6 +3028,8 @@ layer_AcquireWinrtDisplayNV_after(physicalDevice, display);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkAcquireWinrtDisplayNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2902,6 +3061,8 @@ layer_GetWinrtDisplayNV_after(physicalDevice, deviceRelativeId, pDisplay);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetWinrtDisplayNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2932,6 +3093,8 @@ layer_GetPhysicalDeviceSurfaceCapabilities2EXT_after(physicalDevice, surface, pS
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSurfaceCapabilities2EXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2961,6 +3124,8 @@ layer_EnumeratePhysicalDeviceGroups_after(instance, pPhysicalDeviceGroupCount, p
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkEnumeratePhysicalDeviceGroups!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -2990,6 +3155,8 @@ layer_GetPhysicalDevicePresentRectanglesKHR_after(physicalDevice, surface, pRect
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDevicePresentRectanglesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3020,6 +3187,8 @@ layer_CreateIOSSurfaceMVK_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateIOSSurfaceMVK!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3051,6 +3220,8 @@ layer_CreateMacOSSurfaceMVK_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateMacOSSurfaceMVK!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3082,6 +3253,8 @@ layer_CreateMetalSurfaceEXT_after(instance, pCreateInfo, pAllocator, pSurface);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateMetalSurfaceEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3111,6 +3284,8 @@ layer_GetPhysicalDeviceMultisamplePropertiesEXT_after(physicalDevice, samples, p
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceMultisamplePropertiesEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMultisamplePropertiesEXT(physicalDevice, samples, pMultisampleProperties);
@@ -3137,6 +3312,8 @@ layer_GetPhysicalDeviceSurfaceCapabilities2KHR_after(physicalDevice, pSurfaceInf
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSurfaceCapabilities2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3166,6 +3343,8 @@ layer_GetPhysicalDeviceSurfaceFormats2KHR_after(physicalDevice, pSurfaceInfo, pS
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSurfaceFormats2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3195,6 +3374,8 @@ layer_GetPhysicalDeviceDisplayProperties2KHR_after(physicalDevice, pPropertyCoun
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceDisplayProperties2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3224,6 +3405,8 @@ layer_GetPhysicalDeviceDisplayPlaneProperties2KHR_after(physicalDevice, pPropert
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceDisplayPlaneProperties2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3253,6 +3436,8 @@ layer_GetDisplayModeProperties2KHR_after(physicalDevice, display, pPropertyCount
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDisplayModeProperties2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3282,6 +3467,8 @@ layer_GetDisplayPlaneCapabilities2KHR_after(physicalDevice, pDisplayPlaneInfo, p
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDisplayPlaneCapabilities2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3311,6 +3498,8 @@ layer_GetPhysicalDeviceCalibrateableTimeDomainsKHR_after(physicalDevice, pTimeDo
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceCalibrateableTimeDomainsKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3340,6 +3529,8 @@ layer_CreateDebugUtilsMessengerEXT_after(instance, pCreateInfo, pAllocator, pMes
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateDebugUtilsMessengerEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3368,6 +3559,8 @@ layer_DestroyDebugUtilsMessengerEXT_after(instance, messenger, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyDebugUtilsMessengerEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(instance)].DestroyDebugUtilsMessengerEXT(instance, messenger, pAllocator);
@@ -3393,6 +3586,8 @@ layer_SubmitDebugUtilsMessageEXT_after(instance, messageSeverity, messageTypes, 
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSubmitDebugUtilsMessageEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(instance)].SubmitDebugUtilsMessageEXT(instance, messageSeverity, messageTypes, pCallbackData);
@@ -3419,6 +3614,8 @@ layer_GetPhysicalDeviceCooperativeMatrixPropertiesNV_after(physicalDevice, pProp
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3449,6 +3646,8 @@ layer_GetPhysicalDeviceSurfacePresentModes2EXT_after(physicalDevice, pSurfaceInf
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSurfacePresentModes2EXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3479,6 +3678,8 @@ layer_EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR_after(physic
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3507,6 +3708,8 @@ layer_GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR_after(physicalDevice
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR(physicalDevice, pPerformanceQueryCreateInfo, pNumPasses);
@@ -3533,6 +3736,8 @@ layer_CreateHeadlessSurfaceEXT_after(instance, pCreateInfo, pAllocator, pSurface
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateHeadlessSurfaceEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3562,6 +3767,8 @@ layer_GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV_after(phys
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3591,6 +3798,8 @@ layer_GetPhysicalDeviceToolProperties_after(physicalDevice, pToolCount, pToolPro
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceToolProperties!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3620,6 +3829,8 @@ layer_GetPhysicalDeviceFragmentShadingRatesKHR_after(physicalDevice, pFragmentSh
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceFragmentShadingRatesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3649,6 +3860,8 @@ layer_GetPhysicalDeviceVideoCapabilitiesKHR_after(physicalDevice, pVideoProfile,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceVideoCapabilitiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3678,6 +3891,8 @@ layer_GetPhysicalDeviceVideoFormatPropertiesKHR_after(physicalDevice, pVideoForm
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceVideoFormatPropertiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3707,6 +3922,8 @@ layer_GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR_after(physicalDevice
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3736,6 +3953,8 @@ layer_AcquireDrmDisplayEXT_after(physicalDevice, drmFd, display);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkAcquireDrmDisplayEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3765,6 +3984,8 @@ layer_GetDrmDisplayEXT_after(physicalDevice, drmFd, connectorId, display);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDrmDisplayEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3794,6 +4015,8 @@ layer_GetPhysicalDeviceOpticalFlowImageFormatsNV_after(physicalDevice, pOpticalF
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceOpticalFlowImageFormatsNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3823,6 +4046,8 @@ layer_GetPhysicalDeviceCooperativeMatrixPropertiesKHR_after(physicalDevice, pPro
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceCooperativeMatrixPropertiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3851,6 +4076,8 @@ layer_GetPhysicalDeviceFeatures2KHR_after(physicalDevice, pFeatures);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceFeatures2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures2KHR(physicalDevice, pFeatures);
@@ -3876,6 +4103,8 @@ layer_GetPhysicalDeviceProperties2KHR_after(physicalDevice, pProperties);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceProperties2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties2KHR(physicalDevice, pProperties);
@@ -3901,6 +4130,8 @@ layer_GetPhysicalDeviceFormatProperties2KHR_after(physicalDevice, format, pForma
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceFormatProperties2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties2KHR(physicalDevice, format, pFormatProperties);
@@ -3927,6 +4158,8 @@ layer_GetPhysicalDeviceImageFormatProperties2KHR_after(physicalDevice, pImageFor
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceImageFormatProperties2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -3955,6 +4188,8 @@ layer_GetPhysicalDeviceQueueFamilyProperties2KHR_after(physicalDevice, pQueueFam
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceQueueFamilyProperties2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties2KHR(physicalDevice, pQueueFamilyPropertyCount, pQueueFamilyProperties);
@@ -3980,6 +4215,8 @@ layer_GetPhysicalDeviceMemoryProperties2KHR_after(physicalDevice, pMemoryPropert
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceMemoryProperties2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties2KHR(physicalDevice, pMemoryProperties);
@@ -4005,6 +4242,8 @@ layer_GetPhysicalDeviceSparseImageFormatProperties2KHR_after(physicalDevice, pFo
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceSparseImageFormatProperties2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProperties2KHR(physicalDevice, pFormatInfo, pPropertyCount, pProperties);
@@ -4030,6 +4269,8 @@ layer_GetPhysicalDeviceExternalBufferPropertiesKHR_after(physicalDevice, pExtern
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceExternalBufferPropertiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalBufferPropertiesKHR(physicalDevice, pExternalBufferInfo, pExternalBufferProperties);
@@ -4055,6 +4296,8 @@ layer_GetPhysicalDeviceExternalSemaphorePropertiesKHR_after(physicalDevice, pExt
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalSemaphorePropertiesKHR(physicalDevice, pExternalSemaphoreInfo, pExternalSemaphoreProperties);
@@ -4080,6 +4323,8 @@ layer_GetPhysicalDeviceExternalFencePropertiesKHR_after(physicalDevice, pExterna
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceExternalFencePropertiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalFencePropertiesKHR(physicalDevice, pExternalFenceInfo, pExternalFenceProperties);
@@ -4106,6 +4351,8 @@ layer_EnumeratePhysicalDeviceGroupsKHR_after(instance, pPhysicalDeviceGroupCount
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkEnumeratePhysicalDeviceGroupsKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4135,6 +4382,8 @@ layer_GetPhysicalDeviceCalibrateableTimeDomainsEXT_after(physicalDevice, pTimeDo
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4164,6 +4413,8 @@ layer_GetPhysicalDeviceToolPropertiesEXT_after(physicalDevice, pToolCount, pTool
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPhysicalDeviceToolPropertiesEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4192,6 +4443,8 @@ layer_GetDeviceQueue_after(device, queueFamilyIndex, queueIndex, pQueue);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceQueue!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDeviceQueue(device, queueFamilyIndex, queueIndex, pQueue);
@@ -4218,6 +4471,8 @@ layer_QueueSubmit_after(queue, submitCount, pSubmits, fence);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkQueueSubmit!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4247,6 +4502,8 @@ layer_QueueWaitIdle_after(queue);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkQueueWaitIdle!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4276,6 +4533,8 @@ layer_DeviceWaitIdle_after(device);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDeviceWaitIdle!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4305,6 +4564,8 @@ layer_AllocateMemory_after(device, pAllocateInfo, pAllocator, pMemory);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkAllocateMemory!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4333,6 +4594,8 @@ layer_FreeMemory_after(device, memory, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkFreeMemory!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].FreeMemory(device, memory, pAllocator);
@@ -4359,6 +4622,8 @@ layer_MapMemory_after(device, memory, offset, size, flags, ppData);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkMapMemory!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4387,6 +4652,8 @@ layer_UnmapMemory_after(device, memory);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkUnmapMemory!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].UnmapMemory(device, memory);
@@ -4413,6 +4680,8 @@ layer_FlushMappedMemoryRanges_after(device, memoryRangeCount, pMemoryRanges);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkFlushMappedMemoryRanges!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4442,6 +4711,8 @@ layer_InvalidateMappedMemoryRanges_after(device, memoryRangeCount, pMemoryRanges
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkInvalidateMappedMemoryRanges!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4470,6 +4741,8 @@ layer_GetDeviceMemoryCommitment_after(device, memory, pCommittedMemoryInBytes);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceMemoryCommitment!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDeviceMemoryCommitment(device, memory, pCommittedMemoryInBytes);
@@ -4495,6 +4768,8 @@ layer_GetBufferMemoryRequirements_after(device, buffer, pMemoryRequirements);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetBufferMemoryRequirements!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetBufferMemoryRequirements(device, buffer, pMemoryRequirements);
@@ -4521,6 +4796,8 @@ layer_BindBufferMemory_after(device, buffer, memory, memoryOffset);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkBindBufferMemory!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4549,6 +4826,8 @@ layer_GetImageMemoryRequirements_after(device, image, pMemoryRequirements);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetImageMemoryRequirements!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetImageMemoryRequirements(device, image, pMemoryRequirements);
@@ -4575,6 +4854,8 @@ layer_BindImageMemory_after(device, image, memory, memoryOffset);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkBindImageMemory!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4603,6 +4884,8 @@ layer_GetImageSparseMemoryRequirements_after(device, image, pSparseMemoryRequire
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetImageSparseMemoryRequirements!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements(device, image, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -4629,6 +4912,8 @@ layer_QueueBindSparse_after(queue, bindInfoCount, pBindInfo, fence);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkQueueBindSparse!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4658,6 +4943,8 @@ layer_CreateFence_after(device, pCreateInfo, pAllocator, pFence);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateFence!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4686,6 +4973,8 @@ layer_DestroyFence_after(device, fence, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyFence!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyFence(device, fence, pAllocator);
@@ -4712,6 +5001,8 @@ layer_ResetFences_after(device, fenceCount, pFences);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkResetFences!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4741,6 +5032,8 @@ layer_GetFenceStatus_after(device, fence);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetFenceStatus!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4770,6 +5063,8 @@ layer_WaitForFences_after(device, fenceCount, pFences, waitAll, timeout);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkWaitForFences!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4799,6 +5094,8 @@ layer_CreateSemaphore_after(device, pCreateInfo, pAllocator, pSemaphore);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateSemaphore!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4827,6 +5124,8 @@ layer_DestroySemaphore_after(device, semaphore, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroySemaphore!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroySemaphore(device, semaphore, pAllocator);
@@ -4853,6 +5152,8 @@ layer_CreateEvent_after(device, pCreateInfo, pAllocator, pEvent);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateEvent!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4881,6 +5182,8 @@ layer_DestroyEvent_after(device, event, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyEvent!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyEvent(device, event, pAllocator);
@@ -4907,6 +5210,8 @@ layer_GetEventStatus_after(device, event);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetEventStatus!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4936,6 +5241,8 @@ layer_SetEvent_after(device, event);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSetEvent!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4965,6 +5272,8 @@ layer_ResetEvent_after(device, event);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkResetEvent!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -4994,6 +5303,8 @@ layer_CreateQueryPool_after(device, pCreateInfo, pAllocator, pQueryPool);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateQueryPool!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5022,6 +5333,8 @@ layer_DestroyQueryPool_after(device, queryPool, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyQueryPool!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyQueryPool(device, queryPool, pAllocator);
@@ -5048,6 +5361,8 @@ layer_GetQueryPoolResults_after(device, queryPool, firstQuery, queryCount, dataS
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetQueryPoolResults!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5076,6 +5391,8 @@ layer_ResetQueryPool_after(device, queryPool, firstQuery, queryCount);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkResetQueryPool!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].ResetQueryPool(device, queryPool, firstQuery, queryCount);
@@ -5102,6 +5419,8 @@ layer_CreateBuffer_after(device, pCreateInfo, pAllocator, pBuffer);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateBuffer!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5130,6 +5449,8 @@ layer_DestroyBuffer_after(device, buffer, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyBuffer!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyBuffer(device, buffer, pAllocator);
@@ -5156,6 +5477,8 @@ layer_CreateBufferView_after(device, pCreateInfo, pAllocator, pView);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateBufferView!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5184,6 +5507,8 @@ layer_DestroyBufferView_after(device, bufferView, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyBufferView!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyBufferView(device, bufferView, pAllocator);
@@ -5210,6 +5535,8 @@ layer_CreateImage_after(device, pCreateInfo, pAllocator, pImage);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateImage!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5238,6 +5565,8 @@ layer_DestroyImage_after(device, image, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyImage!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyImage(device, image, pAllocator);
@@ -5263,6 +5592,8 @@ layer_GetImageSubresourceLayout_after(device, image, pSubresource, pLayout);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetImageSubresourceLayout!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetImageSubresourceLayout(device, image, pSubresource, pLayout);
@@ -5289,6 +5620,8 @@ layer_CreateImageView_after(device, pCreateInfo, pAllocator, pView);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateImageView!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5317,6 +5650,8 @@ layer_DestroyImageView_after(device, imageView, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyImageView!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyImageView(device, imageView, pAllocator);
@@ -5343,6 +5678,8 @@ layer_CreateShaderModule_after(device, pCreateInfo, pAllocator, pShaderModule);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateShaderModule!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5371,6 +5708,8 @@ layer_DestroyShaderModule_after(device, shaderModule, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyShaderModule!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyShaderModule(device, shaderModule, pAllocator);
@@ -5397,6 +5736,8 @@ layer_CreatePipelineCache_after(device, pCreateInfo, pAllocator, pPipelineCache)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreatePipelineCache!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5425,6 +5766,8 @@ layer_DestroyPipelineCache_after(device, pipelineCache, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyPipelineCache!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyPipelineCache(device, pipelineCache, pAllocator);
@@ -5451,6 +5794,8 @@ layer_GetPipelineCacheData_after(device, pipelineCache, pDataSize, pData);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPipelineCacheData!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5480,6 +5825,8 @@ layer_MergePipelineCaches_after(device, dstCache, srcCacheCount, pSrcCaches);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkMergePipelineCaches!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5509,6 +5856,8 @@ layer_CreateGraphicsPipelines_after(device, pipelineCache, createInfoCount, pCre
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateGraphicsPipelines!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5538,6 +5887,8 @@ layer_CreateComputePipelines_after(device, pipelineCache, createInfoCount, pCrea
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateComputePipelines!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5567,6 +5918,8 @@ layer_GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI_after(device, renderpass, pM
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5595,6 +5948,8 @@ layer_DestroyPipeline_after(device, pipeline, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyPipeline!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyPipeline(device, pipeline, pAllocator);
@@ -5621,6 +5976,8 @@ layer_CreatePipelineLayout_after(device, pCreateInfo, pAllocator, pPipelineLayou
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreatePipelineLayout!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5649,6 +6006,8 @@ layer_DestroyPipelineLayout_after(device, pipelineLayout, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyPipelineLayout!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyPipelineLayout(device, pipelineLayout, pAllocator);
@@ -5675,6 +6034,8 @@ layer_CreateSampler_after(device, pCreateInfo, pAllocator, pSampler);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateSampler!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5703,6 +6064,8 @@ layer_DestroySampler_after(device, sampler, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroySampler!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroySampler(device, sampler, pAllocator);
@@ -5729,6 +6092,8 @@ layer_CreateDescriptorSetLayout_after(device, pCreateInfo, pAllocator, pSetLayou
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateDescriptorSetLayout!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5757,6 +6122,8 @@ layer_DestroyDescriptorSetLayout_after(device, descriptorSetLayout, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyDescriptorSetLayout!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyDescriptorSetLayout(device, descriptorSetLayout, pAllocator);
@@ -5783,6 +6150,8 @@ layer_CreateDescriptorPool_after(device, pCreateInfo, pAllocator, pDescriptorPoo
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateDescriptorPool!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5811,6 +6180,8 @@ layer_DestroyDescriptorPool_after(device, descriptorPool, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyDescriptorPool!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyDescriptorPool(device, descriptorPool, pAllocator);
@@ -5837,6 +6208,8 @@ layer_ResetDescriptorPool_after(device, descriptorPool, flags);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkResetDescriptorPool!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5866,6 +6239,8 @@ layer_AllocateDescriptorSets_after(device, pAllocateInfo, pDescriptorSets);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkAllocateDescriptorSets!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5895,6 +6270,8 @@ layer_FreeDescriptorSets_after(device, descriptorPool, descriptorSetCount, pDesc
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkFreeDescriptorSets!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5923,6 +6300,8 @@ layer_UpdateDescriptorSets_after(device, descriptorWriteCount, pDescriptorWrites
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkUpdateDescriptorSets!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].UpdateDescriptorSets(device, descriptorWriteCount, pDescriptorWrites, descriptorCopyCount, pDescriptorCopies);
@@ -5949,6 +6328,8 @@ layer_CreateFramebuffer_after(device, pCreateInfo, pAllocator, pFramebuffer);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateFramebuffer!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -5977,6 +6358,8 @@ layer_DestroyFramebuffer_after(device, framebuffer, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyFramebuffer!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyFramebuffer(device, framebuffer, pAllocator);
@@ -6003,6 +6386,8 @@ layer_CreateRenderPass_after(device, pCreateInfo, pAllocator, pRenderPass);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateRenderPass!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -6031,6 +6416,8 @@ layer_DestroyRenderPass_after(device, renderPass, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyRenderPass!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyRenderPass(device, renderPass, pAllocator);
@@ -6056,6 +6443,8 @@ layer_GetRenderAreaGranularity_after(device, renderPass, pGranularity);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetRenderAreaGranularity!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetRenderAreaGranularity(device, renderPass, pGranularity);
@@ -6081,6 +6470,8 @@ layer_GetRenderingAreaGranularityKHR_after(device, pRenderingAreaInfo, pGranular
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetRenderingAreaGranularityKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetRenderingAreaGranularityKHR(device, pRenderingAreaInfo, pGranularity);
@@ -6107,6 +6498,8 @@ layer_CreateCommandPool_after(device, pCreateInfo, pAllocator, pCommandPool);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateCommandPool!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -6135,6 +6528,8 @@ layer_DestroyCommandPool_after(device, commandPool, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyCommandPool!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyCommandPool(device, commandPool, pAllocator);
@@ -6161,6 +6556,8 @@ layer_ResetCommandPool_after(device, commandPool, flags);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkResetCommandPool!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -6190,6 +6587,8 @@ layer_AllocateCommandBuffers_after(device, pAllocateInfo, pCommandBuffers);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkAllocateCommandBuffers!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -6218,6 +6617,8 @@ layer_FreeCommandBuffers_after(device, commandPool, commandBufferCount, pCommand
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkFreeCommandBuffers!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].FreeCommandBuffers(device, commandPool, commandBufferCount, pCommandBuffers);
@@ -6244,6 +6645,8 @@ layer_BeginCommandBuffer_after(commandBuffer, pBeginInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkBeginCommandBuffer!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -6273,6 +6676,8 @@ layer_EndCommandBuffer_after(commandBuffer);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkEndCommandBuffer!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -6302,6 +6707,8 @@ layer_ResetCommandBuffer_after(commandBuffer, flags);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkResetCommandBuffer!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -6330,6 +6737,8 @@ layer_CmdBindPipeline_after(commandBuffer, pipelineBindPoint, pipeline);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindPipeline!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindPipeline(commandBuffer, pipelineBindPoint, pipeline);
@@ -6355,6 +6764,8 @@ layer_CmdSetAttachmentFeedbackLoopEnableEXT_after(commandBuffer, aspectMask);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetAttachmentFeedbackLoopEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetAttachmentFeedbackLoopEnableEXT(commandBuffer, aspectMask);
@@ -6380,6 +6791,8 @@ layer_CmdSetViewport_after(commandBuffer, firstViewport, viewportCount, pViewpor
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetViewport!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetViewport(commandBuffer, firstViewport, viewportCount, pViewports);
@@ -6405,6 +6818,8 @@ layer_CmdSetScissor_after(commandBuffer, firstScissor, scissorCount, pScissors);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetScissor!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetScissor(commandBuffer, firstScissor, scissorCount, pScissors);
@@ -6430,6 +6845,8 @@ layer_CmdSetLineWidth_after(commandBuffer, lineWidth);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetLineWidth!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetLineWidth(commandBuffer, lineWidth);
@@ -6455,6 +6872,8 @@ layer_CmdSetDepthBias_after(commandBuffer, depthBiasConstantFactor, depthBiasCla
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthBias!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBias(commandBuffer, depthBiasConstantFactor, depthBiasClamp, depthBiasSlopeFactor);
@@ -6480,6 +6899,8 @@ layer_CmdSetBlendConstants_after(commandBuffer, blendConstants);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetBlendConstants!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetBlendConstants(commandBuffer, blendConstants);
@@ -6505,6 +6926,8 @@ layer_CmdSetDepthBounds_after(commandBuffer, minDepthBounds, maxDepthBounds);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthBounds!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBounds(commandBuffer, minDepthBounds, maxDepthBounds);
@@ -6530,6 +6953,8 @@ layer_CmdSetStencilCompareMask_after(commandBuffer, faceMask, compareMask);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetStencilCompareMask!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilCompareMask(commandBuffer, faceMask, compareMask);
@@ -6555,6 +6980,8 @@ layer_CmdSetStencilWriteMask_after(commandBuffer, faceMask, writeMask);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetStencilWriteMask!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilWriteMask(commandBuffer, faceMask, writeMask);
@@ -6580,6 +7007,8 @@ layer_CmdSetStencilReference_after(commandBuffer, faceMask, reference);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetStencilReference!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilReference(commandBuffer, faceMask, reference);
@@ -6605,6 +7034,8 @@ layer_CmdBindDescriptorSets_after(commandBuffer, pipelineBindPoint, layout, firs
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindDescriptorSets!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorSets(commandBuffer, pipelineBindPoint, layout, firstSet, descriptorSetCount, pDescriptorSets, dynamicOffsetCount, pDynamicOffsets);
@@ -6630,6 +7061,8 @@ layer_CmdBindIndexBuffer_after(commandBuffer, buffer, offset, indexType);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindIndexBuffer!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindIndexBuffer(commandBuffer, buffer, offset, indexType);
@@ -6655,6 +7088,8 @@ layer_CmdBindVertexBuffers_after(commandBuffer, firstBinding, bindingCount, pBuf
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindVertexBuffers!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets);
@@ -6680,6 +7115,8 @@ layer_CmdDraw_after(commandBuffer, vertexCount, instanceCount, firstVertex, firs
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDraw!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
@@ -6705,6 +7142,8 @@ layer_CmdDrawIndexed_after(commandBuffer, indexCount, instanceCount, firstIndex,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndexed!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
@@ -6730,6 +7169,8 @@ layer_CmdDrawMultiEXT_after(commandBuffer, drawCount, pVertexInfo, instanceCount
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMultiEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawMultiEXT(commandBuffer, drawCount, pVertexInfo, instanceCount, firstInstance, stride);
@@ -6755,6 +7196,8 @@ layer_CmdDrawMultiIndexedEXT_after(commandBuffer, drawCount, pIndexInfo, instanc
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMultiIndexedEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawMultiIndexedEXT(commandBuffer, drawCount, pIndexInfo, instanceCount, firstInstance, stride, pVertexOffset);
@@ -6780,6 +7223,8 @@ layer_CmdDrawIndirect_after(commandBuffer, buffer, offset, drawCount, stride);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndirect!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirect(commandBuffer, buffer, offset, drawCount, stride);
@@ -6805,6 +7250,8 @@ layer_CmdDrawIndexedIndirect_after(commandBuffer, buffer, offset, drawCount, str
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndexedIndirect!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirect(commandBuffer, buffer, offset, drawCount, stride);
@@ -6830,6 +7277,8 @@ layer_CmdDispatch_after(commandBuffer, groupCountX, groupCountY, groupCountZ);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDispatch!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDispatch(commandBuffer, groupCountX, groupCountY, groupCountZ);
@@ -6855,6 +7304,8 @@ layer_CmdDispatchIndirect_after(commandBuffer, buffer, offset);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDispatchIndirect!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDispatchIndirect(commandBuffer, buffer, offset);
@@ -6880,6 +7331,8 @@ layer_CmdSubpassShadingHUAWEI_after(commandBuffer);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSubpassShadingHUAWEI!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSubpassShadingHUAWEI(commandBuffer);
@@ -6905,6 +7358,8 @@ layer_CmdDrawClusterHUAWEI_after(commandBuffer, groupCountX, groupCountY, groupC
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawClusterHUAWEI!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawClusterHUAWEI(commandBuffer, groupCountX, groupCountY, groupCountZ);
@@ -6930,6 +7385,8 @@ layer_CmdDrawClusterIndirectHUAWEI_after(commandBuffer, buffer, offset);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawClusterIndirectHUAWEI!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawClusterIndirectHUAWEI(commandBuffer, buffer, offset);
@@ -6955,6 +7412,8 @@ layer_CmdUpdatePipelineIndirectBufferNV_after(commandBuffer, pipelineBindPoint, 
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdUpdatePipelineIndirectBufferNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdUpdatePipelineIndirectBufferNV(commandBuffer, pipelineBindPoint, pipeline);
@@ -6980,6 +7439,8 @@ layer_CmdCopyBuffer_after(commandBuffer, srcBuffer, dstBuffer, regionCount, pReg
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyBuffer!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, regionCount, pRegions);
@@ -7005,6 +7466,8 @@ layer_CmdCopyImage_after(commandBuffer, srcImage, srcImageLayout, dstImage, dstI
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyImage!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
@@ -7030,6 +7493,8 @@ layer_CmdBlitImage_after(commandBuffer, srcImage, srcImageLayout, dstImage, dstI
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBlitImage!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBlitImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions, filter);
@@ -7055,6 +7520,8 @@ layer_CmdCopyBufferToImage_after(commandBuffer, srcBuffer, dstImage, dstImageLay
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyBufferToImage!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage(commandBuffer, srcBuffer, dstImage, dstImageLayout, regionCount, pRegions);
@@ -7080,6 +7547,8 @@ layer_CmdCopyImageToBuffer_after(commandBuffer, srcImage, srcImageLayout, dstBuf
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyImageToBuffer!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions);
@@ -7105,6 +7574,8 @@ layer_CmdCopyMemoryIndirectNV_after(commandBuffer, copyBufferAddress, copyCount,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyMemoryIndirectNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride);
@@ -7130,6 +7601,8 @@ layer_CmdCopyMemoryToImageIndirectNV_after(commandBuffer, copyBufferAddress, cop
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyMemoryToImageIndirectNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToImageIndirectNV(commandBuffer, copyBufferAddress, copyCount, stride, dstImage, dstImageLayout, pImageSubresources);
@@ -7155,6 +7628,8 @@ layer_CmdUpdateBuffer_after(commandBuffer, dstBuffer, dstOffset, dataSize, pData
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdUpdateBuffer!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, dataSize, pData);
@@ -7180,6 +7655,8 @@ layer_CmdFillBuffer_after(commandBuffer, dstBuffer, dstOffset, size, data);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdFillBuffer!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdFillBuffer(commandBuffer, dstBuffer, dstOffset, size, data);
@@ -7205,6 +7682,8 @@ layer_CmdClearColorImage_after(commandBuffer, image, imageLayout, pColor, rangeC
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdClearColorImage!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdClearColorImage(commandBuffer, image, imageLayout, pColor, rangeCount, pRanges);
@@ -7230,6 +7709,8 @@ layer_CmdClearDepthStencilImage_after(commandBuffer, image, imageLayout, pDepthS
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdClearDepthStencilImage!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdClearDepthStencilImage(commandBuffer, image, imageLayout, pDepthStencil, rangeCount, pRanges);
@@ -7255,6 +7736,8 @@ layer_CmdClearAttachments_after(commandBuffer, attachmentCount, pAttachments, re
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdClearAttachments!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdClearAttachments(commandBuffer, attachmentCount, pAttachments, rectCount, pRects);
@@ -7280,6 +7763,8 @@ layer_CmdResolveImage_after(commandBuffer, srcImage, srcImageLayout, dstImage, d
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdResolveImage!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdResolveImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, regionCount, pRegions);
@@ -7305,6 +7790,8 @@ layer_CmdSetEvent_after(commandBuffer, event, stageMask);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetEvent!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetEvent(commandBuffer, event, stageMask);
@@ -7330,6 +7817,8 @@ layer_CmdResetEvent_after(commandBuffer, event, stageMask);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdResetEvent!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdResetEvent(commandBuffer, event, stageMask);
@@ -7355,6 +7844,8 @@ layer_CmdWaitEvents_after(commandBuffer, eventCount, pEvents, srcStageMask, dstS
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdWaitEvents!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdWaitEvents(commandBuffer, eventCount, pEvents, srcStageMask, dstStageMask, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
@@ -7380,6 +7871,8 @@ layer_CmdPipelineBarrier_after(commandBuffer, srcStageMask, dstStageMask, depend
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdPipelineBarrier!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers);
@@ -7405,6 +7898,8 @@ layer_CmdBeginQuery_after(commandBuffer, queryPool, query, flags);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBeginQuery!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBeginQuery(commandBuffer, queryPool, query, flags);
@@ -7430,6 +7925,8 @@ layer_CmdEndQuery_after(commandBuffer, queryPool, query);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdEndQuery!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdEndQuery(commandBuffer, queryPool, query);
@@ -7455,6 +7952,8 @@ layer_CmdBeginConditionalRenderingEXT_after(commandBuffer, pConditionalRendering
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBeginConditionalRenderingEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBeginConditionalRenderingEXT(commandBuffer, pConditionalRenderingBegin);
@@ -7480,6 +7979,8 @@ layer_CmdEndConditionalRenderingEXT_after(commandBuffer);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdEndConditionalRenderingEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdEndConditionalRenderingEXT(commandBuffer);
@@ -7505,6 +8006,8 @@ layer_CmdResetQueryPool_after(commandBuffer, queryPool, firstQuery, queryCount);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdResetQueryPool!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdResetQueryPool(commandBuffer, queryPool, firstQuery, queryCount);
@@ -7530,6 +8033,8 @@ layer_CmdWriteTimestamp_after(commandBuffer, pipelineStage, queryPool, query);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdWriteTimestamp!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp(commandBuffer, pipelineStage, queryPool, query);
@@ -7555,6 +8060,8 @@ layer_CmdCopyQueryPoolResults_after(commandBuffer, queryPool, firstQuery, queryC
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyQueryPoolResults!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyQueryPoolResults(commandBuffer, queryPool, firstQuery, queryCount, dstBuffer, dstOffset, stride, flags);
@@ -7580,6 +8087,8 @@ layer_CmdPushConstants_after(commandBuffer, layout, stageFlags, offset, size, pV
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdPushConstants!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdPushConstants(commandBuffer, layout, stageFlags, offset, size, pValues);
@@ -7605,6 +8114,8 @@ layer_CmdBeginRenderPass_after(commandBuffer, pRenderPassBegin, contents);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBeginRenderPass!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass(commandBuffer, pRenderPassBegin, contents);
@@ -7630,6 +8141,8 @@ layer_CmdNextSubpass_after(commandBuffer, contents);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdNextSubpass!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdNextSubpass(commandBuffer, contents);
@@ -7655,6 +8168,8 @@ layer_CmdEndRenderPass_after(commandBuffer);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdEndRenderPass!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass(commandBuffer);
@@ -7680,6 +8195,8 @@ layer_CmdExecuteCommands_after(commandBuffer, commandBufferCount, pCommandBuffer
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdExecuteCommands!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdExecuteCommands(commandBuffer, commandBufferCount, pCommandBuffers);
@@ -7706,6 +8223,8 @@ layer_CreateSharedSwapchainsKHR_after(device, swapchainCount, pCreateInfos, pAll
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateSharedSwapchainsKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -7735,6 +8254,8 @@ layer_CreateSwapchainKHR_after(device, pCreateInfo, pAllocator, pSwapchain);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateSwapchainKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -7763,6 +8284,8 @@ layer_DestroySwapchainKHR_after(device, swapchain, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroySwapchainKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroySwapchainKHR(device, swapchain, pAllocator);
@@ -7789,6 +8312,8 @@ layer_GetSwapchainImagesKHR_after(device, swapchain, pSwapchainImageCount, pSwap
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetSwapchainImagesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -7818,6 +8343,8 @@ layer_AcquireNextImageKHR_after(device, swapchain, timeout, semaphore, fence, pI
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkAcquireNextImageKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -7847,6 +8374,8 @@ layer_QueuePresentKHR_after(queue, pPresentInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkQueuePresentKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -7876,6 +8405,8 @@ layer_DebugMarkerSetObjectNameEXT_after(device, pNameInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDebugMarkerSetObjectNameEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -7905,6 +8436,8 @@ layer_DebugMarkerSetObjectTagEXT_after(device, pTagInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDebugMarkerSetObjectTagEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -7933,6 +8466,8 @@ layer_CmdDebugMarkerBeginEXT_after(commandBuffer, pMarkerInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDebugMarkerBeginEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerBeginEXT(commandBuffer, pMarkerInfo);
@@ -7958,6 +8493,8 @@ layer_CmdDebugMarkerEndEXT_after(commandBuffer);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDebugMarkerEndEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerEndEXT(commandBuffer);
@@ -7983,6 +8520,8 @@ layer_CmdDebugMarkerInsertEXT_after(commandBuffer, pMarkerInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDebugMarkerInsertEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerInsertEXT(commandBuffer, pMarkerInfo);
@@ -8010,6 +8549,8 @@ layer_GetMemoryWin32HandleNV_after(device, memory, handleType, pHandle);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetMemoryWin32HandleNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8039,6 +8580,8 @@ layer_CmdExecuteGeneratedCommandsNV_after(commandBuffer, isPreprocessed, pGenera
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdExecuteGeneratedCommandsNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdExecuteGeneratedCommandsNV(commandBuffer, isPreprocessed, pGeneratedCommandsInfo);
@@ -8064,6 +8607,8 @@ layer_CmdPreprocessGeneratedCommandsNV_after(commandBuffer, pGeneratedCommandsIn
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdPreprocessGeneratedCommandsNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdPreprocessGeneratedCommandsNV(commandBuffer, pGeneratedCommandsInfo);
@@ -8089,6 +8634,8 @@ layer_CmdBindPipelineShaderGroupNV_after(commandBuffer, pipelineBindPoint, pipel
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindPipelineShaderGroupNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindPipelineShaderGroupNV(commandBuffer, pipelineBindPoint, pipeline, groupIndex);
@@ -8114,6 +8661,8 @@ layer_GetGeneratedCommandsMemoryRequirementsNV_after(device, pInfo, pMemoryRequi
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetGeneratedCommandsMemoryRequirementsNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetGeneratedCommandsMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
@@ -8140,6 +8689,8 @@ layer_CreateIndirectCommandsLayoutNV_after(device, pCreateInfo, pAllocator, pInd
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateIndirectCommandsLayoutNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8168,6 +8719,8 @@ layer_DestroyIndirectCommandsLayoutNV_after(device, indirectCommandsLayout, pAll
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyIndirectCommandsLayoutNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyIndirectCommandsLayoutNV(device, indirectCommandsLayout, pAllocator);
@@ -8193,6 +8746,8 @@ layer_CmdPushDescriptorSetKHR_after(commandBuffer, pipelineBindPoint, layout, se
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdPushDescriptorSetKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetKHR(commandBuffer, pipelineBindPoint, layout, set, descriptorWriteCount, pDescriptorWrites);
@@ -8218,6 +8773,8 @@ layer_TrimCommandPool_after(device, commandPool, flags);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkTrimCommandPool!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].TrimCommandPool(device, commandPool, flags);
@@ -8245,6 +8802,8 @@ layer_GetMemoryWin32HandleKHR_after(device, pGetWin32HandleInfo, pHandle);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetMemoryWin32HandleKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8276,6 +8835,8 @@ layer_GetMemoryWin32HandlePropertiesKHR_after(device, handleType, handle, pMemor
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetMemoryWin32HandlePropertiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8306,6 +8867,8 @@ layer_GetMemoryFdKHR_after(device, pGetFdInfo, pFd);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetMemoryFdKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8335,6 +8898,8 @@ layer_GetMemoryFdPropertiesKHR_after(device, handleType, fd, pMemoryFdProperties
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetMemoryFdPropertiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8365,6 +8930,8 @@ layer_GetMemoryZirconHandleFUCHSIA_after(device, pGetZirconHandleInfo, pZirconHa
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetMemoryZirconHandleFUCHSIA!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8396,6 +8963,8 @@ layer_GetMemoryZirconHandlePropertiesFUCHSIA_after(device, handleType, zirconHan
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetMemoryZirconHandlePropertiesFUCHSIA!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8426,6 +8995,8 @@ layer_GetMemoryRemoteAddressNV_after(device, pMemoryGetRemoteAddressInfo, pAddre
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetMemoryRemoteAddressNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8456,6 +9027,8 @@ layer_GetMemorySciBufNV_after(device, pGetSciBufInfo, pHandle);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetMemorySciBufNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8487,6 +9060,8 @@ layer_GetSemaphoreWin32HandleKHR_after(device, pGetWin32HandleInfo, pHandle);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetSemaphoreWin32HandleKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8518,6 +9093,8 @@ layer_ImportSemaphoreWin32HandleKHR_after(device, pImportSemaphoreWin32HandleInf
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkImportSemaphoreWin32HandleKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8548,6 +9125,8 @@ layer_GetSemaphoreFdKHR_after(device, pGetFdInfo, pFd);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetSemaphoreFdKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8577,6 +9156,8 @@ layer_ImportSemaphoreFdKHR_after(device, pImportSemaphoreFdInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkImportSemaphoreFdKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8607,6 +9188,8 @@ layer_GetSemaphoreZirconHandleFUCHSIA_after(device, pGetZirconHandleInfo, pZirco
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetSemaphoreZirconHandleFUCHSIA!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8638,6 +9221,8 @@ layer_ImportSemaphoreZirconHandleFUCHSIA_after(device, pImportSemaphoreZirconHan
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkImportSemaphoreZirconHandleFUCHSIA!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8669,6 +9254,8 @@ layer_GetFenceWin32HandleKHR_after(device, pGetWin32HandleInfo, pHandle);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetFenceWin32HandleKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8700,6 +9287,8 @@ layer_ImportFenceWin32HandleKHR_after(device, pImportFenceWin32HandleInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkImportFenceWin32HandleKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8730,6 +9319,8 @@ layer_GetFenceFdKHR_after(device, pGetFdInfo, pFd);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetFenceFdKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8759,6 +9350,8 @@ layer_ImportFenceFdKHR_after(device, pImportFenceFdInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkImportFenceFdKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8789,6 +9382,8 @@ layer_GetFenceSciSyncFenceNV_after(device, pGetSciSyncHandleInfo, pHandle);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetFenceSciSyncFenceNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8820,6 +9415,8 @@ layer_GetFenceSciSyncObjNV_after(device, pGetSciSyncHandleInfo, pHandle);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetFenceSciSyncObjNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8851,6 +9448,8 @@ layer_ImportFenceSciSyncFenceNV_after(device, pImportFenceSciSyncInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkImportFenceSciSyncFenceNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8882,6 +9481,8 @@ layer_ImportFenceSciSyncObjNV_after(device, pImportFenceSciSyncInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkImportFenceSciSyncObjNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8913,6 +9514,8 @@ layer_GetSemaphoreSciSyncObjNV_after(device, pGetSciSyncInfo, pHandle);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetSemaphoreSciSyncObjNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8944,6 +9547,8 @@ layer_ImportSemaphoreSciSyncObjNV_after(device, pImportSemaphoreSciSyncInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkImportSemaphoreSciSyncObjNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -8975,6 +9580,8 @@ layer_CreateSemaphoreSciSyncPoolNV_after(device, pCreateInfo, pAllocator, pSemap
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateSemaphoreSciSyncPoolNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9005,6 +9612,8 @@ layer_DestroySemaphoreSciSyncPoolNV_after(device, semaphorePool, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroySemaphoreSciSyncPoolNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroySemaphoreSciSyncPoolNV(device, semaphorePool, pAllocator);
@@ -9032,6 +9641,8 @@ layer_DisplayPowerControlEXT_after(device, display, pDisplayPowerInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDisplayPowerControlEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9061,6 +9672,8 @@ layer_RegisterDeviceEventEXT_after(device, pDeviceEventInfo, pAllocator, pFence)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkRegisterDeviceEventEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9090,6 +9703,8 @@ layer_RegisterDisplayEventEXT_after(device, display, pDisplayEventInfo, pAllocat
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkRegisterDisplayEventEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9119,6 +9734,8 @@ layer_GetSwapchainCounterEXT_after(device, swapchain, counter, pCounterValue);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetSwapchainCounterEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9147,6 +9764,8 @@ layer_GetDeviceGroupPeerMemoryFeatures_after(device, heapIndex, localDeviceIndex
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceGroupPeerMemoryFeatures!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDeviceGroupPeerMemoryFeatures(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
@@ -9173,6 +9792,8 @@ layer_BindBufferMemory2_after(device, bindInfoCount, pBindInfos);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkBindBufferMemory2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9202,6 +9823,8 @@ layer_BindImageMemory2_after(device, bindInfoCount, pBindInfos);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkBindImageMemory2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9230,6 +9853,8 @@ layer_CmdSetDeviceMask_after(commandBuffer, deviceMask);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDeviceMask!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDeviceMask(commandBuffer, deviceMask);
@@ -9256,6 +9881,8 @@ layer_GetDeviceGroupPresentCapabilitiesKHR_after(device, pDeviceGroupPresentCapa
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceGroupPresentCapabilitiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9285,6 +9912,8 @@ layer_GetDeviceGroupSurfacePresentModesKHR_after(device, surface, pModes);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceGroupSurfacePresentModesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9314,6 +9943,8 @@ layer_AcquireNextImage2KHR_after(device, pAcquireInfo, pImageIndex);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkAcquireNextImage2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9342,6 +9973,8 @@ layer_CmdDispatchBase_after(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, g
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDispatchBase!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDispatchBase(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
@@ -9368,6 +10001,8 @@ layer_CreateDescriptorUpdateTemplate_after(device, pCreateInfo, pAllocator, pDes
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateDescriptorUpdateTemplate!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9396,6 +10031,8 @@ layer_DestroyDescriptorUpdateTemplate_after(device, descriptorUpdateTemplate, pA
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyDescriptorUpdateTemplate!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyDescriptorUpdateTemplate(device, descriptorUpdateTemplate, pAllocator);
@@ -9421,6 +10058,8 @@ layer_UpdateDescriptorSetWithTemplate_after(device, descriptorSet, descriptorUpd
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkUpdateDescriptorSetWithTemplate!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].UpdateDescriptorSetWithTemplate(device, descriptorSet, descriptorUpdateTemplate, pData);
@@ -9446,6 +10085,8 @@ layer_CmdPushDescriptorSetWithTemplateKHR_after(commandBuffer, descriptorUpdateT
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdPushDescriptorSetWithTemplateKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetWithTemplateKHR(commandBuffer, descriptorUpdateTemplate, layout, set, pData);
@@ -9471,6 +10112,8 @@ layer_SetHdrMetadataEXT_after(device, swapchainCount, pSwapchains, pMetadata);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSetHdrMetadataEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].SetHdrMetadataEXT(device, swapchainCount, pSwapchains, pMetadata);
@@ -9497,6 +10140,8 @@ layer_GetSwapchainStatusKHR_after(device, swapchain);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetSwapchainStatusKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9526,6 +10171,8 @@ layer_GetRefreshCycleDurationGOOGLE_after(device, swapchain, pDisplayTimingPrope
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetRefreshCycleDurationGOOGLE!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9555,6 +10202,8 @@ layer_GetPastPresentationTimingGOOGLE_after(device, swapchain, pPresentationTimi
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPastPresentationTimingGOOGLE!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9583,6 +10232,8 @@ layer_CmdSetViewportWScalingNV_after(commandBuffer, firstViewport, viewportCount
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetViewportWScalingNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWScalingNV(commandBuffer, firstViewport, viewportCount, pViewportWScalings);
@@ -9608,6 +10259,8 @@ layer_CmdSetDiscardRectangleEXT_after(commandBuffer, firstDiscardRectangle, disc
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDiscardRectangleEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleEXT(commandBuffer, firstDiscardRectangle, discardRectangleCount, pDiscardRectangles);
@@ -9633,6 +10286,8 @@ layer_CmdSetDiscardRectangleEnableEXT_after(commandBuffer, discardRectangleEnabl
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDiscardRectangleEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleEnableEXT(commandBuffer, discardRectangleEnable);
@@ -9658,6 +10313,8 @@ layer_CmdSetDiscardRectangleModeEXT_after(commandBuffer, discardRectangleMode);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDiscardRectangleModeEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleModeEXT(commandBuffer, discardRectangleMode);
@@ -9683,6 +10340,8 @@ layer_CmdSetSampleLocationsEXT_after(commandBuffer, pSampleLocationsInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetSampleLocationsEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetSampleLocationsEXT(commandBuffer, pSampleLocationsInfo);
@@ -9708,6 +10367,8 @@ layer_GetBufferMemoryRequirements2_after(device, pInfo, pMemoryRequirements);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetBufferMemoryRequirements2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetBufferMemoryRequirements2(device, pInfo, pMemoryRequirements);
@@ -9733,6 +10394,8 @@ layer_GetImageMemoryRequirements2_after(device, pInfo, pMemoryRequirements);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetImageMemoryRequirements2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetImageMemoryRequirements2(device, pInfo, pMemoryRequirements);
@@ -9758,6 +10421,8 @@ layer_GetImageSparseMemoryRequirements2_after(device, pInfo, pSparseMemoryRequir
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetImageSparseMemoryRequirements2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements2(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -9783,6 +10448,8 @@ layer_GetDeviceBufferMemoryRequirements_after(device, pInfo, pMemoryRequirements
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceBufferMemoryRequirements!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDeviceBufferMemoryRequirements(device, pInfo, pMemoryRequirements);
@@ -9808,6 +10475,8 @@ layer_GetDeviceImageMemoryRequirements_after(device, pInfo, pMemoryRequirements)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceImageMemoryRequirements!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDeviceImageMemoryRequirements(device, pInfo, pMemoryRequirements);
@@ -9833,6 +10502,8 @@ layer_GetDeviceImageSparseMemoryRequirements_after(device, pInfo, pSparseMemoryR
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceImageSparseMemoryRequirements!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDeviceImageSparseMemoryRequirements(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -9859,6 +10530,8 @@ layer_CreateSamplerYcbcrConversion_after(device, pCreateInfo, pAllocator, pYcbcr
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateSamplerYcbcrConversion!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9887,6 +10560,8 @@ layer_DestroySamplerYcbcrConversion_after(device, ycbcrConversion, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroySamplerYcbcrConversion!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroySamplerYcbcrConversion(device, ycbcrConversion, pAllocator);
@@ -9912,6 +10587,8 @@ layer_GetDeviceQueue2_after(device, pQueueInfo, pQueue);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceQueue2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDeviceQueue2(device, pQueueInfo, pQueue);
@@ -9938,6 +10615,8 @@ layer_CreateValidationCacheEXT_after(device, pCreateInfo, pAllocator, pValidatio
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateValidationCacheEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -9966,6 +10645,8 @@ layer_DestroyValidationCacheEXT_after(device, validationCache, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyValidationCacheEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyValidationCacheEXT(device, validationCache, pAllocator);
@@ -9992,6 +10673,8 @@ layer_GetValidationCacheDataEXT_after(device, validationCache, pDataSize, pData)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetValidationCacheDataEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10021,6 +10704,8 @@ layer_MergeValidationCachesEXT_after(device, dstCache, srcCacheCount, pSrcCaches
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkMergeValidationCachesEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10049,6 +10734,8 @@ layer_GetDescriptorSetLayoutSupport_after(device, pCreateInfo, pSupport);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDescriptorSetLayoutSupport!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutSupport(device, pCreateInfo, pSupport);
@@ -10076,6 +10763,8 @@ layer_GetSwapchainGrallocUsageANDROID_after(device, format, imageUsage, grallocU
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetSwapchainGrallocUsageANDROID!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10107,6 +10796,8 @@ layer_GetSwapchainGrallocUsage2ANDROID_after(device, format, imageUsage, swapcha
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetSwapchainGrallocUsage2ANDROID!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10138,6 +10829,8 @@ layer_AcquireImageANDROID_after(device, image, nativeFenceFd, semaphore, fence);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkAcquireImageANDROID!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10169,6 +10862,8 @@ layer_QueueSignalReleaseImageANDROID_after(queue, waitSemaphoreCount, pWaitSemap
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkQueueSignalReleaseImageANDROID!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10199,6 +10894,8 @@ layer_GetShaderInfoAMD_after(device, pipeline, shaderStage, infoType, pInfoSize,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetShaderInfoAMD!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10227,6 +10924,8 @@ layer_SetLocalDimmingAMD_after(device, swapChain, localDimmingEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSetLocalDimmingAMD!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].SetLocalDimmingAMD(device, swapChain, localDimmingEnable);
@@ -10253,6 +10952,8 @@ layer_GetCalibratedTimestampsKHR_after(device, timestampCount, pTimestampInfos, 
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetCalibratedTimestampsKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10282,6 +10983,8 @@ layer_SetDebugUtilsObjectNameEXT_after(device, pNameInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSetDebugUtilsObjectNameEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10311,6 +11014,8 @@ layer_SetDebugUtilsObjectTagEXT_after(device, pTagInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSetDebugUtilsObjectTagEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10339,6 +11044,8 @@ layer_QueueBeginDebugUtilsLabelEXT_after(queue, pLabelInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkQueueBeginDebugUtilsLabelEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(queue)].QueueBeginDebugUtilsLabelEXT(queue, pLabelInfo);
@@ -10364,6 +11071,8 @@ layer_QueueEndDebugUtilsLabelEXT_after(queue);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkQueueEndDebugUtilsLabelEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(queue)].QueueEndDebugUtilsLabelEXT(queue);
@@ -10389,6 +11098,8 @@ layer_QueueInsertDebugUtilsLabelEXT_after(queue, pLabelInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkQueueInsertDebugUtilsLabelEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(queue)].QueueInsertDebugUtilsLabelEXT(queue, pLabelInfo);
@@ -10414,6 +11125,8 @@ layer_CmdBeginDebugUtilsLabelEXT_after(commandBuffer, pLabelInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBeginDebugUtilsLabelEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBeginDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
@@ -10439,6 +11152,8 @@ layer_CmdEndDebugUtilsLabelEXT_after(commandBuffer);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdEndDebugUtilsLabelEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdEndDebugUtilsLabelEXT(commandBuffer);
@@ -10464,6 +11179,8 @@ layer_CmdInsertDebugUtilsLabelEXT_after(commandBuffer, pLabelInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdInsertDebugUtilsLabelEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdInsertDebugUtilsLabelEXT(commandBuffer, pLabelInfo);
@@ -10490,6 +11207,8 @@ layer_GetMemoryHostPointerPropertiesEXT_after(device, handleType, pHostPointer, 
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetMemoryHostPointerPropertiesEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10518,6 +11237,8 @@ layer_CmdWriteBufferMarkerAMD_after(commandBuffer, pipelineStage, dstBuffer, dst
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdWriteBufferMarkerAMD!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdWriteBufferMarkerAMD(commandBuffer, pipelineStage, dstBuffer, dstOffset, marker);
@@ -10544,6 +11265,8 @@ layer_CreateRenderPass2_after(device, pCreateInfo, pAllocator, pRenderPass);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateRenderPass2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10572,6 +11295,8 @@ layer_CmdBeginRenderPass2_after(commandBuffer, pRenderPassBegin, pSubpassBeginIn
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBeginRenderPass2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass2(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
@@ -10597,6 +11322,8 @@ layer_CmdNextSubpass2_after(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdNextSubpass2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdNextSubpass2(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
@@ -10622,6 +11349,8 @@ layer_CmdEndRenderPass2_after(commandBuffer, pSubpassEndInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdEndRenderPass2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass2(commandBuffer, pSubpassEndInfo);
@@ -10648,6 +11377,8 @@ layer_GetSemaphoreCounterValue_after(device, semaphore, pValue);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetSemaphoreCounterValue!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10677,6 +11408,8 @@ layer_WaitSemaphores_after(device, pWaitInfo, timeout);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkWaitSemaphores!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10706,6 +11439,8 @@ layer_SignalSemaphore_after(device, pSignalInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSignalSemaphore!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10736,6 +11471,8 @@ layer_GetAndroidHardwareBufferPropertiesANDROID_after(device, buffer, pPropertie
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetAndroidHardwareBufferPropertiesANDROID!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10767,6 +11504,8 @@ layer_GetMemoryAndroidHardwareBufferANDROID_after(device, pInfo, pBuffer);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetMemoryAndroidHardwareBufferANDROID!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -10796,6 +11535,8 @@ layer_CmdDrawIndirectCount_after(commandBuffer, buffer, offset, countBuffer, cou
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndirectCount!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -10821,6 +11562,8 @@ layer_CmdDrawIndexedIndirectCount_after(commandBuffer, buffer, offset, countBuff
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndexedIndirectCount!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCount(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -10846,6 +11589,8 @@ layer_CmdSetCheckpointNV_after(commandBuffer, pCheckpointMarker);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetCheckpointNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetCheckpointNV(commandBuffer, pCheckpointMarker);
@@ -10871,6 +11616,8 @@ layer_GetQueueCheckpointDataNV_after(queue, pCheckpointDataCount, pCheckpointDat
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetQueueCheckpointDataNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(queue)].GetQueueCheckpointDataNV(queue, pCheckpointDataCount, pCheckpointData);
@@ -10896,6 +11643,8 @@ layer_CmdBindTransformFeedbackBuffersEXT_after(commandBuffer, firstBinding, bind
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindTransformFeedbackBuffersEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindTransformFeedbackBuffersEXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes);
@@ -10921,6 +11670,8 @@ layer_CmdBeginTransformFeedbackEXT_after(commandBuffer, firstCounterBuffer, coun
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBeginTransformFeedbackEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBeginTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
@@ -10946,6 +11697,8 @@ layer_CmdEndTransformFeedbackEXT_after(commandBuffer, firstCounterBuffer, counte
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdEndTransformFeedbackEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdEndTransformFeedbackEXT(commandBuffer, firstCounterBuffer, counterBufferCount, pCounterBuffers, pCounterBufferOffsets);
@@ -10971,6 +11724,8 @@ layer_CmdBeginQueryIndexedEXT_after(commandBuffer, queryPool, query, flags, inde
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBeginQueryIndexedEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBeginQueryIndexedEXT(commandBuffer, queryPool, query, flags, index);
@@ -10996,6 +11751,8 @@ layer_CmdEndQueryIndexedEXT_after(commandBuffer, queryPool, query, index);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdEndQueryIndexedEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdEndQueryIndexedEXT(commandBuffer, queryPool, query, index);
@@ -11021,6 +11778,8 @@ layer_CmdDrawIndirectByteCountEXT_after(commandBuffer, instanceCount, firstInsta
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndirectByteCountEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectByteCountEXT(commandBuffer, instanceCount, firstInstance, counterBuffer, counterBufferOffset, counterOffset, vertexStride);
@@ -11046,6 +11805,8 @@ layer_CmdSetExclusiveScissorNV_after(commandBuffer, firstExclusiveScissor, exclu
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetExclusiveScissorNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetExclusiveScissorNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissors);
@@ -11071,6 +11832,8 @@ layer_CmdSetExclusiveScissorEnableNV_after(commandBuffer, firstExclusiveScissor,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetExclusiveScissorEnableNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetExclusiveScissorEnableNV(commandBuffer, firstExclusiveScissor, exclusiveScissorCount, pExclusiveScissorEnables);
@@ -11096,6 +11859,8 @@ layer_CmdBindShadingRateImageNV_after(commandBuffer, imageView, imageLayout);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindShadingRateImageNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindShadingRateImageNV(commandBuffer, imageView, imageLayout);
@@ -11121,6 +11886,8 @@ layer_CmdSetViewportShadingRatePaletteNV_after(commandBuffer, firstViewport, vie
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetViewportShadingRatePaletteNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportShadingRatePaletteNV(commandBuffer, firstViewport, viewportCount, pShadingRatePalettes);
@@ -11146,6 +11913,8 @@ layer_CmdSetCoarseSampleOrderNV_after(commandBuffer, sampleOrderType, customSamp
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetCoarseSampleOrderNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetCoarseSampleOrderNV(commandBuffer, sampleOrderType, customSampleOrderCount, pCustomSampleOrders);
@@ -11171,6 +11940,8 @@ layer_CmdDrawMeshTasksNV_after(commandBuffer, taskCount, firstTask);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMeshTasksNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksNV(commandBuffer, taskCount, firstTask);
@@ -11196,6 +11967,8 @@ layer_CmdDrawMeshTasksIndirectNV_after(commandBuffer, buffer, offset, drawCount,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMeshTasksIndirectNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectNV(commandBuffer, buffer, offset, drawCount, stride);
@@ -11221,6 +11994,8 @@ layer_CmdDrawMeshTasksIndirectCountNV_after(commandBuffer, buffer, offset, count
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMeshTasksIndirectCountNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectCountNV(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -11246,6 +12021,8 @@ layer_CmdDrawMeshTasksEXT_after(commandBuffer, groupCountX, groupCountY, groupCo
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMeshTasksEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksEXT(commandBuffer, groupCountX, groupCountY, groupCountZ);
@@ -11271,6 +12048,8 @@ layer_CmdDrawMeshTasksIndirectEXT_after(commandBuffer, buffer, offset, drawCount
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMeshTasksIndirectEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectEXT(commandBuffer, buffer, offset, drawCount, stride);
@@ -11296,6 +12075,8 @@ layer_CmdDrawMeshTasksIndirectCountEXT_after(commandBuffer, buffer, offset, coun
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawMeshTasksIndirectCountEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectCountEXT(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -11322,6 +12103,8 @@ layer_CompileDeferredNV_after(device, pipeline, shader);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCompileDeferredNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -11351,6 +12134,8 @@ layer_CreateAccelerationStructureNV_after(device, pCreateInfo, pAllocator, pAcce
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateAccelerationStructureNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -11379,6 +12164,8 @@ layer_CmdBindInvocationMaskHUAWEI_after(commandBuffer, imageView, imageLayout);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindInvocationMaskHUAWEI!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindInvocationMaskHUAWEI(commandBuffer, imageView, imageLayout);
@@ -11404,6 +12191,8 @@ layer_DestroyAccelerationStructureKHR_after(device, accelerationStructure, pAllo
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyAccelerationStructureKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyAccelerationStructureKHR(device, accelerationStructure, pAllocator);
@@ -11429,6 +12218,8 @@ layer_DestroyAccelerationStructureNV_after(device, accelerationStructure, pAlloc
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyAccelerationStructureNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyAccelerationStructureNV(device, accelerationStructure, pAllocator);
@@ -11454,6 +12245,8 @@ layer_GetAccelerationStructureMemoryRequirementsNV_after(device, pInfo, pMemoryR
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetAccelerationStructureMemoryRequirementsNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetAccelerationStructureMemoryRequirementsNV(device, pInfo, pMemoryRequirements);
@@ -11480,6 +12273,8 @@ layer_BindAccelerationStructureMemoryNV_after(device, bindInfoCount, pBindInfos)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkBindAccelerationStructureMemoryNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -11508,6 +12303,8 @@ layer_CmdCopyAccelerationStructureNV_after(commandBuffer, dst, src, mode);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyAccelerationStructureNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureNV(commandBuffer, dst, src, mode);
@@ -11533,6 +12330,8 @@ layer_CmdCopyAccelerationStructureKHR_after(commandBuffer, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyAccelerationStructureKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureKHR(commandBuffer, pInfo);
@@ -11559,6 +12358,8 @@ layer_CopyAccelerationStructureKHR_after(device, deferredOperation, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCopyAccelerationStructureKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -11587,6 +12388,8 @@ layer_CmdCopyAccelerationStructureToMemoryKHR_after(commandBuffer, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyAccelerationStructureToMemoryKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureToMemoryKHR(commandBuffer, pInfo);
@@ -11613,6 +12416,8 @@ layer_CopyAccelerationStructureToMemoryKHR_after(device, deferredOperation, pInf
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCopyAccelerationStructureToMemoryKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -11641,6 +12446,8 @@ layer_CmdCopyMemoryToAccelerationStructureKHR_after(commandBuffer, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyMemoryToAccelerationStructureKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToAccelerationStructureKHR(commandBuffer, pInfo);
@@ -11667,6 +12474,8 @@ layer_CopyMemoryToAccelerationStructureKHR_after(device, deferredOperation, pInf
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCopyMemoryToAccelerationStructureKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -11695,6 +12504,8 @@ layer_CmdWriteAccelerationStructuresPropertiesKHR_after(commandBuffer, accelerat
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdWriteAccelerationStructuresPropertiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdWriteAccelerationStructuresPropertiesKHR(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
@@ -11720,6 +12531,8 @@ layer_CmdWriteAccelerationStructuresPropertiesNV_after(commandBuffer, accelerati
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdWriteAccelerationStructuresPropertiesNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdWriteAccelerationStructuresPropertiesNV(commandBuffer, accelerationStructureCount, pAccelerationStructures, queryType, queryPool, firstQuery);
@@ -11745,6 +12558,8 @@ layer_CmdBuildAccelerationStructureNV_after(commandBuffer, pInfo, instanceData, 
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBuildAccelerationStructureNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructureNV(commandBuffer, pInfo, instanceData, instanceOffset, update, dst, src, scratch, scratchOffset);
@@ -11771,6 +12586,8 @@ layer_WriteAccelerationStructuresPropertiesKHR_after(device, accelerationStructu
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkWriteAccelerationStructuresPropertiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -11799,6 +12616,8 @@ layer_CmdTraceRaysKHR_after(commandBuffer, pRaygenShaderBindingTable, pMissShade
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdTraceRaysKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, width, height, depth);
@@ -11824,6 +12643,8 @@ layer_CmdTraceRaysNV_after(commandBuffer, raygenShaderBindingTableBuffer, raygen
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdTraceRaysNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysNV(commandBuffer, raygenShaderBindingTableBuffer, raygenShaderBindingOffset, missShaderBindingTableBuffer, missShaderBindingOffset, missShaderBindingStride, hitShaderBindingTableBuffer, hitShaderBindingOffset, hitShaderBindingStride, callableShaderBindingTableBuffer, callableShaderBindingOffset, callableShaderBindingStride, width, height, depth);
@@ -11850,6 +12671,8 @@ layer_GetRayTracingShaderGroupHandlesKHR_after(device, pipeline, firstGroup, gro
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetRayTracingShaderGroupHandlesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -11879,6 +12702,8 @@ layer_GetRayTracingCaptureReplayShaderGroupHandlesKHR_after(device, pipeline, fi
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetRayTracingCaptureReplayShaderGroupHandlesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -11908,6 +12733,8 @@ layer_GetAccelerationStructureHandleNV_after(device, accelerationStructure, data
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetAccelerationStructureHandleNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -11937,6 +12764,8 @@ layer_CreateRayTracingPipelinesNV_after(device, pipelineCache, createInfoCount, 
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateRayTracingPipelinesNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -11966,6 +12795,8 @@ layer_CreateRayTracingPipelinesKHR_after(device, deferredOperation, pipelineCach
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateRayTracingPipelinesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -11994,6 +12825,8 @@ layer_CmdTraceRaysIndirectKHR_after(commandBuffer, pRaygenShaderBindingTable, pM
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdTraceRaysIndirectKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysIndirectKHR(commandBuffer, pRaygenShaderBindingTable, pMissShaderBindingTable, pHitShaderBindingTable, pCallableShaderBindingTable, indirectDeviceAddress);
@@ -12019,6 +12852,8 @@ layer_CmdTraceRaysIndirect2KHR_after(commandBuffer, indirectDeviceAddress);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdTraceRaysIndirect2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdTraceRaysIndirect2KHR(commandBuffer, indirectDeviceAddress);
@@ -12044,6 +12879,8 @@ layer_GetDeviceAccelerationStructureCompatibilityKHR_after(device, pVersionInfo,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceAccelerationStructureCompatibilityKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDeviceAccelerationStructureCompatibilityKHR(device, pVersionInfo, pCompatibility);
@@ -12070,6 +12907,8 @@ layer_GetRayTracingShaderGroupStackSizeKHR_after(device, pipeline, group, groupS
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetRayTracingShaderGroupStackSizeKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12098,6 +12937,8 @@ layer_CmdSetRayTracingPipelineStackSizeKHR_after(commandBuffer, pipelineStackSiz
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetRayTracingPipelineStackSizeKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetRayTracingPipelineStackSizeKHR(commandBuffer, pipelineStackSize);
@@ -12124,6 +12965,8 @@ layer_GetImageViewHandleNVX_after(device, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetImageViewHandleNVX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12153,6 +12996,8 @@ layer_GetImageViewAddressNVX_after(device, imageView, pProperties);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetImageViewAddressNVX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12183,6 +13028,8 @@ layer_GetDeviceGroupSurfacePresentModes2EXT_after(device, pSurfaceInfo, pModes);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceGroupSurfacePresentModes2EXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12214,6 +13061,8 @@ layer_AcquireFullScreenExclusiveModeEXT_after(device, swapchain);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkAcquireFullScreenExclusiveModeEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12245,6 +13094,8 @@ layer_ReleaseFullScreenExclusiveModeEXT_after(device, swapchain);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkReleaseFullScreenExclusiveModeEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12275,6 +13126,8 @@ layer_AcquireProfilingLockKHR_after(device, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkAcquireProfilingLockKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12303,6 +13156,8 @@ layer_ReleaseProfilingLockKHR_after(device);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkReleaseProfilingLockKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].ReleaseProfilingLockKHR(device);
@@ -12329,6 +13184,8 @@ layer_GetImageDrmFormatModifierPropertiesEXT_after(device, image, pProperties);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetImageDrmFormatModifierPropertiesEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12358,6 +13215,8 @@ layer_GetBufferOpaqueCaptureAddress_after(device, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetBufferOpaqueCaptureAddress!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12387,6 +13246,8 @@ layer_GetBufferDeviceAddress_after(device, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetBufferDeviceAddress!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12416,6 +13277,8 @@ layer_InitializePerformanceApiINTEL_after(device, pInitializeInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkInitializePerformanceApiINTEL!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12444,6 +13307,8 @@ layer_UninitializePerformanceApiINTEL_after(device);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkUninitializePerformanceApiINTEL!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].UninitializePerformanceApiINTEL(device);
@@ -12470,6 +13335,8 @@ layer_CmdSetPerformanceMarkerINTEL_after(commandBuffer, pMarkerInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetPerformanceMarkerINTEL!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12499,6 +13366,8 @@ layer_CmdSetPerformanceStreamMarkerINTEL_after(commandBuffer, pMarkerInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetPerformanceStreamMarkerINTEL!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12528,6 +13397,8 @@ layer_CmdSetPerformanceOverrideINTEL_after(commandBuffer, pOverrideInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetPerformanceOverrideINTEL!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12557,6 +13428,8 @@ layer_AcquirePerformanceConfigurationINTEL_after(device, pAcquireInfo, pConfigur
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkAcquirePerformanceConfigurationINTEL!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12586,6 +13459,8 @@ layer_ReleasePerformanceConfigurationINTEL_after(device, configuration);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkReleasePerformanceConfigurationINTEL!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12615,6 +13490,8 @@ layer_QueueSetPerformanceConfigurationINTEL_after(queue, configuration);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkQueueSetPerformanceConfigurationINTEL!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12644,6 +13521,8 @@ layer_GetPerformanceParameterINTEL_after(device, parameter, pValue);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPerformanceParameterINTEL!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12673,6 +13552,8 @@ layer_GetDeviceMemoryOpaqueCaptureAddress_after(device, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceMemoryOpaqueCaptureAddress!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12702,6 +13583,8 @@ layer_GetPipelineExecutablePropertiesKHR_after(device, pPipelineInfo, pExecutabl
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPipelineExecutablePropertiesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12731,6 +13614,8 @@ layer_GetPipelineExecutableStatisticsKHR_after(device, pExecutableInfo, pStatist
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPipelineExecutableStatisticsKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12760,6 +13645,8 @@ layer_GetPipelineExecutableInternalRepresentationsKHR_after(device, pExecutableI
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPipelineExecutableInternalRepresentationsKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12789,6 +13676,8 @@ layer_CreateAccelerationStructureKHR_after(device, pCreateInfo, pAllocator, pAcc
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateAccelerationStructureKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12817,6 +13706,8 @@ layer_CmdBuildAccelerationStructuresKHR_after(commandBuffer, infoCount, pInfos, 
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBuildAccelerationStructuresKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructuresKHR(commandBuffer, infoCount, pInfos, ppBuildRangeInfos);
@@ -12842,6 +13733,8 @@ layer_CmdBuildAccelerationStructuresIndirectKHR_after(commandBuffer, infoCount, 
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBuildAccelerationStructuresIndirectKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructuresIndirectKHR(commandBuffer, infoCount, pInfos, pIndirectDeviceAddresses, pIndirectStrides, ppMaxPrimitiveCounts);
@@ -12868,6 +13761,8 @@ layer_BuildAccelerationStructuresKHR_after(device, deferredOperation, infoCount,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkBuildAccelerationStructuresKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12897,6 +13792,8 @@ layer_GetAccelerationStructureDeviceAddressKHR_after(device, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetAccelerationStructureDeviceAddressKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12926,6 +13823,8 @@ layer_CreateDeferredOperationKHR_after(device, pAllocator, pDeferredOperation);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateDeferredOperationKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -12954,6 +13853,8 @@ layer_DestroyDeferredOperationKHR_after(device, operation, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyDeferredOperationKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyDeferredOperationKHR(device, operation, pAllocator);
@@ -12980,6 +13881,8 @@ layer_GetDeferredOperationMaxConcurrencyKHR_after(device, operation);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeferredOperationMaxConcurrencyKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -13009,6 +13912,8 @@ layer_GetDeferredOperationResultKHR_after(device, operation);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeferredOperationResultKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -13038,6 +13943,8 @@ layer_DeferredOperationJoinKHR_after(device, operation);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDeferredOperationJoinKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -13066,6 +13973,8 @@ layer_GetPipelineIndirectMemoryRequirementsNV_after(device, pCreateInfo, pMemory
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPipelineIndirectMemoryRequirementsNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetPipelineIndirectMemoryRequirementsNV(device, pCreateInfo, pMemoryRequirements);
@@ -13092,6 +14001,8 @@ layer_GetPipelineIndirectDeviceAddressNV_after(device, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPipelineIndirectDeviceAddressNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -13120,6 +14031,8 @@ layer_CmdSetCullMode_after(commandBuffer, cullMode);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetCullMode!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetCullMode(commandBuffer, cullMode);
@@ -13145,6 +14058,8 @@ layer_CmdSetFrontFace_after(commandBuffer, frontFace);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetFrontFace!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetFrontFace(commandBuffer, frontFace);
@@ -13170,6 +14085,8 @@ layer_CmdSetPrimitiveTopology_after(commandBuffer, primitiveTopology);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetPrimitiveTopology!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveTopology(commandBuffer, primitiveTopology);
@@ -13195,6 +14112,8 @@ layer_CmdSetViewportWithCount_after(commandBuffer, viewportCount, pViewports);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetViewportWithCount!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWithCount(commandBuffer, viewportCount, pViewports);
@@ -13220,6 +14139,8 @@ layer_CmdSetScissorWithCount_after(commandBuffer, scissorCount, pScissors);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetScissorWithCount!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetScissorWithCount(commandBuffer, scissorCount, pScissors);
@@ -13245,6 +14166,8 @@ layer_CmdBindIndexBuffer2KHR_after(commandBuffer, buffer, offset, size, indexTyp
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindIndexBuffer2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindIndexBuffer2KHR(commandBuffer, buffer, offset, size, indexType);
@@ -13270,6 +14193,8 @@ layer_CmdBindVertexBuffers2_after(commandBuffer, firstBinding, bindingCount, pBu
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindVertexBuffers2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers2(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
@@ -13295,6 +14220,8 @@ layer_CmdSetDepthTestEnable_after(commandBuffer, depthTestEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthTestEnable!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthTestEnable(commandBuffer, depthTestEnable);
@@ -13320,6 +14247,8 @@ layer_CmdSetDepthWriteEnable_after(commandBuffer, depthWriteEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthWriteEnable!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthWriteEnable(commandBuffer, depthWriteEnable);
@@ -13345,6 +14274,8 @@ layer_CmdSetDepthCompareOp_after(commandBuffer, depthCompareOp);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthCompareOp!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthCompareOp(commandBuffer, depthCompareOp);
@@ -13370,6 +14301,8 @@ layer_CmdSetDepthBoundsTestEnable_after(commandBuffer, depthBoundsTestEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthBoundsTestEnable!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBoundsTestEnable(commandBuffer, depthBoundsTestEnable);
@@ -13395,6 +14328,8 @@ layer_CmdSetStencilTestEnable_after(commandBuffer, stencilTestEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetStencilTestEnable!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilTestEnable(commandBuffer, stencilTestEnable);
@@ -13420,6 +14355,8 @@ layer_CmdSetStencilOp_after(commandBuffer, faceMask, failOp, passOp, depthFailOp
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetStencilOp!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilOp(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
@@ -13445,6 +14382,8 @@ layer_CmdSetPatchControlPointsEXT_after(commandBuffer, patchControlPoints);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetPatchControlPointsEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetPatchControlPointsEXT(commandBuffer, patchControlPoints);
@@ -13470,6 +14409,8 @@ layer_CmdSetRasterizerDiscardEnable_after(commandBuffer, rasterizerDiscardEnable
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetRasterizerDiscardEnable!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizerDiscardEnable(commandBuffer, rasterizerDiscardEnable);
@@ -13495,6 +14436,8 @@ layer_CmdSetDepthBiasEnable_after(commandBuffer, depthBiasEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthBiasEnable!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBiasEnable(commandBuffer, depthBiasEnable);
@@ -13520,6 +14463,8 @@ layer_CmdSetLogicOpEXT_after(commandBuffer, logicOp);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetLogicOpEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetLogicOpEXT(commandBuffer, logicOp);
@@ -13545,6 +14490,8 @@ layer_CmdSetPrimitiveRestartEnable_after(commandBuffer, primitiveRestartEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetPrimitiveRestartEnable!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveRestartEnable(commandBuffer, primitiveRestartEnable);
@@ -13570,6 +14517,8 @@ layer_CmdSetTessellationDomainOriginEXT_after(commandBuffer, domainOrigin);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetTessellationDomainOriginEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetTessellationDomainOriginEXT(commandBuffer, domainOrigin);
@@ -13595,6 +14544,8 @@ layer_CmdSetDepthClampEnableEXT_after(commandBuffer, depthClampEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthClampEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthClampEnableEXT(commandBuffer, depthClampEnable);
@@ -13620,6 +14571,8 @@ layer_CmdSetPolygonModeEXT_after(commandBuffer, polygonMode);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetPolygonModeEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetPolygonModeEXT(commandBuffer, polygonMode);
@@ -13645,6 +14598,8 @@ layer_CmdSetRasterizationSamplesEXT_after(commandBuffer, rasterizationSamples);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetRasterizationSamplesEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizationSamplesEXT(commandBuffer, rasterizationSamples);
@@ -13670,6 +14625,8 @@ layer_CmdSetSampleMaskEXT_after(commandBuffer, samples, pSampleMask);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetSampleMaskEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetSampleMaskEXT(commandBuffer, samples, pSampleMask);
@@ -13695,6 +14652,8 @@ layer_CmdSetAlphaToCoverageEnableEXT_after(commandBuffer, alphaToCoverageEnable)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetAlphaToCoverageEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetAlphaToCoverageEnableEXT(commandBuffer, alphaToCoverageEnable);
@@ -13720,6 +14679,8 @@ layer_CmdSetAlphaToOneEnableEXT_after(commandBuffer, alphaToOneEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetAlphaToOneEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetAlphaToOneEnableEXT(commandBuffer, alphaToOneEnable);
@@ -13745,6 +14706,8 @@ layer_CmdSetLogicOpEnableEXT_after(commandBuffer, logicOpEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetLogicOpEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetLogicOpEnableEXT(commandBuffer, logicOpEnable);
@@ -13770,6 +14733,8 @@ layer_CmdSetColorBlendEnableEXT_after(commandBuffer, firstAttachment, attachment
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetColorBlendEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendEnableEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendEnables);
@@ -13795,6 +14760,8 @@ layer_CmdSetColorBlendEquationEXT_after(commandBuffer, firstAttachment, attachme
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetColorBlendEquationEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendEquationEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendEquations);
@@ -13820,6 +14787,8 @@ layer_CmdSetColorWriteMaskEXT_after(commandBuffer, firstAttachment, attachmentCo
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetColorWriteMaskEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetColorWriteMaskEXT(commandBuffer, firstAttachment, attachmentCount, pColorWriteMasks);
@@ -13845,6 +14814,8 @@ layer_CmdSetRasterizationStreamEXT_after(commandBuffer, rasterizationStream);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetRasterizationStreamEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizationStreamEXT(commandBuffer, rasterizationStream);
@@ -13870,6 +14841,8 @@ layer_CmdSetConservativeRasterizationModeEXT_after(commandBuffer, conservativeRa
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetConservativeRasterizationModeEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetConservativeRasterizationModeEXT(commandBuffer, conservativeRasterizationMode);
@@ -13895,6 +14868,8 @@ layer_CmdSetExtraPrimitiveOverestimationSizeEXT_after(commandBuffer, extraPrimit
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetExtraPrimitiveOverestimationSizeEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetExtraPrimitiveOverestimationSizeEXT(commandBuffer, extraPrimitiveOverestimationSize);
@@ -13920,6 +14895,8 @@ layer_CmdSetDepthClipEnableEXT_after(commandBuffer, depthClipEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthClipEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthClipEnableEXT(commandBuffer, depthClipEnable);
@@ -13945,6 +14922,8 @@ layer_CmdSetSampleLocationsEnableEXT_after(commandBuffer, sampleLocationsEnable)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetSampleLocationsEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetSampleLocationsEnableEXT(commandBuffer, sampleLocationsEnable);
@@ -13970,6 +14949,8 @@ layer_CmdSetColorBlendAdvancedEXT_after(commandBuffer, firstAttachment, attachme
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetColorBlendAdvancedEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendAdvancedEXT(commandBuffer, firstAttachment, attachmentCount, pColorBlendAdvanced);
@@ -13995,6 +14976,8 @@ layer_CmdSetProvokingVertexModeEXT_after(commandBuffer, provokingVertexMode);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetProvokingVertexModeEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetProvokingVertexModeEXT(commandBuffer, provokingVertexMode);
@@ -14020,6 +15003,8 @@ layer_CmdSetLineRasterizationModeEXT_after(commandBuffer, lineRasterizationMode)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetLineRasterizationModeEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetLineRasterizationModeEXT(commandBuffer, lineRasterizationMode);
@@ -14045,6 +15030,8 @@ layer_CmdSetLineStippleEnableEXT_after(commandBuffer, stippledLineEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetLineStippleEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetLineStippleEnableEXT(commandBuffer, stippledLineEnable);
@@ -14070,6 +15057,8 @@ layer_CmdSetDepthClipNegativeOneToOneEXT_after(commandBuffer, negativeOneToOne);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthClipNegativeOneToOneEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthClipNegativeOneToOneEXT(commandBuffer, negativeOneToOne);
@@ -14095,6 +15084,8 @@ layer_CmdSetViewportWScalingEnableNV_after(commandBuffer, viewportWScalingEnable
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetViewportWScalingEnableNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWScalingEnableNV(commandBuffer, viewportWScalingEnable);
@@ -14120,6 +15111,8 @@ layer_CmdSetViewportSwizzleNV_after(commandBuffer, firstViewport, viewportCount,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetViewportSwizzleNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportSwizzleNV(commandBuffer, firstViewport, viewportCount, pViewportSwizzles);
@@ -14145,6 +15138,8 @@ layer_CmdSetCoverageToColorEnableNV_after(commandBuffer, coverageToColorEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetCoverageToColorEnableNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageToColorEnableNV(commandBuffer, coverageToColorEnable);
@@ -14170,6 +15165,8 @@ layer_CmdSetCoverageToColorLocationNV_after(commandBuffer, coverageToColorLocati
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetCoverageToColorLocationNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageToColorLocationNV(commandBuffer, coverageToColorLocation);
@@ -14195,6 +15192,8 @@ layer_CmdSetCoverageModulationModeNV_after(commandBuffer, coverageModulationMode
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetCoverageModulationModeNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationModeNV(commandBuffer, coverageModulationMode);
@@ -14220,6 +15219,8 @@ layer_CmdSetCoverageModulationTableEnableNV_after(commandBuffer, coverageModulat
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetCoverageModulationTableEnableNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationTableEnableNV(commandBuffer, coverageModulationTableEnable);
@@ -14245,6 +15246,8 @@ layer_CmdSetCoverageModulationTableNV_after(commandBuffer, coverageModulationTab
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetCoverageModulationTableNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationTableNV(commandBuffer, coverageModulationTableCount, pCoverageModulationTable);
@@ -14270,6 +15273,8 @@ layer_CmdSetShadingRateImageEnableNV_after(commandBuffer, shadingRateImageEnable
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetShadingRateImageEnableNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetShadingRateImageEnableNV(commandBuffer, shadingRateImageEnable);
@@ -14295,6 +15300,8 @@ layer_CmdSetCoverageReductionModeNV_after(commandBuffer, coverageReductionMode);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetCoverageReductionModeNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetCoverageReductionModeNV(commandBuffer, coverageReductionMode);
@@ -14320,6 +15327,8 @@ layer_CmdSetRepresentativeFragmentTestEnableNV_after(commandBuffer, representati
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetRepresentativeFragmentTestEnableNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetRepresentativeFragmentTestEnableNV(commandBuffer, representativeFragmentTestEnable);
@@ -14346,6 +15355,8 @@ layer_CreatePrivateDataSlot_after(device, pCreateInfo, pAllocator, pPrivateDataS
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreatePrivateDataSlot!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -14374,6 +15385,8 @@ layer_DestroyPrivateDataSlot_after(device, privateDataSlot, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyPrivateDataSlot!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyPrivateDataSlot(device, privateDataSlot, pAllocator);
@@ -14400,6 +15413,8 @@ layer_SetPrivateData_after(device, objectType, objectHandle, privateDataSlot, da
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSetPrivateData!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -14428,6 +15443,8 @@ layer_GetPrivateData_after(device, objectType, objectHandle, privateDataSlot, pD
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPrivateData!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetPrivateData(device, objectType, objectHandle, privateDataSlot, pData);
@@ -14453,6 +15470,8 @@ layer_CmdCopyBuffer2_after(commandBuffer, pCopyBufferInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyBuffer2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer2(commandBuffer, pCopyBufferInfo);
@@ -14478,6 +15497,8 @@ layer_CmdCopyImage2_after(commandBuffer, pCopyImageInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyImage2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyImage2(commandBuffer, pCopyImageInfo);
@@ -14503,6 +15524,8 @@ layer_CmdBlitImage2_after(commandBuffer, pBlitImageInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBlitImage2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBlitImage2(commandBuffer, pBlitImageInfo);
@@ -14528,6 +15551,8 @@ layer_CmdCopyBufferToImage2_after(commandBuffer, pCopyBufferToImageInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyBufferToImage2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage2(commandBuffer, pCopyBufferToImageInfo);
@@ -14553,6 +15578,8 @@ layer_CmdCopyImageToBuffer2_after(commandBuffer, pCopyImageToBufferInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyImageToBuffer2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer2(commandBuffer, pCopyImageToBufferInfo);
@@ -14578,6 +15605,8 @@ layer_CmdResolveImage2_after(commandBuffer, pResolveImageInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdResolveImage2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdResolveImage2(commandBuffer, pResolveImageInfo);
@@ -14603,6 +15632,8 @@ layer_CmdSetFragmentShadingRateKHR_after(commandBuffer, pFragmentSize, combinerO
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetFragmentShadingRateKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetFragmentShadingRateKHR(commandBuffer, pFragmentSize, combinerOps);
@@ -14628,6 +15659,8 @@ layer_CmdSetFragmentShadingRateEnumNV_after(commandBuffer, shadingRate, combiner
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetFragmentShadingRateEnumNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetFragmentShadingRateEnumNV(commandBuffer, shadingRate, combinerOps);
@@ -14653,6 +15686,8 @@ layer_GetAccelerationStructureBuildSizesKHR_after(device, buildType, pBuildInfo,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetAccelerationStructureBuildSizesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetAccelerationStructureBuildSizesKHR(device, buildType, pBuildInfo, pMaxPrimitiveCounts, pSizeInfo);
@@ -14678,6 +15713,8 @@ layer_CmdSetVertexInputEXT_after(commandBuffer, vertexBindingDescriptionCount, p
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetVertexInputEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetVertexInputEXT(commandBuffer, vertexBindingDescriptionCount, pVertexBindingDescriptions, vertexAttributeDescriptionCount, pVertexAttributeDescriptions);
@@ -14703,6 +15740,8 @@ layer_CmdSetColorWriteEnableEXT_after(commandBuffer, attachmentCount, pColorWrit
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetColorWriteEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetColorWriteEnableEXT(commandBuffer, attachmentCount, pColorWriteEnables);
@@ -14728,6 +15767,8 @@ layer_CmdSetEvent2_after(commandBuffer, event, pDependencyInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetEvent2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetEvent2(commandBuffer, event, pDependencyInfo);
@@ -14753,6 +15794,8 @@ layer_CmdResetEvent2_after(commandBuffer, event, stageMask);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdResetEvent2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdResetEvent2(commandBuffer, event, stageMask);
@@ -14778,6 +15821,8 @@ layer_CmdWaitEvents2_after(commandBuffer, eventCount, pEvents, pDependencyInfos)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdWaitEvents2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdWaitEvents2(commandBuffer, eventCount, pEvents, pDependencyInfos);
@@ -14803,6 +15848,8 @@ layer_CmdPipelineBarrier2_after(commandBuffer, pDependencyInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdPipelineBarrier2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier2(commandBuffer, pDependencyInfo);
@@ -14829,6 +15876,8 @@ layer_QueueSubmit2_after(queue, submitCount, pSubmits, fence);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkQueueSubmit2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -14857,6 +15906,8 @@ layer_CmdWriteTimestamp2_after(commandBuffer, stage, queryPool, query);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdWriteTimestamp2!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp2(commandBuffer, stage, queryPool, query);
@@ -14882,6 +15933,8 @@ layer_CmdWriteBufferMarker2AMD_after(commandBuffer, stage, dstBuffer, dstOffset,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdWriteBufferMarker2AMD!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdWriteBufferMarker2AMD(commandBuffer, stage, dstBuffer, dstOffset, marker);
@@ -14907,6 +15960,8 @@ layer_GetQueueCheckpointData2NV_after(queue, pCheckpointDataCount, pCheckpointDa
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetQueueCheckpointData2NV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(queue)].GetQueueCheckpointData2NV(queue, pCheckpointDataCount, pCheckpointData);
@@ -14933,6 +15988,8 @@ layer_CopyMemoryToImageEXT_after(device, pCopyMemoryToImageInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCopyMemoryToImageEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -14962,6 +16019,8 @@ layer_CopyImageToMemoryEXT_after(device, pCopyImageToMemoryInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCopyImageToMemoryEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -14991,6 +16050,8 @@ layer_CopyImageToImageEXT_after(device, pCopyImageToImageInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCopyImageToImageEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15020,6 +16081,8 @@ layer_TransitionImageLayoutEXT_after(device, transitionCount, pTransitions);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkTransitionImageLayoutEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15049,6 +16112,8 @@ layer_CreateVideoSessionKHR_after(device, pCreateInfo, pAllocator, pVideoSession
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateVideoSessionKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15077,6 +16142,8 @@ layer_DestroyVideoSessionKHR_after(device, videoSession, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyVideoSessionKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyVideoSessionKHR(device, videoSession, pAllocator);
@@ -15103,6 +16170,8 @@ layer_CreateVideoSessionParametersKHR_after(device, pCreateInfo, pAllocator, pVi
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateVideoSessionParametersKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15132,6 +16201,8 @@ layer_UpdateVideoSessionParametersKHR_after(device, videoSessionParameters, pUpd
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkUpdateVideoSessionParametersKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15161,6 +16232,8 @@ layer_GetEncodedVideoSessionParametersKHR_after(device, pVideoSessionParametersI
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetEncodedVideoSessionParametersKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15189,6 +16262,8 @@ layer_DestroyVideoSessionParametersKHR_after(device, videoSessionParameters, pAl
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyVideoSessionParametersKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyVideoSessionParametersKHR(device, videoSessionParameters, pAllocator);
@@ -15215,6 +16290,8 @@ layer_GetVideoSessionMemoryRequirementsKHR_after(device, videoSession, pMemoryRe
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetVideoSessionMemoryRequirementsKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15244,6 +16321,8 @@ layer_BindVideoSessionMemoryKHR_after(device, videoSession, bindSessionMemoryInf
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkBindVideoSessionMemoryKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15272,6 +16351,8 @@ layer_CmdDecodeVideoKHR_after(commandBuffer, pDecodeInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDecodeVideoKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDecodeVideoKHR(commandBuffer, pDecodeInfo);
@@ -15297,6 +16378,8 @@ layer_CmdBeginVideoCodingKHR_after(commandBuffer, pBeginInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBeginVideoCodingKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBeginVideoCodingKHR(commandBuffer, pBeginInfo);
@@ -15322,6 +16405,8 @@ layer_CmdControlVideoCodingKHR_after(commandBuffer, pCodingControlInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdControlVideoCodingKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdControlVideoCodingKHR(commandBuffer, pCodingControlInfo);
@@ -15347,6 +16432,8 @@ layer_CmdEndVideoCodingKHR_after(commandBuffer, pEndCodingInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdEndVideoCodingKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdEndVideoCodingKHR(commandBuffer, pEndCodingInfo);
@@ -15372,6 +16459,8 @@ layer_CmdEncodeVideoKHR_after(commandBuffer, pEncodeInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdEncodeVideoKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdEncodeVideoKHR(commandBuffer, pEncodeInfo);
@@ -15397,6 +16486,8 @@ layer_CmdDecompressMemoryNV_after(commandBuffer, decompressRegionCount, pDecompr
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDecompressMemoryNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDecompressMemoryNV(commandBuffer, decompressRegionCount, pDecompressMemoryRegions);
@@ -15422,6 +16513,8 @@ layer_CmdDecompressMemoryIndirectCountNV_after(commandBuffer, indirectCommandsAd
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDecompressMemoryIndirectCountNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDecompressMemoryIndirectCountNV(commandBuffer, indirectCommandsAddress, indirectCommandsCountAddress, stride);
@@ -15448,6 +16541,8 @@ layer_CreateCuModuleNVX_after(device, pCreateInfo, pAllocator, pModule);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateCuModuleNVX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15477,6 +16572,8 @@ layer_CreateCuFunctionNVX_after(device, pCreateInfo, pAllocator, pFunction);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateCuFunctionNVX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15505,6 +16602,8 @@ layer_DestroyCuModuleNVX_after(device, module, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyCuModuleNVX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyCuModuleNVX(device, module, pAllocator);
@@ -15530,6 +16629,8 @@ layer_DestroyCuFunctionNVX_after(device, function, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyCuFunctionNVX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyCuFunctionNVX(device, function, pAllocator);
@@ -15555,6 +16656,8 @@ layer_CmdCuLaunchKernelNVX_after(commandBuffer, pLaunchInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCuLaunchKernelNVX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCuLaunchKernelNVX(commandBuffer, pLaunchInfo);
@@ -15580,6 +16683,8 @@ layer_GetDescriptorSetLayoutSizeEXT_after(device, layout, pLayoutSizeInBytes);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDescriptorSetLayoutSizeEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutSizeEXT(device, layout, pLayoutSizeInBytes);
@@ -15605,6 +16710,8 @@ layer_GetDescriptorSetLayoutBindingOffsetEXT_after(device, layout, binding, pOff
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDescriptorSetLayoutBindingOffsetEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutBindingOffsetEXT(device, layout, binding, pOffset);
@@ -15630,6 +16737,8 @@ layer_GetDescriptorEXT_after(device, pDescriptorInfo, dataSize, pDescriptor);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDescriptorEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDescriptorEXT(device, pDescriptorInfo, dataSize, pDescriptor);
@@ -15655,6 +16764,8 @@ layer_CmdBindDescriptorBuffersEXT_after(commandBuffer, bufferCount, pBindingInfo
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindDescriptorBuffersEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBuffersEXT(commandBuffer, bufferCount, pBindingInfos);
@@ -15680,6 +16791,8 @@ layer_CmdSetDescriptorBufferOffsetsEXT_after(commandBuffer, pipelineBindPoint, l
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDescriptorBufferOffsetsEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDescriptorBufferOffsetsEXT(commandBuffer, pipelineBindPoint, layout, firstSet, setCount, pBufferIndices, pOffsets);
@@ -15705,6 +16818,8 @@ layer_CmdBindDescriptorBufferEmbeddedSamplersEXT_after(commandBuffer, pipelineBi
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindDescriptorBufferEmbeddedSamplersEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBufferEmbeddedSamplersEXT(commandBuffer, pipelineBindPoint, layout, set);
@@ -15731,6 +16846,8 @@ layer_GetBufferOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetBufferOpaqueCaptureDescriptorDataEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15760,6 +16877,8 @@ layer_GetImageOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetImageOpaqueCaptureDescriptorDataEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15789,6 +16908,8 @@ layer_GetImageViewOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetImageViewOpaqueCaptureDescriptorDataEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15818,6 +16939,8 @@ layer_GetSamplerOpaqueCaptureDescriptorDataEXT_after(device, pInfo, pData);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetSamplerOpaqueCaptureDescriptorDataEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15847,6 +16970,8 @@ layer_GetAccelerationStructureOpaqueCaptureDescriptorDataEXT_after(device, pInfo
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetAccelerationStructureOpaqueCaptureDescriptorDataEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15875,6 +17000,8 @@ layer_SetDeviceMemoryPriorityEXT_after(device, memory, priority);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSetDeviceMemoryPriorityEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].SetDeviceMemoryPriorityEXT(device, memory, priority);
@@ -15901,6 +17028,8 @@ layer_WaitForPresentKHR_after(device, swapchain, presentId, timeout);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkWaitForPresentKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15931,6 +17060,8 @@ layer_CreateBufferCollectionFUCHSIA_after(device, pCreateInfo, pAllocator, pColl
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateBufferCollectionFUCHSIA!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15962,6 +17093,8 @@ layer_SetBufferCollectionBufferConstraintsFUCHSIA_after(device, collection, pBuf
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSetBufferCollectionBufferConstraintsFUCHSIA!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -15993,6 +17126,8 @@ layer_SetBufferCollectionImageConstraintsFUCHSIA_after(device, collection, pImag
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSetBufferCollectionImageConstraintsFUCHSIA!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16023,6 +17158,8 @@ layer_DestroyBufferCollectionFUCHSIA_after(device, collection, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyBufferCollectionFUCHSIA!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyBufferCollectionFUCHSIA(device, collection, pAllocator);
@@ -16051,6 +17188,8 @@ layer_GetBufferCollectionPropertiesFUCHSIA_after(device, collection, pProperties
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetBufferCollectionPropertiesFUCHSIA!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16081,6 +17220,8 @@ layer_CreateCudaModuleNV_after(device, pCreateInfo, pAllocator, pModule);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateCudaModuleNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16110,6 +17251,8 @@ layer_GetCudaModuleCacheNV_after(device, module, pCacheSize, pCacheData);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetCudaModuleCacheNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16139,6 +17282,8 @@ layer_CreateCudaFunctionNV_after(device, pCreateInfo, pAllocator, pFunction);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateCudaFunctionNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16167,6 +17312,8 @@ layer_DestroyCudaModuleNV_after(device, module, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyCudaModuleNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyCudaModuleNV(device, module, pAllocator);
@@ -16192,6 +17339,8 @@ layer_DestroyCudaFunctionNV_after(device, function, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyCudaFunctionNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyCudaFunctionNV(device, function, pAllocator);
@@ -16217,6 +17366,8 @@ layer_CmdCudaLaunchKernelNV_after(commandBuffer, pLaunchInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCudaLaunchKernelNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCudaLaunchKernelNV(commandBuffer, pLaunchInfo);
@@ -16242,6 +17393,8 @@ layer_CmdBeginRendering_after(commandBuffer, pRenderingInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBeginRendering!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBeginRendering(commandBuffer, pRenderingInfo);
@@ -16267,6 +17420,8 @@ layer_CmdEndRendering_after(commandBuffer);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdEndRendering!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdEndRendering(commandBuffer);
@@ -16292,6 +17447,8 @@ layer_GetDescriptorSetLayoutHostMappingInfoVALVE_after(device, pBindingReference
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDescriptorSetLayoutHostMappingInfoVALVE!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutHostMappingInfoVALVE(device, pBindingReference, pHostMapping);
@@ -16317,6 +17474,8 @@ layer_GetDescriptorSetHostMappingVALVE_after(device, descriptorSet, ppData);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDescriptorSetHostMappingVALVE!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDescriptorSetHostMappingVALVE(device, descriptorSet, ppData);
@@ -16343,6 +17502,8 @@ layer_CreateMicromapEXT_after(device, pCreateInfo, pAllocator, pMicromap);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateMicromapEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16371,6 +17532,8 @@ layer_CmdBuildMicromapsEXT_after(commandBuffer, infoCount, pInfos);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBuildMicromapsEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBuildMicromapsEXT(commandBuffer, infoCount, pInfos);
@@ -16397,6 +17560,8 @@ layer_BuildMicromapsEXT_after(device, deferredOperation, infoCount, pInfos);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkBuildMicromapsEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16425,6 +17590,8 @@ layer_DestroyMicromapEXT_after(device, micromap, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyMicromapEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyMicromapEXT(device, micromap, pAllocator);
@@ -16450,6 +17617,8 @@ layer_CmdCopyMicromapEXT_after(commandBuffer, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyMicromapEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyMicromapEXT(commandBuffer, pInfo);
@@ -16476,6 +17645,8 @@ layer_CopyMicromapEXT_after(device, deferredOperation, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCopyMicromapEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16504,6 +17675,8 @@ layer_CmdCopyMicromapToMemoryEXT_after(commandBuffer, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyMicromapToMemoryEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyMicromapToMemoryEXT(commandBuffer, pInfo);
@@ -16530,6 +17703,8 @@ layer_CopyMicromapToMemoryEXT_after(device, deferredOperation, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCopyMicromapToMemoryEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16558,6 +17733,8 @@ layer_CmdCopyMemoryToMicromapEXT_after(commandBuffer, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyMemoryToMicromapEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToMicromapEXT(commandBuffer, pInfo);
@@ -16584,6 +17761,8 @@ layer_CopyMemoryToMicromapEXT_after(device, deferredOperation, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCopyMemoryToMicromapEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16612,6 +17791,8 @@ layer_CmdWriteMicromapsPropertiesEXT_after(commandBuffer, micromapCount, pMicrom
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdWriteMicromapsPropertiesEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdWriteMicromapsPropertiesEXT(commandBuffer, micromapCount, pMicromaps, queryType, queryPool, firstQuery);
@@ -16638,6 +17819,8 @@ layer_WriteMicromapsPropertiesEXT_after(device, micromapCount, pMicromaps, query
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkWriteMicromapsPropertiesEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16666,6 +17849,8 @@ layer_GetDeviceMicromapCompatibilityEXT_after(device, pVersionInfo, pCompatibili
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceMicromapCompatibilityEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDeviceMicromapCompatibilityEXT(device, pVersionInfo, pCompatibility);
@@ -16691,6 +17876,8 @@ layer_GetMicromapBuildSizesEXT_after(device, buildType, pBuildInfo, pSizeInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetMicromapBuildSizesEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetMicromapBuildSizesEXT(device, buildType, pBuildInfo, pSizeInfo);
@@ -16716,6 +17903,8 @@ layer_GetShaderModuleIdentifierEXT_after(device, shaderModule, pIdentifier);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetShaderModuleIdentifierEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetShaderModuleIdentifierEXT(device, shaderModule, pIdentifier);
@@ -16741,6 +17930,8 @@ layer_GetShaderModuleCreateInfoIdentifierEXT_after(device, pCreateInfo, pIdentif
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetShaderModuleCreateInfoIdentifierEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetShaderModuleCreateInfoIdentifierEXT(device, pCreateInfo, pIdentifier);
@@ -16766,6 +17957,8 @@ layer_GetImageSubresourceLayout2KHR_after(device, image, pSubresource, pLayout);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetImageSubresourceLayout2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetImageSubresourceLayout2KHR(device, image, pSubresource, pLayout);
@@ -16792,6 +17985,8 @@ layer_GetPipelinePropertiesEXT_after(device, pPipelineInfo, pPipelineProperties)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPipelinePropertiesEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16821,6 +18016,8 @@ layer_ExportMetalObjectsEXT_after(device, pMetalObjectsInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkExportMetalObjectsEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].ExportMetalObjectsEXT(device, pMetalObjectsInfo);
@@ -16848,6 +18045,8 @@ layer_GetFramebufferTilePropertiesQCOM_after(device, framebuffer, pPropertiesCou
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetFramebufferTilePropertiesQCOM!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16877,6 +18076,8 @@ layer_GetDynamicRenderingTilePropertiesQCOM_after(device, pRenderingInfo, pPrope
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDynamicRenderingTilePropertiesQCOM!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16906,6 +18107,8 @@ layer_CreateOpticalFlowSessionNV_after(device, pCreateInfo, pAllocator, pSession
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateOpticalFlowSessionNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16934,6 +18137,8 @@ layer_DestroyOpticalFlowSessionNV_after(device, session, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyOpticalFlowSessionNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyOpticalFlowSessionNV(device, session, pAllocator);
@@ -16960,6 +18165,8 @@ layer_BindOpticalFlowSessionImageNV_after(device, session, bindingPoint, view, l
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkBindOpticalFlowSessionImageNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -16988,6 +18195,8 @@ layer_CmdOpticalFlowExecuteNV_after(commandBuffer, session, pExecuteInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdOpticalFlowExecuteNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdOpticalFlowExecuteNV(commandBuffer, session, pExecuteInfo);
@@ -17014,6 +18223,8 @@ layer_GetDeviceFaultInfoEXT_after(device, pFaultCounts, pFaultInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceFaultInfoEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -17042,6 +18253,8 @@ layer_CmdSetDepthBias2EXT_after(commandBuffer, pDepthBiasInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthBias2EXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBias2EXT(commandBuffer, pDepthBiasInfo);
@@ -17068,6 +18281,8 @@ layer_ReleaseSwapchainImagesEXT_after(device, pReleaseInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkReleaseSwapchainImagesEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -17096,6 +18311,8 @@ layer_GetDeviceImageSubresourceLayoutKHR_after(device, pInfo, pLayout);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceImageSubresourceLayoutKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDeviceImageSubresourceLayoutKHR(device, pInfo, pLayout);
@@ -17122,6 +18339,8 @@ layer_MapMemory2KHR_after(device, pMemoryMapInfo, ppData);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkMapMemory2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -17151,6 +18370,8 @@ layer_UnmapMemory2KHR_after(device, pMemoryUnmapInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkUnmapMemory2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -17180,6 +18401,8 @@ layer_CreateShadersEXT_after(device, createInfoCount, pCreateInfos, pAllocator, 
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateShadersEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -17208,6 +18431,8 @@ layer_DestroyShaderEXT_after(device, shader, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyShaderEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyShaderEXT(device, shader, pAllocator);
@@ -17234,6 +18459,8 @@ layer_GetShaderBinaryDataEXT_after(device, shader, pDataSize, pData);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetShaderBinaryDataEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -17262,6 +18489,8 @@ layer_CmdBindShadersEXT_after(commandBuffer, stageCount, pStages, pShaders);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindShadersEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindShadersEXT(commandBuffer, stageCount, pStages, pShaders);
@@ -17289,6 +18518,8 @@ layer_GetScreenBufferPropertiesQNX_after(device, buffer, pProperties);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetScreenBufferPropertiesQNX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -17320,6 +18551,8 @@ layer_GetExecutionGraphPipelineScratchSizeAMDX_after(device, executionGraph, pSi
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetExecutionGraphPipelineScratchSizeAMDX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -17351,6 +18584,8 @@ layer_GetExecutionGraphPipelineNodeIndexAMDX_after(device, executionGraph, pNode
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetExecutionGraphPipelineNodeIndexAMDX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -17382,6 +18617,8 @@ layer_CreateExecutionGraphPipelinesAMDX_after(device, pipelineCache, createInfoC
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateExecutionGraphPipelinesAMDX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -17412,6 +18649,8 @@ layer_CmdInitializeGraphScratchMemoryAMDX_after(commandBuffer, scratch);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdInitializeGraphScratchMemoryAMDX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdInitializeGraphScratchMemoryAMDX(commandBuffer, scratch);
@@ -17439,6 +18678,8 @@ layer_CmdDispatchGraphAMDX_after(commandBuffer, scratch, pCountInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDispatchGraphAMDX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphAMDX(commandBuffer, scratch, pCountInfo);
@@ -17466,6 +18707,8 @@ layer_CmdDispatchGraphIndirectAMDX_after(commandBuffer, scratch, pCountInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDispatchGraphIndirectAMDX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphIndirectAMDX(commandBuffer, scratch, pCountInfo);
@@ -17493,6 +18736,8 @@ layer_CmdDispatchGraphIndirectCountAMDX_after(commandBuffer, scratch, countInfo)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDispatchGraphIndirectCountAMDX!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphIndirectCountAMDX(commandBuffer, scratch, countInfo);
@@ -17519,6 +18764,8 @@ layer_CmdBindDescriptorSets2KHR_after(commandBuffer, pBindDescriptorSetsInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindDescriptorSets2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorSets2KHR(commandBuffer, pBindDescriptorSetsInfo);
@@ -17544,6 +18791,8 @@ layer_CmdPushConstants2KHR_after(commandBuffer, pPushConstantsInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdPushConstants2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdPushConstants2KHR(commandBuffer, pPushConstantsInfo);
@@ -17569,6 +18818,8 @@ layer_CmdPushDescriptorSet2KHR_after(commandBuffer, pPushDescriptorSetInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdPushDescriptorSet2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSet2KHR(commandBuffer, pPushDescriptorSetInfo);
@@ -17594,6 +18845,8 @@ layer_CmdPushDescriptorSetWithTemplate2KHR_after(commandBuffer, pPushDescriptorS
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdPushDescriptorSetWithTemplate2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetWithTemplate2KHR(commandBuffer, pPushDescriptorSetWithTemplateInfo);
@@ -17619,6 +18872,8 @@ layer_CmdSetDescriptorBufferOffsets2EXT_after(commandBuffer, pSetDescriptorBuffe
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDescriptorBufferOffsets2EXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDescriptorBufferOffsets2EXT(commandBuffer, pSetDescriptorBufferOffsetsInfo);
@@ -17644,6 +18899,8 @@ layer_CmdBindDescriptorBufferEmbeddedSamplers2EXT_after(commandBuffer, pBindDesc
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindDescriptorBufferEmbeddedSamplers2EXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBufferEmbeddedSamplers2EXT(commandBuffer, pBindDescriptorBufferEmbeddedSamplersInfo);
@@ -17670,6 +18927,8 @@ layer_SetLatencySleepModeNV_after(device, swapchain, pSleepModeInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSetLatencySleepModeNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -17699,6 +18958,8 @@ layer_LatencySleepNV_after(device, swapchain, pSleepInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkLatencySleepNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -17727,6 +18988,8 @@ layer_SetLatencyMarkerNV_after(device, swapchain, pLatencyMarkerInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSetLatencyMarkerNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].SetLatencyMarkerNV(device, swapchain, pLatencyMarkerInfo);
@@ -17752,6 +19015,8 @@ layer_GetLatencyTimingsNV_after(device, swapchain, pLatencyMarkerInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetLatencyTimingsNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetLatencyTimingsNV(device, swapchain, pLatencyMarkerInfo);
@@ -17777,6 +19042,8 @@ layer_QueueNotifyOutOfBandNV_after(queue, pQueueTypeInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkQueueNotifyOutOfBandNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(queue)].QueueNotifyOutOfBandNV(queue, pQueueTypeInfo);
@@ -17802,6 +19069,8 @@ layer_ResetQueryPoolEXT_after(device, queryPool, firstQuery, queryCount);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkResetQueryPoolEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].ResetQueryPoolEXT(device, queryPool, firstQuery, queryCount);
@@ -17827,6 +19096,8 @@ layer_TrimCommandPoolKHR_after(device, commandPool, flags);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkTrimCommandPoolKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].TrimCommandPoolKHR(device, commandPool, flags);
@@ -17852,6 +19123,8 @@ layer_GetDeviceGroupPeerMemoryFeaturesKHR_after(device, heapIndex, localDeviceIn
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceGroupPeerMemoryFeaturesKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDeviceGroupPeerMemoryFeaturesKHR(device, heapIndex, localDeviceIndex, remoteDeviceIndex, pPeerMemoryFeatures);
@@ -17878,6 +19151,8 @@ layer_BindBufferMemory2KHR_after(device, bindInfoCount, pBindInfos);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkBindBufferMemory2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -17907,6 +19182,8 @@ layer_BindImageMemory2KHR_after(device, bindInfoCount, pBindInfos);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkBindImageMemory2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -17935,6 +19212,8 @@ layer_CmdSetDeviceMaskKHR_after(commandBuffer, deviceMask);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDeviceMaskKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDeviceMaskKHR(commandBuffer, deviceMask);
@@ -17960,6 +19239,8 @@ layer_CmdDispatchBaseKHR_after(commandBuffer, baseGroupX, baseGroupY, baseGroupZ
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDispatchBaseKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDispatchBaseKHR(commandBuffer, baseGroupX, baseGroupY, baseGroupZ, groupCountX, groupCountY, groupCountZ);
@@ -17986,6 +19267,8 @@ layer_CreateDescriptorUpdateTemplateKHR_after(device, pCreateInfo, pAllocator, p
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateDescriptorUpdateTemplateKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -18014,6 +19297,8 @@ layer_DestroyDescriptorUpdateTemplateKHR_after(device, descriptorUpdateTemplate,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyDescriptorUpdateTemplateKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyDescriptorUpdateTemplateKHR(device, descriptorUpdateTemplate, pAllocator);
@@ -18039,6 +19324,8 @@ layer_UpdateDescriptorSetWithTemplateKHR_after(device, descriptorSet, descriptor
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkUpdateDescriptorSetWithTemplateKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].UpdateDescriptorSetWithTemplateKHR(device, descriptorSet, descriptorUpdateTemplate, pData);
@@ -18064,6 +19351,8 @@ layer_GetBufferMemoryRequirements2KHR_after(device, pInfo, pMemoryRequirements);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetBufferMemoryRequirements2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetBufferMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
@@ -18089,6 +19378,8 @@ layer_GetImageMemoryRequirements2KHR_after(device, pInfo, pMemoryRequirements);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetImageMemoryRequirements2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetImageMemoryRequirements2KHR(device, pInfo, pMemoryRequirements);
@@ -18114,6 +19405,8 @@ layer_GetImageSparseMemoryRequirements2KHR_after(device, pInfo, pSparseMemoryReq
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetImageSparseMemoryRequirements2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements2KHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -18139,6 +19432,8 @@ layer_GetDeviceBufferMemoryRequirementsKHR_after(device, pInfo, pMemoryRequireme
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceBufferMemoryRequirementsKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDeviceBufferMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
@@ -18164,6 +19459,8 @@ layer_GetDeviceImageMemoryRequirementsKHR_after(device, pInfo, pMemoryRequiremen
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceImageMemoryRequirementsKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDeviceImageMemoryRequirementsKHR(device, pInfo, pMemoryRequirements);
@@ -18189,6 +19486,8 @@ layer_GetDeviceImageSparseMemoryRequirementsKHR_after(device, pInfo, pSparseMemo
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceImageSparseMemoryRequirementsKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDeviceImageSparseMemoryRequirementsKHR(device, pInfo, pSparseMemoryRequirementCount, pSparseMemoryRequirements);
@@ -18215,6 +19514,8 @@ layer_CreateSamplerYcbcrConversionKHR_after(device, pCreateInfo, pAllocator, pYc
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateSamplerYcbcrConversionKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -18243,6 +19544,8 @@ layer_DestroySamplerYcbcrConversionKHR_after(device, ycbcrConversion, pAllocator
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroySamplerYcbcrConversionKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroySamplerYcbcrConversionKHR(device, ycbcrConversion, pAllocator);
@@ -18268,6 +19571,8 @@ layer_GetDescriptorSetLayoutSupportKHR_after(device, pCreateInfo, pSupport);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDescriptorSetLayoutSupportKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetDescriptorSetLayoutSupportKHR(device, pCreateInfo, pSupport);
@@ -18294,6 +19599,8 @@ layer_GetCalibratedTimestampsEXT_after(device, timestampCount, pTimestampInfos, 
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetCalibratedTimestampsEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -18323,6 +19630,8 @@ layer_CreateRenderPass2KHR_after(device, pCreateInfo, pAllocator, pRenderPass);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreateRenderPass2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -18351,6 +19660,8 @@ layer_CmdBeginRenderPass2KHR_after(commandBuffer, pRenderPassBegin, pSubpassBegi
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBeginRenderPass2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass2KHR(commandBuffer, pRenderPassBegin, pSubpassBeginInfo);
@@ -18376,6 +19687,8 @@ layer_CmdNextSubpass2KHR_after(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdNextSubpass2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdNextSubpass2KHR(commandBuffer, pSubpassBeginInfo, pSubpassEndInfo);
@@ -18401,6 +19714,8 @@ layer_CmdEndRenderPass2KHR_after(commandBuffer, pSubpassEndInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdEndRenderPass2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass2KHR(commandBuffer, pSubpassEndInfo);
@@ -18427,6 +19742,8 @@ layer_GetSemaphoreCounterValueKHR_after(device, semaphore, pValue);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetSemaphoreCounterValueKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -18456,6 +19773,8 @@ layer_WaitSemaphoresKHR_after(device, pWaitInfo, timeout);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkWaitSemaphoresKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -18485,6 +19804,8 @@ layer_SignalSemaphoreKHR_after(device, pSignalInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSignalSemaphoreKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -18513,6 +19834,8 @@ layer_CmdDrawIndirectCountKHR_after(commandBuffer, buffer, offset, countBuffer, 
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndirectCountKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCountKHR(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -18538,6 +19861,8 @@ layer_CmdDrawIndirectCountAMD_after(commandBuffer, buffer, offset, countBuffer, 
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndirectCountAMD!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -18563,6 +19888,8 @@ layer_CmdDrawIndexedIndirectCountKHR_after(commandBuffer, buffer, offset, countB
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndexedIndirectCountKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCountKHR(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -18588,6 +19915,8 @@ layer_CmdDrawIndexedIndirectCountAMD_after(commandBuffer, buffer, offset, countB
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdDrawIndexedIndirectCountAMD!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCountAMD(commandBuffer, buffer, offset, countBuffer, countBufferOffset, maxDrawCount, stride);
@@ -18614,6 +19943,8 @@ layer_GetRayTracingShaderGroupHandlesNV_after(device, pipeline, firstGroup, grou
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetRayTracingShaderGroupHandlesNV!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -18643,6 +19974,8 @@ layer_GetBufferOpaqueCaptureAddressKHR_after(device, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetBufferOpaqueCaptureAddressKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -18672,6 +20005,8 @@ layer_GetBufferDeviceAddressKHR_after(device, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetBufferDeviceAddressKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -18701,6 +20036,8 @@ layer_GetBufferDeviceAddressEXT_after(device, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetBufferDeviceAddressEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -18730,6 +20067,8 @@ layer_GetDeviceMemoryOpaqueCaptureAddressKHR_after(device, pInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetDeviceMemoryOpaqueCaptureAddressKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -18758,6 +20097,8 @@ layer_CmdSetLineStippleEXT_after(commandBuffer, lineStippleFactor, lineStipplePa
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetLineStippleEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetLineStippleEXT(commandBuffer, lineStippleFactor, lineStipplePattern);
@@ -18783,6 +20124,8 @@ layer_CmdSetCullModeEXT_after(commandBuffer, cullMode);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetCullModeEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetCullModeEXT(commandBuffer, cullMode);
@@ -18808,6 +20151,8 @@ layer_CmdSetFrontFaceEXT_after(commandBuffer, frontFace);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetFrontFaceEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetFrontFaceEXT(commandBuffer, frontFace);
@@ -18833,6 +20178,8 @@ layer_CmdSetPrimitiveTopologyEXT_after(commandBuffer, primitiveTopology);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetPrimitiveTopologyEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveTopologyEXT(commandBuffer, primitiveTopology);
@@ -18858,6 +20205,8 @@ layer_CmdSetViewportWithCountEXT_after(commandBuffer, viewportCount, pViewports)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetViewportWithCountEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetViewportWithCountEXT(commandBuffer, viewportCount, pViewports);
@@ -18883,6 +20232,8 @@ layer_CmdSetScissorWithCountEXT_after(commandBuffer, scissorCount, pScissors);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetScissorWithCountEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetScissorWithCountEXT(commandBuffer, scissorCount, pScissors);
@@ -18908,6 +20259,8 @@ layer_CmdBindVertexBuffers2EXT_after(commandBuffer, firstBinding, bindingCount, 
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBindVertexBuffers2EXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers2EXT(commandBuffer, firstBinding, bindingCount, pBuffers, pOffsets, pSizes, pStrides);
@@ -18933,6 +20286,8 @@ layer_CmdSetDepthTestEnableEXT_after(commandBuffer, depthTestEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthTestEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthTestEnableEXT(commandBuffer, depthTestEnable);
@@ -18958,6 +20313,8 @@ layer_CmdSetDepthWriteEnableEXT_after(commandBuffer, depthWriteEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthWriteEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthWriteEnableEXT(commandBuffer, depthWriteEnable);
@@ -18983,6 +20340,8 @@ layer_CmdSetDepthCompareOpEXT_after(commandBuffer, depthCompareOp);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthCompareOpEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthCompareOpEXT(commandBuffer, depthCompareOp);
@@ -19008,6 +20367,8 @@ layer_CmdSetDepthBoundsTestEnableEXT_after(commandBuffer, depthBoundsTestEnable)
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthBoundsTestEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBoundsTestEnableEXT(commandBuffer, depthBoundsTestEnable);
@@ -19033,6 +20394,8 @@ layer_CmdSetStencilTestEnableEXT_after(commandBuffer, stencilTestEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetStencilTestEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilTestEnableEXT(commandBuffer, stencilTestEnable);
@@ -19058,6 +20421,8 @@ layer_CmdSetStencilOpEXT_after(commandBuffer, faceMask, failOp, passOp, depthFai
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetStencilOpEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetStencilOpEXT(commandBuffer, faceMask, failOp, passOp, depthFailOp, compareOp);
@@ -19083,6 +20448,8 @@ layer_CmdSetRasterizerDiscardEnableEXT_after(commandBuffer, rasterizerDiscardEna
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetRasterizerDiscardEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetRasterizerDiscardEnableEXT(commandBuffer, rasterizerDiscardEnable);
@@ -19108,6 +20475,8 @@ layer_CmdSetDepthBiasEnableEXT_after(commandBuffer, depthBiasEnable);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetDepthBiasEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetDepthBiasEnableEXT(commandBuffer, depthBiasEnable);
@@ -19133,6 +20502,8 @@ layer_CmdSetPrimitiveRestartEnableEXT_after(commandBuffer, primitiveRestartEnabl
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetPrimitiveRestartEnableEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveRestartEnableEXT(commandBuffer, primitiveRestartEnable);
@@ -19159,6 +20530,8 @@ layer_CreatePrivateDataSlotEXT_after(device, pCreateInfo, pAllocator, pPrivateDa
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCreatePrivateDataSlotEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -19187,6 +20560,8 @@ layer_DestroyPrivateDataSlotEXT_after(device, privateDataSlot, pAllocator);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkDestroyPrivateDataSlotEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].DestroyPrivateDataSlotEXT(device, privateDataSlot, pAllocator);
@@ -19213,6 +20588,8 @@ layer_SetPrivateDataEXT_after(device, objectType, objectHandle, privateDataSlot,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkSetPrivateDataEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -19241,6 +20618,8 @@ layer_GetPrivateDataEXT_after(device, objectType, objectHandle, privateDataSlot,
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetPrivateDataEXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetPrivateDataEXT(device, objectType, objectHandle, privateDataSlot, pData);
@@ -19266,6 +20645,8 @@ layer_CmdCopyBuffer2KHR_after(commandBuffer, pCopyBufferInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyBuffer2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer2KHR(commandBuffer, pCopyBufferInfo);
@@ -19291,6 +20672,8 @@ layer_CmdCopyImage2KHR_after(commandBuffer, pCopyImageInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyImage2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyImage2KHR(commandBuffer, pCopyImageInfo);
@@ -19316,6 +20699,8 @@ layer_CmdBlitImage2KHR_after(commandBuffer, pBlitImageInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBlitImage2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBlitImage2KHR(commandBuffer, pBlitImageInfo);
@@ -19341,6 +20726,8 @@ layer_CmdCopyBufferToImage2KHR_after(commandBuffer, pCopyBufferToImageInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyBufferToImage2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage2KHR(commandBuffer, pCopyBufferToImageInfo);
@@ -19366,6 +20753,8 @@ layer_CmdCopyImageToBuffer2KHR_after(commandBuffer, pCopyImageToBufferInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdCopyImageToBuffer2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer2KHR(commandBuffer, pCopyImageToBufferInfo);
@@ -19391,6 +20780,8 @@ layer_CmdResolveImage2KHR_after(commandBuffer, pResolveImageInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdResolveImage2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdResolveImage2KHR(commandBuffer, pResolveImageInfo);
@@ -19416,6 +20807,8 @@ layer_CmdSetEvent2KHR_after(commandBuffer, event, pDependencyInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdSetEvent2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdSetEvent2KHR(commandBuffer, event, pDependencyInfo);
@@ -19441,6 +20834,8 @@ layer_CmdResetEvent2KHR_after(commandBuffer, event, stageMask);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdResetEvent2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdResetEvent2KHR(commandBuffer, event, stageMask);
@@ -19466,6 +20861,8 @@ layer_CmdWaitEvents2KHR_after(commandBuffer, eventCount, pEvents, pDependencyInf
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdWaitEvents2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdWaitEvents2KHR(commandBuffer, eventCount, pEvents, pDependencyInfos);
@@ -19491,6 +20888,8 @@ layer_CmdPipelineBarrier2KHR_after(commandBuffer, pDependencyInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdPipelineBarrier2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier2KHR(commandBuffer, pDependencyInfo);
@@ -19517,6 +20916,8 @@ layer_QueueSubmit2KHR_after(queue, submitCount, pSubmits, fence);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkQueueSubmit2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 return ret;
 } else {
@@ -19545,6 +20946,8 @@ layer_CmdWriteTimestamp2KHR_after(commandBuffer, stage, queryPool, query);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdWriteTimestamp2KHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp2KHR(commandBuffer, stage, queryPool, query);
@@ -19570,6 +20973,8 @@ layer_CmdBeginRenderingKHR_after(commandBuffer, pRenderingInfo);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdBeginRenderingKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdBeginRenderingKHR(commandBuffer, pRenderingInfo);
@@ -19595,6 +21000,8 @@ layer_CmdEndRenderingKHR_after(commandBuffer);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkCmdEndRenderingKHR!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(commandBuffer)].CmdEndRenderingKHR(commandBuffer);
@@ -19620,6 +21027,8 @@ layer_GetImageSubresourceLayout2EXT_after(device, image, pSubresource, pLayout);
 #endif 
 if(connected) {
 winsockSendToUI(&ConnectSocket, "end_vkGetImageSubresourceLayout2EXT!");
+if (callEveryBreak || callAtBreak)
+	newCall();
 }
 } else {
 device_dispatch[GetKey(device)].GetImageSubresourceLayout2EXT(device, image, pSubresource, pLayout);
