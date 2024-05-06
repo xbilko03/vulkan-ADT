@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <sstream>
+#include  <iomanip>
 
 namespace details {
     unsigned long long vkMemoryManager::GetFromPointerID(std::string message)
@@ -18,7 +19,6 @@ namespace details {
     }
 
 
-
     /* max buffer inspect length */
 #define MAXREADABLESIZE 100 * sizeof(int)
 
@@ -31,11 +31,23 @@ namespace details {
         if (dataSize > size)
             dataSize = size;
 
-        for (unsigned long long i = 0; i < dataSize;i += sizeof(int))
+        int rows = 4;
+        int address = 0x0000;
+
+        for (unsigned long long i = 0; i < dataSize; i += sizeof(int))
         {
-            stream << std::hex << (int)(inputData + i);
+
+            if (i % (sizeof(int) * rows) == 0)
+            {
+                stream << "0x" << std::setfill('0') << std::setw(4) << std::uppercase << std::hex << address;
+                output += stream.str() + " : ";
+                address += sizeof(int) * rows;
+                stream = {};
+            }
+
+            stream << std::uppercase << std::hex << (int)(inputData + i);
             output += stream.str();
-            if ((i / sizeof(int) + 1) % 5 == 0)
+            if ((i / sizeof(int) + 1) % rows == 0)
                 output += "\n";
             else
                 output += " ";

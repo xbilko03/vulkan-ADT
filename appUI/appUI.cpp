@@ -13,11 +13,25 @@ namespace details {
     #define MAX_TABLE_SIZE 10
 
     std::map < std::string, bool> apiDetails;
+    std::map < unsigned long long, bool> texDetails;
+    std::map < unsigned long long, bool> texLoaded;
+    float zoom = 1.0f;
 
+    bool apiCalls = false;
+    bool buffers = false;
+    bool demo = false;
+    bool texture = false;
+    bool appInfo = false;
+    bool images = false;
+    bool memories = false;
+    bool warnings = false;
+    bool breaks = false;
 
     void appUI::ShowWarnings(details::appWindow* window, details::events* dataObject)
     {
-        ImGui::Begin("Warnings");
+        ImGui::SetNextWindowSize(ImVec2(512, 768), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowPos(ImVec2(192, 0), ImGuiCond_FirstUseEver);
+        ImGui::Begin("Warnings", &warnings, ImGuiWindowFlags_NoCollapse);
 
         auto warningsList = (*dataObject).getWarningsList();
 
@@ -30,7 +44,9 @@ namespace details {
     }
     void appUI::ShowBreaks(details::appWindow* window, details::events* dataObject)
     {
-        ImGui::Begin("Breakpoints");
+        ImGui::SetNextWindowSize(ImVec2(512, 768), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowPos(ImVec2(192, 0), ImGuiCond_FirstUseEver);
+        ImGui::Begin("Breakpoints", &breaks, ImGuiWindowFlags_NoCollapse);
 
         auto breaksList = (*dataObject).getBreaksList();
 
@@ -43,7 +59,9 @@ namespace details {
     }
     void appUI::ShowMemories(details::appWindow* window, details::events* dataObject)
     {
-        ImGui::Begin("Memory");
+        ImGui::SetNextWindowSize(ImVec2(512, 768), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowPos(ImVec2(192, 0), ImGuiCond_FirstUseEver);
+        ImGui::Begin("Memory", &memories, ImGuiWindowFlags_NoCollapse);
         
         unsigned long long memoryCount = (*dataObject).getMemoriesCount();
 
@@ -54,16 +72,19 @@ namespace details {
             if(ImGui::CollapsingHeader(output.c_str()))
             {
                 output = (*dataObject).getMemoryPointer(i);
+                ImGui::SeparatorText("VkImage Handle Address");
                 ImGui::Text(output.c_str());
 
                 if (dataObject->getCallsSettings() && output != "new")
                 {
+                    ImGui::SeparatorText("Culprit");
                     output = std::to_string((*dataObject).getMemoryCulpritID(i));
                     output += ":";
                     output += (*dataObject).getMemoryCulpritName(i);
                     ImGui::Text(output.c_str());
                 }
 
+                ImGui::SeparatorText("Data");
                 ImGui::Text((*dataObject).getMemoryData(i).c_str());
             }
         }
@@ -72,7 +93,9 @@ namespace details {
     }
     void appUI::ShowImages(details::appWindow* window, details::events* dataObject)
     {
-        ImGui::Begin("Images");
+        ImGui::SetNextWindowSize(ImVec2(512, 768), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowPos(ImVec2(192, 0), ImGuiCond_FirstUseEver);
+        ImGui::Begin("Images", &images, ImGuiWindowFlags_NoCollapse);
 
         unsigned long long imageCount = (*dataObject).getImagesCount();
 
@@ -83,50 +106,78 @@ namespace details {
             std::string output = hdrName + "[" + (*dataObject).getImageState(i) + "]";
             if (ImGui::CollapsingHeader(output.c_str()))
             {
+                ImGui::SeparatorText("VkImage Handle Address");
                 output = (*dataObject).getImagePointer(i);
                 ImGui::Text(output.c_str());
 
                 if (dataObject->getCallsSettings() && output != "")
                 {
+                    ImGui::SeparatorText("Culprit");
                     output = std::to_string((*dataObject).getImageCulpritID(i));
                     output += ":";
                     output += (*dataObject).getImageCulpritName(i);
                     ImGui::Text(output.c_str());
                 }
 
-                ImGui::Text((*dataObject).getImageData(i).c_str());
-                ImGui::Text("pointer = %p", (*window).getImageDS(i));
-                ImGui::Text("size = %d x %d", (*window).getImageWidth(i), (*window).getImageHeight(i));
-
-                if (ImGui::Button("Load Texture"))
-                    (*dataObject).loadTexture(i);
-                if (ImGui::CollapsingHeader("inspect texture"))
+                if ((*dataObject).getImageData(i) != "")
                 {
-                    ImTextureID my_tex_id = (ImTextureID)(*window).getImageDS(i);
-                    float my_tex_w = (*window).getImageWidth(i);
-                    float my_tex_h = (*window).getImageHeight(i);
+                    ImGui::SeparatorText("Data");
+                    ImGui::Text((*dataObject).getImageData(i).c_str());
+                }
+
+                if ((*dataObject).getImageData(i) != "")
+                {
+                    ImGui::SeparatorText("Image");
+                    std::string buttName = "Load Image Data #" + std::to_string(i);
+                    if (ImGui::Button(buttName.c_str()))
+                    {
+                        (*dataObject).loadTexture(i);
+                        texLoaded[i] = true;
+                    }
+                    ImGui::Text("size = %d x %d", (*window).getImageWidth(i), (*window).getImageHeight(i));
+
+                    buttName = "Detail #" + std::to_string(i);
+                    if (ImGui::Button(buttName.c_str()))
+                        texDetails[i] = true;
 
                     ImVec2 pos = ImGui::GetCursorScreenPos();
                     ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
                     ImVec4 border_col = ImGui::GetStyleColorVec4(ImGuiCol_Border);
 
-                    ImGui::Image((ImTextureID)(*window).getImageDS(i), ImVec2((*window).getImageWidth(i), (*window).getImageHeight(i)));
-                    if (ImGui::BeginItemTooltip())
+                    /* FIXED IMAGIZE SIZE = 256 x 256+- */
+                    ImTextureID my_tex_id = (ImTextureID)(*window).getImageDS(i);
+                    float width = (*window).getImageWidth(i);
+                    float height = (*window).getImageHeight(i);
+                    if (texLoaded[i] == true)
                     {
-                        float region_sz = 32.0f;
-                        float region_x = io.MousePos.x - pos.x - region_sz * 0.5f;
-                        float region_y = io.MousePos.y - pos.y - region_sz * 0.5f;
-                        float zoom = 4.0f;
-                        if (region_x < 0.0f) { region_x = 0.0f; }
-                        else if (region_x > my_tex_w - region_sz) { region_x = my_tex_w - region_sz; }
-                        if (region_y < 0.0f) { region_y = 0.0f; }
-                        else if (region_y > my_tex_h - region_sz) { region_y = my_tex_h - region_sz; }
-                        ImGui::Text("Min: (%.2f, %.2f)", region_x, region_y);
-                        ImGui::Text("Max: (%.2f, %.2f)", region_x + region_sz, region_y + region_sz);
-                        ImVec2 uv0 = ImVec2((region_x) / my_tex_w, (region_y) / my_tex_h);
-                        ImVec2 uv1 = ImVec2((region_x + region_sz) / my_tex_w, (region_y + region_sz) / my_tex_h);
-                        ImGui::Image(my_tex_id, ImVec2(region_sz * zoom, region_sz * zoom), uv0, uv1, tint_col, border_col);
-                        ImGui::EndTooltip();
+                        if (width >= height)
+                        {
+                            double scale = 512 / (double)width;
+                            width *= scale;
+                            height *= scale;
+                        }
+                        else
+                        {
+                            double scale = 512 / (double)height;
+                            width *= scale;
+                            height *= scale;
+                        }
+                        ImGui::Image((ImTextureID)(*window).getImageDS(i), ImVec2(width, height));
+                    }
+
+                    if (texDetails[i])
+                    {
+                        std::string detailsStr = "texDetails #" + std::to_string(i);
+                        ImGui::Begin(detailsStr.c_str(), &texDetails[i], ImGuiWindowFlags_HorizontalScrollbar);
+
+                        ImGui::DragFloat("zoom", &zoom, 0.10f, 1.0f, 256.0f);
+                        float width = (*window).getImageWidth(i);
+                        float height = (*window).getImageHeight(i);
+                        width *= zoom;
+                        height *= zoom;
+                        ImGui::Image((ImTextureID)(*window).getImageDS(i), ImVec2(width, height));
+
+                        ImGui::End();
                     }
                 }
             }
@@ -135,7 +186,9 @@ namespace details {
     }
     void appUI::ShowBuffers(details::appWindow* window, details::events* dataObject)
     {
-        ImGui::Begin("Vk_Buffers");
+        ImGui::SetNextWindowSize(ImVec2(512, 768), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowPos(ImVec2(192, 0), ImGuiCond_FirstUseEver);
+        ImGui::Begin("Vk_Buffers", &buffers, ImGuiWindowFlags_NoCollapse);
 
         unsigned long long bufferCount = (*dataObject).getBufferCount();
 
@@ -145,17 +198,20 @@ namespace details {
             std::string output = hdrName + "[" + (*dataObject).getBufferState(i) + "]";
             if (ImGui::CollapsingHeader(output.c_str()))
             {
+                ImGui::SeparatorText("VkBuffer Handle Address");
                 output = (*dataObject).getBufferPointer(i);
                 ImGui::Text(output.c_str());
 
                 if (dataObject->getCallsSettings() && output != "new")
                 {
+                    ImGui::SeparatorText("Culprit");
                     output = std::to_string((*dataObject).getBufferCulpritID(i));
                     output += ":";
                     output += (*dataObject).getBufferCulpritName(i);
                     ImGui::Text(output.c_str());
                 }
 
+                ImGui::SeparatorText("Data");
                 ImGui::Text((*dataObject).getBufferData(i).c_str());
             }
         }
@@ -164,7 +220,9 @@ namespace details {
     }
     void appUI::ShowAppInfo(details::appWindow* window, details::events* dataObject)
     {
-        ImGui::Begin("Vulkan Info");
+        ImGui::SetNextWindowSize(ImVec2(512, 768), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowPos(ImVec2(192, 0), ImGuiCond_FirstUseEver);
+        ImGui::Begin("Vulkan Info", &appInfo, ImGuiWindowFlags_NoCollapse);
 
         if (ImGui::CollapsingHeader("appInfo"))
         {
@@ -183,19 +241,16 @@ namespace details {
     }
     void appUI::ShowApiCalls(details::appWindow *window, details::events *dataObject)
     {
+        ImGui::SetNextWindowSize(ImVec2(512, 768), ImGuiCond_FirstUseEver);
+        ImGui::SetNextWindowPos(ImVec2(192, 0), ImGuiCond_FirstUseEver);
         static ImGuiTableFlags flags =
             ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
             | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_NoBordersInBody
-            | ImGuiTableFlags_ScrollY;
-        //PushStyleCompact();
-        //ImGui::CheckboxFlags("ImGuiTableFlags_SortMulti", &flags, ImGuiTableFlags_SortMulti);
-        //ImGui::SameLine(); HelpMarker("When sorting is enabled: hold shift when clicking headers to sort on multiple column. TableGetSortSpecs() may return specs where (SpecsCount > 1).");
-        //ImGui::CheckboxFlags("ImGuiTableFlags_SortTristate", &flags, ImGuiTableFlags_SortTristate);
-        //ImGui::SameLine(); HelpMarker("When sorting is enabled: allow no sorting, disable default sorting. TableGetSortSpecs() may return specs where (SpecsCount == 0).");
-        //PopStyleCompact();
+            | ImGuiTableFlags_ScrollY || ImGuiTableFlags_SizingStretchProp;
+
         const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
 
-        ImGui::Begin("Vk_API_Calls");
+        ImGui::Begin("Vk_API_Calls", &apiCalls, ImGuiWindowFlags_NoCollapse);
 
         unsigned long long frameRangesCount;
         unsigned long long framesCount = (*dataObject).getFrameCount();
@@ -205,6 +260,9 @@ namespace details {
         for (unsigned long long i = 0; i < frameRangesCount; i++)
         {
             std::string headerName = "frames " + std::to_string(i * groupFrameSingleCount) + "-" + std::to_string((i + 1) * groupFrameSingleCount) + '\0';
+
+
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(7.0f, 7.0f));
             if (ImGui::CollapsingHeader(headerName.c_str()))
             {
                 unsigned long long framesPerThisRange;
@@ -216,8 +274,11 @@ namespace details {
                 {
                     framesPerThisRange = framesCount % groupFrameSingleCount;
                 }
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1.0f, 1.0f));
+                ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.2f));
                 for (unsigned long long index = 0; index < framesPerThisRange; index++)
                 {
+
                     if (i + index == 0)
                     {
                         headerName = "before frames" + '\0';
@@ -238,7 +299,7 @@ namespace details {
                             ImGui::TableSetupColumn("Call_ID", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, 0);
                             ImGui::TableSetupColumn("Vk_Call", ImGuiTableColumnFlags_WidthFixed, 0.0f, 1);
                             ImGui::TableSetupColumn("vkResult", ImGuiTableColumnFlags_WidthFixed, 0.0f, 2);
-                            ImGui::TableSetupColumn("Parameters", ImGuiTableColumnFlags_NoSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, 2);
+                            ImGui::TableSetupColumn("Detail", ImGuiTableColumnFlags_NoSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, 2);
                             ImGui::TableHeadersRow();
 
                             /*
@@ -273,17 +334,18 @@ namespace details {
                                 ImGui::TableNextColumn();
 
                                 std::string IdStr = ("vk_Call [ID=" + std::to_string(item->getID()) + "]");
-                                ImGui::Checkbox("Detail", &(apiDetails[IdStr]));
+                                if (ImGui::Button("",ImVec2(ImGui::GetContentRegionAvail().x,20)))
+                                {
+                                    apiDetails[IdStr] = true;
+                                }
                                 if(apiDetails[IdStr])
                                 {
-                                    bool p_open;
-                                    p_open = true;
-                                    ImGui::Begin(IdStr.c_str(), &p_open, 0);
-                                    ImGui::Text(IdStr.c_str());
+                                    ImGui::Begin(IdStr.c_str(), &apiDetails[IdStr], 0);
+                                    ImGui::Text(item->getName().c_str());
                                     if (ImGui::BeginTable((IdStr + "table").c_str(), 2, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * tableSize), 0.0f))
                                     {
-                                        ImGui::TableSetupColumn("Parameter_Name", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, 0);
-                                        ImGui::TableSetupColumn("Value", ImGuiTableColumnFlags_WidthFixed, 0.0f, 1);
+                                        ImGui::TableSetupColumn("Parameter_Name", ImGuiTableColumnFlags_DefaultSort, 0.0f, 0);
+                                        ImGui::TableSetupColumn("Value", NULL, 0.0f, 1);
                                         ImGui::TableHeadersRow();
                                         for (auto itm : item->getParameters())
                                         {
@@ -303,8 +365,14 @@ namespace details {
                             ImGui::EndTable();
                         }
                     }
+
                 }
+                ImGui::PopStyleColor();
+                ImGui::PopStyleVar();
             }
+            ImGui::PopStyleVar();
+            
+
         }
         ImGui::End();
     }
@@ -325,15 +393,37 @@ namespace details {
         window.imGuiInit();
         window.CreateTexture();
 
-        bool apiCalls = false;
-        bool buffers = false;
-        bool demo = false;
-        bool texture = false;
-        bool appInfo = false;
-        bool images = false;
-        bool memories = false;
-        bool warnings = false;
-        bool breaks = false;
+        ImGuiWindowFlags mainWindowFlags = 0;
+        mainWindowFlags |= ImGuiWindowFlags_NoMove;
+        mainWindowFlags |= ImGuiWindowFlags_NoResize;
+        mainWindowFlags |= ImGuiWindowFlags_NoCollapse;
+        mainWindowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
+        mainWindowFlags |= ImGuiWindowFlags_NoTitleBar;
+
+        /* menu and general colors */
+        ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.4f));
+        ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.6f));
+        ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.8f));
+        ImGui::PushStyleColor(ImGuiCol_CheckMark, (ImVec4)ImColor::HSV(0.0f, 1.0f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.6f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.7f));
+
+        /* feature windows colors */
+        ImGui::PushStyleColor(ImGuiCol_TitleBg, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.4f));
+        ImGui::PushStyleColor(ImGuiCol_TitleBgActive, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.5f));
+        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.6f));
+        ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.7f));
+
+        /* tables */
+        ImGui::PushStyleColor(ImGuiCol_TableHeaderBg, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.4f));
+
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(20.0f, 20.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 8.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f));
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(8.0f, 0.0f));
 
         /* window render loop */
         while (!glfwWindowShouldClose(window.window))
@@ -344,7 +434,14 @@ namespace details {
 
             /* imGui menu */            
             {
-                ImGui::Begin("Menu");
+                /* resize */
+                int width, height;
+                glfwGetWindowSize(window.window, &width, &height);
+                ImGui::SetNextWindowSize({ (float)width, (float)height }, 0);
+                ImGui::SetNextWindowPos({0,0}, 0);
+
+                ImGui::Begin("Menu", NULL, mainWindowFlags);
+
                 if(eventManager.getCallsSettings())
                     ImGui::Checkbox("Api_Calls", &apiCalls);
                 if (eventManager.getBuffersSettings())
@@ -359,11 +456,23 @@ namespace details {
                     ImGui::Checkbox("Breakpoints", &breaks);
 
                 ImGui::Checkbox("App_Info", &appInfo);
-                ImGui::Checkbox("Demo_Window", &demo);
+                //ImGui::Checkbox("Demo_Window", &demo);
+
+                if (ImGui::Button("Exit", ImVec2(128,64)))
+                {
+                    break;
+                }
+
                 ImGui::End();
             }
 
-            if(apiCalls == true)
+
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8.0f, 8.0f));
+            ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f));
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(8.0f, 0.0f));
+
+            if (apiCalls == true)
                 ShowApiCalls(&window, &eventManager);
             if(buffers == true)
                 ShowBuffers(&window, &eventManager);
@@ -379,8 +488,15 @@ namespace details {
                 ShowImages(&window, &eventManager);
             if (memories == true)
                 ShowMemories(&window, &eventManager);
+
+
+            ImGui::PopStyleVar(4);
+
             window.renderNewFrame();
         }
+
+        ImGui::PopStyleVar(4);
+        ImGui::PopStyleColor(7);
 
         /* clean */
         window.cleanupImGui();

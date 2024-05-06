@@ -99,7 +99,7 @@ namespace laygen
             outputStr += "ptrToString((void**)std::addressof(";
             outputStr += prefix + name;
             outputStr += "))";
-            ret = true;
+            ret = false;
         }
         else if (type == "uint32_t" || type == "int32_t" || type == "float" || type == "int" || type == "size_t" || type == "uint64_t" || type == "uint8_t" || type == "VkDeviceSize")
         {
@@ -120,7 +120,7 @@ namespace laygen
             outputStr += "charToString((char*)";
             outputStr += prefix + name;
             outputStr += ")";
-            ret = true;
+            ret = false;
         }
         else if (type == "array")
         {
@@ -128,7 +128,7 @@ namespace laygen
             outputStr += "\"";
             outputStr += prefix + name;
             outputStr += "=[array]\"";
-            ret = true;
+            ret = false;
         }
         else if (IsEnum(type))
         {
@@ -529,7 +529,7 @@ namespace laygen
             * print parameters that can be sent
             */
 
-            //PrintParemeterSends(&generatedLayerFile, &(xmlp.structList), &(item.parameterList));
+            PrintParemeterSends(&generatedLayerFile, &(xmlp.structList), &(item.parameterList));
 
             /*
             * additional functionality (if) defined in layer.cpp

@@ -13,7 +13,8 @@ namespace details {
         };
 
         std::list<ParamStr> getParameters() { return this->parameters; }
-        std::string getName() { return this->name; }
+        /* skip prefix */
+        std::string getName() { return this->name.substr(6, this->name.size()); }
         unsigned long long getID() { return this->ID; }
         int getRetVal() { return this->returnVal; }
 
