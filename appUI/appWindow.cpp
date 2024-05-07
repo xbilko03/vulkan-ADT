@@ -32,7 +32,7 @@ namespace details {
             RemoveTexture(&loadedImages[ID]);
         }
 
-        my_texture.Channels = channels;
+        my_texture.Channels = 4;
         //unsigned char* image_data = stbi_load(filename, &tex_data->Width, &tex_data->Height, 0, tex_data->Channels);
         my_texture.Height = height;
         my_texture.Width = width;

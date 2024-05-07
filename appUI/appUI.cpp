@@ -128,16 +128,16 @@ namespace details {
                 if ((*dataObject).getImageData(i) != "")
                 {
                     ImGui::SeparatorText("Image");
-                    std::string buttName = "Load Image Data #" + std::to_string(i);
-                    if (ImGui::Button(buttName.c_str()))
+                    std::string buttonName = "Load Image Data #" + std::to_string(i);
+                    if (ImGui::Button(buttonName.c_str()))
                     {
                         (*dataObject).loadTexture(i);
                         texLoaded[i] = true;
                     }
                     ImGui::Text("size = %d x %d", (*window).getImageWidth(i), (*window).getImageHeight(i));
 
-                    buttName = "Detail #" + std::to_string(i);
-                    if (ImGui::Button(buttName.c_str()))
+                    buttonName = "Native size and zoom #" + std::to_string(i);
+                    if (ImGui::Button(buttonName.c_str()))
                         texDetails[i] = true;
 
                     ImVec2 pos = ImGui::GetCursorScreenPos();

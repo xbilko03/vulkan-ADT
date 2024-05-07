@@ -99,7 +99,7 @@ namespace details {
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         bufferInfo.size = MAXBUFFERSIZE;
-        bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+        bufferInfo.usage = VK_BUFFER_USAGE_TRANSFER_DST_BIT;
         bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
         skipLock = true;
@@ -143,6 +143,10 @@ namespace details {
     }
     void layerData::mapImageToBuffer(VkDeviceMemory memory)
     {
+        skipLock = true;
+        vkDeviceWaitIdle(deviceAddr);
+        skipLock = false;
+
         VkImage inputImage = memoryMap[memory].boundImage;
 
         VkBufferImageCopy region{};
@@ -155,7 +159,6 @@ namespace details {
         region.imageSubresource.layerCount = 1;
         region.imageOffset = { 0, 0, 0 };
         region.imageExtent = imageMap[inputImage].extent;
-
 
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -174,7 +177,7 @@ namespace details {
         skipLock = false;
 
         skipLock = true;
-        vkCmdCopyImageToBuffer(commandBuffer, inputImage, imageMap[inputImage].layout, buffer, 1, &region);
+        vkCmdCopyImageToBuffer(commandBuffer, inputImage, VK_IMAGE_LAYOUT_GENERAL, buffer, 1, &region);
         skipLock = false;
 
         skipLock = true;

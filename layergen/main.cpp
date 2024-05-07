@@ -1,16 +1,24 @@
-#include "layer_generator.hpp"
+﻿/*
+* Name		    : main.cpp
+* Project	    : A Debugging Tool for Vulkan API (VkDebugger)
+* Description   : Entry point for the layer generator
+*
+* Author : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
+*/
 
-#include <cstdlib>
+#include "layer_generator.hpp"
 #include <iostream>
 #include <stdexcept>
 
 int main() {
     laygen::LayerGenerator app{};
 
-    try {
+    try
+    {
         app.run();
     }
-    catch (const std::exception& e) {
+    catch (std::exception e)
+    {
         std::cerr << e.what() << '\n';
         return EXIT_FAILURE;
     }

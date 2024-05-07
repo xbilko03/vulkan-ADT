@@ -1,8 +1,8 @@
 #include "layer.hpp"
 #include <mutex>
 #include <ws2tcpip.h>
-#include "../layergen/vk_layer_dispatch_table.h"
-#include "../vklayer/vk_layer_table.h"
+#include "layer_generated.h"
+#include "vk_layer_table.h"
 
 std::map<void*, VkLayerInstanceDispatchTable> instance_dispatch;
 std::map<void*, VkLayerDispatchTable> device_dispatch;
@@ -10,7 +10,9 @@ std::mutex global_lock;
 typedef std::lock_guard<std::mutex> scoped_lock;
 template<typename DispatchableType>
 void* GetKey(DispatchableType inst)
-{ return *(void**)inst; }
+{ 
+	return *(void**)inst; 
+}
 void CreateDeviceDispatch(PFN_vkGetDeviceProcAddr gdpa, VkDevice* pDevice) {
 VkLayerDispatchTable dispatchTable;
 dispatchTable.GetDeviceProcAddr = (PFN_vkGetDeviceProcAddr)gdpa(*pDevice, "vkGetDeviceProcAddr");
@@ -890,7 +892,7 @@ std::string GetWindowName()
 }
 
 /* Layer init and shutdown */
-VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
 {
     /* create new process */
     STARTUPINFO info = { sizeof(info) };
@@ -1010,7 +1012,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateInstance(const VkInstance
     return ret;
 }
 
-VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyInstance(VkInstance instance, const VkAllocationCallbacks* pAllocator)
+VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyInstance(VkInstance instance, const VkAllocationCallbacks* pAllocator)
 {
     scoped_lock l(global_lock);
 
@@ -1048,7 +1050,7 @@ VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyInstance(VkInstance instance
     layerWinsockExit(&ConnectSocket);
 }
 
-VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDevice(VkPhysicalDevice physicalDevice, const VkDeviceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDevice* pDevice)
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(VkPhysicalDevice physicalDevice, const VkDeviceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDevice* pDevice)
 {
     VkLayerDeviceCreateInfo* layerCreateInfo = (VkLayerDeviceCreateInfo*)pCreateInfo->pNext;
 
@@ -1126,7 +1128,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDevice(VkPhysicalDevice p
     return ret;
 }
 
-VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDevice(VkDevice device, const VkAllocationCallbacks* pAllocator)
+VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDevice(VkDevice device, const VkAllocationCallbacks* pAllocator)
 {
     scoped_lock l(global_lock);
     
@@ -1161,7 +1163,7 @@ VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDevice(VkDevice device, cons
 }
 
 /* Enumeration function */
-VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateInstanceLayerProperties(uint32_t* pPropertyCount, VkLayerProperties* pProperties)
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceLayerProperties(uint32_t* pPropertyCount, VkLayerProperties* pProperties)
 {
     /* send call before loader */
     if (connected) {
@@ -1194,7 +1196,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateInstanceLayerPropertie
     return VK_SUCCESS;
 }
 
-VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateDeviceLayerProperties(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkLayerProperties* pProperties)
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceLayerProperties(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkLayerProperties* pProperties)
 {
 
     /* send call before loader */
@@ -1228,7 +1230,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateDeviceLayerProperties(
     return VK_SUCCESS;
 }
 
-VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateInstanceExtensionProperties(const char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceExtensionProperties(const char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
 {
     /* send call before loader */
     if (connected) {
@@ -1257,7 +1259,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateInstanceExtensionPrope
     return VK_SUCCESS;
 }
 
-VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice, const char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
+VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice, const char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
 {
 
     /* send call before loader */
@@ -1301,7 +1303,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumerateDeviceExtensionPropert
 
 /* Generated part */
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumeratePhysicalDevices(VkInstance instance, uint32_t* pPhysicalDeviceCount, VkPhysicalDevice* pPhysicalDevices) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumeratePhysicalDevices(VkInstance instance, uint32_t* pPhysicalDeviceCount, VkPhysicalDevice* pPhysicalDevices) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1336,7 +1338,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties* pProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1374,7 +1376,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties(physicalDe
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceQueueFamilyProperties(VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties* pQueueFamilyProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceQueueFamilyProperties(VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties* pQueueFamilyProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1410,7 +1412,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceMemoryProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties* pMemoryProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceMemoryProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties* pMemoryProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1444,7 +1446,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties(phys
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceFeatures(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures* pFeatures) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceFeatures(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures* pFeatures) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1531,7 +1533,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures(physicalDevi
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceFormatProperties(VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties* pFormatProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceFormatProperties(VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties* pFormatProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1566,7 +1568,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties(phys
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceImageFormatProperties(VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags, VkImageFormatProperties* pImageFormatProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceImageFormatProperties(VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags, VkImageFormatProperties* pImageFormatProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1609,7 +1611,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceSparseImageFormatProperties(VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkSampleCountFlagBits samples, VkImageUsageFlags usage, VkImageTiling tiling, uint32_t* pPropertyCount, VkSparseImageFormatProperties* pProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceSparseImageFormatProperties(VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkSampleCountFlagBits samples, VkImageUsageFlags usage, VkImageTiling tiling, uint32_t* pPropertyCount, VkSparseImageFormatProperties* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1646,7 +1648,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProp
 }
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateAndroidSurfaceKHR(VkInstance instance, VkAndroidSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateAndroidSurfaceKHR(VkInstance instance, VkAndroidSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1693,7 +1695,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceDisplayPropertiesKHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkDisplayPropertiesKHR* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceDisplayPropertiesKHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkDisplayPropertiesKHR* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1735,7 +1737,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceDisplayPlanePropertiesKHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkDisplayPlanePropertiesKHR* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceDisplayPlanePropertiesKHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkDisplayPlanePropertiesKHR* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1773,7 +1775,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDisplayPlaneSupportedDisplaysKHR(VkPhysicalDevice physicalDevice, uint32_t planeIndex, uint32_t* pDisplayCount, VkDisplayKHR* pDisplays) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetDisplayPlaneSupportedDisplaysKHR(VkPhysicalDevice physicalDevice, uint32_t planeIndex, uint32_t* pDisplayCount, VkDisplayKHR* pDisplays) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1809,7 +1811,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDisplayModePropertiesKHR(VkPhysicalDevice physicalDevice, VkDisplayKHR display, uint32_t* pPropertyCount, VkDisplayModePropertiesKHR* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetDisplayModePropertiesKHR(VkPhysicalDevice physicalDevice, VkDisplayKHR display, uint32_t* pPropertyCount, VkDisplayModePropertiesKHR* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1848,7 +1850,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDisplayModeKHR(VkPhysicalDevice physicalDevice, VkDisplayKHR display, VkDisplayModeCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDisplayModeKHR* pMode) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDisplayModeKHR(VkPhysicalDevice physicalDevice, VkDisplayKHR display, VkDisplayModeCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDisplayModeKHR* pMode) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1895,7 +1897,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDisplayPlaneCapabilitiesKHR(VkPhysicalDevice physicalDevice, VkDisplayModeKHR mode, uint32_t planeIndex, VkDisplayPlaneCapabilitiesKHR* pCapabilities) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetDisplayPlaneCapabilitiesKHR(VkPhysicalDevice physicalDevice, VkDisplayModeKHR mode, uint32_t planeIndex, VkDisplayPlaneCapabilitiesKHR* pCapabilities) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1942,7 +1944,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDisplayPlaneSurfaceKHR(VkInstance instance, VkDisplaySurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDisplayPlaneSurfaceKHR(VkInstance instance, VkDisplaySurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -1992,7 +1994,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroySurfaceKHR(VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroySurfaceKHR(VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2030,7 +2032,7 @@ instance_dispatch[GetKey(instance)].DestroySurfaceKHR(instance, surface, pAlloca
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfaceSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, VkSurfaceKHR surface, VkBool32* pSupported) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceSurfaceSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, VkSurfaceKHR surface, VkBool32* pSupported) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2067,7 +2069,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfaceCapabilitiesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkSurfaceCapabilitiesKHR* pSurfaceCapabilities) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceSurfaceCapabilitiesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkSurfaceCapabilitiesKHR* pSurfaceCapabilities) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2113,7 +2115,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfaceFormatsKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pSurfaceFormatCount, VkSurfaceFormatKHR* pSurfaceFormats) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceSurfaceFormatsKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pSurfaceFormatCount, VkSurfaceFormatKHR* pSurfaceFormats) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2150,7 +2152,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfacePresentModesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pPresentModeCount, VkPresentModeKHR* pPresentModes) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceSurfacePresentModesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pPresentModeCount, VkPresentModeKHR* pPresentModes) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2187,7 +2189,7 @@ return ret;
 }
 
 #if defined(VK_USE_PLATFORM_VI_NN)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateViSurfaceNN(VkInstance instance, VkViSurfaceCreateInfoNN* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateViSurfaceNN(VkInstance instance, VkViSurfaceCreateInfoNN* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2234,7 +2236,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateWaylandSurfaceKHR(VkInstance instance, VkWaylandSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateWaylandSurfaceKHR(VkInstance instance, VkWaylandSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2283,7 +2285,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
- VK_LAYER_EXPORT VkBool32 VKAPI_CALL DetailsLayer_GetPhysicalDeviceWaylandPresentationSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, wl_display* display) {
+ VK_LAYER_EXPORT VkBool32 VKAPI_CALL DebuggerLayer_GetPhysicalDeviceWaylandPresentationSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, wl_display* display) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2321,7 +2323,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateWin32SurfaceKHR(VkInstance instance, VkWin32SurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateWin32SurfaceKHR(VkInstance instance, VkWin32SurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2370,7 +2372,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkBool32 VKAPI_CALL DetailsLayer_GetPhysicalDeviceWin32PresentationSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex) {
+ VK_LAYER_EXPORT VkBool32 VKAPI_CALL DebuggerLayer_GetPhysicalDeviceWin32PresentationSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2407,7 +2409,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_XLIB_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateXlibSurfaceKHR(VkInstance instance, VkXlibSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateXlibSurfaceKHR(VkInstance instance, VkXlibSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2456,7 +2458,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_XLIB_KHR)
- VK_LAYER_EXPORT VkBool32 VKAPI_CALL DetailsLayer_GetPhysicalDeviceXlibPresentationSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, Display* dpy, VisualID visualID) {
+ VK_LAYER_EXPORT VkBool32 VKAPI_CALL DebuggerLayer_GetPhysicalDeviceXlibPresentationSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, Display* dpy, VisualID visualID) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2495,7 +2497,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_XCB_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateXcbSurfaceKHR(VkInstance instance, VkXcbSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateXcbSurfaceKHR(VkInstance instance, VkXcbSurfaceCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2544,7 +2546,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_XCB_KHR)
- VK_LAYER_EXPORT VkBool32 VKAPI_CALL DetailsLayer_GetPhysicalDeviceXcbPresentationSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, xcb_connection_t* connection, xcb_visualid_t visual_id) {
+ VK_LAYER_EXPORT VkBool32 VKAPI_CALL DebuggerLayer_GetPhysicalDeviceXcbPresentationSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, xcb_connection_t* connection, xcb_visualid_t visual_id) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2583,7 +2585,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_DIRECTFB_EXT)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDirectFBSurfaceEXT(VkInstance instance, VkDirectFBSurfaceCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDirectFBSurfaceEXT(VkInstance instance, VkDirectFBSurfaceCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2632,7 +2634,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_DIRECTFB_EXT)
- VK_LAYER_EXPORT VkBool32 VKAPI_CALL DetailsLayer_GetPhysicalDeviceDirectFBPresentationSupportEXT(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, IDirectFB* dfb) {
+ VK_LAYER_EXPORT VkBool32 VKAPI_CALL DebuggerLayer_GetPhysicalDeviceDirectFBPresentationSupportEXT(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, IDirectFB* dfb) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2670,7 +2672,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_FUCHSIA)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateImagePipeSurfaceFUCHSIA(VkInstance instance, VkImagePipeSurfaceCreateInfoFUCHSIA* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateImagePipeSurfaceFUCHSIA(VkInstance instance, VkImagePipeSurfaceCreateInfoFUCHSIA* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2718,7 +2720,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_GGP)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateStreamDescriptorSurfaceGGP(VkInstance instance, VkStreamDescriptorSurfaceCreateInfoGGP* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateStreamDescriptorSurfaceGGP(VkInstance instance, VkStreamDescriptorSurfaceCreateInfoGGP* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2766,7 +2768,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_SCREEN_QNX)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateScreenSurfaceQNX(VkInstance instance, VkScreenSurfaceCreateInfoQNX* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateScreenSurfaceQNX(VkInstance instance, VkScreenSurfaceCreateInfoQNX* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2815,7 +2817,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_SCREEN_QNX)
- VK_LAYER_EXPORT VkBool32 VKAPI_CALL DetailsLayer_GetPhysicalDeviceScreenPresentationSupportQNX(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, _screen_window* window) {
+ VK_LAYER_EXPORT VkBool32 VKAPI_CALL DebuggerLayer_GetPhysicalDeviceScreenPresentationSupportQNX(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, _screen_window* window) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2852,7 +2854,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDebugReportCallbackEXT(VkInstance instance, VkDebugReportCallbackCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDebugReportCallbackEXT* pCallback) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDebugReportCallbackEXT(VkInstance instance, VkDebugReportCallbackCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDebugReportCallbackEXT* pCallback) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2898,7 +2900,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDebugReportCallbackEXT(VkInstance instance, VkDebugReportCallbackEXT callback, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDebugReportCallbackEXT(VkInstance instance, VkDebugReportCallbackEXT callback, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2936,7 +2938,7 @@ instance_dispatch[GetKey(instance)].DestroyDebugReportCallbackEXT(instance, call
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DebugReportMessageEXT(VkInstance instance, VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, char* pLayerPrefix, char* pMessage) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DebugReportMessageEXT(VkInstance instance, VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, char* pLayerPrefix, char* pMessage) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -2970,7 +2972,7 @@ instance_dispatch[GetKey(instance)].DebugReportMessageEXT(instance, flags, objec
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalImageFormatPropertiesNV(VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags, VkExternalMemoryHandleTypeFlagsNV externalHandleType, VkExternalImageFormatPropertiesNV* pExternalImageFormatProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceExternalImageFormatPropertiesNV(VkPhysicalDevice physicalDevice, VkFormat format, VkImageType type, VkImageTiling tiling, VkImageUsageFlags usage, VkImageCreateFlags flags, VkExternalMemoryHandleTypeFlagsNV externalHandleType, VkExternalImageFormatPropertiesNV* pExternalImageFormatProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3013,7 +3015,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceFeatures2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceFeatures2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3046,7 +3048,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures2(physicalDev
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties2* pProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties2* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3079,7 +3081,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties2(physicalD
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceFormatProperties2(VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties2* pFormatProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceFormatProperties2(VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties2* pFormatProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3112,7 +3114,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties2(phy
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceImageFormatProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceImageFormatInfo2* pImageFormatInfo, VkImageFormatProperties2* pImageFormatProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceImageFormatProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceImageFormatInfo2* pImageFormatInfo, VkImageFormatProperties2* pImageFormatProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3153,7 +3155,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceQueueFamilyProperties2(VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties2* pQueueFamilyProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceQueueFamilyProperties2(VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties2* pQueueFamilyProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3186,7 +3188,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceMemoryProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties2* pMemoryProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceMemoryProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties2* pMemoryProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3219,7 +3221,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties2(phy
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceSparseImageFormatProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSparseImageFormatInfo2* pFormatInfo, uint32_t* pPropertyCount, VkSparseImageFormatProperties2* pProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceSparseImageFormatProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSparseImageFormatInfo2* pFormatInfo, uint32_t* pPropertyCount, VkSparseImageFormatProperties2* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3255,7 +3257,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProp
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalBufferProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalBufferInfo* pExternalBufferInfo, VkExternalBufferProperties* pExternalBufferProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceExternalBufferProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalBufferInfo* pExternalBufferInfo, VkExternalBufferProperties* pExternalBufferProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3293,7 +3295,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalBufferPropert
 }
 
 #if defined(VK_USE_PLATFORM_SCI)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalMemorySciBufPropertiesNV(VkPhysicalDevice physicalDevice, VkExternalMemoryHandleTypeFlagBits handleType, NvSciBufObj handle, VkMemorySciBufPropertiesNV* pMemorySciBufProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceExternalMemorySciBufPropertiesNV(VkPhysicalDevice physicalDevice, VkExternalMemoryHandleTypeFlagBits handleType, NvSciBufObj handle, VkMemorySciBufPropertiesNV* pMemorySciBufProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3333,7 +3335,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSciBufAttributesNV(VkPhysicalDevice physicalDevice, NvSciBufAttrList pAttributes) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceSciBufAttributesNV(VkPhysicalDevice physicalDevice, NvSciBufAttrList pAttributes) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3369,7 +3371,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalSemaphoreProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalSemaphoreInfo* pExternalSemaphoreInfo, VkExternalSemaphoreProperties* pExternalSemaphoreProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceExternalSemaphoreProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalSemaphoreInfo* pExternalSemaphoreInfo, VkExternalSemaphoreProperties* pExternalSemaphoreProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3406,7 +3408,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalSemaphoreProp
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalFenceProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalFenceInfo* pExternalFenceInfo, VkExternalFenceProperties* pExternalFenceProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceExternalFenceProperties(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalFenceInfo* pExternalFenceInfo, VkExternalFenceProperties* pExternalFenceProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3444,7 +3446,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalFenceProperti
 }
 
 #if defined(VK_USE_PLATFORM_SCI)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSciSyncAttributesNV(VkPhysicalDevice physicalDevice, VkSciSyncAttributesInfoNV* pSciSyncAttributesInfo, NvSciSyncAttrList pAttributes) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceSciSyncAttributesNV(VkPhysicalDevice physicalDevice, VkSciSyncAttributesInfoNV* pSciSyncAttributesInfo, NvSciSyncAttrList pAttributes) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3482,7 +3484,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ReleaseDisplayEXT(VkPhysicalDevice physicalDevice, VkDisplayKHR display) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ReleaseDisplayEXT(VkPhysicalDevice physicalDevice, VkDisplayKHR display) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3518,7 +3520,7 @@ return ret;
 }
 
 #if defined(VK_USE_PLATFORM_XLIB_XRANDR_EXT)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireXlibDisplayEXT(VkPhysicalDevice physicalDevice, Display* dpy, VkDisplayKHR display) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_AcquireXlibDisplayEXT(VkPhysicalDevice physicalDevice, Display* dpy, VkDisplayKHR display) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3556,7 +3558,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_XLIB_XRANDR_EXT)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetRandROutputDisplayEXT(VkPhysicalDevice physicalDevice, Display* dpy, RROutput rrOutput, VkDisplayKHR* pDisplay) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetRandROutputDisplayEXT(VkPhysicalDevice physicalDevice, Display* dpy, RROutput rrOutput, VkDisplayKHR* pDisplay) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3595,7 +3597,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireWinrtDisplayNV(VkPhysicalDevice physicalDevice, VkDisplayKHR display) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_AcquireWinrtDisplayNV(VkPhysicalDevice physicalDevice, VkDisplayKHR display) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3632,7 +3634,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetWinrtDisplayNV(VkPhysicalDevice physicalDevice, uint32_t deviceRelativeId, VkDisplayKHR* pDisplay) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetWinrtDisplayNV(VkPhysicalDevice physicalDevice, uint32_t deviceRelativeId, VkDisplayKHR* pDisplay) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3669,7 +3671,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfaceCapabilities2EXT(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkSurfaceCapabilities2EXT* pSurfaceCapabilities) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceSurfaceCapabilities2EXT(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkSurfaceCapabilities2EXT* pSurfaceCapabilities) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3716,7 +3718,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumeratePhysicalDeviceGroups(VkInstance instance, uint32_t* pPhysicalDeviceGroupCount, VkPhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumeratePhysicalDeviceGroups(VkInstance instance, uint32_t* pPhysicalDeviceGroupCount, VkPhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3754,7 +3756,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDevicePresentRectanglesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pRectCount, VkRect2D* pRects) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDevicePresentRectanglesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pRectCount, VkRect2D* pRects) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3794,7 +3796,7 @@ return ret;
 }
 
 #if defined(VK_USE_PLATFORM_IOS_MVK)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateIOSSurfaceMVK(VkInstance instance, VkIOSSurfaceCreateInfoMVK* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateIOSSurfaceMVK(VkInstance instance, VkIOSSurfaceCreateInfoMVK* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3841,7 +3843,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_MACOS_MVK)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateMacOSSurfaceMVK(VkInstance instance, VkMacOSSurfaceCreateInfoMVK* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateMacOSSurfaceMVK(VkInstance instance, VkMacOSSurfaceCreateInfoMVK* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3888,7 +3890,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_METAL_EXT)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateMetalSurfaceEXT(VkInstance instance, VkMetalSurfaceCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateMetalSurfaceEXT(VkInstance instance, VkMetalSurfaceCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3935,7 +3937,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceMultisamplePropertiesEXT(VkPhysicalDevice physicalDevice, VkSampleCountFlagBits samples, VkMultisamplePropertiesEXT* pMultisampleProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceMultisamplePropertiesEXT(VkPhysicalDevice physicalDevice, VkSampleCountFlagBits samples, VkMultisamplePropertiesEXT* pMultisampleProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -3968,7 +3970,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMultisampleProperties
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfaceCapabilities2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, VkSurfaceCapabilities2KHR* pSurfaceCapabilities) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceSurfaceCapabilities2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, VkSurfaceCapabilities2KHR* pSurfaceCapabilities) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4008,7 +4010,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfaceFormats2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, uint32_t* pSurfaceFormatCount, VkSurfaceFormat2KHR* pSurfaceFormats) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceSurfaceFormats2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, uint32_t* pSurfaceFormatCount, VkSurfaceFormat2KHR* pSurfaceFormats) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4048,7 +4050,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceDisplayProperties2KHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkDisplayProperties2KHR* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceDisplayProperties2KHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkDisplayProperties2KHR* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4085,7 +4087,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceDisplayPlaneProperties2KHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkDisplayPlaneProperties2KHR* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceDisplayPlaneProperties2KHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkDisplayPlaneProperties2KHR* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4122,7 +4124,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDisplayModeProperties2KHR(VkPhysicalDevice physicalDevice, VkDisplayKHR display, uint32_t* pPropertyCount, VkDisplayModeProperties2KHR* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetDisplayModeProperties2KHR(VkPhysicalDevice physicalDevice, VkDisplayKHR display, uint32_t* pPropertyCount, VkDisplayModeProperties2KHR* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4160,7 +4162,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDisplayPlaneCapabilities2KHR(VkPhysicalDevice physicalDevice, VkDisplayPlaneInfo2KHR* pDisplayPlaneInfo, VkDisplayPlaneCapabilities2KHR* pCapabilities) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetDisplayPlaneCapabilities2KHR(VkPhysicalDevice physicalDevice, VkDisplayPlaneInfo2KHR* pDisplayPlaneInfo, VkDisplayPlaneCapabilities2KHR* pCapabilities) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4201,7 +4203,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceCalibrateableTimeDomainsKHR(VkPhysicalDevice physicalDevice, uint32_t* pTimeDomainCount, VkTimeDomainKHR* pTimeDomains) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceCalibrateableTimeDomainsKHR(VkPhysicalDevice physicalDevice, uint32_t* pTimeDomainCount, VkTimeDomainKHR* pTimeDomains) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4236,7 +4238,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pMessenger) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pMessenger) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4284,7 +4286,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT messenger, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT messenger, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4322,7 +4324,7 @@ instance_dispatch[GetKey(instance)].DestroyDebugUtilsMessengerEXT(instance, mess
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_SubmitDebugUtilsMessageEXT(VkInstance instance, VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageTypes, VkDebugUtilsMessengerCallbackDataEXT* pCallbackData) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_SubmitDebugUtilsMessageEXT(VkInstance instance, VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageTypes, VkDebugUtilsMessengerCallbackDataEXT* pCallbackData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4367,7 +4369,7 @@ instance_dispatch[GetKey(instance)].SubmitDebugUtilsMessageEXT(instance, message
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceCooperativeMatrixPropertiesNV(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkCooperativeMatrixPropertiesNV* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceCooperativeMatrixPropertiesNV(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkCooperativeMatrixPropertiesNV* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4412,7 +4414,7 @@ return ret;
 }
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSurfacePresentModes2EXT(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, uint32_t* pPresentModeCount, VkPresentModeKHR* pPresentModes) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceSurfacePresentModes2EXT(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, uint32_t* pPresentModeCount, VkPresentModeKHR* pPresentModes) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4451,7 +4453,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, uint32_t* pCounterCount, VkPerformanceCounterKHR* pCounters, VkPerformanceCounterDescriptionKHR* pCounterDescriptions) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, uint32_t* pCounterCount, VkPerformanceCounterKHR* pCounters, VkPerformanceCounterDescriptionKHR* pCounterDescriptions) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4491,7 +4493,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR(VkPhysicalDevice physicalDevice, VkQueryPoolPerformanceCreateInfoKHR* pPerformanceQueryCreateInfo, uint32_t* pNumPasses) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR(VkPhysicalDevice physicalDevice, VkQueryPoolPerformanceCreateInfoKHR* pPerformanceQueryCreateInfo, uint32_t* pNumPasses) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4525,7 +4527,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyPerformanc
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateHeadlessSurfaceEXT(VkInstance instance, VkHeadlessSurfaceCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateHeadlessSurfaceEXT(VkInstance instance, VkHeadlessSurfaceCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4570,7 +4572,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(VkPhysicalDevice physicalDevice, uint32_t* pCombinationCount, VkFramebufferMixedSamplesCombinationNV* pCombinations) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV(VkPhysicalDevice physicalDevice, uint32_t* pCombinationCount, VkFramebufferMixedSamplesCombinationNV* pCombinations) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4608,7 +4610,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceToolProperties(VkPhysicalDevice physicalDevice, uint32_t* pToolCount, VkPhysicalDeviceToolProperties* pToolProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceToolProperties(VkPhysicalDevice physicalDevice, uint32_t* pToolCount, VkPhysicalDeviceToolProperties* pToolProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4645,7 +4647,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceFragmentShadingRatesKHR(VkPhysicalDevice physicalDevice, uint32_t* pFragmentShadingRateCount, VkPhysicalDeviceFragmentShadingRateKHR* pFragmentShadingRates) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceFragmentShadingRatesKHR(VkPhysicalDevice physicalDevice, uint32_t* pFragmentShadingRateCount, VkPhysicalDeviceFragmentShadingRateKHR* pFragmentShadingRates) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4683,7 +4685,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceVideoCapabilitiesKHR(VkPhysicalDevice physicalDevice, VkVideoProfileInfoKHR* pVideoProfile, VkVideoCapabilitiesKHR* pCapabilities) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceVideoCapabilitiesKHR(VkPhysicalDevice physicalDevice, VkVideoProfileInfoKHR* pVideoProfile, VkVideoCapabilitiesKHR* pCapabilities) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4733,7 +4735,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceVideoFormatPropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceVideoFormatInfoKHR* pVideoFormatInfo, uint32_t* pVideoFormatPropertyCount, VkVideoFormatPropertiesKHR* pVideoFormatProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceVideoFormatPropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceVideoFormatInfoKHR* pVideoFormatInfo, uint32_t* pVideoFormatPropertyCount, VkVideoFormatPropertiesKHR* pVideoFormatProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4775,7 +4777,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR* pQualityLevelInfo, VkVideoEncodeQualityLevelPropertiesKHR* pQualityLevelProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceVideoEncodeQualityLevelPropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceVideoEncodeQualityLevelInfoKHR* pQualityLevelInfo, VkVideoEncodeQualityLevelPropertiesKHR* pQualityLevelProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4820,7 +4822,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireDrmDisplayEXT(VkPhysicalDevice physicalDevice, int32_t drmFd, VkDisplayKHR display) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_AcquireDrmDisplayEXT(VkPhysicalDevice physicalDevice, int32_t drmFd, VkDisplayKHR display) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4856,7 +4858,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDrmDisplayEXT(VkPhysicalDevice physicalDevice, int32_t drmFd, uint32_t connectorId, VkDisplayKHR* display) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetDrmDisplayEXT(VkPhysicalDevice physicalDevice, int32_t drmFd, uint32_t connectorId, VkDisplayKHR* display) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4893,7 +4895,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceOpticalFlowImageFormatsNV(VkPhysicalDevice physicalDevice, VkOpticalFlowImageFormatInfoNV* pOpticalFlowImageFormatInfo, uint32_t* pFormatCount, VkOpticalFlowImageFormatPropertiesNV* pImageFormatProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceOpticalFlowImageFormatsNV(VkPhysicalDevice physicalDevice, VkOpticalFlowImageFormatInfoNV* pOpticalFlowImageFormatInfo, uint32_t* pFormatCount, VkOpticalFlowImageFormatPropertiesNV* pImageFormatProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4932,7 +4934,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceCooperativeMatrixPropertiesKHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkCooperativeMatrixPropertiesKHR* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceCooperativeMatrixPropertiesKHR(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkCooperativeMatrixPropertiesKHR* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -4972,7 +4974,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceFeatures2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceFeatures2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5005,7 +5007,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFeatures2KHR(physical
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties2* pProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties2* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5038,7 +5040,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceProperties2KHR(physic
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceFormatProperties2KHR(VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties2* pFormatProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceFormatProperties2KHR(VkPhysicalDevice physicalDevice, VkFormat format, VkFormatProperties2* pFormatProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5071,7 +5073,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceFormatProperties2KHR(
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceImageFormatProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceImageFormatInfo2* pImageFormatInfo, VkImageFormatProperties2* pImageFormatProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceImageFormatProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceImageFormatInfo2* pImageFormatInfo, VkImageFormatProperties2* pImageFormatProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5112,7 +5114,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceQueueFamilyProperties2KHR(VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties2* pQueueFamilyProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceQueueFamilyProperties2KHR(VkPhysicalDevice physicalDevice, uint32_t* pQueueFamilyPropertyCount, VkQueueFamilyProperties2* pQueueFamilyProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5145,7 +5147,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceQueueFamilyProperties
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceMemoryProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties2* pMemoryProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceMemoryProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceMemoryProperties2* pMemoryProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5178,7 +5180,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceMemoryProperties2KHR(
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceSparseImageFormatProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSparseImageFormatInfo2* pFormatInfo, uint32_t* pPropertyCount, VkSparseImageFormatProperties2* pProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceSparseImageFormatProperties2KHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceSparseImageFormatInfo2* pFormatInfo, uint32_t* pPropertyCount, VkSparseImageFormatProperties2* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5214,7 +5216,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceSparseImageFormatProp
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalBufferPropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalBufferInfo* pExternalBufferInfo, VkExternalBufferProperties* pExternalBufferProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceExternalBufferPropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalBufferInfo* pExternalBufferInfo, VkExternalBufferProperties* pExternalBufferProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5251,7 +5253,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalBufferPropert
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalSemaphorePropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalSemaphoreInfo* pExternalSemaphoreInfo, VkExternalSemaphoreProperties* pExternalSemaphoreProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceExternalSemaphorePropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalSemaphoreInfo* pExternalSemaphoreInfo, VkExternalSemaphoreProperties* pExternalSemaphoreProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5288,7 +5290,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalSemaphoreProp
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPhysicalDeviceExternalFencePropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalFenceInfo* pExternalFenceInfo, VkExternalFenceProperties* pExternalFenceProperties) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPhysicalDeviceExternalFencePropertiesKHR(VkPhysicalDevice physicalDevice, VkPhysicalDeviceExternalFenceInfo* pExternalFenceInfo, VkExternalFenceProperties* pExternalFenceProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5325,7 +5327,7 @@ instance_dispatch[GetKey(physicalDevice)].GetPhysicalDeviceExternalFenceProperti
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EnumeratePhysicalDeviceGroupsKHR(VkInstance instance, uint32_t* pPhysicalDeviceGroupCount, VkPhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumeratePhysicalDeviceGroupsKHR(VkInstance instance, uint32_t* pPhysicalDeviceGroupCount, VkPhysicalDeviceGroupProperties* pPhysicalDeviceGroupProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5363,7 +5365,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceCalibrateableTimeDomainsEXT(VkPhysicalDevice physicalDevice, uint32_t* pTimeDomainCount, VkTimeDomainKHR* pTimeDomains) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceCalibrateableTimeDomainsEXT(VkPhysicalDevice physicalDevice, uint32_t* pTimeDomainCount, VkTimeDomainKHR* pTimeDomains) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5398,7 +5400,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPhysicalDeviceToolPropertiesEXT(VkPhysicalDevice physicalDevice, uint32_t* pToolCount, VkPhysicalDeviceToolProperties* pToolProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPhysicalDeviceToolPropertiesEXT(VkPhysicalDevice physicalDevice, uint32_t* pToolCount, VkPhysicalDeviceToolProperties* pToolProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5435,7 +5437,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceQueue(VkDevice device, uint32_t queueFamilyIndex, uint32_t queueIndex, VkQueue* pQueue) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDeviceQueue(VkDevice device, uint32_t queueFamilyIndex, uint32_t queueIndex, VkQueue* pQueue) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5468,7 +5470,7 @@ device_dispatch[GetKey(device)].GetDeviceQueue(device, queueFamilyIndex, queueIn
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueueSubmit(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_QueueSubmit(VkQueue queue, uint32_t submitCount, VkSubmitInfo* pSubmits, VkFence fence) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5513,7 +5515,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueueWaitIdle(VkQueue queue) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_QueueWaitIdle(VkQueue queue) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5547,7 +5549,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_DeviceWaitIdle(VkDevice device) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_DeviceWaitIdle(VkDevice device) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5581,7 +5583,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AllocateMemory(VkDevice device, VkMemoryAllocateInfo* pAllocateInfo, VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_AllocateMemory(VkDevice device, VkMemoryAllocateInfo* pAllocateInfo, VkAllocationCallbacks* pAllocator, VkDeviceMemory* pMemory) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5627,7 +5629,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_FreeMemory(VkDevice device, VkDeviceMemory memory, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_FreeMemory(VkDevice device, VkDeviceMemory memory, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5665,7 +5667,7 @@ device_dispatch[GetKey(device)].FreeMemory(device, memory, pAllocator);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_MapMemory(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_MapMemory(VkDevice device, VkDeviceMemory memory, VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, void** ppData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5704,7 +5706,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_UnmapMemory(VkDevice device, VkDeviceMemory memory) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_UnmapMemory(VkDevice device, VkDeviceMemory memory) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5735,7 +5737,7 @@ device_dispatch[GetKey(device)].UnmapMemory(device, memory);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_FlushMappedMemoryRanges(VkDevice device, uint32_t memoryRangeCount, VkMappedMemoryRange* pMemoryRanges) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_FlushMappedMemoryRanges(VkDevice device, uint32_t memoryRangeCount, VkMappedMemoryRange* pMemoryRanges) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5775,7 +5777,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_InvalidateMappedMemoryRanges(VkDevice device, uint32_t memoryRangeCount, VkMappedMemoryRange* pMemoryRanges) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_InvalidateMappedMemoryRanges(VkDevice device, uint32_t memoryRangeCount, VkMappedMemoryRange* pMemoryRanges) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5815,7 +5817,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceMemoryCommitment(VkDevice device, VkDeviceMemory memory, VkDeviceSize* pCommittedMemoryInBytes) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDeviceMemoryCommitment(VkDevice device, VkDeviceMemory memory, VkDeviceSize* pCommittedMemoryInBytes) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5847,7 +5849,7 @@ device_dispatch[GetKey(device)].GetDeviceMemoryCommitment(device, memory, pCommi
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetBufferMemoryRequirements(VkDevice device, VkBuffer buffer, VkMemoryRequirements* pMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetBufferMemoryRequirements(VkDevice device, VkBuffer buffer, VkMemoryRequirements* pMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5883,7 +5885,7 @@ device_dispatch[GetKey(device)].GetBufferMemoryRequirements(device, buffer, pMem
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindBufferMemory(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BindBufferMemory(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5920,7 +5922,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageMemoryRequirements(VkDevice device, VkImage image, VkMemoryRequirements* pMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetImageMemoryRequirements(VkDevice device, VkImage image, VkMemoryRequirements* pMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5956,7 +5958,7 @@ device_dispatch[GetKey(device)].GetImageMemoryRequirements(device, image, pMemor
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindImageMemory(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BindImageMemory(VkDevice device, VkImage image, VkDeviceMemory memory, VkDeviceSize memoryOffset) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -5993,7 +5995,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageSparseMemoryRequirements(VkDevice device, VkImage image, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements* pSparseMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetImageSparseMemoryRequirements(VkDevice device, VkImage image, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements* pSparseMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6031,7 +6033,7 @@ device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements(device, image, 
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueueBindSparse(VkQueue queue, uint32_t bindInfoCount, VkBindSparseInfo* pBindInfo, VkFence fence) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_QueueBindSparse(VkQueue queue, uint32_t bindInfoCount, VkBindSparseInfo* pBindInfo, VkFence fence) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6110,7 +6112,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateFence(VkDevice device, VkFenceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkFence* pFence) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateFence(VkDevice device, VkFenceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkFence* pFence) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6155,7 +6157,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyFence(VkDevice device, VkFence fence, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyFence(VkDevice device, VkFence fence, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6193,7 +6195,7 @@ device_dispatch[GetKey(device)].DestroyFence(device, fence, pAllocator);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ResetFences(VkDevice device, uint32_t fenceCount, VkFence* pFences) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ResetFences(VkDevice device, uint32_t fenceCount, VkFence* pFences) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6229,7 +6231,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetFenceStatus(VkDevice device, VkFence fence) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetFenceStatus(VkDevice device, VkFence fence) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6264,7 +6266,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_WaitForFences(VkDevice device, uint32_t fenceCount, VkFence* pFences, VkBool32 waitAll, uint64_t timeout) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_WaitForFences(VkDevice device, uint32_t fenceCount, VkFence* pFences, VkBool32 waitAll, uint64_t timeout) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6302,7 +6304,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateSemaphore(VkDevice device, VkSemaphoreCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSemaphore* pSemaphore) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateSemaphore(VkDevice device, VkSemaphoreCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSemaphore* pSemaphore) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6347,7 +6349,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroySemaphore(VkDevice device, VkSemaphore semaphore, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroySemaphore(VkDevice device, VkSemaphore semaphore, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6385,7 +6387,7 @@ device_dispatch[GetKey(device)].DestroySemaphore(device, semaphore, pAllocator);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateEvent(VkDevice device, VkEventCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkEvent* pEvent) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateEvent(VkDevice device, VkEventCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkEvent* pEvent) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6430,7 +6432,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyEvent(VkDevice device, VkEvent event, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyEvent(VkDevice device, VkEvent event, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6468,7 +6470,7 @@ device_dispatch[GetKey(device)].DestroyEvent(device, event, pAllocator);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetEventStatus(VkDevice device, VkEvent event) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetEventStatus(VkDevice device, VkEvent event) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6503,7 +6505,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetEvent(VkDevice device, VkEvent event) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_SetEvent(VkDevice device, VkEvent event) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6538,7 +6540,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ResetEvent(VkDevice device, VkEvent event) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ResetEvent(VkDevice device, VkEvent event) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6573,7 +6575,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateQueryPool(VkDevice device, VkQueryPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkQueryPool* pQueryPool) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateQueryPool(VkDevice device, VkQueryPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkQueryPool* pQueryPool) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6620,7 +6622,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyQueryPool(VkDevice device, VkQueryPool queryPool, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyQueryPool(VkDevice device, VkQueryPool queryPool, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6658,7 +6660,7 @@ device_dispatch[GetKey(device)].DestroyQueryPool(device, queryPool, pAllocator);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetQueryPoolResults(VkDevice device, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, size_t dataSize, void* pData, VkDeviceSize stride, VkQueryResultFlags flags) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetQueryPoolResults(VkDevice device, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, size_t dataSize, void* pData, VkDeviceSize stride, VkQueryResultFlags flags) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6698,7 +6700,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_ResetQueryPool(VkDevice device, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_ResetQueryPool(VkDevice device, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6731,7 +6733,7 @@ device_dispatch[GetKey(device)].ResetQueryPool(device, queryPool, firstQuery, qu
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateBuffer(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateBuffer(VkDevice device, VkBufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBuffer* pBuffer) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6779,7 +6781,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyBuffer(VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyBuffer(VkDevice device, VkBuffer buffer, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6817,7 +6819,7 @@ device_dispatch[GetKey(device)].DestroyBuffer(device, buffer, pAllocator);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateBufferView(VkDevice device, VkBufferViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBufferView* pView) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateBufferView(VkDevice device, VkBufferViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBufferView* pView) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6865,7 +6867,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyBufferView(VkDevice device, VkBufferView bufferView, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyBufferView(VkDevice device, VkBufferView bufferView, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6903,7 +6905,7 @@ device_dispatch[GetKey(device)].DestroyBufferView(device, bufferView, pAllocator
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateImage(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateImage(VkDevice device, VkImageCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImage* pImage) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6953,7 +6955,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyImage(VkDevice device, VkImage image, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyImage(VkDevice device, VkImage image, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -6991,7 +6993,7 @@ device_dispatch[GetKey(device)].DestroyImage(device, image, pAllocator);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageSubresourceLayout(VkDevice device, VkImage image, VkImageSubresource* pSubresource, VkSubresourceLayout* pLayout) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetImageSubresourceLayout(VkDevice device, VkImage image, VkImageSubresource* pSubresource, VkSubresourceLayout* pLayout) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7034,7 +7036,7 @@ device_dispatch[GetKey(device)].GetImageSubresourceLayout(device, image, pSubres
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateImageView(VkDevice device, VkImageViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImageView* pView) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateImageView(VkDevice device, VkImageViewCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkImageView* pView) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7082,7 +7084,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyImageView(VkDevice device, VkImageView imageView, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyImageView(VkDevice device, VkImageView imageView, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7120,7 +7122,7 @@ device_dispatch[GetKey(device)].DestroyImageView(device, imageView, pAllocator);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateShaderModule(VkDevice device, VkShaderModuleCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkShaderModule* pShaderModule) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateShaderModule(VkDevice device, VkShaderModuleCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkShaderModule* pShaderModule) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7166,7 +7168,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyShaderModule(VkDevice device, VkShaderModule shaderModule, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyShaderModule(VkDevice device, VkShaderModule shaderModule, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7204,7 +7206,7 @@ device_dispatch[GetKey(device)].DestroyShaderModule(device, shaderModule, pAlloc
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreatePipelineCache(VkDevice device, VkPipelineCacheCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreatePipelineCache(VkDevice device, VkPipelineCacheCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7251,7 +7253,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyPipelineCache(VkDevice device, VkPipelineCache pipelineCache, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyPipelineCache(VkDevice device, VkPipelineCache pipelineCache, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7289,7 +7291,7 @@ device_dispatch[GetKey(device)].DestroyPipelineCache(device, pipelineCache, pAll
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPipelineCacheData(VkDevice device, VkPipelineCache pipelineCache, size_t* pDataSize, void* pData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPipelineCacheData(VkDevice device, VkPipelineCache pipelineCache, size_t* pDataSize, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7325,7 +7327,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_MergePipelineCaches(VkDevice device, VkPipelineCache dstCache, uint32_t srcCacheCount, VkPipelineCache* pSrcCaches) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_MergePipelineCaches(VkDevice device, VkPipelineCache dstCache, uint32_t srcCacheCount, VkPipelineCache* pSrcCaches) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7362,7 +7364,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateGraphicsPipelines(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkGraphicsPipelineCreateInfo* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateGraphicsPipelines(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkGraphicsPipelineCreateInfo* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7515,7 +7517,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateComputePipelines(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkComputePipelineCreateInfo* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateComputePipelines(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkComputePipelineCreateInfo* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7566,7 +7568,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(VkDevice device, VkRenderPass renderpass, VkExtent2D* pMaxWorkgroupSize) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetDeviceSubpassShadingMaxWorkgroupSizeHUAWEI(VkDevice device, VkRenderPass renderpass, VkExtent2D* pMaxWorkgroupSize) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7605,7 +7607,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyPipeline(VkDevice device, VkPipeline pipeline, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyPipeline(VkDevice device, VkPipeline pipeline, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7643,7 +7645,7 @@ device_dispatch[GetKey(device)].DestroyPipeline(device, pipeline, pAllocator);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreatePipelineLayout(VkDevice device, VkPipelineLayoutCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPipelineLayout* pPipelineLayout) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreatePipelineLayout(VkDevice device, VkPipelineLayoutCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPipelineLayout* pPipelineLayout) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7696,7 +7698,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyPipelineLayout(VkDevice device, VkPipelineLayout pipelineLayout, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyPipelineLayout(VkDevice device, VkPipelineLayout pipelineLayout, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7734,7 +7736,7 @@ device_dispatch[GetKey(device)].DestroyPipelineLayout(device, pipelineLayout, pA
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateSampler(VkDevice device, VkSamplerCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSampler* pSampler) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateSampler(VkDevice device, VkSamplerCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSampler* pSampler) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7786,7 +7788,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroySampler(VkDevice device, VkSampler sampler, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroySampler(VkDevice device, VkSampler sampler, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7824,7 +7826,7 @@ device_dispatch[GetKey(device)].DestroySampler(device, sampler, pAllocator);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDescriptorSetLayout(VkDevice device, VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorSetLayout* pSetLayout) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDescriptorSetLayout(VkDevice device, VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorSetLayout* pSetLayout) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7876,7 +7878,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDescriptorSetLayout(VkDevice device, VkDescriptorSetLayout descriptorSetLayout, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDescriptorSetLayout(VkDevice device, VkDescriptorSetLayout descriptorSetLayout, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7914,7 +7916,7 @@ device_dispatch[GetKey(device)].DestroyDescriptorSetLayout(device, descriptorSet
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDescriptorPool(VkDevice device, VkDescriptorPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorPool* pDescriptorPool) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDescriptorPool(VkDevice device, VkDescriptorPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorPool* pDescriptorPool) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -7964,7 +7966,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDescriptorPool(VkDevice device, VkDescriptorPool descriptorPool, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDescriptorPool(VkDevice device, VkDescriptorPool descriptorPool, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8002,7 +8004,7 @@ device_dispatch[GetKey(device)].DestroyDescriptorPool(device, descriptorPool, pA
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ResetDescriptorPool(VkDevice device, VkDescriptorPool descriptorPool, VkDescriptorPoolResetFlags flags) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ResetDescriptorPool(VkDevice device, VkDescriptorPool descriptorPool, VkDescriptorPoolResetFlags flags) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8038,7 +8040,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AllocateDescriptorSets(VkDevice device, VkDescriptorSetAllocateInfo* pAllocateInfo, VkDescriptorSet* pDescriptorSets) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_AllocateDescriptorSets(VkDevice device, VkDescriptorSetAllocateInfo* pAllocateInfo, VkDescriptorSet* pDescriptorSets) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8078,7 +8080,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_FreeDescriptorSets(VkDevice device, VkDescriptorPool descriptorPool, uint32_t descriptorSetCount, VkDescriptorSet* pDescriptorSets) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_FreeDescriptorSets(VkDevice device, VkDescriptorPool descriptorPool, uint32_t descriptorSetCount, VkDescriptorSet* pDescriptorSets) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8115,7 +8117,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_UpdateDescriptorSets(VkDevice device, uint32_t descriptorWriteCount, VkWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount, VkCopyDescriptorSet* pDescriptorCopies) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_UpdateDescriptorSets(VkDevice device, uint32_t descriptorWriteCount, VkWriteDescriptorSet* pDescriptorWrites, uint32_t descriptorCopyCount, VkCopyDescriptorSet* pDescriptorCopies) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8172,7 +8174,7 @@ device_dispatch[GetKey(device)].UpdateDescriptorSets(device, descriptorWriteCoun
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateFramebuffer(VkDevice device, VkFramebufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateFramebuffer(VkDevice device, VkFramebufferCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkFramebuffer* pFramebuffer) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8223,7 +8225,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyFramebuffer(VkDevice device, VkFramebuffer framebuffer, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyFramebuffer(VkDevice device, VkFramebuffer framebuffer, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8261,7 +8263,7 @@ device_dispatch[GetKey(device)].DestroyFramebuffer(device, framebuffer, pAllocat
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateRenderPass(VkDevice device, VkRenderPassCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateRenderPass(VkDevice device, VkRenderPassCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8339,7 +8341,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyRenderPass(VkDevice device, VkRenderPass renderPass, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyRenderPass(VkDevice device, VkRenderPass renderPass, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8377,7 +8379,7 @@ device_dispatch[GetKey(device)].DestroyRenderPass(device, renderPass, pAllocator
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetRenderAreaGranularity(VkDevice device, VkRenderPass renderPass, VkExtent2D* pGranularity) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetRenderAreaGranularity(VkDevice device, VkRenderPass renderPass, VkExtent2D* pGranularity) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8412,7 +8414,7 @@ device_dispatch[GetKey(device)].GetRenderAreaGranularity(device, renderPass, pGr
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetRenderingAreaGranularityKHR(VkDevice device, VkRenderingAreaInfoKHR* pRenderingAreaInfo, VkExtent2D* pGranularity) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetRenderingAreaGranularityKHR(VkDevice device, VkRenderingAreaInfoKHR* pRenderingAreaInfo, VkExtent2D* pGranularity) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8451,7 +8453,7 @@ device_dispatch[GetKey(device)].GetRenderingAreaGranularityKHR(device, pRenderin
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateCommandPool(VkDevice device, VkCommandPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateCommandPool(VkDevice device, VkCommandPoolCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCommandPool* pCommandPool) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8497,7 +8499,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyCommandPool(VkDevice device, VkCommandPool commandPool, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyCommandPool(VkDevice device, VkCommandPool commandPool, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8535,7 +8537,7 @@ device_dispatch[GetKey(device)].DestroyCommandPool(device, commandPool, pAllocat
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ResetCommandPool(VkDevice device, VkCommandPool commandPool, VkCommandPoolResetFlags flags) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ResetCommandPool(VkDevice device, VkCommandPool commandPool, VkCommandPoolResetFlags flags) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8571,7 +8573,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AllocateCommandBuffers(VkDevice device, VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_AllocateCommandBuffers(VkDevice device, VkCommandBufferAllocateInfo* pAllocateInfo, VkCommandBuffer* pCommandBuffers) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8610,7 +8612,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_FreeCommandBuffers(VkDevice device, VkCommandPool commandPool, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_FreeCommandBuffers(VkDevice device, VkCommandPool commandPool, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8643,7 +8645,7 @@ device_dispatch[GetKey(device)].FreeCommandBuffers(device, commandPool, commandB
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BeginCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferBeginInfo* pBeginInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BeginCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferBeginInfo* pBeginInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8688,7 +8690,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_EndCommandBuffer(VkCommandBuffer commandBuffer) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EndCommandBuffer(VkCommandBuffer commandBuffer) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8722,7 +8724,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ResetCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ResetCommandBuffer(VkCommandBuffer commandBuffer, VkCommandBufferResetFlags flags) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8757,7 +8759,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindPipeline(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindPipeline(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8788,7 +8790,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindPipeline(commandBuffer, pipelineBi
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetAttachmentFeedbackLoopEnableEXT(VkCommandBuffer commandBuffer, VkImageAspectFlags aspectMask) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetAttachmentFeedbackLoopEnableEXT(VkCommandBuffer commandBuffer, VkImageAspectFlags aspectMask) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8819,7 +8821,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetAttachmentFeedbackLoopEnableEXT(com
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetViewport(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, VkViewport* pViewports) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetViewport(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, VkViewport* pViewports) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8859,7 +8861,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetViewport(commandBuffer, firstViewpo
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetScissor(VkCommandBuffer commandBuffer, uint32_t firstScissor, uint32_t scissorCount, VkRect2D* pScissors) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetScissor(VkCommandBuffer commandBuffer, uint32_t firstScissor, uint32_t scissorCount, VkRect2D* pScissors) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8895,7 +8897,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetScissor(commandBuffer, firstScissor
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetLineWidth(VkCommandBuffer commandBuffer, float lineWidth) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetLineWidth(VkCommandBuffer commandBuffer, float lineWidth) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8926,7 +8928,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetLineWidth(commandBuffer, lineWidth)
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthBias(VkCommandBuffer commandBuffer, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthBias(VkCommandBuffer commandBuffer, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8959,7 +8961,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthBias(commandBuffer, depthBiasC
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetBlendConstants(VkCommandBuffer commandBuffer, float* blendConstants) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetBlendConstants(VkCommandBuffer commandBuffer, float* blendConstants) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -8990,7 +8992,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetBlendConstants(commandBuffer, blend
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthBounds(VkCommandBuffer commandBuffer, float minDepthBounds, float maxDepthBounds) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthBounds(VkCommandBuffer commandBuffer, float minDepthBounds, float maxDepthBounds) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9022,7 +9024,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthBounds(commandBuffer, minDepth
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetStencilCompareMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t compareMask) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetStencilCompareMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t compareMask) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9054,7 +9056,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetStencilCompareMask(commandBuffer, f
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetStencilWriteMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t writeMask) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetStencilWriteMask(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t writeMask) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9086,7 +9088,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetStencilWriteMask(commandBuffer, fac
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetStencilReference(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t reference) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetStencilReference(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, uint32_t reference) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9118,7 +9120,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetStencilReference(commandBuffer, fac
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindDescriptorSets(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t descriptorSetCount, VkDescriptorSet* pDescriptorSets, uint32_t dynamicOffsetCount, uint32_t* pDynamicOffsets) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindDescriptorSets(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t descriptorSetCount, VkDescriptorSet* pDescriptorSets, uint32_t dynamicOffsetCount, uint32_t* pDynamicOffsets) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9153,7 +9155,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorSets(commandBuffer, pipe
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindIndexBuffer(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkIndexType indexType) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindIndexBuffer(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkIndexType indexType) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9185,7 +9187,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindIndexBuffer(commandBuffer, buffer,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindVertexBuffers(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, VkBuffer* pBuffers, VkDeviceSize* pOffsets) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindVertexBuffers(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, VkBuffer* pBuffers, VkDeviceSize* pOffsets) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9219,7 +9221,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers(commandBuffer, first
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDraw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9253,7 +9255,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDraw(commandBuffer, vertexCount, insta
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndexed(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndexed(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9288,7 +9290,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawIndexed(commandBuffer, indexCount,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMultiEXT(VkCommandBuffer commandBuffer, uint32_t drawCount, VkMultiDrawInfoEXT* pVertexInfo, uint32_t instanceCount, uint32_t firstInstance, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawMultiEXT(VkCommandBuffer commandBuffer, uint32_t drawCount, VkMultiDrawInfoEXT* pVertexInfo, uint32_t instanceCount, uint32_t firstInstance, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9326,7 +9328,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawMultiEXT(commandBuffer, drawCount,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMultiIndexedEXT(VkCommandBuffer commandBuffer, uint32_t drawCount, VkMultiDrawIndexedInfoEXT* pIndexInfo, uint32_t instanceCount, uint32_t firstInstance, uint32_t stride, int32_t* pVertexOffset) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawMultiIndexedEXT(VkCommandBuffer commandBuffer, uint32_t drawCount, VkMultiDrawIndexedInfoEXT* pIndexInfo, uint32_t instanceCount, uint32_t firstInstance, uint32_t stride, int32_t* pVertexOffset) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9366,7 +9368,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawMultiIndexedEXT(commandBuffer, dra
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9400,7 +9402,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawIndirect(commandBuffer, buffer, of
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndexedIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndexedIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9434,7 +9436,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirect(commandBuffer, buf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDispatch(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDispatch(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9467,7 +9469,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDispatch(commandBuffer, groupCountX, g
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDispatchIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDispatchIndirect(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9499,7 +9501,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDispatchIndirect(commandBuffer, buffer
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSubpassShadingHUAWEI(VkCommandBuffer commandBuffer) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSubpassShadingHUAWEI(VkCommandBuffer commandBuffer) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9529,7 +9531,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSubpassShadingHUAWEI(commandBuffer);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawClusterHUAWEI(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawClusterHUAWEI(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9562,7 +9564,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawClusterHUAWEI(commandBuffer, group
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawClusterIndirectHUAWEI(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawClusterIndirectHUAWEI(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9594,7 +9596,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawClusterIndirectHUAWEI(commandBuffe
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdUpdatePipelineIndirectBufferNV(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdUpdatePipelineIndirectBufferNV(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9625,7 +9627,7 @@ device_dispatch[GetKey(commandBuffer)].CmdUpdatePipelineIndirectBufferNV(command
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyBuffer(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, VkBufferCopy* pRegions) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyBuffer(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkBuffer dstBuffer, uint32_t regionCount, VkBufferCopy* pRegions) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9663,7 +9665,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer(commandBuffer, srcBuffer, d
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageCopy* pRegions) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageCopy* pRegions) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9703,7 +9705,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyImage(commandBuffer, srcImage, src
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBlitImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageBlit* pRegions, VkFilter filter) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBlitImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageBlit* pRegions, VkFilter filter) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9742,7 +9744,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBlitImage(commandBuffer, srcImage, src
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkBufferImageCopy* pRegions) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyBufferToImage(VkCommandBuffer commandBuffer, VkBuffer srcBuffer, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkBufferImageCopy* pRegions) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9783,7 +9785,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage(commandBuffer, srcBu
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyImageToBuffer(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, VkBufferImageCopy* pRegions) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyImageToBuffer(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkBuffer dstBuffer, uint32_t regionCount, VkBufferImageCopy* pRegions) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9824,7 +9826,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer(commandBuffer, srcIm
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyMemoryIndirectNV(VkCommandBuffer commandBuffer, VkDeviceAddress copyBufferAddress, uint32_t copyCount, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyMemoryIndirectNV(VkCommandBuffer commandBuffer, VkDeviceAddress copyBufferAddress, uint32_t copyCount, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9857,7 +9859,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryIndirectNV(commandBuffer, co
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyMemoryToImageIndirectNV(VkCommandBuffer commandBuffer, VkDeviceAddress copyBufferAddress, uint32_t copyCount, uint32_t stride, VkImage dstImage, VkImageLayout dstImageLayout, VkImageSubresourceLayers* pImageSubresources) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyMemoryToImageIndirectNV(VkCommandBuffer commandBuffer, VkDeviceAddress copyBufferAddress, uint32_t copyCount, uint32_t stride, VkImage dstImage, VkImageLayout dstImageLayout, VkImageSubresourceLayers* pImageSubresources) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9897,7 +9899,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToImageIndirectNV(commandBuf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdUpdateBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize dataSize, void* pData) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdUpdateBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize dataSize, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9930,7 +9932,7 @@ device_dispatch[GetKey(commandBuffer)].CmdUpdateBuffer(commandBuffer, dstBuffer,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdFillBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize size, uint32_t data) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdFillBuffer(VkCommandBuffer commandBuffer, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize size, uint32_t data) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -9964,7 +9966,7 @@ device_dispatch[GetKey(commandBuffer)].CmdFillBuffer(commandBuffer, dstBuffer, d
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdClearColorImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, VkClearColorValue* pColor, uint32_t rangeCount, VkImageSubresourceRange* pRanges) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdClearColorImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, VkClearColorValue* pColor, uint32_t rangeCount, VkImageSubresourceRange* pRanges) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10004,7 +10006,7 @@ device_dispatch[GetKey(commandBuffer)].CmdClearColorImage(commandBuffer, image, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdClearDepthStencilImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, VkClearDepthStencilValue* pDepthStencil, uint32_t rangeCount, VkImageSubresourceRange* pRanges) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdClearDepthStencilImage(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout imageLayout, VkClearDepthStencilValue* pDepthStencil, uint32_t rangeCount, VkImageSubresourceRange* pRanges) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10047,7 +10049,7 @@ device_dispatch[GetKey(commandBuffer)].CmdClearDepthStencilImage(commandBuffer, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdClearAttachments(VkCommandBuffer commandBuffer, uint32_t attachmentCount, VkClearAttachment* pAttachments, uint32_t rectCount, VkClearRect* pRects) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdClearAttachments(VkCommandBuffer commandBuffer, uint32_t attachmentCount, VkClearAttachment* pAttachments, uint32_t rectCount, VkClearRect* pRects) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10089,7 +10091,7 @@ device_dispatch[GetKey(commandBuffer)].CmdClearAttachments(commandBuffer, attach
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdResolveImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageResolve* pRegions) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdResolveImage(VkCommandBuffer commandBuffer, VkImage srcImage, VkImageLayout srcImageLayout, VkImage dstImage, VkImageLayout dstImageLayout, uint32_t regionCount, VkImageResolve* pRegions) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10129,7 +10131,7 @@ device_dispatch[GetKey(commandBuffer)].CmdResolveImage(commandBuffer, srcImage, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10161,7 +10163,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetEvent(commandBuffer, event, stageMa
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdResetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdResetEvent(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags stageMask) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10193,7 +10195,7 @@ device_dispatch[GetKey(commandBuffer)].CmdResetEvent(commandBuffer, event, stage
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWaitEvents(VkCommandBuffer commandBuffer, uint32_t eventCount, VkEvent* pEvents, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, uint32_t memoryBarrierCount, VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, VkImageMemoryBarrier* pImageMemoryBarriers) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdWaitEvents(VkCommandBuffer commandBuffer, uint32_t eventCount, VkEvent* pEvents, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, uint32_t memoryBarrierCount, VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, VkImageMemoryBarrier* pImageMemoryBarriers) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10251,7 +10253,7 @@ device_dispatch[GetKey(commandBuffer)].CmdWaitEvents(commandBuffer, eventCount, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPipelineBarrier(VkCommandBuffer commandBuffer, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags dependencyFlags, uint32_t memoryBarrierCount, VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, VkImageMemoryBarrier* pImageMemoryBarriers) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdPipelineBarrier(VkCommandBuffer commandBuffer, VkPipelineStageFlags srcStageMask, VkPipelineStageFlags dstStageMask, VkDependencyFlags dependencyFlags, uint32_t memoryBarrierCount, VkMemoryBarrier* pMemoryBarriers, uint32_t bufferMemoryBarrierCount, VkBufferMemoryBarrier* pBufferMemoryBarriers, uint32_t imageMemoryBarrierCount, VkImageMemoryBarrier* pImageMemoryBarriers) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10308,7 +10310,7 @@ device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier(commandBuffer, srcStag
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBeginQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10341,7 +10343,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBeginQuery(commandBuffer, queryPool, q
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdEndQuery(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10373,7 +10375,7 @@ device_dispatch[GetKey(commandBuffer)].CmdEndQuery(commandBuffer, queryPool, que
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginConditionalRenderingEXT(VkCommandBuffer commandBuffer, VkConditionalRenderingBeginInfoEXT* pConditionalRenderingBegin) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBeginConditionalRenderingEXT(VkCommandBuffer commandBuffer, VkConditionalRenderingBeginInfoEXT* pConditionalRenderingBegin) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10408,7 +10410,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBeginConditionalRenderingEXT(commandBu
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndConditionalRenderingEXT(VkCommandBuffer commandBuffer) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdEndConditionalRenderingEXT(VkCommandBuffer commandBuffer) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10438,7 +10440,7 @@ device_dispatch[GetKey(commandBuffer)].CmdEndConditionalRenderingEXT(commandBuff
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdResetQueryPool(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdResetQueryPool(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10471,7 +10473,7 @@ device_dispatch[GetKey(commandBuffer)].CmdResetQueryPool(commandBuffer, queryPoo
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteTimestamp(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkQueryPool queryPool, uint32_t query) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdWriteTimestamp(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkQueryPool queryPool, uint32_t query) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10503,7 +10505,7 @@ device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp(commandBuffer, pipeline
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyQueryPoolResults(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize stride, VkQueryResultFlags flags) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyQueryPoolResults(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount, VkBuffer dstBuffer, VkDeviceSize dstOffset, VkDeviceSize stride, VkQueryResultFlags flags) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10540,7 +10542,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyQueryPoolResults(commandBuffer, qu
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPushConstants(VkCommandBuffer commandBuffer, VkPipelineLayout layout, VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size, void* pValues) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdPushConstants(VkCommandBuffer commandBuffer, VkPipelineLayout layout, VkShaderStageFlags stageFlags, uint32_t offset, uint32_t size, void* pValues) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10574,7 +10576,7 @@ device_dispatch[GetKey(commandBuffer)].CmdPushConstants(commandBuffer, layout, s
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginRenderPass(VkCommandBuffer commandBuffer, VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassContents contents) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBeginRenderPass(VkCommandBuffer commandBuffer, VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassContents contents) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10611,7 +10613,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass(commandBuffer, pRender
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdNextSubpass(VkCommandBuffer commandBuffer, VkSubpassContents contents) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdNextSubpass(VkCommandBuffer commandBuffer, VkSubpassContents contents) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10641,7 +10643,7 @@ device_dispatch[GetKey(commandBuffer)].CmdNextSubpass(commandBuffer, contents);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndRenderPass(VkCommandBuffer commandBuffer) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdEndRenderPass(VkCommandBuffer commandBuffer) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10671,7 +10673,7 @@ device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass(commandBuffer);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdExecuteCommands(VkCommandBuffer commandBuffer, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdExecuteCommands(VkCommandBuffer commandBuffer, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10703,7 +10705,7 @@ device_dispatch[GetKey(commandBuffer)].CmdExecuteCommands(commandBuffer, command
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateSharedSwapchainsKHR(VkDevice device, uint32_t swapchainCount, VkSwapchainCreateInfoKHR* pCreateInfos, VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchains) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateSharedSwapchainsKHR(VkDevice device, uint32_t swapchainCount, VkSwapchainCreateInfoKHR* pCreateInfos, VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchains) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10758,7 +10760,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateSwapchainKHR(VkDevice device, VkSwapchainCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchain) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateSwapchainKHR(VkDevice device, VkSwapchainCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchain) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10812,7 +10814,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroySwapchainKHR(VkDevice device, VkSwapchainKHR swapchain, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroySwapchainKHR(VkDevice device, VkSwapchainKHR swapchain, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10850,7 +10852,7 @@ device_dispatch[GetKey(device)].DestroySwapchainKHR(device, swapchain, pAllocato
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSwapchainImagesKHR(VkDevice device, VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetSwapchainImagesKHR(VkDevice device, VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10886,7 +10888,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireNextImageKHR(VkDevice device, VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_AcquireNextImageKHR(VkDevice device, VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10924,7 +10926,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueuePresentKHR(VkQueue queue, VkPresentInfoKHR* pPresentInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_QueuePresentKHR(VkQueue queue, VkPresentInfoKHR* pPresentInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -10964,7 +10966,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_DebugMarkerSetObjectNameEXT(VkDevice device, VkDebugMarkerObjectNameInfoEXT* pNameInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_DebugMarkerSetObjectNameEXT(VkDevice device, VkDebugMarkerObjectNameInfoEXT* pNameInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11001,7 +11003,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_DebugMarkerSetObjectTagEXT(VkDevice device, VkDebugMarkerObjectTagInfoEXT* pTagInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_DebugMarkerSetObjectTagEXT(VkDevice device, VkDebugMarkerObjectTagInfoEXT* pTagInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11040,7 +11042,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDebugMarkerBeginEXT(VkCommandBuffer commandBuffer, VkDebugMarkerMarkerInfoEXT* pMarkerInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDebugMarkerBeginEXT(VkCommandBuffer commandBuffer, VkDebugMarkerMarkerInfoEXT* pMarkerInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11072,7 +11074,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerBeginEXT(commandBuffer, pMa
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDebugMarkerEndEXT(VkCommandBuffer commandBuffer) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDebugMarkerEndEXT(VkCommandBuffer commandBuffer) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11102,7 +11104,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerEndEXT(commandBuffer);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDebugMarkerInsertEXT(VkCommandBuffer commandBuffer, VkDebugMarkerMarkerInfoEXT* pMarkerInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDebugMarkerInsertEXT(VkCommandBuffer commandBuffer, VkDebugMarkerMarkerInfoEXT* pMarkerInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11135,7 +11137,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDebugMarkerInsertEXT(commandBuffer, pM
 }
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryWin32HandleNV(VkDevice device, VkDeviceMemory memory, VkExternalMemoryHandleTypeFlagsNV handleType, HANDLE* pHandle) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetMemoryWin32HandleNV(VkDevice device, VkDeviceMemory memory, VkExternalMemoryHandleTypeFlagsNV handleType, HANDLE* pHandle) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11173,7 +11175,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdExecuteGeneratedCommandsNV(VkCommandBuffer commandBuffer, VkBool32 isPreprocessed, VkGeneratedCommandsInfoNV* pGeneratedCommandsInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdExecuteGeneratedCommandsNV(VkCommandBuffer commandBuffer, VkBool32 isPreprocessed, VkGeneratedCommandsInfoNV* pGeneratedCommandsInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11221,7 +11223,7 @@ device_dispatch[GetKey(commandBuffer)].CmdExecuteGeneratedCommandsNV(commandBuff
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPreprocessGeneratedCommandsNV(VkCommandBuffer commandBuffer, VkGeneratedCommandsInfoNV* pGeneratedCommandsInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdPreprocessGeneratedCommandsNV(VkCommandBuffer commandBuffer, VkGeneratedCommandsInfoNV* pGeneratedCommandsInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11268,7 +11270,7 @@ device_dispatch[GetKey(commandBuffer)].CmdPreprocessGeneratedCommandsNV(commandB
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindPipelineShaderGroupNV(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline, uint32_t groupIndex) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindPipelineShaderGroupNV(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipeline pipeline, uint32_t groupIndex) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11300,7 +11302,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindPipelineShaderGroupNV(commandBuffe
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetGeneratedCommandsMemoryRequirementsNV(VkDevice device, VkGeneratedCommandsMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetGeneratedCommandsMemoryRequirementsNV(VkDevice device, VkGeneratedCommandsMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11338,7 +11340,7 @@ device_dispatch[GetKey(device)].GetGeneratedCommandsMemoryRequirementsNV(device,
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateIndirectCommandsLayoutNV(VkDevice device, VkIndirectCommandsLayoutCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkIndirectCommandsLayoutNV* pIndirectCommandsLayout) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateIndirectCommandsLayoutNV(VkDevice device, VkIndirectCommandsLayoutCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkIndirectCommandsLayoutNV* pIndirectCommandsLayout) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11398,7 +11400,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyIndirectCommandsLayoutNV(VkDevice device, VkIndirectCommandsLayoutNV indirectCommandsLayout, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyIndirectCommandsLayoutNV(VkDevice device, VkIndirectCommandsLayoutNV indirectCommandsLayout, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11436,7 +11438,7 @@ device_dispatch[GetKey(device)].DestroyIndirectCommandsLayoutNV(device, indirect
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPushDescriptorSetKHR(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t set, uint32_t descriptorWriteCount, VkWriteDescriptorSet* pDescriptorWrites) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdPushDescriptorSetKHR(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t set, uint32_t descriptorWriteCount, VkWriteDescriptorSet* pDescriptorWrites) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11485,7 +11487,7 @@ device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetKHR(commandBuffer, pi
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_TrimCommandPool(VkDevice device, VkCommandPool commandPool, VkCommandPoolTrimFlags flags) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_TrimCommandPool(VkDevice device, VkCommandPool commandPool, VkCommandPoolTrimFlags flags) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11518,7 +11520,7 @@ device_dispatch[GetKey(device)].TrimCommandPool(device, commandPool, flags);
 }
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryWin32HandleKHR(VkDevice device, VkMemoryGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetMemoryWin32HandleKHR(VkDevice device, VkMemoryGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11558,7 +11560,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryWin32HandlePropertiesKHR(VkDevice device, VkExternalMemoryHandleTypeFlagBits handleType, HANDLE handle, VkMemoryWin32HandlePropertiesKHR* pMemoryWin32HandleProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetMemoryWin32HandlePropertiesKHR(VkDevice device, VkExternalMemoryHandleTypeFlagBits handleType, HANDLE handle, VkMemoryWin32HandlePropertiesKHR* pMemoryWin32HandleProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11597,7 +11599,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryFdKHR(VkDevice device, VkMemoryGetFdInfoKHR* pGetFdInfo, int* pFd) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetMemoryFdKHR(VkDevice device, VkMemoryGetFdInfoKHR* pGetFdInfo, int* pFd) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11635,7 +11637,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryFdPropertiesKHR(VkDevice device, VkExternalMemoryHandleTypeFlagBits handleType, int fd, VkMemoryFdPropertiesKHR* pMemoryFdProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetMemoryFdPropertiesKHR(VkDevice device, VkExternalMemoryHandleTypeFlagBits handleType, int fd, VkMemoryFdPropertiesKHR* pMemoryFdProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11674,7 +11676,7 @@ return ret;
 }
 
 #if defined(VK_USE_PLATFORM_FUCHSIA)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryZirconHandleFUCHSIA(VkDevice device, VkMemoryGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, zx_handle_t* pZirconHandle) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetMemoryZirconHandleFUCHSIA(VkDevice device, VkMemoryGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, zx_handle_t* pZirconHandle) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11714,7 +11716,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_FUCHSIA)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryZirconHandlePropertiesFUCHSIA(VkDevice device, VkExternalMemoryHandleTypeFlagBits handleType, zx_handle_t zirconHandle, VkMemoryZirconHandlePropertiesFUCHSIA* pMemoryZirconHandleProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetMemoryZirconHandlePropertiesFUCHSIA(VkDevice device, VkExternalMemoryHandleTypeFlagBits handleType, zx_handle_t zirconHandle, VkMemoryZirconHandlePropertiesFUCHSIA* pMemoryZirconHandleProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11753,7 +11755,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryRemoteAddressNV(VkDevice device, VkMemoryGetRemoteAddressInfoNV* pMemoryGetRemoteAddressInfo, VkRemoteAddressNV* pAddress) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetMemoryRemoteAddressNV(VkDevice device, VkMemoryGetRemoteAddressInfoNV* pMemoryGetRemoteAddressInfo, VkRemoteAddressNV* pAddress) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11792,7 +11794,7 @@ return ret;
 }
 
 #if defined(VK_USE_PLATFORM_SCI)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemorySciBufNV(VkDevice device, VkMemoryGetSciBufInfoNV* pGetSciBufInfo, NvSciBufObj* pHandle) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetMemorySciBufNV(VkDevice device, VkMemoryGetSciBufInfoNV* pGetSciBufInfo, NvSciBufObj* pHandle) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11832,7 +11834,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSemaphoreWin32HandleKHR(VkDevice device, VkSemaphoreGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetSemaphoreWin32HandleKHR(VkDevice device, VkSemaphoreGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11872,7 +11874,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportSemaphoreWin32HandleKHR(VkDevice device, VkImportSemaphoreWin32HandleInfoKHR* pImportSemaphoreWin32HandleInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ImportSemaphoreWin32HandleKHR(VkDevice device, VkImportSemaphoreWin32HandleInfoKHR* pImportSemaphoreWin32HandleInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11913,7 +11915,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSemaphoreFdKHR(VkDevice device, VkSemaphoreGetFdInfoKHR* pGetFdInfo, int* pFd) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetSemaphoreFdKHR(VkDevice device, VkSemaphoreGetFdInfoKHR* pGetFdInfo, int* pFd) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11951,7 +11953,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportSemaphoreFdKHR(VkDevice device, VkImportSemaphoreFdInfoKHR* pImportSemaphoreFdInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ImportSemaphoreFdKHR(VkDevice device, VkImportSemaphoreFdInfoKHR* pImportSemaphoreFdInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -11991,7 +11993,7 @@ return ret;
 }
 
 #if defined(VK_USE_PLATFORM_FUCHSIA)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSemaphoreZirconHandleFUCHSIA(VkDevice device, VkSemaphoreGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, zx_handle_t* pZirconHandle) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetSemaphoreZirconHandleFUCHSIA(VkDevice device, VkSemaphoreGetZirconHandleInfoFUCHSIA* pGetZirconHandleInfo, zx_handle_t* pZirconHandle) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12031,7 +12033,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_FUCHSIA)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportSemaphoreZirconHandleFUCHSIA(VkDevice device, VkImportSemaphoreZirconHandleInfoFUCHSIA* pImportSemaphoreZirconHandleInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ImportSemaphoreZirconHandleFUCHSIA(VkDevice device, VkImportSemaphoreZirconHandleInfoFUCHSIA* pImportSemaphoreZirconHandleInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12072,7 +12074,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetFenceWin32HandleKHR(VkDevice device, VkFenceGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetFenceWin32HandleKHR(VkDevice device, VkFenceGetWin32HandleInfoKHR* pGetWin32HandleInfo, HANDLE* pHandle) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12112,7 +12114,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportFenceWin32HandleKHR(VkDevice device, VkImportFenceWin32HandleInfoKHR* pImportFenceWin32HandleInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ImportFenceWin32HandleKHR(VkDevice device, VkImportFenceWin32HandleInfoKHR* pImportFenceWin32HandleInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12153,7 +12155,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetFenceFdKHR(VkDevice device, VkFenceGetFdInfoKHR* pGetFdInfo, int* pFd) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetFenceFdKHR(VkDevice device, VkFenceGetFdInfoKHR* pGetFdInfo, int* pFd) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12191,7 +12193,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportFenceFdKHR(VkDevice device, VkImportFenceFdInfoKHR* pImportFenceFdInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ImportFenceFdKHR(VkDevice device, VkImportFenceFdInfoKHR* pImportFenceFdInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12231,7 +12233,7 @@ return ret;
 }
 
 #if defined(VK_USE_PLATFORM_SCI)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetFenceSciSyncFenceNV(VkDevice device, VkFenceGetSciSyncInfoNV* pGetSciSyncHandleInfo, void* pHandle) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetFenceSciSyncFenceNV(VkDevice device, VkFenceGetSciSyncInfoNV* pGetSciSyncHandleInfo, void* pHandle) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12270,7 +12272,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetFenceSciSyncObjNV(VkDevice device, VkFenceGetSciSyncInfoNV* pGetSciSyncHandleInfo, void* pHandle) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetFenceSciSyncObjNV(VkDevice device, VkFenceGetSciSyncInfoNV* pGetSciSyncHandleInfo, void* pHandle) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12309,7 +12311,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportFenceSciSyncFenceNV(VkDevice device, VkImportFenceSciSyncInfoNV* pImportFenceSciSyncInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ImportFenceSciSyncFenceNV(VkDevice device, VkImportFenceSciSyncInfoNV* pImportFenceSciSyncInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12348,7 +12350,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportFenceSciSyncObjNV(VkDevice device, VkImportFenceSciSyncInfoNV* pImportFenceSciSyncInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ImportFenceSciSyncObjNV(VkDevice device, VkImportFenceSciSyncInfoNV* pImportFenceSciSyncInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12387,7 +12389,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSemaphoreSciSyncObjNV(VkDevice device, VkSemaphoreGetSciSyncInfoNV* pGetSciSyncInfo, void* pHandle) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetSemaphoreSciSyncObjNV(VkDevice device, VkSemaphoreGetSciSyncInfoNV* pGetSciSyncInfo, void* pHandle) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12426,7 +12428,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ImportSemaphoreSciSyncObjNV(VkDevice device, VkImportSemaphoreSciSyncInfoNV* pImportSemaphoreSciSyncInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ImportSemaphoreSciSyncObjNV(VkDevice device, VkImportSemaphoreSciSyncInfoNV* pImportSemaphoreSciSyncInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12465,7 +12467,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateSemaphoreSciSyncPoolNV(VkDevice device, VkSemaphoreSciSyncPoolCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSemaphoreSciSyncPoolNV* pSemaphorePool) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateSemaphoreSciSyncPoolNV(VkDevice device, VkSemaphoreSciSyncPoolCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSemaphoreSciSyncPoolNV* pSemaphorePool) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12512,7 +12514,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_SCI)
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroySemaphoreSciSyncPoolNV(VkDevice device, VkSemaphoreSciSyncPoolNV semaphorePool, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroySemaphoreSciSyncPoolNV(VkDevice device, VkSemaphoreSciSyncPoolNV semaphorePool, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12551,7 +12553,7 @@ device_dispatch[GetKey(device)].DestroySemaphoreSciSyncPoolNV(device, semaphoreP
 }
 
 #endif
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_DisplayPowerControlEXT(VkDevice device, VkDisplayKHR display, VkDisplayPowerInfoEXT* pDisplayPowerInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_DisplayPowerControlEXT(VkDevice device, VkDisplayKHR display, VkDisplayPowerInfoEXT* pDisplayPowerInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12588,7 +12590,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_RegisterDeviceEventEXT(VkDevice device, VkDeviceEventInfoEXT* pDeviceEventInfo, VkAllocationCallbacks* pAllocator, VkFence* pFence) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_RegisterDeviceEventEXT(VkDevice device, VkDeviceEventInfoEXT* pDeviceEventInfo, VkAllocationCallbacks* pAllocator, VkFence* pFence) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12632,7 +12634,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_RegisterDisplayEventEXT(VkDevice device, VkDisplayKHR display, VkDisplayEventInfoEXT* pDisplayEventInfo, VkAllocationCallbacks* pAllocator, VkFence* pFence) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_RegisterDisplayEventEXT(VkDevice device, VkDisplayKHR display, VkDisplayEventInfoEXT* pDisplayEventInfo, VkAllocationCallbacks* pAllocator, VkFence* pFence) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12677,7 +12679,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSwapchainCounterEXT(VkDevice device, VkSwapchainKHR swapchain, VkSurfaceCounterFlagBitsEXT counter, uint64_t* pCounterValue) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetSwapchainCounterEXT(VkDevice device, VkSwapchainKHR swapchain, VkSurfaceCounterFlagBitsEXT counter, uint64_t* pCounterValue) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12713,7 +12715,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceGroupPeerMemoryFeatures(VkDevice device, uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDeviceGroupPeerMemoryFeatures(VkDevice device, uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12747,7 +12749,7 @@ device_dispatch[GetKey(device)].GetDeviceGroupPeerMemoryFeatures(device, heapInd
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindBufferMemory2(VkDevice device, uint32_t bindInfoCount, VkBindBufferMemoryInfo* pBindInfos) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BindBufferMemory2(VkDevice device, uint32_t bindInfoCount, VkBindBufferMemoryInfo* pBindInfos) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12787,7 +12789,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindImageMemory2(VkDevice device, uint32_t bindInfoCount, VkBindImageMemoryInfo* pBindInfos) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BindImageMemory2(VkDevice device, uint32_t bindInfoCount, VkBindImageMemoryInfo* pBindInfos) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12827,7 +12829,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDeviceMask(VkCommandBuffer commandBuffer, uint32_t deviceMask) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDeviceMask(VkCommandBuffer commandBuffer, uint32_t deviceMask) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12858,7 +12860,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDeviceMask(commandBuffer, deviceMas
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDeviceGroupPresentCapabilitiesKHR(VkDevice device, VkDeviceGroupPresentCapabilitiesKHR* pDeviceGroupPresentCapabilities) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetDeviceGroupPresentCapabilitiesKHR(VkDevice device, VkDeviceGroupPresentCapabilitiesKHR* pDeviceGroupPresentCapabilities) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12895,7 +12897,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDeviceGroupSurfacePresentModesKHR(VkDevice device, VkSurfaceKHR surface, VkDeviceGroupPresentModeFlagsKHR* pModes) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetDeviceGroupSurfacePresentModesKHR(VkDevice device, VkSurfaceKHR surface, VkDeviceGroupPresentModeFlagsKHR* pModes) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12931,7 +12933,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireNextImage2KHR(VkDevice device, VkAcquireNextImageInfoKHR* pAcquireInfo, uint32_t* pImageIndex) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_AcquireNextImage2KHR(VkDevice device, VkAcquireNextImageInfoKHR* pAcquireInfo, uint32_t* pImageIndex) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -12972,7 +12974,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDispatchBase(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDispatchBase(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13008,7 +13010,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDispatchBase(commandBuffer, baseGroupX
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDescriptorUpdateTemplate(VkDevice device, VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDescriptorUpdateTemplate(VkDevice device, VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13064,7 +13066,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDescriptorUpdateTemplate(VkDevice device, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDescriptorUpdateTemplate(VkDevice device, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13102,7 +13104,7 @@ device_dispatch[GetKey(device)].DestroyDescriptorUpdateTemplate(device, descript
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_UpdateDescriptorSetWithTemplate(VkDevice device, VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, void* pData) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_UpdateDescriptorSetWithTemplate(VkDevice device, VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13134,7 +13136,7 @@ device_dispatch[GetKey(device)].UpdateDescriptorSetWithTemplate(device, descript
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, void* pData) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdPushDescriptorSetWithTemplateKHR(VkCommandBuffer commandBuffer, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkPipelineLayout layout, uint32_t set, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13167,7 +13169,7 @@ device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetWithTemplateKHR(comma
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_SetHdrMetadataEXT(VkDevice device, uint32_t swapchainCount, VkSwapchainKHR* pSwapchains, VkHdrMetadataEXT* pMetadata) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_SetHdrMetadataEXT(VkDevice device, uint32_t swapchainCount, VkSwapchainKHR* pSwapchains, VkHdrMetadataEXT* pMetadata) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13209,7 +13211,7 @@ device_dispatch[GetKey(device)].SetHdrMetadataEXT(device, swapchainCount, pSwapc
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSwapchainStatusKHR(VkDevice device, VkSwapchainKHR swapchain) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetSwapchainStatusKHR(VkDevice device, VkSwapchainKHR swapchain) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13244,7 +13246,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetRefreshCycleDurationGOOGLE(VkDevice device, VkSwapchainKHR swapchain, VkRefreshCycleDurationGOOGLE* pDisplayTimingProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetRefreshCycleDurationGOOGLE(VkDevice device, VkSwapchainKHR swapchain, VkRefreshCycleDurationGOOGLE* pDisplayTimingProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13282,7 +13284,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPastPresentationTimingGOOGLE(VkDevice device, VkSwapchainKHR swapchain, uint32_t* pPresentationTimingCount, VkPastPresentationTimingGOOGLE* pPresentationTimings) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPastPresentationTimingGOOGLE(VkDevice device, VkSwapchainKHR swapchain, uint32_t* pPresentationTimingCount, VkPastPresentationTimingGOOGLE* pPresentationTimings) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13324,7 +13326,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetViewportWScalingNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, VkViewportWScalingNV* pViewportWScalings) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetViewportWScalingNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, VkViewportWScalingNV* pViewportWScalings) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13360,7 +13362,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetViewportWScalingNV(commandBuffer, f
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDiscardRectangleEXT(VkCommandBuffer commandBuffer, uint32_t firstDiscardRectangle, uint32_t discardRectangleCount, VkRect2D* pDiscardRectangles) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDiscardRectangleEXT(VkCommandBuffer commandBuffer, uint32_t firstDiscardRectangle, uint32_t discardRectangleCount, VkRect2D* pDiscardRectangles) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13396,7 +13398,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleEXT(commandBuffer, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDiscardRectangleEnableEXT(VkCommandBuffer commandBuffer, VkBool32 discardRectangleEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDiscardRectangleEnableEXT(VkCommandBuffer commandBuffer, VkBool32 discardRectangleEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13427,7 +13429,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleEnableEXT(commandBu
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDiscardRectangleModeEXT(VkCommandBuffer commandBuffer, VkDiscardRectangleModeEXT discardRectangleMode) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDiscardRectangleModeEXT(VkCommandBuffer commandBuffer, VkDiscardRectangleModeEXT discardRectangleMode) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13457,7 +13459,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDiscardRectangleModeEXT(commandBuff
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetSampleLocationsEXT(VkCommandBuffer commandBuffer, VkSampleLocationsInfoEXT* pSampleLocationsInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetSampleLocationsEXT(VkCommandBuffer commandBuffer, VkSampleLocationsInfoEXT* pSampleLocationsInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13495,7 +13497,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetSampleLocationsEXT(commandBuffer, p
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetBufferMemoryRequirements2(VkDevice device, VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetBufferMemoryRequirements2(VkDevice device, VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13531,7 +13533,7 @@ device_dispatch[GetKey(device)].GetBufferMemoryRequirements2(device, pInfo, pMem
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageMemoryRequirements2(VkDevice device, VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetImageMemoryRequirements2(VkDevice device, VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13567,7 +13569,7 @@ device_dispatch[GetKey(device)].GetImageMemoryRequirements2(device, pInfo, pMemo
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageSparseMemoryRequirements2(VkDevice device, VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetImageSparseMemoryRequirements2(VkDevice device, VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13603,7 +13605,7 @@ device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements2(device, pInfo,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceBufferMemoryRequirements(VkDevice device, VkDeviceBufferMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDeviceBufferMemoryRequirements(VkDevice device, VkDeviceBufferMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13644,7 +13646,7 @@ device_dispatch[GetKey(device)].GetDeviceBufferMemoryRequirements(device, pInfo,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceImageMemoryRequirements(VkDevice device, VkDeviceImageMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDeviceImageMemoryRequirements(VkDevice device, VkDeviceImageMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13687,7 +13689,7 @@ device_dispatch[GetKey(device)].GetDeviceImageMemoryRequirements(device, pInfo, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceImageSparseMemoryRequirements(VkDevice device, VkDeviceImageMemoryRequirements* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDeviceImageSparseMemoryRequirements(VkDevice device, VkDeviceImageMemoryRequirements* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13730,7 +13732,7 @@ device_dispatch[GetKey(device)].GetDeviceImageSparseMemoryRequirements(device, p
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateSamplerYcbcrConversion(VkDevice device, VkSamplerYcbcrConversionCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateSamplerYcbcrConversion(VkDevice device, VkSamplerYcbcrConversionCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13776,7 +13778,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroySamplerYcbcrConversion(VkDevice device, VkSamplerYcbcrConversion ycbcrConversion, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroySamplerYcbcrConversion(VkDevice device, VkSamplerYcbcrConversion ycbcrConversion, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13814,7 +13816,7 @@ device_dispatch[GetKey(device)].DestroySamplerYcbcrConversion(device, ycbcrConve
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceQueue2(VkDevice device, VkDeviceQueueInfo2* pQueueInfo, VkQueue* pQueue) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDeviceQueue2(VkDevice device, VkDeviceQueueInfo2* pQueueInfo, VkQueue* pQueue) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13850,7 +13852,7 @@ device_dispatch[GetKey(device)].GetDeviceQueue2(device, pQueueInfo, pQueue);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateValidationCacheEXT(VkDevice device, VkValidationCacheCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkValidationCacheEXT* pValidationCache) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateValidationCacheEXT(VkDevice device, VkValidationCacheCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkValidationCacheEXT* pValidationCache) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13896,7 +13898,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyValidationCacheEXT(VkDevice device, VkValidationCacheEXT validationCache, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyValidationCacheEXT(VkDevice device, VkValidationCacheEXT validationCache, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13934,7 +13936,7 @@ device_dispatch[GetKey(device)].DestroyValidationCacheEXT(device, validationCach
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetValidationCacheDataEXT(VkDevice device, VkValidationCacheEXT validationCache, size_t* pDataSize, void* pData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetValidationCacheDataEXT(VkDevice device, VkValidationCacheEXT validationCache, size_t* pDataSize, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -13970,7 +13972,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_MergeValidationCachesEXT(VkDevice device, VkValidationCacheEXT dstCache, uint32_t srcCacheCount, VkValidationCacheEXT* pSrcCaches) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_MergeValidationCachesEXT(VkDevice device, VkValidationCacheEXT dstCache, uint32_t srcCacheCount, VkValidationCacheEXT* pSrcCaches) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14007,7 +14009,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDescriptorSetLayoutSupport(VkDevice device, VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDescriptorSetLayoutSupport(VkDevice device, VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14051,7 +14053,7 @@ device_dispatch[GetKey(device)].GetDescriptorSetLayoutSupport(device, pCreateInf
 }
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSwapchainGrallocUsageANDROID(VkDevice device, VkFormat format, VkImageUsageFlags imageUsage, int* grallocUsage) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetSwapchainGrallocUsageANDROID(VkDevice device, VkFormat format, VkImageUsageFlags imageUsage, int* grallocUsage) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14089,7 +14091,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSwapchainGrallocUsage2ANDROID(VkDevice device, VkFormat format, VkImageUsageFlags imageUsage, VkSwapchainImageUsageFlagsANDROID swapchainImageUsage, uint64_t* grallocConsumerUsage, uint64_t* grallocProducerUsage) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetSwapchainGrallocUsage2ANDROID(VkDevice device, VkFormat format, VkImageUsageFlags imageUsage, VkSwapchainImageUsageFlagsANDROID swapchainImageUsage, uint64_t* grallocConsumerUsage, uint64_t* grallocProducerUsage) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14129,7 +14131,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireImageANDROID(VkDevice device, VkImage image, int nativeFenceFd, VkSemaphore semaphore, VkFence fence) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_AcquireImageANDROID(VkDevice device, VkImage image, int nativeFenceFd, VkSemaphore semaphore, VkFence fence) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14169,7 +14171,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueueSignalReleaseImageANDROID(VkQueue queue, uint32_t waitSemaphoreCount, VkSemaphore* pWaitSemaphores, VkImage image, int* pNativeFenceFd) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_QueueSignalReleaseImageANDROID(VkQueue queue, uint32_t waitSemaphoreCount, VkSemaphore* pWaitSemaphores, VkImage image, int* pNativeFenceFd) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14208,7 +14210,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetShaderInfoAMD(VkDevice device, VkPipeline pipeline, VkShaderStageFlagBits shaderStage, VkShaderInfoTypeAMD infoType, size_t* pInfoSize, void* pInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetShaderInfoAMD(VkDevice device, VkPipeline pipeline, VkShaderStageFlagBits shaderStage, VkShaderInfoTypeAMD infoType, size_t* pInfoSize, void* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14244,7 +14246,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_SetLocalDimmingAMD(VkDevice device, VkSwapchainKHR swapChain, VkBool32 localDimmingEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_SetLocalDimmingAMD(VkDevice device, VkSwapchainKHR swapChain, VkBool32 localDimmingEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14276,7 +14278,7 @@ device_dispatch[GetKey(device)].SetLocalDimmingAMD(device, swapChain, localDimmi
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetCalibratedTimestampsKHR(VkDevice device, uint32_t timestampCount, VkCalibratedTimestampInfoKHR* pTimestampInfos, uint64_t* pTimestamps, uint64_t* pMaxDeviation) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetCalibratedTimestampsKHR(VkDevice device, uint32_t timestampCount, VkCalibratedTimestampInfoKHR* pTimestampInfos, uint64_t* pTimestamps, uint64_t* pMaxDeviation) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14315,7 +14317,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetDebugUtilsObjectNameEXT(VkDevice device, VkDebugUtilsObjectNameInfoEXT* pNameInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_SetDebugUtilsObjectNameEXT(VkDevice device, VkDebugUtilsObjectNameInfoEXT* pNameInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14352,7 +14354,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetDebugUtilsObjectTagEXT(VkDevice device, VkDebugUtilsObjectTagInfoEXT* pTagInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_SetDebugUtilsObjectTagEXT(VkDevice device, VkDebugUtilsObjectTagInfoEXT* pTagInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14391,7 +14393,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_QueueBeginDebugUtilsLabelEXT(VkQueue queue, VkDebugUtilsLabelEXT* pLabelInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_QueueBeginDebugUtilsLabelEXT(VkQueue queue, VkDebugUtilsLabelEXT* pLabelInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14423,7 +14425,7 @@ device_dispatch[GetKey(queue)].QueueBeginDebugUtilsLabelEXT(queue, pLabelInfo);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_QueueEndDebugUtilsLabelEXT(VkQueue queue) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_QueueEndDebugUtilsLabelEXT(VkQueue queue) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14453,7 +14455,7 @@ device_dispatch[GetKey(queue)].QueueEndDebugUtilsLabelEXT(queue);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_QueueInsertDebugUtilsLabelEXT(VkQueue queue, VkDebugUtilsLabelEXT* pLabelInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_QueueInsertDebugUtilsLabelEXT(VkQueue queue, VkDebugUtilsLabelEXT* pLabelInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14485,7 +14487,7 @@ device_dispatch[GetKey(queue)].QueueInsertDebugUtilsLabelEXT(queue, pLabelInfo);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, VkDebugUtilsLabelEXT* pLabelInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBeginDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, VkDebugUtilsLabelEXT* pLabelInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14517,7 +14519,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBeginDebugUtilsLabelEXT(commandBuffer,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndDebugUtilsLabelEXT(VkCommandBuffer commandBuffer) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdEndDebugUtilsLabelEXT(VkCommandBuffer commandBuffer) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14547,7 +14549,7 @@ device_dispatch[GetKey(commandBuffer)].CmdEndDebugUtilsLabelEXT(commandBuffer);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdInsertDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, VkDebugUtilsLabelEXT* pLabelInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdInsertDebugUtilsLabelEXT(VkCommandBuffer commandBuffer, VkDebugUtilsLabelEXT* pLabelInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14579,7 +14581,7 @@ device_dispatch[GetKey(commandBuffer)].CmdInsertDebugUtilsLabelEXT(commandBuffer
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryHostPointerPropertiesEXT(VkDevice device, VkExternalMemoryHandleTypeFlagBits handleType, void* pHostPointer, VkMemoryHostPointerPropertiesEXT* pMemoryHostPointerProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetMemoryHostPointerPropertiesEXT(VkDevice device, VkExternalMemoryHandleTypeFlagBits handleType, void* pHostPointer, VkMemoryHostPointerPropertiesEXT* pMemoryHostPointerProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14616,7 +14618,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteBufferMarkerAMD(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdWriteBufferMarkerAMD(VkCommandBuffer commandBuffer, VkPipelineStageFlagBits pipelineStage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14649,7 +14651,7 @@ device_dispatch[GetKey(commandBuffer)].CmdWriteBufferMarkerAMD(commandBuffer, pi
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateRenderPass2(VkDevice device, VkRenderPassCreateInfo2* pCreateInfo, VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateRenderPass2(VkDevice device, VkRenderPassCreateInfo2* pCreateInfo, VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14734,7 +14736,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginRenderPass2(VkCommandBuffer commandBuffer, VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassBeginInfo* pSubpassBeginInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBeginRenderPass2(VkCommandBuffer commandBuffer, VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassBeginInfo* pSubpassBeginInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14773,7 +14775,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass2(commandBuffer, pRende
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdNextSubpass2(VkCommandBuffer commandBuffer, VkSubpassBeginInfo* pSubpassBeginInfo, VkSubpassEndInfo* pSubpassEndInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdNextSubpass2(VkCommandBuffer commandBuffer, VkSubpassBeginInfo* pSubpassBeginInfo, VkSubpassEndInfo* pSubpassEndInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14807,7 +14809,7 @@ device_dispatch[GetKey(commandBuffer)].CmdNextSubpass2(commandBuffer, pSubpassBe
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndRenderPass2(VkCommandBuffer commandBuffer, VkSubpassEndInfo* pSubpassEndInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdEndRenderPass2(VkCommandBuffer commandBuffer, VkSubpassEndInfo* pSubpassEndInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14839,7 +14841,7 @@ device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass2(commandBuffer, pSubpass
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSemaphoreCounterValue(VkDevice device, VkSemaphore semaphore, uint64_t* pValue) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetSemaphoreCounterValue(VkDevice device, VkSemaphore semaphore, uint64_t* pValue) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14875,7 +14877,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_WaitSemaphores(VkDevice device, VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_WaitSemaphores(VkDevice device, VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14916,7 +14918,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SignalSemaphore(VkDevice device, VkSemaphoreSignalInfo* pSignalInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_SignalSemaphore(VkDevice device, VkSemaphoreSignalInfo* pSignalInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14955,7 +14957,7 @@ return ret;
 }
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetAndroidHardwareBufferPropertiesANDROID(VkDevice device, AHardwareBuffer* buffer, VkAndroidHardwareBufferPropertiesANDROID* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetAndroidHardwareBufferPropertiesANDROID(VkDevice device, AHardwareBuffer* buffer, VkAndroidHardwareBufferPropertiesANDROID* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -14996,7 +14998,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetMemoryAndroidHardwareBufferANDROID(VkDevice device, VkMemoryGetAndroidHardwareBufferInfoANDROID* pInfo, AHardwareBuffer* pBuffer) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetMemoryAndroidHardwareBufferANDROID(VkDevice device, VkMemoryGetAndroidHardwareBufferInfoANDROID* pInfo, AHardwareBuffer* pBuffer) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15035,7 +15037,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15071,7 +15073,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCount(commandBuffer, buffe
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndexedIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndexedIndirectCount(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15107,7 +15109,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCount(commandBuffer
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCheckpointNV(VkCommandBuffer commandBuffer, void* pCheckpointMarker) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetCheckpointNV(VkCommandBuffer commandBuffer, void* pCheckpointMarker) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15137,7 +15139,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetCheckpointNV(commandBuffer, pCheckp
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetQueueCheckpointDataNV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointDataNV* pCheckpointData) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetQueueCheckpointDataNV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointDataNV* pCheckpointData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15169,7 +15171,7 @@ device_dispatch[GetKey(queue)].GetQueueCheckpointDataNV(queue, pCheckpointDataCo
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindTransformFeedbackBuffersEXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, VkBuffer* pBuffers, VkDeviceSize* pOffsets, VkDeviceSize* pSizes) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindTransformFeedbackBuffersEXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, VkBuffer* pBuffers, VkDeviceSize* pOffsets, VkDeviceSize* pSizes) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15204,7 +15206,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindTransformFeedbackBuffersEXT(comman
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginTransformFeedbackEXT(VkCommandBuffer commandBuffer, uint32_t firstCounterBuffer, uint32_t counterBufferCount, VkBuffer* pCounterBuffers, VkDeviceSize* pCounterBufferOffsets) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBeginTransformFeedbackEXT(VkCommandBuffer commandBuffer, uint32_t firstCounterBuffer, uint32_t counterBufferCount, VkBuffer* pCounterBuffers, VkDeviceSize* pCounterBufferOffsets) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15238,7 +15240,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBeginTransformFeedbackEXT(commandBuffe
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndTransformFeedbackEXT(VkCommandBuffer commandBuffer, uint32_t firstCounterBuffer, uint32_t counterBufferCount, VkBuffer* pCounterBuffers, VkDeviceSize* pCounterBufferOffsets) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdEndTransformFeedbackEXT(VkCommandBuffer commandBuffer, uint32_t firstCounterBuffer, uint32_t counterBufferCount, VkBuffer* pCounterBuffers, VkDeviceSize* pCounterBufferOffsets) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15272,7 +15274,7 @@ device_dispatch[GetKey(commandBuffer)].CmdEndTransformFeedbackEXT(commandBuffer,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginQueryIndexedEXT(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags, uint32_t index) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBeginQueryIndexedEXT(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, VkQueryControlFlags flags, uint32_t index) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15306,7 +15308,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBeginQueryIndexedEXT(commandBuffer, qu
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndQueryIndexedEXT(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, uint32_t index) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdEndQueryIndexedEXT(VkCommandBuffer commandBuffer, VkQueryPool queryPool, uint32_t query, uint32_t index) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15339,7 +15341,7 @@ device_dispatch[GetKey(commandBuffer)].CmdEndQueryIndexedEXT(commandBuffer, quer
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndirectByteCountEXT(VkCommandBuffer commandBuffer, uint32_t instanceCount, uint32_t firstInstance, VkBuffer counterBuffer, VkDeviceSize counterBufferOffset, uint32_t counterOffset, uint32_t vertexStride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndirectByteCountEXT(VkCommandBuffer commandBuffer, uint32_t instanceCount, uint32_t firstInstance, VkBuffer counterBuffer, VkDeviceSize counterBufferOffset, uint32_t counterOffset, uint32_t vertexStride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15375,7 +15377,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectByteCountEXT(commandBuffer
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetExclusiveScissorNV(VkCommandBuffer commandBuffer, uint32_t firstExclusiveScissor, uint32_t exclusiveScissorCount, VkRect2D* pExclusiveScissors) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetExclusiveScissorNV(VkCommandBuffer commandBuffer, uint32_t firstExclusiveScissor, uint32_t exclusiveScissorCount, VkRect2D* pExclusiveScissors) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15411,7 +15413,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetExclusiveScissorNV(commandBuffer, f
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetExclusiveScissorEnableNV(VkCommandBuffer commandBuffer, uint32_t firstExclusiveScissor, uint32_t exclusiveScissorCount, VkBool32* pExclusiveScissorEnables) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetExclusiveScissorEnableNV(VkCommandBuffer commandBuffer, uint32_t firstExclusiveScissor, uint32_t exclusiveScissorCount, VkBool32* pExclusiveScissorEnables) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15444,7 +15446,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetExclusiveScissorEnableNV(commandBuf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindShadingRateImageNV(VkCommandBuffer commandBuffer, VkImageView imageView, VkImageLayout imageLayout) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindShadingRateImageNV(VkCommandBuffer commandBuffer, VkImageView imageView, VkImageLayout imageLayout) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15475,7 +15477,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindShadingRateImageNV(commandBuffer, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetViewportShadingRatePaletteNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, VkShadingRatePaletteNV* pShadingRatePalettes) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetViewportShadingRatePaletteNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, VkShadingRatePaletteNV* pShadingRatePalettes) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15511,7 +15513,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetViewportShadingRatePaletteNV(comman
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCoarseSampleOrderNV(VkCommandBuffer commandBuffer, VkCoarseSampleOrderTypeNV sampleOrderType, uint32_t customSampleOrderCount, VkCoarseSampleOrderCustomNV* pCustomSampleOrders) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetCoarseSampleOrderNV(VkCommandBuffer commandBuffer, VkCoarseSampleOrderTypeNV sampleOrderType, uint32_t customSampleOrderCount, VkCoarseSampleOrderCustomNV* pCustomSampleOrders) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15551,7 +15553,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetCoarseSampleOrderNV(commandBuffer, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMeshTasksNV(VkCommandBuffer commandBuffer, uint32_t taskCount, uint32_t firstTask) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawMeshTasksNV(VkCommandBuffer commandBuffer, uint32_t taskCount, uint32_t firstTask) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15583,7 +15585,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksNV(commandBuffer, taskCou
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMeshTasksIndirectNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawMeshTasksIndirectNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15617,7 +15619,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectNV(commandBuffer,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMeshTasksIndirectCountNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawMeshTasksIndirectCountNV(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15653,7 +15655,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectCountNV(commandBu
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMeshTasksEXT(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawMeshTasksEXT(VkCommandBuffer commandBuffer, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15686,7 +15688,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksEXT(commandBuffer, groupC
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMeshTasksIndirectEXT(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawMeshTasksIndirectEXT(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, uint32_t drawCount, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15720,7 +15722,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectEXT(commandBuffer
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawMeshTasksIndirectCountEXT(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawMeshTasksIndirectCountEXT(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15756,7 +15758,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawMeshTasksIndirectCountEXT(commandB
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CompileDeferredNV(VkDevice device, VkPipeline pipeline, uint32_t shader) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CompileDeferredNV(VkDevice device, VkPipeline pipeline, uint32_t shader) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15792,7 +15794,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateAccelerationStructureNV(VkDevice device, VkAccelerationStructureCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkAccelerationStructureNV* pAccelerationStructure) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateAccelerationStructureNV(VkDevice device, VkAccelerationStructureCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkAccelerationStructureNV* pAccelerationStructure) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15838,7 +15840,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindInvocationMaskHUAWEI(VkCommandBuffer commandBuffer, VkImageView imageView, VkImageLayout imageLayout) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindInvocationMaskHUAWEI(VkCommandBuffer commandBuffer, VkImageView imageView, VkImageLayout imageLayout) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15869,7 +15871,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindInvocationMaskHUAWEI(commandBuffer
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyAccelerationStructureKHR(VkDevice device, VkAccelerationStructureKHR accelerationStructure, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyAccelerationStructureKHR(VkDevice device, VkAccelerationStructureKHR accelerationStructure, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15907,7 +15909,7 @@ device_dispatch[GetKey(device)].DestroyAccelerationStructureKHR(device, accelera
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyAccelerationStructureNV(VkDevice device, VkAccelerationStructureNV accelerationStructure, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyAccelerationStructureNV(VkDevice device, VkAccelerationStructureNV accelerationStructure, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15945,7 +15947,7 @@ device_dispatch[GetKey(device)].DestroyAccelerationStructureNV(device, accelerat
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetAccelerationStructureMemoryRequirementsNV(VkDevice device, VkAccelerationStructureMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetAccelerationStructureMemoryRequirementsNV(VkDevice device, VkAccelerationStructureMemoryRequirementsInfoNV* pInfo, VkMemoryRequirements2KHR* pMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -15980,7 +15982,7 @@ device_dispatch[GetKey(device)].GetAccelerationStructureMemoryRequirementsNV(dev
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindAccelerationStructureMemoryNV(VkDevice device, uint32_t bindInfoCount, VkBindAccelerationStructureMemoryInfoNV* pBindInfos) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BindAccelerationStructureMemoryNV(VkDevice device, uint32_t bindInfoCount, VkBindAccelerationStructureMemoryInfoNV* pBindInfos) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16021,7 +16023,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkCopyAccelerationStructureModeKHR mode) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkCopyAccelerationStructureModeKHR mode) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16053,7 +16055,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureNV(commandBuf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyAccelerationStructureKHR(VkCommandBuffer commandBuffer, VkCopyAccelerationStructureInfoKHR* pInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyAccelerationStructureKHR(VkCommandBuffer commandBuffer, VkCopyAccelerationStructureInfoKHR* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16087,7 +16089,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureKHR(commandBu
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyAccelerationStructureKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyAccelerationStructureInfoKHR* pInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CopyAccelerationStructureKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyAccelerationStructureInfoKHR* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16126,7 +16128,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyAccelerationStructureToMemoryKHR(VkCommandBuffer commandBuffer, VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyAccelerationStructureToMemoryKHR(VkCommandBuffer commandBuffer, VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16160,7 +16162,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyAccelerationStructureToMemoryKHR(c
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyAccelerationStructureToMemoryKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CopyAccelerationStructureToMemoryKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyAccelerationStructureToMemoryInfoKHR* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16199,7 +16201,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyMemoryToAccelerationStructureKHR(VkCommandBuffer commandBuffer, VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyMemoryToAccelerationStructureKHR(VkCommandBuffer commandBuffer, VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16233,7 +16235,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToAccelerationStructureKHR(c
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyMemoryToAccelerationStructureKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CopyMemoryToAccelerationStructureKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyMemoryToAccelerationStructureInfoKHR* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16272,7 +16274,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteAccelerationStructuresPropertiesKHR(VkCommandBuffer commandBuffer, uint32_t accelerationStructureCount, VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdWriteAccelerationStructuresPropertiesKHR(VkCommandBuffer commandBuffer, uint32_t accelerationStructureCount, VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16306,7 +16308,7 @@ device_dispatch[GetKey(commandBuffer)].CmdWriteAccelerationStructuresPropertiesK
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteAccelerationStructuresPropertiesNV(VkCommandBuffer commandBuffer, uint32_t accelerationStructureCount, VkAccelerationStructureNV* pAccelerationStructures, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdWriteAccelerationStructuresPropertiesNV(VkCommandBuffer commandBuffer, uint32_t accelerationStructureCount, VkAccelerationStructureNV* pAccelerationStructures, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16340,7 +16342,7 @@ device_dispatch[GetKey(commandBuffer)].CmdWriteAccelerationStructuresPropertiesN
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBuildAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureInfoNV* pInfo, VkBuffer instanceData, VkDeviceSize instanceOffset, VkBool32 update, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkBuffer scratch, VkDeviceSize scratchOffset) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBuildAccelerationStructureNV(VkCommandBuffer commandBuffer, VkAccelerationStructureInfoNV* pInfo, VkBuffer instanceData, VkDeviceSize instanceOffset, VkBool32 update, VkAccelerationStructureNV dst, VkAccelerationStructureNV src, VkBuffer scratch, VkDeviceSize scratchOffset) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16387,7 +16389,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructureNV(commandBu
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_WriteAccelerationStructuresPropertiesKHR(VkDevice device, uint32_t accelerationStructureCount, VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, size_t dataSize, void* pData, size_t stride) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_WriteAccelerationStructuresPropertiesKHR(VkDevice device, uint32_t accelerationStructureCount, VkAccelerationStructureKHR* pAccelerationStructures, VkQueryType queryType, size_t dataSize, void* pData, size_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16425,7 +16427,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdTraceRaysKHR(VkCommandBuffer commandBuffer, VkStridedDeviceAddressRegionKHR* pRaygenShaderBindingTable, VkStridedDeviceAddressRegionKHR* pMissShaderBindingTable, VkStridedDeviceAddressRegionKHR* pHitShaderBindingTable, VkStridedDeviceAddressRegionKHR* pCallableShaderBindingTable, uint32_t width, uint32_t height, uint32_t depth) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdTraceRaysKHR(VkCommandBuffer commandBuffer, VkStridedDeviceAddressRegionKHR* pRaygenShaderBindingTable, VkStridedDeviceAddressRegionKHR* pMissShaderBindingTable, VkStridedDeviceAddressRegionKHR* pHitShaderBindingTable, VkStridedDeviceAddressRegionKHR* pCallableShaderBindingTable, uint32_t width, uint32_t height, uint32_t depth) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16478,7 +16480,7 @@ device_dispatch[GetKey(commandBuffer)].CmdTraceRaysKHR(commandBuffer, pRaygenSha
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdTraceRaysNV(VkCommandBuffer commandBuffer, VkBuffer raygenShaderBindingTableBuffer, VkDeviceSize raygenShaderBindingOffset, VkBuffer missShaderBindingTableBuffer, VkDeviceSize missShaderBindingOffset, VkDeviceSize missShaderBindingStride, VkBuffer hitShaderBindingTableBuffer, VkDeviceSize hitShaderBindingOffset, VkDeviceSize hitShaderBindingStride, VkBuffer callableShaderBindingTableBuffer, VkDeviceSize callableShaderBindingOffset, VkDeviceSize callableShaderBindingStride, uint32_t width, uint32_t height, uint32_t depth) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdTraceRaysNV(VkCommandBuffer commandBuffer, VkBuffer raygenShaderBindingTableBuffer, VkDeviceSize raygenShaderBindingOffset, VkBuffer missShaderBindingTableBuffer, VkDeviceSize missShaderBindingOffset, VkDeviceSize missShaderBindingStride, VkBuffer hitShaderBindingTableBuffer, VkDeviceSize hitShaderBindingOffset, VkDeviceSize hitShaderBindingStride, VkBuffer callableShaderBindingTableBuffer, VkDeviceSize callableShaderBindingOffset, VkDeviceSize callableShaderBindingStride, uint32_t width, uint32_t height, uint32_t depth) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16522,7 +16524,7 @@ device_dispatch[GetKey(commandBuffer)].CmdTraceRaysNV(commandBuffer, raygenShade
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetRayTracingShaderGroupHandlesKHR(VkDevice device, VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetRayTracingShaderGroupHandlesKHR(VkDevice device, VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16560,7 +16562,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetRayTracingCaptureReplayShaderGroupHandlesKHR(VkDevice device, VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetRayTracingCaptureReplayShaderGroupHandlesKHR(VkDevice device, VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16598,7 +16600,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetAccelerationStructureHandleNV(VkDevice device, VkAccelerationStructureNV accelerationStructure, size_t dataSize, void* pData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetAccelerationStructureHandleNV(VkDevice device, VkAccelerationStructureNV accelerationStructure, size_t dataSize, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16634,7 +16636,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateRayTracingPipelinesNV(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkRayTracingPipelineCreateInfoNV* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateRayTracingPipelinesNV(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkRayTracingPipelineCreateInfoNV* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16701,7 +16703,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateRayTracingPipelinesKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkRayTracingPipelineCreateInfoKHR* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateRayTracingPipelinesKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkRayTracingPipelineCreateInfoKHR* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16782,7 +16784,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdTraceRaysIndirectKHR(VkCommandBuffer commandBuffer, VkStridedDeviceAddressRegionKHR* pRaygenShaderBindingTable, VkStridedDeviceAddressRegionKHR* pMissShaderBindingTable, VkStridedDeviceAddressRegionKHR* pHitShaderBindingTable, VkStridedDeviceAddressRegionKHR* pCallableShaderBindingTable, VkDeviceAddress indirectDeviceAddress) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdTraceRaysIndirectKHR(VkCommandBuffer commandBuffer, VkStridedDeviceAddressRegionKHR* pRaygenShaderBindingTable, VkStridedDeviceAddressRegionKHR* pMissShaderBindingTable, VkStridedDeviceAddressRegionKHR* pHitShaderBindingTable, VkStridedDeviceAddressRegionKHR* pCallableShaderBindingTable, VkDeviceAddress indirectDeviceAddress) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16833,7 +16835,7 @@ device_dispatch[GetKey(commandBuffer)].CmdTraceRaysIndirectKHR(commandBuffer, pR
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdTraceRaysIndirect2KHR(VkCommandBuffer commandBuffer, VkDeviceAddress indirectDeviceAddress) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdTraceRaysIndirect2KHR(VkCommandBuffer commandBuffer, VkDeviceAddress indirectDeviceAddress) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16864,7 +16866,7 @@ device_dispatch[GetKey(commandBuffer)].CmdTraceRaysIndirect2KHR(commandBuffer, i
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceAccelerationStructureCompatibilityKHR(VkDevice device, VkAccelerationStructureVersionInfoKHR* pVersionInfo, VkAccelerationStructureCompatibilityKHR* pCompatibility) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDeviceAccelerationStructureCompatibilityKHR(VkDevice device, VkAccelerationStructureVersionInfoKHR* pVersionInfo, VkAccelerationStructureCompatibilityKHR* pCompatibility) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16898,7 +16900,7 @@ device_dispatch[GetKey(device)].GetDeviceAccelerationStructureCompatibilityKHR(d
 }
 }
 
- VK_LAYER_EXPORT VkDeviceSize VKAPI_CALL DetailsLayer_GetRayTracingShaderGroupStackSizeKHR(VkDevice device, VkPipeline pipeline, uint32_t group, VkShaderGroupShaderKHR groupShader) {
+ VK_LAYER_EXPORT VkDeviceSize VKAPI_CALL DebuggerLayer_GetRayTracingShaderGroupStackSizeKHR(VkDevice device, VkPipeline pipeline, uint32_t group, VkShaderGroupShaderKHR groupShader) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16934,7 +16936,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetRayTracingPipelineStackSizeKHR(VkCommandBuffer commandBuffer, uint32_t pipelineStackSize) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetRayTracingPipelineStackSizeKHR(VkCommandBuffer commandBuffer, uint32_t pipelineStackSize) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -16965,7 +16967,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetRayTracingPipelineStackSizeKHR(comm
 }
 }
 
- VK_LAYER_EXPORT uint32_t VKAPI_CALL DetailsLayer_GetImageViewHandleNVX(VkDevice device, VkImageViewHandleInfoNVX* pInfo) {
+ VK_LAYER_EXPORT uint32_t VKAPI_CALL DebuggerLayer_GetImageViewHandleNVX(VkDevice device, VkImageViewHandleInfoNVX* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17003,7 +17005,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetImageViewAddressNVX(VkDevice device, VkImageView imageView, VkImageViewAddressPropertiesNVX* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetImageViewAddressNVX(VkDevice device, VkImageView imageView, VkImageViewAddressPropertiesNVX* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17043,7 +17045,7 @@ return ret;
 }
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDeviceGroupSurfacePresentModes2EXT(VkDevice device, VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, VkDeviceGroupPresentModeFlagsKHR* pModes) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetDeviceGroupSurfacePresentModes2EXT(VkDevice device, VkPhysicalDeviceSurfaceInfo2KHR* pSurfaceInfo, VkDeviceGroupPresentModeFlagsKHR* pModes) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17083,7 +17085,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireFullScreenExclusiveModeEXT(VkDevice device, VkSwapchainKHR swapchain) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_AcquireFullScreenExclusiveModeEXT(VkDevice device, VkSwapchainKHR swapchain) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17120,7 +17122,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ReleaseFullScreenExclusiveModeEXT(VkDevice device, VkSwapchainKHR swapchain) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ReleaseFullScreenExclusiveModeEXT(VkDevice device, VkSwapchainKHR swapchain) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17156,7 +17158,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquireProfilingLockKHR(VkDevice device, VkAcquireProfilingLockInfoKHR* pInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_AcquireProfilingLockKHR(VkDevice device, VkAcquireProfilingLockInfoKHR* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17194,7 +17196,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_ReleaseProfilingLockKHR(VkDevice device) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_ReleaseProfilingLockKHR(VkDevice device) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17224,7 +17226,7 @@ device_dispatch[GetKey(device)].ReleaseProfilingLockKHR(device);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetImageDrmFormatModifierPropertiesEXT(VkDevice device, VkImage image, VkImageDrmFormatModifierPropertiesEXT* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetImageDrmFormatModifierPropertiesEXT(VkDevice device, VkImage image, VkImageDrmFormatModifierPropertiesEXT* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17262,7 +17264,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT uint64_t VKAPI_CALL DetailsLayer_GetBufferOpaqueCaptureAddress(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
+ VK_LAYER_EXPORT uint64_t VKAPI_CALL DebuggerLayer_GetBufferOpaqueCaptureAddress(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17299,7 +17301,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DetailsLayer_GetBufferDeviceAddress(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
+ VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DebuggerLayer_GetBufferDeviceAddress(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17336,7 +17338,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_InitializePerformanceApiINTEL(VkDevice device, VkInitializePerformanceApiInfoINTEL* pInitializeInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_InitializePerformanceApiINTEL(VkDevice device, VkInitializePerformanceApiInfoINTEL* pInitializeInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17372,7 +17374,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_UninitializePerformanceApiINTEL(VkDevice device) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_UninitializePerformanceApiINTEL(VkDevice device) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17402,7 +17404,7 @@ device_dispatch[GetKey(device)].UninitializePerformanceApiINTEL(device);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CmdSetPerformanceMarkerINTEL(VkCommandBuffer commandBuffer, VkPerformanceMarkerInfoINTEL* pMarkerInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CmdSetPerformanceMarkerINTEL(VkCommandBuffer commandBuffer, VkPerformanceMarkerInfoINTEL* pMarkerInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17439,7 +17441,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CmdSetPerformanceStreamMarkerINTEL(VkCommandBuffer commandBuffer, VkPerformanceStreamMarkerInfoINTEL* pMarkerInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CmdSetPerformanceStreamMarkerINTEL(VkCommandBuffer commandBuffer, VkPerformanceStreamMarkerInfoINTEL* pMarkerInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17476,7 +17478,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CmdSetPerformanceOverrideINTEL(VkCommandBuffer commandBuffer, VkPerformanceOverrideInfoINTEL* pOverrideInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CmdSetPerformanceOverrideINTEL(VkCommandBuffer commandBuffer, VkPerformanceOverrideInfoINTEL* pOverrideInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17514,7 +17516,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_AcquirePerformanceConfigurationINTEL(VkDevice device, VkPerformanceConfigurationAcquireInfoINTEL* pAcquireInfo, VkPerformanceConfigurationINTEL* pConfiguration) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_AcquirePerformanceConfigurationINTEL(VkDevice device, VkPerformanceConfigurationAcquireInfoINTEL* pAcquireInfo, VkPerformanceConfigurationINTEL* pConfiguration) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17551,7 +17553,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ReleasePerformanceConfigurationINTEL(VkDevice device, VkPerformanceConfigurationINTEL configuration) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ReleasePerformanceConfigurationINTEL(VkDevice device, VkPerformanceConfigurationINTEL configuration) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17586,7 +17588,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueueSetPerformanceConfigurationINTEL(VkQueue queue, VkPerformanceConfigurationINTEL configuration) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_QueueSetPerformanceConfigurationINTEL(VkQueue queue, VkPerformanceConfigurationINTEL configuration) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17621,7 +17623,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPerformanceParameterINTEL(VkDevice device, VkPerformanceParameterTypeINTEL parameter, VkPerformanceValueINTEL* pValue) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPerformanceParameterINTEL(VkDevice device, VkPerformanceParameterTypeINTEL parameter, VkPerformanceValueINTEL* pValue) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17658,7 +17660,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT uint64_t VKAPI_CALL DetailsLayer_GetDeviceMemoryOpaqueCaptureAddress(VkDevice device, VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) {
+ VK_LAYER_EXPORT uint64_t VKAPI_CALL DebuggerLayer_GetDeviceMemoryOpaqueCaptureAddress(VkDevice device, VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17695,7 +17697,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPipelineExecutablePropertiesKHR(VkDevice device, VkPipelineInfoKHR* pPipelineInfo, uint32_t* pExecutableCount, VkPipelineExecutablePropertiesKHR* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPipelineExecutablePropertiesKHR(VkDevice device, VkPipelineInfoKHR* pPipelineInfo, uint32_t* pExecutableCount, VkPipelineExecutablePropertiesKHR* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17736,7 +17738,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPipelineExecutableStatisticsKHR(VkDevice device, VkPipelineExecutableInfoKHR* pExecutableInfo, uint32_t* pStatisticCount, VkPipelineExecutableStatisticKHR* pStatistics) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPipelineExecutableStatisticsKHR(VkDevice device, VkPipelineExecutableInfoKHR* pExecutableInfo, uint32_t* pStatisticCount, VkPipelineExecutableStatisticKHR* pStatistics) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17777,7 +17779,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPipelineExecutableInternalRepresentationsKHR(VkDevice device, VkPipelineExecutableInfoKHR* pExecutableInfo, uint32_t* pInternalRepresentationCount, VkPipelineExecutableInternalRepresentationKHR* pInternalRepresentations) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPipelineExecutableInternalRepresentationsKHR(VkDevice device, VkPipelineExecutableInfoKHR* pExecutableInfo, uint32_t* pInternalRepresentationCount, VkPipelineExecutableInternalRepresentationKHR* pInternalRepresentations) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17819,7 +17821,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateAccelerationStructureKHR(VkDevice device, VkAccelerationStructureCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkAccelerationStructureKHR* pAccelerationStructure) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateAccelerationStructureKHR(VkDevice device, VkAccelerationStructureCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkAccelerationStructureKHR* pAccelerationStructure) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17868,7 +17870,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBuildAccelerationStructuresKHR(VkCommandBuffer commandBuffer, uint32_t infoCount, VkAccelerationStructureBuildGeometryInfoKHR* pInfos, VkAccelerationStructureBuildRangeInfoKHR** ppBuildRangeInfos) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBuildAccelerationStructuresKHR(VkCommandBuffer commandBuffer, uint32_t infoCount, VkAccelerationStructureBuildGeometryInfoKHR* pInfos, VkAccelerationStructureBuildRangeInfoKHR** ppBuildRangeInfos) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17911,7 +17913,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructuresKHR(command
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBuildAccelerationStructuresIndirectKHR(VkCommandBuffer commandBuffer, uint32_t infoCount, VkAccelerationStructureBuildGeometryInfoKHR* pInfos, VkDeviceAddress* pIndirectDeviceAddresses, uint32_t* pIndirectStrides, uint32_t** ppMaxPrimitiveCounts) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBuildAccelerationStructuresIndirectKHR(VkCommandBuffer commandBuffer, uint32_t infoCount, VkAccelerationStructureBuildGeometryInfoKHR* pInfos, VkDeviceAddress* pIndirectDeviceAddresses, uint32_t* pIndirectStrides, uint32_t** ppMaxPrimitiveCounts) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -17955,7 +17957,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBuildAccelerationStructuresIndirectKHR
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BuildAccelerationStructuresKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, uint32_t infoCount, VkAccelerationStructureBuildGeometryInfoKHR* pInfos, VkAccelerationStructureBuildRangeInfoKHR** ppBuildRangeInfos) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BuildAccelerationStructuresKHR(VkDevice device, VkDeferredOperationKHR deferredOperation, uint32_t infoCount, VkAccelerationStructureBuildGeometryInfoKHR* pInfos, VkAccelerationStructureBuildRangeInfoKHR** ppBuildRangeInfos) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18003,7 +18005,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DetailsLayer_GetAccelerationStructureDeviceAddressKHR(VkDevice device, VkAccelerationStructureDeviceAddressInfoKHR* pInfo) {
+ VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DebuggerLayer_GetAccelerationStructureDeviceAddressKHR(VkDevice device, VkAccelerationStructureDeviceAddressInfoKHR* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18040,7 +18042,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDeferredOperationKHR(VkDevice device, VkAllocationCallbacks* pAllocator, VkDeferredOperationKHR* pDeferredOperation) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDeferredOperationKHR(VkDevice device, VkAllocationCallbacks* pAllocator, VkDeferredOperationKHR* pDeferredOperation) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18082,7 +18084,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDeferredOperationKHR(VkDevice device, VkDeferredOperationKHR operation, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDeferredOperationKHR(VkDevice device, VkDeferredOperationKHR operation, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18120,7 +18122,7 @@ device_dispatch[GetKey(device)].DestroyDeferredOperationKHR(device, operation, p
 }
 }
 
- VK_LAYER_EXPORT uint32_t VKAPI_CALL DetailsLayer_GetDeferredOperationMaxConcurrencyKHR(VkDevice device, VkDeferredOperationKHR operation) {
+ VK_LAYER_EXPORT uint32_t VKAPI_CALL DebuggerLayer_GetDeferredOperationMaxConcurrencyKHR(VkDevice device, VkDeferredOperationKHR operation) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18155,7 +18157,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDeferredOperationResultKHR(VkDevice device, VkDeferredOperationKHR operation) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetDeferredOperationResultKHR(VkDevice device, VkDeferredOperationKHR operation) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18190,7 +18192,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_DeferredOperationJoinKHR(VkDevice device, VkDeferredOperationKHR operation) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_DeferredOperationJoinKHR(VkDevice device, VkDeferredOperationKHR operation) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18225,7 +18227,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPipelineIndirectMemoryRequirementsNV(VkDevice device, VkComputePipelineCreateInfo* pCreateInfo, VkMemoryRequirements2* pMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPipelineIndirectMemoryRequirementsNV(VkDevice device, VkComputePipelineCreateInfo* pCreateInfo, VkMemoryRequirements2* pMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18265,7 +18267,7 @@ device_dispatch[GetKey(device)].GetPipelineIndirectMemoryRequirementsNV(device, 
 }
 }
 
- VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DetailsLayer_GetPipelineIndirectDeviceAddressNV(VkDevice device, VkPipelineIndirectDeviceAddressInfoNV* pInfo) {
+ VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DebuggerLayer_GetPipelineIndirectDeviceAddressNV(VkDevice device, VkPipelineIndirectDeviceAddressInfoNV* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18302,7 +18304,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCullMode(VkCommandBuffer commandBuffer, VkCullModeFlags cullMode) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetCullMode(VkCommandBuffer commandBuffer, VkCullModeFlags cullMode) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18333,7 +18335,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetCullMode(commandBuffer, cullMode);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetFrontFace(VkCommandBuffer commandBuffer, VkFrontFace frontFace) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetFrontFace(VkCommandBuffer commandBuffer, VkFrontFace frontFace) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18363,7 +18365,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetFrontFace(commandBuffer, frontFace)
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetPrimitiveTopology(VkCommandBuffer commandBuffer, VkPrimitiveTopology primitiveTopology) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetPrimitiveTopology(VkCommandBuffer commandBuffer, VkPrimitiveTopology primitiveTopology) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18393,7 +18395,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveTopology(commandBuffer, pr
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetViewportWithCount(VkCommandBuffer commandBuffer, uint32_t viewportCount, VkViewport* pViewports) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetViewportWithCount(VkCommandBuffer commandBuffer, uint32_t viewportCount, VkViewport* pViewports) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18432,7 +18434,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetViewportWithCount(commandBuffer, vi
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetScissorWithCount(VkCommandBuffer commandBuffer, uint32_t scissorCount, VkRect2D* pScissors) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetScissorWithCount(VkCommandBuffer commandBuffer, uint32_t scissorCount, VkRect2D* pScissors) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18467,7 +18469,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetScissorWithCount(commandBuffer, sci
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindIndexBuffer2KHR(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkDeviceSize size, VkIndexType indexType) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindIndexBuffer2KHR(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkDeviceSize size, VkIndexType indexType) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18500,7 +18502,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindIndexBuffer2KHR(commandBuffer, buf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindVertexBuffers2(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, VkBuffer* pBuffers, VkDeviceSize* pOffsets, VkDeviceSize* pSizes, VkDeviceSize* pStrides) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindVertexBuffers2(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, VkBuffer* pBuffers, VkDeviceSize* pOffsets, VkDeviceSize* pSizes, VkDeviceSize* pStrides) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18536,7 +18538,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers2(commandBuffer, firs
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthTestEnable(VkCommandBuffer commandBuffer, VkBool32 depthTestEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthTestEnable(VkCommandBuffer commandBuffer, VkBool32 depthTestEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18567,7 +18569,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthTestEnable(commandBuffer, dept
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthWriteEnable(VkCommandBuffer commandBuffer, VkBool32 depthWriteEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthWriteEnable(VkCommandBuffer commandBuffer, VkBool32 depthWriteEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18598,7 +18600,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthWriteEnable(commandBuffer, dep
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthCompareOp(VkCommandBuffer commandBuffer, VkCompareOp depthCompareOp) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthCompareOp(VkCommandBuffer commandBuffer, VkCompareOp depthCompareOp) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18628,7 +18630,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthCompareOp(commandBuffer, depth
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthBoundsTestEnable(VkCommandBuffer commandBuffer, VkBool32 depthBoundsTestEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthBoundsTestEnable(VkCommandBuffer commandBuffer, VkBool32 depthBoundsTestEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18659,7 +18661,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthBoundsTestEnable(commandBuffer
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetStencilTestEnable(VkCommandBuffer commandBuffer, VkBool32 stencilTestEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetStencilTestEnable(VkCommandBuffer commandBuffer, VkBool32 stencilTestEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18690,7 +18692,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetStencilTestEnable(commandBuffer, st
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetStencilOp(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp, VkCompareOp compareOp) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetStencilOp(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp, VkCompareOp compareOp) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18721,7 +18723,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetStencilOp(commandBuffer, faceMask, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetPatchControlPointsEXT(VkCommandBuffer commandBuffer, uint32_t patchControlPoints) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetPatchControlPointsEXT(VkCommandBuffer commandBuffer, uint32_t patchControlPoints) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18752,7 +18754,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetPatchControlPointsEXT(commandBuffer
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetRasterizerDiscardEnable(VkCommandBuffer commandBuffer, VkBool32 rasterizerDiscardEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetRasterizerDiscardEnable(VkCommandBuffer commandBuffer, VkBool32 rasterizerDiscardEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18783,7 +18785,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetRasterizerDiscardEnable(commandBuff
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthBiasEnable(VkCommandBuffer commandBuffer, VkBool32 depthBiasEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthBiasEnable(VkCommandBuffer commandBuffer, VkBool32 depthBiasEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18814,7 +18816,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthBiasEnable(commandBuffer, dept
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetLogicOpEXT(VkCommandBuffer commandBuffer, VkLogicOp logicOp) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetLogicOpEXT(VkCommandBuffer commandBuffer, VkLogicOp logicOp) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18844,7 +18846,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetLogicOpEXT(commandBuffer, logicOp);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetPrimitiveRestartEnable(VkCommandBuffer commandBuffer, VkBool32 primitiveRestartEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetPrimitiveRestartEnable(VkCommandBuffer commandBuffer, VkBool32 primitiveRestartEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18875,7 +18877,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveRestartEnable(commandBuffe
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetTessellationDomainOriginEXT(VkCommandBuffer commandBuffer, VkTessellationDomainOrigin domainOrigin) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetTessellationDomainOriginEXT(VkCommandBuffer commandBuffer, VkTessellationDomainOrigin domainOrigin) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18905,7 +18907,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetTessellationDomainOriginEXT(command
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthClampEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthClampEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthClampEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthClampEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18936,7 +18938,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthClampEnableEXT(commandBuffer, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetPolygonModeEXT(VkCommandBuffer commandBuffer, VkPolygonMode polygonMode) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetPolygonModeEXT(VkCommandBuffer commandBuffer, VkPolygonMode polygonMode) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18966,7 +18968,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetPolygonModeEXT(commandBuffer, polyg
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetRasterizationSamplesEXT(VkCommandBuffer commandBuffer, VkSampleCountFlagBits rasterizationSamples) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetRasterizationSamplesEXT(VkCommandBuffer commandBuffer, VkSampleCountFlagBits rasterizationSamples) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -18996,7 +18998,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetRasterizationSamplesEXT(commandBuff
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetSampleMaskEXT(VkCommandBuffer commandBuffer, VkSampleCountFlagBits samples, VkSampleMask* pSampleMask) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetSampleMaskEXT(VkCommandBuffer commandBuffer, VkSampleCountFlagBits samples, VkSampleMask* pSampleMask) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19027,7 +19029,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetSampleMaskEXT(commandBuffer, sample
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetAlphaToCoverageEnableEXT(VkCommandBuffer commandBuffer, VkBool32 alphaToCoverageEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetAlphaToCoverageEnableEXT(VkCommandBuffer commandBuffer, VkBool32 alphaToCoverageEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19058,7 +19060,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetAlphaToCoverageEnableEXT(commandBuf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetAlphaToOneEnableEXT(VkCommandBuffer commandBuffer, VkBool32 alphaToOneEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetAlphaToOneEnableEXT(VkCommandBuffer commandBuffer, VkBool32 alphaToOneEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19089,7 +19091,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetAlphaToOneEnableEXT(commandBuffer, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetLogicOpEnableEXT(VkCommandBuffer commandBuffer, VkBool32 logicOpEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetLogicOpEnableEXT(VkCommandBuffer commandBuffer, VkBool32 logicOpEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19120,7 +19122,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetLogicOpEnableEXT(commandBuffer, log
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetColorBlendEnableEXT(VkCommandBuffer commandBuffer, uint32_t firstAttachment, uint32_t attachmentCount, VkBool32* pColorBlendEnables) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetColorBlendEnableEXT(VkCommandBuffer commandBuffer, uint32_t firstAttachment, uint32_t attachmentCount, VkBool32* pColorBlendEnables) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19153,7 +19155,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendEnableEXT(commandBuffer, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetColorBlendEquationEXT(VkCommandBuffer commandBuffer, uint32_t firstAttachment, uint32_t attachmentCount, VkColorBlendEquationEXT* pColorBlendEquations) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetColorBlendEquationEXT(VkCommandBuffer commandBuffer, uint32_t firstAttachment, uint32_t attachmentCount, VkColorBlendEquationEXT* pColorBlendEquations) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19187,7 +19189,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendEquationEXT(commandBuffer
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetColorWriteMaskEXT(VkCommandBuffer commandBuffer, uint32_t firstAttachment, uint32_t attachmentCount, VkColorComponentFlags* pColorWriteMasks) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetColorWriteMaskEXT(VkCommandBuffer commandBuffer, uint32_t firstAttachment, uint32_t attachmentCount, VkColorComponentFlags* pColorWriteMasks) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19220,7 +19222,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetColorWriteMaskEXT(commandBuffer, fi
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetRasterizationStreamEXT(VkCommandBuffer commandBuffer, uint32_t rasterizationStream) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetRasterizationStreamEXT(VkCommandBuffer commandBuffer, uint32_t rasterizationStream) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19251,7 +19253,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetRasterizationStreamEXT(commandBuffe
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetConservativeRasterizationModeEXT(VkCommandBuffer commandBuffer, VkConservativeRasterizationModeEXT conservativeRasterizationMode) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetConservativeRasterizationModeEXT(VkCommandBuffer commandBuffer, VkConservativeRasterizationModeEXT conservativeRasterizationMode) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19281,7 +19283,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetConservativeRasterizationModeEXT(co
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetExtraPrimitiveOverestimationSizeEXT(VkCommandBuffer commandBuffer, float extraPrimitiveOverestimationSize) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetExtraPrimitiveOverestimationSizeEXT(VkCommandBuffer commandBuffer, float extraPrimitiveOverestimationSize) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19312,7 +19314,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetExtraPrimitiveOverestimationSizeEXT
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthClipEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthClipEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthClipEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthClipEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19343,7 +19345,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthClipEnableEXT(commandBuffer, d
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetSampleLocationsEnableEXT(VkCommandBuffer commandBuffer, VkBool32 sampleLocationsEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetSampleLocationsEnableEXT(VkCommandBuffer commandBuffer, VkBool32 sampleLocationsEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19374,7 +19376,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetSampleLocationsEnableEXT(commandBuf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetColorBlendAdvancedEXT(VkCommandBuffer commandBuffer, uint32_t firstAttachment, uint32_t attachmentCount, VkColorBlendAdvancedEXT* pColorBlendAdvanced) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetColorBlendAdvancedEXT(VkCommandBuffer commandBuffer, uint32_t firstAttachment, uint32_t attachmentCount, VkColorBlendAdvancedEXT* pColorBlendAdvanced) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19411,7 +19413,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetColorBlendAdvancedEXT(commandBuffer
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetProvokingVertexModeEXT(VkCommandBuffer commandBuffer, VkProvokingVertexModeEXT provokingVertexMode) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetProvokingVertexModeEXT(VkCommandBuffer commandBuffer, VkProvokingVertexModeEXT provokingVertexMode) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19441,7 +19443,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetProvokingVertexModeEXT(commandBuffe
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetLineRasterizationModeEXT(VkCommandBuffer commandBuffer, VkLineRasterizationModeEXT lineRasterizationMode) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetLineRasterizationModeEXT(VkCommandBuffer commandBuffer, VkLineRasterizationModeEXT lineRasterizationMode) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19472,7 +19474,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetLineRasterizationModeEXT(commandBuf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetLineStippleEnableEXT(VkCommandBuffer commandBuffer, VkBool32 stippledLineEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetLineStippleEnableEXT(VkCommandBuffer commandBuffer, VkBool32 stippledLineEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19503,7 +19505,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetLineStippleEnableEXT(commandBuffer,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthClipNegativeOneToOneEXT(VkCommandBuffer commandBuffer, VkBool32 negativeOneToOne) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthClipNegativeOneToOneEXT(VkCommandBuffer commandBuffer, VkBool32 negativeOneToOne) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19534,7 +19536,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthClipNegativeOneToOneEXT(comman
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetViewportWScalingEnableNV(VkCommandBuffer commandBuffer, VkBool32 viewportWScalingEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetViewportWScalingEnableNV(VkCommandBuffer commandBuffer, VkBool32 viewportWScalingEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19565,7 +19567,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetViewportWScalingEnableNV(commandBuf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetViewportSwizzleNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, VkViewportSwizzleNV* pViewportSwizzles) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetViewportSwizzleNV(VkCommandBuffer commandBuffer, uint32_t firstViewport, uint32_t viewportCount, VkViewportSwizzleNV* pViewportSwizzles) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19599,7 +19601,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetViewportSwizzleNV(commandBuffer, fi
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCoverageToColorEnableNV(VkCommandBuffer commandBuffer, VkBool32 coverageToColorEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetCoverageToColorEnableNV(VkCommandBuffer commandBuffer, VkBool32 coverageToColorEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19630,7 +19632,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetCoverageToColorEnableNV(commandBuff
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCoverageToColorLocationNV(VkCommandBuffer commandBuffer, uint32_t coverageToColorLocation) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetCoverageToColorLocationNV(VkCommandBuffer commandBuffer, uint32_t coverageToColorLocation) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19661,7 +19663,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetCoverageToColorLocationNV(commandBu
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCoverageModulationModeNV(VkCommandBuffer commandBuffer, VkCoverageModulationModeNV coverageModulationMode) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetCoverageModulationModeNV(VkCommandBuffer commandBuffer, VkCoverageModulationModeNV coverageModulationMode) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19691,7 +19693,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationModeNV(commandBuf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCoverageModulationTableEnableNV(VkCommandBuffer commandBuffer, VkBool32 coverageModulationTableEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetCoverageModulationTableEnableNV(VkCommandBuffer commandBuffer, VkBool32 coverageModulationTableEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19722,7 +19724,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationTableEnableNV(com
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCoverageModulationTableNV(VkCommandBuffer commandBuffer, uint32_t coverageModulationTableCount, float* pCoverageModulationTable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetCoverageModulationTableNV(VkCommandBuffer commandBuffer, uint32_t coverageModulationTableCount, float* pCoverageModulationTable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19754,7 +19756,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetCoverageModulationTableNV(commandBu
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetShadingRateImageEnableNV(VkCommandBuffer commandBuffer, VkBool32 shadingRateImageEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetShadingRateImageEnableNV(VkCommandBuffer commandBuffer, VkBool32 shadingRateImageEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19785,7 +19787,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetShadingRateImageEnableNV(commandBuf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCoverageReductionModeNV(VkCommandBuffer commandBuffer, VkCoverageReductionModeNV coverageReductionMode) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetCoverageReductionModeNV(VkCommandBuffer commandBuffer, VkCoverageReductionModeNV coverageReductionMode) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19815,7 +19817,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetCoverageReductionModeNV(commandBuff
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetRepresentativeFragmentTestEnableNV(VkCommandBuffer commandBuffer, VkBool32 representativeFragmentTestEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetRepresentativeFragmentTestEnableNV(VkCommandBuffer commandBuffer, VkBool32 representativeFragmentTestEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19846,7 +19848,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetRepresentativeFragmentTestEnableNV(
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreatePrivateDataSlot(VkDevice device, VkPrivateDataSlotCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreatePrivateDataSlot(VkDevice device, VkPrivateDataSlotCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19891,7 +19893,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyPrivateDataSlot(VkDevice device, VkPrivateDataSlot privateDataSlot, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyPrivateDataSlot(VkDevice device, VkPrivateDataSlot privateDataSlot, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19929,7 +19931,7 @@ device_dispatch[GetKey(device)].DestroyPrivateDataSlot(device, privateDataSlot, 
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetPrivateData(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t data) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_SetPrivateData(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t data) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19966,7 +19968,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPrivateData(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t* pData) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPrivateData(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -19999,7 +20001,7 @@ device_dispatch[GetKey(device)].GetPrivateData(device, objectType, objectHandle,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyBuffer2(VkCommandBuffer commandBuffer, VkCopyBufferInfo2* pCopyBufferInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyBuffer2(VkCommandBuffer commandBuffer, VkCopyBufferInfo2* pCopyBufferInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20039,7 +20041,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer2(commandBuffer, pCopyBuffer
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyImage2(VkCommandBuffer commandBuffer, VkCopyImageInfo2* pCopyImageInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyImage2(VkCommandBuffer commandBuffer, VkCopyImageInfo2* pCopyImageInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20081,7 +20083,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyImage2(commandBuffer, pCopyImageIn
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBlitImage2(VkCommandBuffer commandBuffer, VkBlitImageInfo2* pBlitImageInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBlitImage2(VkCommandBuffer commandBuffer, VkBlitImageInfo2* pBlitImageInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20122,7 +20124,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBlitImage2(commandBuffer, pBlitImageIn
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyBufferToImage2(VkCommandBuffer commandBuffer, VkCopyBufferToImageInfo2* pCopyBufferToImageInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyBufferToImage2(VkCommandBuffer commandBuffer, VkCopyBufferToImageInfo2* pCopyBufferToImageInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20165,7 +20167,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage2(commandBuffer, pCop
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyImageToBuffer2(VkCommandBuffer commandBuffer, VkCopyImageToBufferInfo2* pCopyImageToBufferInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyImageToBuffer2(VkCommandBuffer commandBuffer, VkCopyImageToBufferInfo2* pCopyImageToBufferInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20208,7 +20210,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer2(commandBuffer, pCop
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdResolveImage2(VkCommandBuffer commandBuffer, VkResolveImageInfo2* pResolveImageInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdResolveImage2(VkCommandBuffer commandBuffer, VkResolveImageInfo2* pResolveImageInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20250,7 +20252,7 @@ device_dispatch[GetKey(commandBuffer)].CmdResolveImage2(commandBuffer, pResolveI
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetFragmentShadingRateKHR(VkCommandBuffer commandBuffer, VkExtent2D* pFragmentSize, VkFragmentShadingRateCombinerOpKHR* combinerOps) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetFragmentShadingRateKHR(VkCommandBuffer commandBuffer, VkExtent2D* pFragmentSize, VkFragmentShadingRateCombinerOpKHR* combinerOps) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20285,7 +20287,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetFragmentShadingRateKHR(commandBuffe
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetFragmentShadingRateEnumNV(VkCommandBuffer commandBuffer, VkFragmentShadingRateNV shadingRate, VkFragmentShadingRateCombinerOpKHR* combinerOps) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetFragmentShadingRateEnumNV(VkCommandBuffer commandBuffer, VkFragmentShadingRateNV shadingRate, VkFragmentShadingRateCombinerOpKHR* combinerOps) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20316,7 +20318,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetFragmentShadingRateEnumNV(commandBu
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetAccelerationStructureBuildSizesKHR(VkDevice device, VkAccelerationStructureBuildTypeKHR buildType, VkAccelerationStructureBuildGeometryInfoKHR* pBuildInfo, uint32_t* pMaxPrimitiveCounts, VkAccelerationStructureBuildSizesInfoKHR* pSizeInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetAccelerationStructureBuildSizesKHR(VkDevice device, VkAccelerationStructureBuildTypeKHR buildType, VkAccelerationStructureBuildGeometryInfoKHR* pBuildInfo, uint32_t* pMaxPrimitiveCounts, VkAccelerationStructureBuildSizesInfoKHR* pSizeInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20362,7 +20364,7 @@ device_dispatch[GetKey(device)].GetAccelerationStructureBuildSizesKHR(device, bu
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetVertexInputEXT(VkCommandBuffer commandBuffer, uint32_t vertexBindingDescriptionCount, VkVertexInputBindingDescription2EXT* pVertexBindingDescriptions, uint32_t vertexAttributeDescriptionCount, VkVertexInputAttributeDescription2EXT* pVertexAttributeDescriptions) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetVertexInputEXT(VkCommandBuffer commandBuffer, uint32_t vertexBindingDescriptionCount, VkVertexInputBindingDescription2EXT* pVertexBindingDescriptions, uint32_t vertexAttributeDescriptionCount, VkVertexInputAttributeDescription2EXT* pVertexAttributeDescriptions) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20404,7 +20406,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetVertexInputEXT(commandBuffer, verte
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetColorWriteEnableEXT(VkCommandBuffer commandBuffer, uint32_t attachmentCount, VkBool32* pColorWriteEnables) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetColorWriteEnableEXT(VkCommandBuffer commandBuffer, uint32_t attachmentCount, VkBool32* pColorWriteEnables) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20436,7 +20438,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetColorWriteEnableEXT(commandBuffer, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetEvent2(VkCommandBuffer commandBuffer, VkEvent event, VkDependencyInfo* pDependencyInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetEvent2(VkCommandBuffer commandBuffer, VkEvent event, VkDependencyInfo* pDependencyInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20500,7 +20502,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetEvent2(commandBuffer, event, pDepen
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdResetEvent2(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2 stageMask) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdResetEvent2(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2 stageMask) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20532,7 +20534,7 @@ device_dispatch[GetKey(commandBuffer)].CmdResetEvent2(commandBuffer, event, stag
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWaitEvents2(VkCommandBuffer commandBuffer, uint32_t eventCount, VkEvent* pEvents, VkDependencyInfo* pDependencyInfos) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdWaitEvents2(VkCommandBuffer commandBuffer, uint32_t eventCount, VkEvent* pEvents, VkDependencyInfo* pDependencyInfos) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20597,7 +20599,7 @@ device_dispatch[GetKey(commandBuffer)].CmdWaitEvents2(commandBuffer, eventCount,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPipelineBarrier2(VkCommandBuffer commandBuffer, VkDependencyInfo* pDependencyInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdPipelineBarrier2(VkCommandBuffer commandBuffer, VkDependencyInfo* pDependencyInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20660,7 +20662,7 @@ device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier2(commandBuffer, pDepen
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueueSubmit2(VkQueue queue, uint32_t submitCount, VkSubmitInfo2* pSubmits, VkFence fence) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_QueueSubmit2(VkQueue queue, uint32_t submitCount, VkSubmitInfo2* pSubmits, VkFence fence) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20718,7 +20720,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteTimestamp2(VkCommandBuffer commandBuffer, VkPipelineStageFlags2 stage, VkQueryPool queryPool, uint32_t query) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdWriteTimestamp2(VkCommandBuffer commandBuffer, VkPipelineStageFlags2 stage, VkQueryPool queryPool, uint32_t query) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20751,7 +20753,7 @@ device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp2(commandBuffer, stage, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteBufferMarker2AMD(VkCommandBuffer commandBuffer, VkPipelineStageFlags2 stage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdWriteBufferMarker2AMD(VkCommandBuffer commandBuffer, VkPipelineStageFlags2 stage, VkBuffer dstBuffer, VkDeviceSize dstOffset, uint32_t marker) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20785,7 +20787,7 @@ device_dispatch[GetKey(commandBuffer)].CmdWriteBufferMarker2AMD(commandBuffer, s
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetQueueCheckpointData2NV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointData2NV* pCheckpointData) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetQueueCheckpointData2NV(VkQueue queue, uint32_t* pCheckpointDataCount, VkCheckpointData2NV* pCheckpointData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20818,7 +20820,7 @@ device_dispatch[GetKey(queue)].GetQueueCheckpointData2NV(queue, pCheckpointDataC
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyMemoryToImageEXT(VkDevice device, VkCopyMemoryToImageInfoEXT* pCopyMemoryToImageInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CopyMemoryToImageEXT(VkDevice device, VkCopyMemoryToImageInfoEXT* pCopyMemoryToImageInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20864,7 +20866,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyImageToMemoryEXT(VkDevice device, VkCopyImageToMemoryInfoEXT* pCopyImageToMemoryInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CopyImageToMemoryEXT(VkDevice device, VkCopyImageToMemoryInfoEXT* pCopyImageToMemoryInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20910,7 +20912,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyImageToImageEXT(VkDevice device, VkCopyImageToImageInfoEXT* pCopyImageToImageInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CopyImageToImageEXT(VkDevice device, VkCopyImageToImageInfoEXT* pCopyImageToImageInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20957,7 +20959,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_TransitionImageLayoutEXT(VkDevice device, uint32_t transitionCount, VkHostImageLayoutTransitionInfoEXT* pTransitions) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_TransitionImageLayoutEXT(VkDevice device, uint32_t transitionCount, VkHostImageLayoutTransitionInfoEXT* pTransitions) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -20996,7 +20998,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateVideoSessionKHR(VkDevice device, VkVideoSessionCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkVideoSessionKHR* pVideoSession) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateVideoSessionKHR(VkDevice device, VkVideoSessionCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkVideoSessionKHR* pVideoSession) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21053,7 +21055,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyVideoSessionKHR(VkDevice device, VkVideoSessionKHR videoSession, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyVideoSessionKHR(VkDevice device, VkVideoSessionKHR videoSession, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21091,7 +21093,7 @@ device_dispatch[GetKey(device)].DestroyVideoSessionKHR(device, videoSession, pAl
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateVideoSessionParametersKHR(VkDevice device, VkVideoSessionParametersCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkVideoSessionParametersKHR* pVideoSessionParameters) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateVideoSessionParametersKHR(VkDevice device, VkVideoSessionParametersCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkVideoSessionParametersKHR* pVideoSessionParameters) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21138,7 +21140,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_UpdateVideoSessionParametersKHR(VkDevice device, VkVideoSessionParametersKHR videoSessionParameters, VkVideoSessionParametersUpdateInfoKHR* pUpdateInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_UpdateVideoSessionParametersKHR(VkDevice device, VkVideoSessionParametersKHR videoSessionParameters, VkVideoSessionParametersUpdateInfoKHR* pUpdateInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21176,7 +21178,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetEncodedVideoSessionParametersKHR(VkDevice device, VkVideoEncodeSessionParametersGetInfoKHR* pVideoSessionParametersInfo, VkVideoEncodeSessionParametersFeedbackInfoKHR* pFeedbackInfo, size_t* pDataSize, void* pData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetEncodedVideoSessionParametersKHR(VkDevice device, VkVideoEncodeSessionParametersGetInfoKHR* pVideoSessionParametersInfo, VkVideoEncodeSessionParametersFeedbackInfoKHR* pFeedbackInfo, size_t* pDataSize, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21217,7 +21219,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyVideoSessionParametersKHR(VkDevice device, VkVideoSessionParametersKHR videoSessionParameters, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyVideoSessionParametersKHR(VkDevice device, VkVideoSessionParametersKHR videoSessionParameters, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21255,7 +21257,7 @@ device_dispatch[GetKey(device)].DestroyVideoSessionParametersKHR(device, videoSe
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetVideoSessionMemoryRequirementsKHR(VkDevice device, VkVideoSessionKHR videoSession, uint32_t* pMemoryRequirementsCount, VkVideoSessionMemoryRequirementsKHR* pMemoryRequirements) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetVideoSessionMemoryRequirementsKHR(VkDevice device, VkVideoSessionKHR videoSession, uint32_t* pMemoryRequirementsCount, VkVideoSessionMemoryRequirementsKHR* pMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21294,7 +21296,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindVideoSessionMemoryKHR(VkDevice device, VkVideoSessionKHR videoSession, uint32_t bindSessionMemoryInfoCount, VkBindVideoSessionMemoryInfoKHR* pBindSessionMemoryInfos) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BindVideoSessionMemoryKHR(VkDevice device, VkVideoSessionKHR videoSession, uint32_t bindSessionMemoryInfoCount, VkBindVideoSessionMemoryInfoKHR* pBindSessionMemoryInfos) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21336,7 +21338,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDecodeVideoKHR(VkCommandBuffer commandBuffer, VkVideoDecodeInfoKHR* pDecodeInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDecodeVideoKHR(VkCommandBuffer commandBuffer, VkVideoDecodeInfoKHR* pDecodeInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21392,7 +21394,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDecodeVideoKHR(commandBuffer, pDecodeI
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginVideoCodingKHR(VkCommandBuffer commandBuffer, VkVideoBeginCodingInfoKHR* pBeginInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBeginVideoCodingKHR(VkCommandBuffer commandBuffer, VkVideoBeginCodingInfoKHR* pBeginInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21437,7 +21439,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBeginVideoCodingKHR(commandBuffer, pBe
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdControlVideoCodingKHR(VkCommandBuffer commandBuffer, VkVideoCodingControlInfoKHR* pCodingControlInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdControlVideoCodingKHR(VkCommandBuffer commandBuffer, VkVideoCodingControlInfoKHR* pCodingControlInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21470,7 +21472,7 @@ device_dispatch[GetKey(commandBuffer)].CmdControlVideoCodingKHR(commandBuffer, p
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndVideoCodingKHR(VkCommandBuffer commandBuffer, VkVideoEndCodingInfoKHR* pEndCodingInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdEndVideoCodingKHR(VkCommandBuffer commandBuffer, VkVideoEndCodingInfoKHR* pEndCodingInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21503,7 +21505,7 @@ device_dispatch[GetKey(commandBuffer)].CmdEndVideoCodingKHR(commandBuffer, pEndC
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEncodeVideoKHR(VkCommandBuffer commandBuffer, VkVideoEncodeInfoKHR* pEncodeInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdEncodeVideoKHR(VkCommandBuffer commandBuffer, VkVideoEncodeInfoKHR* pEncodeInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21560,7 +21562,7 @@ device_dispatch[GetKey(commandBuffer)].CmdEncodeVideoKHR(commandBuffer, pEncodeI
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDecompressMemoryNV(VkCommandBuffer commandBuffer, uint32_t decompressRegionCount, VkDecompressMemoryRegionNV* pDecompressMemoryRegions) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDecompressMemoryNV(VkCommandBuffer commandBuffer, uint32_t decompressRegionCount, VkDecompressMemoryRegionNV* pDecompressMemoryRegions) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21598,7 +21600,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDecompressMemoryNV(commandBuffer, deco
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDecompressMemoryIndirectCountNV(VkCommandBuffer commandBuffer, VkDeviceAddress indirectCommandsAddress, VkDeviceAddress indirectCommandsCountAddress, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDecompressMemoryIndirectCountNV(VkCommandBuffer commandBuffer, VkDeviceAddress indirectCommandsAddress, VkDeviceAddress indirectCommandsCountAddress, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21631,7 +21633,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDecompressMemoryIndirectCountNV(comman
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateCuModuleNVX(VkDevice device, VkCuModuleCreateInfoNVX* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCuModuleNVX* pModule) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateCuModuleNVX(VkDevice device, VkCuModuleCreateInfoNVX* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCuModuleNVX* pModule) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21676,7 +21678,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateCuFunctionNVX(VkDevice device, VkCuFunctionCreateInfoNVX* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCuFunctionNVX* pFunction) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateCuFunctionNVX(VkDevice device, VkCuFunctionCreateInfoNVX* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCuFunctionNVX* pFunction) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21721,7 +21723,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyCuModuleNVX(VkDevice device, VkCuModuleNVX module, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyCuModuleNVX(VkDevice device, VkCuModuleNVX module, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21759,7 +21761,7 @@ device_dispatch[GetKey(device)].DestroyCuModuleNVX(device, module, pAllocator);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyCuFunctionNVX(VkDevice device, VkCuFunctionNVX function, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyCuFunctionNVX(VkDevice device, VkCuFunctionNVX function, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21797,7 +21799,7 @@ device_dispatch[GetKey(device)].DestroyCuFunctionNVX(device, function, pAllocato
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCuLaunchKernelNVX(VkCommandBuffer commandBuffer, VkCuLaunchInfoNVX* pLaunchInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCuLaunchKernelNVX(VkCommandBuffer commandBuffer, VkCuLaunchInfoNVX* pLaunchInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21839,7 +21841,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCuLaunchKernelNVX(commandBuffer, pLaun
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDescriptorSetLayoutSizeEXT(VkDevice device, VkDescriptorSetLayout layout, VkDeviceSize* pLayoutSizeInBytes) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDescriptorSetLayoutSizeEXT(VkDevice device, VkDescriptorSetLayout layout, VkDeviceSize* pLayoutSizeInBytes) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21871,7 +21873,7 @@ device_dispatch[GetKey(device)].GetDescriptorSetLayoutSizeEXT(device, layout, pL
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDescriptorSetLayoutBindingOffsetEXT(VkDevice device, VkDescriptorSetLayout layout, uint32_t binding, VkDeviceSize* pOffset) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDescriptorSetLayoutBindingOffsetEXT(VkDevice device, VkDescriptorSetLayout layout, uint32_t binding, VkDeviceSize* pOffset) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21904,7 +21906,7 @@ device_dispatch[GetKey(device)].GetDescriptorSetLayoutBindingOffsetEXT(device, l
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDescriptorEXT(VkDevice device, VkDescriptorGetInfoEXT* pDescriptorInfo, size_t dataSize, void* pDescriptor) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDescriptorEXT(VkDevice device, VkDescriptorGetInfoEXT* pDescriptorInfo, size_t dataSize, void* pDescriptor) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21938,7 +21940,7 @@ device_dispatch[GetKey(device)].GetDescriptorEXT(device, pDescriptorInfo, dataSi
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindDescriptorBuffersEXT(VkCommandBuffer commandBuffer, uint32_t bufferCount, VkDescriptorBufferBindingInfoEXT* pBindingInfos) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindDescriptorBuffersEXT(VkCommandBuffer commandBuffer, uint32_t bufferCount, VkDescriptorBufferBindingInfoEXT* pBindingInfos) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -21973,7 +21975,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBuffersEXT(commandBuffer
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDescriptorBufferOffsetsEXT(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t setCount, uint32_t* pBufferIndices, VkDeviceSize* pOffsets) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDescriptorBufferOffsetsEXT(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t firstSet, uint32_t setCount, uint32_t* pBufferIndices, VkDeviceSize* pOffsets) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22007,7 +22009,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDescriptorBufferOffsetsEXT(commandB
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindDescriptorBufferEmbeddedSamplersEXT(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t set) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindDescriptorBufferEmbeddedSamplersEXT(VkCommandBuffer commandBuffer, VkPipelineBindPoint pipelineBindPoint, VkPipelineLayout layout, uint32_t set) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22039,7 +22041,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBufferEmbeddedSamplersEX
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetBufferOpaqueCaptureDescriptorDataEXT(VkDevice device, VkBufferCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetBufferOpaqueCaptureDescriptorDataEXT(VkDevice device, VkBufferCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22076,7 +22078,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetImageOpaqueCaptureDescriptorDataEXT(VkDevice device, VkImageCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetImageOpaqueCaptureDescriptorDataEXT(VkDevice device, VkImageCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22113,7 +22115,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetImageViewOpaqueCaptureDescriptorDataEXT(VkDevice device, VkImageViewCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetImageViewOpaqueCaptureDescriptorDataEXT(VkDevice device, VkImageViewCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22150,7 +22152,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSamplerOpaqueCaptureDescriptorDataEXT(VkDevice device, VkSamplerCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetSamplerOpaqueCaptureDescriptorDataEXT(VkDevice device, VkSamplerCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22187,7 +22189,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetAccelerationStructureOpaqueCaptureDescriptorDataEXT(VkDevice device, VkAccelerationStructureCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetAccelerationStructureOpaqueCaptureDescriptorDataEXT(VkDevice device, VkAccelerationStructureCaptureDescriptorDataInfoEXT* pInfo, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22225,7 +22227,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_SetDeviceMemoryPriorityEXT(VkDevice device, VkDeviceMemory memory, float priority) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_SetDeviceMemoryPriorityEXT(VkDevice device, VkDeviceMemory memory, float priority) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22257,7 +22259,7 @@ device_dispatch[GetKey(device)].SetDeviceMemoryPriorityEXT(device, memory, prior
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_WaitForPresentKHR(VkDevice device, VkSwapchainKHR swapchain, uint64_t presentId, uint64_t timeout) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_WaitForPresentKHR(VkDevice device, VkSwapchainKHR swapchain, uint64_t presentId, uint64_t timeout) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22295,7 +22297,7 @@ return ret;
 }
 
 #if defined(VK_USE_PLATFORM_FUCHSIA)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateBufferCollectionFUCHSIA(VkDevice device, VkBufferCollectionCreateInfoFUCHSIA* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBufferCollectionFUCHSIA* pCollection) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateBufferCollectionFUCHSIA(VkDevice device, VkBufferCollectionCreateInfoFUCHSIA* pCreateInfo, VkAllocationCallbacks* pAllocator, VkBufferCollectionFUCHSIA* pCollection) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22342,7 +22344,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_FUCHSIA)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetBufferCollectionBufferConstraintsFUCHSIA(VkDevice device, VkBufferCollectionFUCHSIA collection, VkBufferConstraintsInfoFUCHSIA* pBufferConstraintsInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_SetBufferCollectionBufferConstraintsFUCHSIA(VkDevice device, VkBufferCollectionFUCHSIA collection, VkBufferConstraintsInfoFUCHSIA* pBufferConstraintsInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22384,7 +22386,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_FUCHSIA)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetBufferCollectionImageConstraintsFUCHSIA(VkDevice device, VkBufferCollectionFUCHSIA collection, VkImageConstraintsInfoFUCHSIA* pImageConstraintsInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_SetBufferCollectionImageConstraintsFUCHSIA(VkDevice device, VkBufferCollectionFUCHSIA collection, VkImageConstraintsInfoFUCHSIA* pImageConstraintsInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22436,7 +22438,7 @@ return ret;
 
 #endif
 #if defined(VK_USE_PLATFORM_FUCHSIA)
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyBufferCollectionFUCHSIA(VkDevice device, VkBufferCollectionFUCHSIA collection, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyBufferCollectionFUCHSIA(VkDevice device, VkBufferCollectionFUCHSIA collection, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22476,7 +22478,7 @@ device_dispatch[GetKey(device)].DestroyBufferCollectionFUCHSIA(device, collectio
 
 #endif
 #if defined(VK_USE_PLATFORM_FUCHSIA)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetBufferCollectionPropertiesFUCHSIA(VkDevice device, VkBufferCollectionFUCHSIA collection, VkBufferCollectionPropertiesFUCHSIA* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetBufferCollectionPropertiesFUCHSIA(VkDevice device, VkBufferCollectionFUCHSIA collection, VkBufferCollectionPropertiesFUCHSIA* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22521,7 +22523,7 @@ return ret;
 }
 
 #endif
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateCudaModuleNV(VkDevice device, VkCudaModuleCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCudaModuleNV* pModule) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateCudaModuleNV(VkDevice device, VkCudaModuleCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCudaModuleNV* pModule) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22566,7 +22568,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetCudaModuleCacheNV(VkDevice device, VkCudaModuleNV module, size_t* pCacheSize, void* pCacheData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetCudaModuleCacheNV(VkDevice device, VkCudaModuleNV module, size_t* pCacheSize, void* pCacheData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22602,7 +22604,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateCudaFunctionNV(VkDevice device, VkCudaFunctionCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCudaFunctionNV* pFunction) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateCudaFunctionNV(VkDevice device, VkCudaFunctionCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkCudaFunctionNV* pFunction) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22647,7 +22649,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyCudaModuleNV(VkDevice device, VkCudaModuleNV module, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyCudaModuleNV(VkDevice device, VkCudaModuleNV module, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22685,7 +22687,7 @@ device_dispatch[GetKey(device)].DestroyCudaModuleNV(device, module, pAllocator);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyCudaFunctionNV(VkDevice device, VkCudaFunctionNV function, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyCudaFunctionNV(VkDevice device, VkCudaFunctionNV function, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22723,7 +22725,7 @@ device_dispatch[GetKey(device)].DestroyCudaFunctionNV(device, function, pAllocat
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCudaLaunchKernelNV(VkCommandBuffer commandBuffer, VkCudaLaunchInfoNV* pLaunchInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCudaLaunchKernelNV(VkCommandBuffer commandBuffer, VkCudaLaunchInfoNV* pLaunchInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22765,7 +22767,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCudaLaunchKernelNV(commandBuffer, pLau
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginRendering(VkCommandBuffer commandBuffer, VkRenderingInfo* pRenderingInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBeginRendering(VkCommandBuffer commandBuffer, VkRenderingInfo* pRenderingInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22817,7 +22819,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBeginRendering(commandBuffer, pRenderi
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndRendering(VkCommandBuffer commandBuffer) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdEndRendering(VkCommandBuffer commandBuffer) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22847,7 +22849,7 @@ device_dispatch[GetKey(commandBuffer)].CmdEndRendering(commandBuffer);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDescriptorSetLayoutHostMappingInfoVALVE(VkDevice device, VkDescriptorSetBindingReferenceVALVE* pBindingReference, VkDescriptorSetLayoutHostMappingInfoVALVE* pHostMapping) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDescriptorSetLayoutHostMappingInfoVALVE(VkDevice device, VkDescriptorSetBindingReferenceVALVE* pBindingReference, VkDescriptorSetLayoutHostMappingInfoVALVE* pHostMapping) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22885,7 +22887,7 @@ device_dispatch[GetKey(device)].GetDescriptorSetLayoutHostMappingInfoVALVE(devic
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDescriptorSetHostMappingVALVE(VkDevice device, VkDescriptorSet descriptorSet, void** ppData) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDescriptorSetHostMappingVALVE(VkDevice device, VkDescriptorSet descriptorSet, void** ppData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22917,7 +22919,7 @@ device_dispatch[GetKey(device)].GetDescriptorSetHostMappingVALVE(device, descrip
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateMicromapEXT(VkDevice device, VkMicromapCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkMicromapEXT* pMicromap) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateMicromapEXT(VkDevice device, VkMicromapCreateInfoEXT* pCreateInfo, VkAllocationCallbacks* pAllocator, VkMicromapEXT* pMicromap) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -22966,7 +22968,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBuildMicromapsEXT(VkCommandBuffer commandBuffer, uint32_t infoCount, VkMicromapBuildInfoEXT* pInfos) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBuildMicromapsEXT(VkCommandBuffer commandBuffer, uint32_t infoCount, VkMicromapBuildInfoEXT* pInfos) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23011,7 +23013,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBuildMicromapsEXT(commandBuffer, infoC
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BuildMicromapsEXT(VkDevice device, VkDeferredOperationKHR deferredOperation, uint32_t infoCount, VkMicromapBuildInfoEXT* pInfos) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BuildMicromapsEXT(VkDevice device, VkDeferredOperationKHR deferredOperation, uint32_t infoCount, VkMicromapBuildInfoEXT* pInfos) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23061,7 +23063,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyMicromapEXT(VkDevice device, VkMicromapEXT micromap, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyMicromapEXT(VkDevice device, VkMicromapEXT micromap, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23099,7 +23101,7 @@ device_dispatch[GetKey(device)].DestroyMicromapEXT(device, micromap, pAllocator)
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyMicromapEXT(VkCommandBuffer commandBuffer, VkCopyMicromapInfoEXT* pInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyMicromapEXT(VkCommandBuffer commandBuffer, VkCopyMicromapInfoEXT* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23133,7 +23135,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyMicromapEXT(commandBuffer, pInfo);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyMicromapEXT(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyMicromapInfoEXT* pInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CopyMicromapEXT(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyMicromapInfoEXT* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23172,7 +23174,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyMicromapToMemoryEXT(VkCommandBuffer commandBuffer, VkCopyMicromapToMemoryInfoEXT* pInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyMicromapToMemoryEXT(VkCommandBuffer commandBuffer, VkCopyMicromapToMemoryInfoEXT* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23206,7 +23208,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyMicromapToMemoryEXT(commandBuffer,
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyMicromapToMemoryEXT(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyMicromapToMemoryInfoEXT* pInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CopyMicromapToMemoryEXT(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyMicromapToMemoryInfoEXT* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23245,7 +23247,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyMemoryToMicromapEXT(VkCommandBuffer commandBuffer, VkCopyMemoryToMicromapInfoEXT* pInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyMemoryToMicromapEXT(VkCommandBuffer commandBuffer, VkCopyMemoryToMicromapInfoEXT* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23279,7 +23281,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyMemoryToMicromapEXT(commandBuffer,
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CopyMemoryToMicromapEXT(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyMemoryToMicromapInfoEXT* pInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CopyMemoryToMicromapEXT(VkDevice device, VkDeferredOperationKHR deferredOperation, VkCopyMemoryToMicromapInfoEXT* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23318,7 +23320,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteMicromapsPropertiesEXT(VkCommandBuffer commandBuffer, uint32_t micromapCount, VkMicromapEXT* pMicromaps, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdWriteMicromapsPropertiesEXT(VkCommandBuffer commandBuffer, uint32_t micromapCount, VkMicromapEXT* pMicromaps, VkQueryType queryType, VkQueryPool queryPool, uint32_t firstQuery) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23352,7 +23354,7 @@ device_dispatch[GetKey(commandBuffer)].CmdWriteMicromapsPropertiesEXT(commandBuf
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_WriteMicromapsPropertiesEXT(VkDevice device, uint32_t micromapCount, VkMicromapEXT* pMicromaps, VkQueryType queryType, size_t dataSize, void* pData, size_t stride) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_WriteMicromapsPropertiesEXT(VkDevice device, uint32_t micromapCount, VkMicromapEXT* pMicromaps, VkQueryType queryType, size_t dataSize, void* pData, size_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23390,7 +23392,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceMicromapCompatibilityEXT(VkDevice device, VkMicromapVersionInfoEXT* pVersionInfo, VkAccelerationStructureCompatibilityKHR* pCompatibility) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDeviceMicromapCompatibilityEXT(VkDevice device, VkMicromapVersionInfoEXT* pVersionInfo, VkAccelerationStructureCompatibilityKHR* pCompatibility) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23424,7 +23426,7 @@ device_dispatch[GetKey(device)].GetDeviceMicromapCompatibilityEXT(device, pVersi
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetMicromapBuildSizesEXT(VkDevice device, VkAccelerationStructureBuildTypeKHR buildType, VkMicromapBuildInfoEXT* pBuildInfo, VkMicromapBuildSizesInfoEXT* pSizeInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetMicromapBuildSizesEXT(VkDevice device, VkAccelerationStructureBuildTypeKHR buildType, VkMicromapBuildInfoEXT* pBuildInfo, VkMicromapBuildSizesInfoEXT* pSizeInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23473,7 +23475,7 @@ device_dispatch[GetKey(device)].GetMicromapBuildSizesEXT(device, buildType, pBui
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetShaderModuleIdentifierEXT(VkDevice device, VkShaderModule shaderModule, VkShaderModuleIdentifierEXT* pIdentifier) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetShaderModuleIdentifierEXT(VkDevice device, VkShaderModule shaderModule, VkShaderModuleIdentifierEXT* pIdentifier) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23507,7 +23509,7 @@ device_dispatch[GetKey(device)].GetShaderModuleIdentifierEXT(device, shaderModul
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetShaderModuleCreateInfoIdentifierEXT(VkDevice device, VkShaderModuleCreateInfo* pCreateInfo, VkShaderModuleIdentifierEXT* pIdentifier) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetShaderModuleCreateInfoIdentifierEXT(VkDevice device, VkShaderModuleCreateInfo* pCreateInfo, VkShaderModuleIdentifierEXT* pIdentifier) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23544,7 +23546,7 @@ device_dispatch[GetKey(device)].GetShaderModuleCreateInfoIdentifierEXT(device, p
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageSubresourceLayout2KHR(VkDevice device, VkImage image, VkImageSubresource2KHR* pSubresource, VkSubresourceLayout2KHR* pLayout) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetImageSubresourceLayout2KHR(VkDevice device, VkImage image, VkImageSubresource2KHR* pSubresource, VkSubresourceLayout2KHR* pLayout) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23581,7 +23583,7 @@ device_dispatch[GetKey(device)].GetImageSubresourceLayout2KHR(device, image, pSu
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetPipelinePropertiesEXT(VkDevice device, VkPipelineInfoEXT* pPipelineInfo, VkBaseOutStructure* pPipelineProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetPipelinePropertiesEXT(VkDevice device, VkPipelineInfoEXT* pPipelineInfo, VkBaseOutStructure* pPipelineProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23624,7 +23626,7 @@ return ret;
 }
 
 #if defined(VK_USE_PLATFORM_METAL_EXT)
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_ExportMetalObjectsEXT(VkDevice device, VkExportMetalObjectsInfoEXT* pMetalObjectsInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_ExportMetalObjectsEXT(VkDevice device, VkExportMetalObjectsInfoEXT* pMetalObjectsInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23657,7 +23659,7 @@ device_dispatch[GetKey(device)].ExportMetalObjectsEXT(device, pMetalObjectsInfo)
 }
 
 #endif
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetFramebufferTilePropertiesQCOM(VkDevice device, VkFramebuffer framebuffer, uint32_t* pPropertiesCount, VkTilePropertiesQCOM* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetFramebufferTilePropertiesQCOM(VkDevice device, VkFramebuffer framebuffer, uint32_t* pPropertiesCount, VkTilePropertiesQCOM* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23697,7 +23699,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDynamicRenderingTilePropertiesQCOM(VkDevice device, VkRenderingInfo* pRenderingInfo, VkTilePropertiesQCOM* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetDynamicRenderingTilePropertiesQCOM(VkDevice device, VkRenderingInfo* pRenderingInfo, VkTilePropertiesQCOM* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23758,7 +23760,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateOpticalFlowSessionNV(VkDevice device, VkOpticalFlowSessionCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkOpticalFlowSessionNV* pSession) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateOpticalFlowSessionNV(VkDevice device, VkOpticalFlowSessionCreateInfoNV* pCreateInfo, VkAllocationCallbacks* pAllocator, VkOpticalFlowSessionNV* pSession) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23807,7 +23809,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyOpticalFlowSessionNV(VkDevice device, VkOpticalFlowSessionNV session, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyOpticalFlowSessionNV(VkDevice device, VkOpticalFlowSessionNV session, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23845,7 +23847,7 @@ device_dispatch[GetKey(device)].DestroyOpticalFlowSessionNV(device, session, pAl
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindOpticalFlowSessionImageNV(VkDevice device, VkOpticalFlowSessionNV session, VkOpticalFlowSessionBindingPointNV bindingPoint, VkImageView view, VkImageLayout layout) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BindOpticalFlowSessionImageNV(VkDevice device, VkOpticalFlowSessionNV session, VkOpticalFlowSessionBindingPointNV bindingPoint, VkImageView view, VkImageLayout layout) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23881,7 +23883,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdOpticalFlowExecuteNV(VkCommandBuffer commandBuffer, VkOpticalFlowSessionNV session, VkOpticalFlowExecuteInfoNV* pExecuteInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdOpticalFlowExecuteNV(VkCommandBuffer commandBuffer, VkOpticalFlowSessionNV session, VkOpticalFlowExecuteInfoNV* pExecuteInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23920,7 +23922,7 @@ device_dispatch[GetKey(commandBuffer)].CmdOpticalFlowExecuteNV(commandBuffer, se
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetDeviceFaultInfoEXT(VkDevice device, VkDeviceFaultCountsEXT* pFaultCounts, VkDeviceFaultInfoEXT* pFaultInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetDeviceFaultInfoEXT(VkDevice device, VkDeviceFaultCountsEXT* pFaultCounts, VkDeviceFaultInfoEXT* pFaultInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23963,7 +23965,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthBias2EXT(VkCommandBuffer commandBuffer, VkDepthBiasInfoEXT* pDepthBiasInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthBias2EXT(VkCommandBuffer commandBuffer, VkDepthBiasInfoEXT* pDepthBiasInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -23998,7 +24000,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthBias2EXT(commandBuffer, pDepth
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_ReleaseSwapchainImagesEXT(VkDevice device, VkReleaseSwapchainImagesInfoEXT* pReleaseInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_ReleaseSwapchainImagesEXT(VkDevice device, VkReleaseSwapchainImagesInfoEXT* pReleaseInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24036,7 +24038,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceImageSubresourceLayoutKHR(VkDevice device, VkDeviceImageSubresourceInfoKHR* pInfo, VkSubresourceLayout2KHR* pLayout) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDeviceImageSubresourceLayoutKHR(VkDevice device, VkDeviceImageSubresourceInfoKHR* pInfo, VkSubresourceLayout2KHR* pLayout) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24082,7 +24084,7 @@ device_dispatch[GetKey(device)].GetDeviceImageSubresourceLayoutKHR(device, pInfo
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_MapMemory2KHR(VkDevice device, VkMemoryMapInfoKHR* pMemoryMapInfo, void** ppData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_MapMemory2KHR(VkDevice device, VkMemoryMapInfoKHR* pMemoryMapInfo, void** ppData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24123,7 +24125,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_UnmapMemory2KHR(VkDevice device, VkMemoryUnmapInfoKHR* pMemoryUnmapInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_UnmapMemory2KHR(VkDevice device, VkMemoryUnmapInfoKHR* pMemoryUnmapInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24161,7 +24163,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateShadersEXT(VkDevice device, uint32_t createInfoCount, VkShaderCreateInfoEXT* pCreateInfos, VkAllocationCallbacks* pAllocator, VkShaderEXT* pShaders) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateShadersEXT(VkDevice device, uint32_t createInfoCount, VkShaderCreateInfoEXT* pCreateInfos, VkAllocationCallbacks* pAllocator, VkShaderEXT* pShaders) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24226,7 +24228,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyShaderEXT(VkDevice device, VkShaderEXT shader, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyShaderEXT(VkDevice device, VkShaderEXT shader, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24264,7 +24266,7 @@ device_dispatch[GetKey(device)].DestroyShaderEXT(device, shader, pAllocator);
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetShaderBinaryDataEXT(VkDevice device, VkShaderEXT shader, size_t* pDataSize, void* pData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetShaderBinaryDataEXT(VkDevice device, VkShaderEXT shader, size_t* pDataSize, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24300,7 +24302,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindShadersEXT(VkCommandBuffer commandBuffer, uint32_t stageCount, VkShaderStageFlagBits* pStages, VkShaderEXT* pShaders) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindShadersEXT(VkCommandBuffer commandBuffer, uint32_t stageCount, VkShaderStageFlagBits* pStages, VkShaderEXT* pShaders) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24334,7 +24336,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindShadersEXT(commandBuffer, stageCou
 }
 
 #if defined(VK_USE_PLATFORM_SCREEN_QNX)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetScreenBufferPropertiesQNX(VkDevice device, _screen_buffer* buffer, VkScreenBufferPropertiesQNX* pProperties) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetScreenBufferPropertiesQNX(VkDevice device, _screen_buffer* buffer, VkScreenBufferPropertiesQNX* pProperties) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24375,7 +24377,7 @@ return ret;
 
 #endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetExecutionGraphPipelineScratchSizeAMDX(VkDevice device, VkPipeline executionGraph, VkExecutionGraphPipelineScratchSizeAMDX* pSizeInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetExecutionGraphPipelineScratchSizeAMDX(VkDevice device, VkPipeline executionGraph, VkExecutionGraphPipelineScratchSizeAMDX* pSizeInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24415,7 +24417,7 @@ return ret;
 
 #endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetExecutionGraphPipelineNodeIndexAMDX(VkDevice device, VkPipeline executionGraph, VkPipelineShaderStageNodeCreateInfoAMDX* pNodeInfo, uint32_t* pNodeIndex) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetExecutionGraphPipelineNodeIndexAMDX(VkDevice device, VkPipeline executionGraph, VkPipelineShaderStageNodeCreateInfoAMDX* pNodeInfo, uint32_t* pNodeIndex) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24455,7 +24457,7 @@ return ret;
 
 #endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateExecutionGraphPipelinesAMDX(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkExecutionGraphPipelineCreateInfoAMDX* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateExecutionGraphPipelinesAMDX(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkExecutionGraphPipelineCreateInfoAMDX* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24520,7 +24522,7 @@ return ret;
 
 #endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdInitializeGraphScratchMemoryAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdInitializeGraphScratchMemoryAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24553,7 +24555,7 @@ device_dispatch[GetKey(commandBuffer)].CmdInitializeGraphScratchMemoryAMDX(comma
 
 #endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDispatchGraphAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDispatchGraphCountInfoAMDX* pCountInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDispatchGraphAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDispatchGraphCountInfoAMDX* pCountInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24591,7 +24593,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphAMDX(commandBuffer, scrat
 
 #endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDispatchGraphIndirectAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDispatchGraphCountInfoAMDX* pCountInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDispatchGraphIndirectAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDispatchGraphCountInfoAMDX* pCountInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24629,7 +24631,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphIndirectAMDX(commandBuffe
 
 #endif
 #if defined(VK_ENABLE_BETA_EXTENSIONS)
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDispatchGraphIndirectCountAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDeviceAddress countInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDispatchGraphIndirectCountAMDX(VkCommandBuffer commandBuffer, VkDeviceAddress scratch, VkDeviceAddress countInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24662,7 +24664,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDispatchGraphIndirectCountAMDX(command
 }
 
 #endif
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindDescriptorSets2KHR(VkCommandBuffer commandBuffer, VkBindDescriptorSetsInfoKHR* pBindDescriptorSetsInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindDescriptorSets2KHR(VkCommandBuffer commandBuffer, VkBindDescriptorSetsInfoKHR* pBindDescriptorSetsInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24700,7 +24702,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorSets2KHR(commandBuffer, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPushConstants2KHR(VkCommandBuffer commandBuffer, VkPushConstantsInfoKHR* pPushConstantsInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdPushConstants2KHR(VkCommandBuffer commandBuffer, VkPushConstantsInfoKHR* pPushConstantsInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24736,7 +24738,7 @@ device_dispatch[GetKey(commandBuffer)].CmdPushConstants2KHR(commandBuffer, pPush
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPushDescriptorSet2KHR(VkCommandBuffer commandBuffer, VkPushDescriptorSetInfoKHR* pPushDescriptorSetInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdPushDescriptorSet2KHR(VkCommandBuffer commandBuffer, VkPushDescriptorSetInfoKHR* pPushDescriptorSetInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24788,7 +24790,7 @@ device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSet2KHR(commandBuffer, p
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPushDescriptorSetWithTemplate2KHR(VkCommandBuffer commandBuffer, VkPushDescriptorSetWithTemplateInfoKHR* pPushDescriptorSetWithTemplateInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdPushDescriptorSetWithTemplate2KHR(VkCommandBuffer commandBuffer, VkPushDescriptorSetWithTemplateInfoKHR* pPushDescriptorSetWithTemplateInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24823,7 +24825,7 @@ device_dispatch[GetKey(commandBuffer)].CmdPushDescriptorSetWithTemplate2KHR(comm
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDescriptorBufferOffsets2EXT(VkCommandBuffer commandBuffer, VkSetDescriptorBufferOffsetsInfoEXT* pSetDescriptorBufferOffsetsInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDescriptorBufferOffsets2EXT(VkCommandBuffer commandBuffer, VkSetDescriptorBufferOffsetsInfoEXT* pSetDescriptorBufferOffsetsInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24860,7 +24862,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDescriptorBufferOffsets2EXT(command
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindDescriptorBufferEmbeddedSamplers2EXT(VkCommandBuffer commandBuffer, VkBindDescriptorBufferEmbeddedSamplersInfoEXT* pBindDescriptorBufferEmbeddedSamplersInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindDescriptorBufferEmbeddedSamplers2EXT(VkCommandBuffer commandBuffer, VkBindDescriptorBufferEmbeddedSamplersInfoEXT* pBindDescriptorBufferEmbeddedSamplersInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24895,7 +24897,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindDescriptorBufferEmbeddedSamplers2E
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetLatencySleepModeNV(VkDevice device, VkSwapchainKHR swapchain, VkLatencySleepModeInfoNV* pSleepModeInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_SetLatencySleepModeNV(VkDevice device, VkSwapchainKHR swapchain, VkLatencySleepModeInfoNV* pSleepModeInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24935,7 +24937,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_LatencySleepNV(VkDevice device, VkSwapchainKHR swapchain, VkLatencySleepInfoNV* pSleepInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_LatencySleepNV(VkDevice device, VkSwapchainKHR swapchain, VkLatencySleepInfoNV* pSleepInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -24974,7 +24976,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_SetLatencyMarkerNV(VkDevice device, VkSwapchainKHR swapchain, VkSetLatencyMarkerInfoNV* pLatencyMarkerInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_SetLatencyMarkerNV(VkDevice device, VkSwapchainKHR swapchain, VkSetLatencyMarkerInfoNV* pLatencyMarkerInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25008,7 +25010,7 @@ device_dispatch[GetKey(device)].SetLatencyMarkerNV(device, swapchain, pLatencyMa
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetLatencyTimingsNV(VkDevice device, VkSwapchainKHR swapchain, VkGetLatencyMarkerInfoNV* pLatencyMarkerInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetLatencyTimingsNV(VkDevice device, VkSwapchainKHR swapchain, VkGetLatencyMarkerInfoNV* pLatencyMarkerInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25043,7 +25045,7 @@ device_dispatch[GetKey(device)].GetLatencyTimingsNV(device, swapchain, pLatencyM
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_QueueNotifyOutOfBandNV(VkQueue queue, VkOutOfBandQueueTypeInfoNV* pQueueTypeInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_QueueNotifyOutOfBandNV(VkQueue queue, VkOutOfBandQueueTypeInfoNV* pQueueTypeInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25075,7 +25077,7 @@ device_dispatch[GetKey(queue)].QueueNotifyOutOfBandNV(queue, pQueueTypeInfo);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_ResetQueryPoolEXT(VkDevice device, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_ResetQueryPoolEXT(VkDevice device, VkQueryPool queryPool, uint32_t firstQuery, uint32_t queryCount) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25108,7 +25110,7 @@ device_dispatch[GetKey(device)].ResetQueryPoolEXT(device, queryPool, firstQuery,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_TrimCommandPoolKHR(VkDevice device, VkCommandPool commandPool, VkCommandPoolTrimFlags flags) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_TrimCommandPoolKHR(VkDevice device, VkCommandPool commandPool, VkCommandPoolTrimFlags flags) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25140,7 +25142,7 @@ device_dispatch[GetKey(device)].TrimCommandPoolKHR(device, commandPool, flags);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceGroupPeerMemoryFeaturesKHR(VkDevice device, uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDeviceGroupPeerMemoryFeaturesKHR(VkDevice device, uint32_t heapIndex, uint32_t localDeviceIndex, uint32_t remoteDeviceIndex, VkPeerMemoryFeatureFlags* pPeerMemoryFeatures) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25174,7 +25176,7 @@ device_dispatch[GetKey(device)].GetDeviceGroupPeerMemoryFeaturesKHR(device, heap
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindBufferMemory2KHR(VkDevice device, uint32_t bindInfoCount, VkBindBufferMemoryInfo* pBindInfos) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BindBufferMemory2KHR(VkDevice device, uint32_t bindInfoCount, VkBindBufferMemoryInfo* pBindInfos) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25214,7 +25216,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_BindImageMemory2KHR(VkDevice device, uint32_t bindInfoCount, VkBindImageMemoryInfo* pBindInfos) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_BindImageMemory2KHR(VkDevice device, uint32_t bindInfoCount, VkBindImageMemoryInfo* pBindInfos) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25254,7 +25256,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDeviceMaskKHR(VkCommandBuffer commandBuffer, uint32_t deviceMask) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDeviceMaskKHR(VkCommandBuffer commandBuffer, uint32_t deviceMask) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25285,7 +25287,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDeviceMaskKHR(commandBuffer, device
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDispatchBaseKHR(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDispatchBaseKHR(VkCommandBuffer commandBuffer, uint32_t baseGroupX, uint32_t baseGroupY, uint32_t baseGroupZ, uint32_t groupCountX, uint32_t groupCountY, uint32_t groupCountZ) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25321,7 +25323,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDispatchBaseKHR(commandBuffer, baseGro
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateDescriptorUpdateTemplateKHR(VkDevice device, VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDescriptorUpdateTemplateKHR(VkDevice device, VkDescriptorUpdateTemplateCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDescriptorUpdateTemplate* pDescriptorUpdateTemplate) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25377,7 +25379,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyDescriptorUpdateTemplateKHR(VkDevice device, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDescriptorUpdateTemplateKHR(VkDevice device, VkDescriptorUpdateTemplate descriptorUpdateTemplate, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25415,7 +25417,7 @@ device_dispatch[GetKey(device)].DestroyDescriptorUpdateTemplateKHR(device, descr
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_UpdateDescriptorSetWithTemplateKHR(VkDevice device, VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, void* pData) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_UpdateDescriptorSetWithTemplateKHR(VkDevice device, VkDescriptorSet descriptorSet, VkDescriptorUpdateTemplate descriptorUpdateTemplate, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25447,7 +25449,7 @@ device_dispatch[GetKey(device)].UpdateDescriptorSetWithTemplateKHR(device, descr
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetBufferMemoryRequirements2KHR(VkDevice device, VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetBufferMemoryRequirements2KHR(VkDevice device, VkBufferMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25483,7 +25485,7 @@ device_dispatch[GetKey(device)].GetBufferMemoryRequirements2KHR(device, pInfo, p
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageMemoryRequirements2KHR(VkDevice device, VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetImageMemoryRequirements2KHR(VkDevice device, VkImageMemoryRequirementsInfo2* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25519,7 +25521,7 @@ device_dispatch[GetKey(device)].GetImageMemoryRequirements2KHR(device, pInfo, pM
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageSparseMemoryRequirements2KHR(VkDevice device, VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetImageSparseMemoryRequirements2KHR(VkDevice device, VkImageSparseMemoryRequirementsInfo2* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25555,7 +25557,7 @@ device_dispatch[GetKey(device)].GetImageSparseMemoryRequirements2KHR(device, pIn
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceBufferMemoryRequirementsKHR(VkDevice device, VkDeviceBufferMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDeviceBufferMemoryRequirementsKHR(VkDevice device, VkDeviceBufferMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25596,7 +25598,7 @@ device_dispatch[GetKey(device)].GetDeviceBufferMemoryRequirementsKHR(device, pIn
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceImageMemoryRequirementsKHR(VkDevice device, VkDeviceImageMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDeviceImageMemoryRequirementsKHR(VkDevice device, VkDeviceImageMemoryRequirements* pInfo, VkMemoryRequirements2* pMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25639,7 +25641,7 @@ device_dispatch[GetKey(device)].GetDeviceImageMemoryRequirementsKHR(device, pInf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDeviceImageSparseMemoryRequirementsKHR(VkDevice device, VkDeviceImageMemoryRequirements* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDeviceImageSparseMemoryRequirementsKHR(VkDevice device, VkDeviceImageMemoryRequirements* pInfo, uint32_t* pSparseMemoryRequirementCount, VkSparseImageMemoryRequirements2* pSparseMemoryRequirements) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25682,7 +25684,7 @@ device_dispatch[GetKey(device)].GetDeviceImageSparseMemoryRequirementsKHR(device
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateSamplerYcbcrConversionKHR(VkDevice device, VkSamplerYcbcrConversionCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateSamplerYcbcrConversionKHR(VkDevice device, VkSamplerYcbcrConversionCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSamplerYcbcrConversion* pYcbcrConversion) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25728,7 +25730,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroySamplerYcbcrConversionKHR(VkDevice device, VkSamplerYcbcrConversion ycbcrConversion, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroySamplerYcbcrConversionKHR(VkDevice device, VkSamplerYcbcrConversion ycbcrConversion, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25766,7 +25768,7 @@ device_dispatch[GetKey(device)].DestroySamplerYcbcrConversionKHR(device, ycbcrCo
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetDescriptorSetLayoutSupportKHR(VkDevice device, VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetDescriptorSetLayoutSupportKHR(VkDevice device, VkDescriptorSetLayoutCreateInfo* pCreateInfo, VkDescriptorSetLayoutSupport* pSupport) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25809,7 +25811,7 @@ device_dispatch[GetKey(device)].GetDescriptorSetLayoutSupportKHR(device, pCreate
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetCalibratedTimestampsEXT(VkDevice device, uint32_t timestampCount, VkCalibratedTimestampInfoKHR* pTimestampInfos, uint64_t* pTimestamps, uint64_t* pMaxDeviation) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetCalibratedTimestampsEXT(VkDevice device, uint32_t timestampCount, VkCalibratedTimestampInfoKHR* pTimestampInfos, uint64_t* pTimestamps, uint64_t* pMaxDeviation) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25848,7 +25850,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreateRenderPass2KHR(VkDevice device, VkRenderPassCreateInfo2* pCreateInfo, VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateRenderPass2KHR(VkDevice device, VkRenderPassCreateInfo2* pCreateInfo, VkAllocationCallbacks* pAllocator, VkRenderPass* pRenderPass) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25933,7 +25935,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginRenderPass2KHR(VkCommandBuffer commandBuffer, VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassBeginInfo* pSubpassBeginInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBeginRenderPass2KHR(VkCommandBuffer commandBuffer, VkRenderPassBeginInfo* pRenderPassBegin, VkSubpassBeginInfo* pSubpassBeginInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -25972,7 +25974,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBeginRenderPass2KHR(commandBuffer, pRe
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdNextSubpass2KHR(VkCommandBuffer commandBuffer, VkSubpassBeginInfo* pSubpassBeginInfo, VkSubpassEndInfo* pSubpassEndInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdNextSubpass2KHR(VkCommandBuffer commandBuffer, VkSubpassBeginInfo* pSubpassBeginInfo, VkSubpassEndInfo* pSubpassEndInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26006,7 +26008,7 @@ device_dispatch[GetKey(commandBuffer)].CmdNextSubpass2KHR(commandBuffer, pSubpas
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndRenderPass2KHR(VkCommandBuffer commandBuffer, VkSubpassEndInfo* pSubpassEndInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdEndRenderPass2KHR(VkCommandBuffer commandBuffer, VkSubpassEndInfo* pSubpassEndInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26038,7 +26040,7 @@ device_dispatch[GetKey(commandBuffer)].CmdEndRenderPass2KHR(commandBuffer, pSubp
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetSemaphoreCounterValueKHR(VkDevice device, VkSemaphore semaphore, uint64_t* pValue) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetSemaphoreCounterValueKHR(VkDevice device, VkSemaphore semaphore, uint64_t* pValue) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26074,7 +26076,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_WaitSemaphoresKHR(VkDevice device, VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_WaitSemaphoresKHR(VkDevice device, VkSemaphoreWaitInfo* pWaitInfo, uint64_t timeout) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26115,7 +26117,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SignalSemaphoreKHR(VkDevice device, VkSemaphoreSignalInfo* pSignalInfo) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_SignalSemaphoreKHR(VkDevice device, VkSemaphoreSignalInfo* pSignalInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26153,7 +26155,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndirectCountKHR(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndirectCountKHR(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26189,7 +26191,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCountKHR(commandBuffer, bu
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26225,7 +26227,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawIndirectCountAMD(commandBuffer, bu
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndexedIndirectCountKHR(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndexedIndirectCountKHR(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26261,7 +26263,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCountKHR(commandBuf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdDrawIndexedIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdDrawIndexedIndirectCountAMD(VkCommandBuffer commandBuffer, VkBuffer buffer, VkDeviceSize offset, VkBuffer countBuffer, VkDeviceSize countBufferOffset, uint32_t maxDrawCount, uint32_t stride) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26297,7 +26299,7 @@ device_dispatch[GetKey(commandBuffer)].CmdDrawIndexedIndirectCountAMD(commandBuf
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_GetRayTracingShaderGroupHandlesNV(VkDevice device, VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_GetRayTracingShaderGroupHandlesNV(VkDevice device, VkPipeline pipeline, uint32_t firstGroup, uint32_t groupCount, size_t dataSize, void* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26335,7 +26337,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT uint64_t VKAPI_CALL DetailsLayer_GetBufferOpaqueCaptureAddressKHR(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
+ VK_LAYER_EXPORT uint64_t VKAPI_CALL DebuggerLayer_GetBufferOpaqueCaptureAddressKHR(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26372,7 +26374,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DetailsLayer_GetBufferDeviceAddressKHR(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
+ VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DebuggerLayer_GetBufferDeviceAddressKHR(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26409,7 +26411,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DetailsLayer_GetBufferDeviceAddressEXT(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
+ VK_LAYER_EXPORT VkDeviceAddress VKAPI_CALL DebuggerLayer_GetBufferDeviceAddressEXT(VkDevice device, VkBufferDeviceAddressInfo* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26446,7 +26448,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT uint64_t VKAPI_CALL DetailsLayer_GetDeviceMemoryOpaqueCaptureAddressKHR(VkDevice device, VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) {
+ VK_LAYER_EXPORT uint64_t VKAPI_CALL DebuggerLayer_GetDeviceMemoryOpaqueCaptureAddressKHR(VkDevice device, VkDeviceMemoryOpaqueCaptureAddressInfo* pInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26483,7 +26485,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetLineStippleEXT(VkCommandBuffer commandBuffer, uint32_t lineStippleFactor, uint16_t lineStipplePattern) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetLineStippleEXT(VkCommandBuffer commandBuffer, uint32_t lineStippleFactor, uint16_t lineStipplePattern) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26515,7 +26517,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetLineStippleEXT(commandBuffer, lineS
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetCullModeEXT(VkCommandBuffer commandBuffer, VkCullModeFlags cullMode) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetCullModeEXT(VkCommandBuffer commandBuffer, VkCullModeFlags cullMode) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26546,7 +26548,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetCullModeEXT(commandBuffer, cullMode
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetFrontFaceEXT(VkCommandBuffer commandBuffer, VkFrontFace frontFace) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetFrontFaceEXT(VkCommandBuffer commandBuffer, VkFrontFace frontFace) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26576,7 +26578,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetFrontFaceEXT(commandBuffer, frontFa
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetPrimitiveTopologyEXT(VkCommandBuffer commandBuffer, VkPrimitiveTopology primitiveTopology) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetPrimitiveTopologyEXT(VkCommandBuffer commandBuffer, VkPrimitiveTopology primitiveTopology) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26606,7 +26608,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveTopologyEXT(commandBuffer,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetViewportWithCountEXT(VkCommandBuffer commandBuffer, uint32_t viewportCount, VkViewport* pViewports) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetViewportWithCountEXT(VkCommandBuffer commandBuffer, uint32_t viewportCount, VkViewport* pViewports) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26645,7 +26647,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetViewportWithCountEXT(commandBuffer,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetScissorWithCountEXT(VkCommandBuffer commandBuffer, uint32_t scissorCount, VkRect2D* pScissors) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetScissorWithCountEXT(VkCommandBuffer commandBuffer, uint32_t scissorCount, VkRect2D* pScissors) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26680,7 +26682,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetScissorWithCountEXT(commandBuffer, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBindVertexBuffers2EXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, VkBuffer* pBuffers, VkDeviceSize* pOffsets, VkDeviceSize* pSizes, VkDeviceSize* pStrides) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBindVertexBuffers2EXT(VkCommandBuffer commandBuffer, uint32_t firstBinding, uint32_t bindingCount, VkBuffer* pBuffers, VkDeviceSize* pOffsets, VkDeviceSize* pSizes, VkDeviceSize* pStrides) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26716,7 +26718,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBindVertexBuffers2EXT(commandBuffer, f
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthTestEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthTestEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26747,7 +26749,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthTestEnableEXT(commandBuffer, d
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthWriteEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthWriteEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthWriteEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthWriteEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26778,7 +26780,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthWriteEnableEXT(commandBuffer, 
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthCompareOpEXT(VkCommandBuffer commandBuffer, VkCompareOp depthCompareOp) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthCompareOpEXT(VkCommandBuffer commandBuffer, VkCompareOp depthCompareOp) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26808,7 +26810,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthCompareOpEXT(commandBuffer, de
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthBoundsTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBoundsTestEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthBoundsTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBoundsTestEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26839,7 +26841,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthBoundsTestEnableEXT(commandBuf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetStencilTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 stencilTestEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetStencilTestEnableEXT(VkCommandBuffer commandBuffer, VkBool32 stencilTestEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26870,7 +26872,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetStencilTestEnableEXT(commandBuffer,
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetStencilOpEXT(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp, VkCompareOp compareOp) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetStencilOpEXT(VkCommandBuffer commandBuffer, VkStencilFaceFlags faceMask, VkStencilOp failOp, VkStencilOp passOp, VkStencilOp depthFailOp, VkCompareOp compareOp) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26901,7 +26903,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetStencilOpEXT(commandBuffer, faceMas
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetRasterizerDiscardEnableEXT(VkCommandBuffer commandBuffer, VkBool32 rasterizerDiscardEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetRasterizerDiscardEnableEXT(VkCommandBuffer commandBuffer, VkBool32 rasterizerDiscardEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26932,7 +26934,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetRasterizerDiscardEnableEXT(commandB
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetDepthBiasEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBiasEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetDepthBiasEnableEXT(VkCommandBuffer commandBuffer, VkBool32 depthBiasEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26963,7 +26965,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetDepthBiasEnableEXT(commandBuffer, d
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetPrimitiveRestartEnableEXT(VkCommandBuffer commandBuffer, VkBool32 primitiveRestartEnable) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetPrimitiveRestartEnableEXT(VkCommandBuffer commandBuffer, VkBool32 primitiveRestartEnable) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -26994,7 +26996,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetPrimitiveRestartEnableEXT(commandBu
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_CreatePrivateDataSlotEXT(VkDevice device, VkPrivateDataSlotCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreatePrivateDataSlotEXT(VkDevice device, VkPrivateDataSlotCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPrivateDataSlot* pPrivateDataSlot) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27039,7 +27041,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_DestroyPrivateDataSlotEXT(VkDevice device, VkPrivateDataSlot privateDataSlot, VkAllocationCallbacks* pAllocator) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyPrivateDataSlotEXT(VkDevice device, VkPrivateDataSlot privateDataSlot, VkAllocationCallbacks* pAllocator) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27077,7 +27079,7 @@ device_dispatch[GetKey(device)].DestroyPrivateDataSlotEXT(device, privateDataSlo
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_SetPrivateDataEXT(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t data) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_SetPrivateDataEXT(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t data) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27114,7 +27116,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetPrivateDataEXT(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t* pData) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetPrivateDataEXT(VkDevice device, VkObjectType objectType, uint64_t objectHandle, VkPrivateDataSlot privateDataSlot, uint64_t* pData) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27147,7 +27149,7 @@ device_dispatch[GetKey(device)].GetPrivateDataEXT(device, objectType, objectHand
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyBuffer2KHR(VkCommandBuffer commandBuffer, VkCopyBufferInfo2* pCopyBufferInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyBuffer2KHR(VkCommandBuffer commandBuffer, VkCopyBufferInfo2* pCopyBufferInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27187,7 +27189,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyBuffer2KHR(commandBuffer, pCopyBuf
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyImage2KHR(VkCommandBuffer commandBuffer, VkCopyImageInfo2* pCopyImageInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyImage2KHR(VkCommandBuffer commandBuffer, VkCopyImageInfo2* pCopyImageInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27229,7 +27231,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyImage2KHR(commandBuffer, pCopyImag
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBlitImage2KHR(VkCommandBuffer commandBuffer, VkBlitImageInfo2* pBlitImageInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBlitImage2KHR(VkCommandBuffer commandBuffer, VkBlitImageInfo2* pBlitImageInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27270,7 +27272,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBlitImage2KHR(commandBuffer, pBlitImag
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyBufferToImage2KHR(VkCommandBuffer commandBuffer, VkCopyBufferToImageInfo2* pCopyBufferToImageInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyBufferToImage2KHR(VkCommandBuffer commandBuffer, VkCopyBufferToImageInfo2* pCopyBufferToImageInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27313,7 +27315,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyBufferToImage2KHR(commandBuffer, p
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdCopyImageToBuffer2KHR(VkCommandBuffer commandBuffer, VkCopyImageToBufferInfo2* pCopyImageToBufferInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdCopyImageToBuffer2KHR(VkCommandBuffer commandBuffer, VkCopyImageToBufferInfo2* pCopyImageToBufferInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27356,7 +27358,7 @@ device_dispatch[GetKey(commandBuffer)].CmdCopyImageToBuffer2KHR(commandBuffer, p
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdResolveImage2KHR(VkCommandBuffer commandBuffer, VkResolveImageInfo2* pResolveImageInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdResolveImage2KHR(VkCommandBuffer commandBuffer, VkResolveImageInfo2* pResolveImageInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27398,7 +27400,7 @@ device_dispatch[GetKey(commandBuffer)].CmdResolveImage2KHR(commandBuffer, pResol
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdSetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, VkDependencyInfo* pDependencyInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdSetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, VkDependencyInfo* pDependencyInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27462,7 +27464,7 @@ device_dispatch[GetKey(commandBuffer)].CmdSetEvent2KHR(commandBuffer, event, pDe
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdResetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2 stageMask) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdResetEvent2KHR(VkCommandBuffer commandBuffer, VkEvent event, VkPipelineStageFlags2 stageMask) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27494,7 +27496,7 @@ device_dispatch[GetKey(commandBuffer)].CmdResetEvent2KHR(commandBuffer, event, s
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWaitEvents2KHR(VkCommandBuffer commandBuffer, uint32_t eventCount, VkEvent* pEvents, VkDependencyInfo* pDependencyInfos) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdWaitEvents2KHR(VkCommandBuffer commandBuffer, uint32_t eventCount, VkEvent* pEvents, VkDependencyInfo* pDependencyInfos) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27559,7 +27561,7 @@ device_dispatch[GetKey(commandBuffer)].CmdWaitEvents2KHR(commandBuffer, eventCou
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdPipelineBarrier2KHR(VkCommandBuffer commandBuffer, VkDependencyInfo* pDependencyInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdPipelineBarrier2KHR(VkCommandBuffer commandBuffer, VkDependencyInfo* pDependencyInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27622,7 +27624,7 @@ device_dispatch[GetKey(commandBuffer)].CmdPipelineBarrier2KHR(commandBuffer, pDe
 }
 }
 
- VK_LAYER_EXPORT VkResult VKAPI_CALL DetailsLayer_QueueSubmit2KHR(VkQueue queue, uint32_t submitCount, VkSubmitInfo2* pSubmits, VkFence fence) {
+ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_QueueSubmit2KHR(VkQueue queue, uint32_t submitCount, VkSubmitInfo2* pSubmits, VkFence fence) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27680,7 +27682,7 @@ return ret;
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdWriteTimestamp2KHR(VkCommandBuffer commandBuffer, VkPipelineStageFlags2 stage, VkQueryPool queryPool, uint32_t query) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdWriteTimestamp2KHR(VkCommandBuffer commandBuffer, VkPipelineStageFlags2 stage, VkQueryPool queryPool, uint32_t query) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27713,7 +27715,7 @@ device_dispatch[GetKey(commandBuffer)].CmdWriteTimestamp2KHR(commandBuffer, stag
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdBeginRenderingKHR(VkCommandBuffer commandBuffer, VkRenderingInfo* pRenderingInfo) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdBeginRenderingKHR(VkCommandBuffer commandBuffer, VkRenderingInfo* pRenderingInfo) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27765,7 +27767,7 @@ device_dispatch[GetKey(commandBuffer)].CmdBeginRenderingKHR(commandBuffer, pRend
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_CmdEndRenderingKHR(VkCommandBuffer commandBuffer) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_CmdEndRenderingKHR(VkCommandBuffer commandBuffer) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27795,7 +27797,7 @@ device_dispatch[GetKey(commandBuffer)].CmdEndRenderingKHR(commandBuffer);
 }
 }
 
- VK_LAYER_EXPORT void VKAPI_CALL DetailsLayer_GetImageSubresourceLayout2EXT(VkDevice device, VkImage image, VkImageSubresource2KHR* pSubresource, VkSubresourceLayout2KHR* pLayout) {
+ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_GetImageSubresourceLayout2EXT(VkDevice device, VkImage image, VkImageSubresource2KHR* pSubresource, VkSubresourceLayout2KHR* pLayout) {
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 if(connected) {
@@ -27831,8 +27833,8 @@ if (callEveryBreak || callAtBreak)
 device_dispatch[GetKey(device)].GetImageSubresourceLayout2EXT(device, image, pSubresource, pLayout);
 }
 }
-#define GETPROCADDR(func) if(!strcmp(pName, "vk" #func)) return (PFN_vkVoidFunction)&DetailsLayer_##func;
-VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DetailsLayer_GetDeviceProcAddr(VkDevice device, const char* pName) {
+#define GETPROCADDR(func) if(!strcmp(pName, "vk" #func)) return (PFN_vkVoidFunction)&DebuggerLayer_##func;
+VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetDeviceProcAddr(VkDevice device, const char* pName) {
 if (GetWindowName() == "vkDetails.exe") { return device_dispatch[GetKey(device)].GetDeviceProcAddr(device, pName); }
 GETPROCADDR(GetDeviceProcAddr);
 GETPROCADDR(DestroyDevice);
@@ -28504,7 +28506,7 @@ GETPROCADDR(GetImageSubresourceLayout2EXT);
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 return device_dispatch[GetKey(device)].GetDeviceProcAddr(device, pName);}
-}VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DetailsLayer_GetInstanceProcAddr(VkInstance instance, const char* pName) {
+}VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetInstanceProcAddr(VkInstance instance, const char* pName) {
 if (GetWindowName() == "vkDetails.exe") { GETPROCADDR(CreateDevice); GETPROCADDR(CreateInstance); return instance_dispatch[GetKey(instance)].GetInstanceProcAddr(instance, pName); }
 GETPROCADDR(CreateInstance);
 GETPROCADDR(DestroyInstance);

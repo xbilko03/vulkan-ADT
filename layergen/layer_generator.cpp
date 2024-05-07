@@ -1,39 +1,174 @@
+﻿/*
+* Name		    : layer_xml_parser.cpp
+* Project	    : A Debugging Tool for Vulkan API (VkDebugger)
+* Description   : Source file of the layer generator to construct vk_layer_generated.h and vk_layer_generated.cpp
+*
+* Author : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
+*/
 #include "layer_generator.hpp"
-
-#include <iostream>
-#include <fstream>
-#include <list>
-#include <filesystem>
-#include <algorithm>
-#include <map>
 
 namespace laygen
 {
-    bool LayerGenerator::IsEnum(std::string input)
+    /* MAIN FUNCTIONS */
+    /* entry point called by main.cpp */
+    void LayerGenerator::run()
     {
-        auto mapped = xmlp.enumList;
-
-        auto item = mapped.find(input);
-        if (item == mapped.end())
+        /* xml parse */
         {
-            return false;
+            /* new class that handles the vk.xml document */
+            if (xmlp.openXmlDoc(XML_PATH) == false)
+            {
+                throw std::runtime_error("cannot open the xml document");
+            }
+            /* if there are commands defined in the xml doc, get the parent node of the commands */
+            cmdDefinitions = xmlp.containsCommands();
+            /* if there are platform protections defined in the xml doc, get their parent node */
+            cmdPlatformProtection = xmlp.containsPlatformProtection();
+
+            if (cmdDefinitions == false)
+            {
+                throw std::runtime_error("No vulkan commands definitions were found inside the vk.xml file");
+            }
+
+            if (cmdPlatformProtection == true)
+            {
+                xmlp.getProtectionGuards();
+            }
+
+            xmlp.assignCmdsToTables();
+            xmlp.assignAliasesToTables();
+            xmlp.assignStructsToTables();
+            xmlp.assignEnumsToTables();
         }
-        return true;
+
+        /* vk_layer_dispatch_table.h generation */
+        {
+            dispatchTableFile.open(VK_TABLE_PATH);
+            if (!dispatchTableFile)
+            {
+                throw std::runtime_error("cannot open the dispatch table file");
+            }
+
+            /* this is how instance table looks like
+            *
+            * typedef struct VkLayerInstanceDispatchTable_ {
+            * PFN_vkCreateInstance CreateInstance;
+            * PFN_vkDestroyInstance DestroyInstance;
+            * ...
+            * } VkLayerInstanceDispatchTable;
+            */
+            generateTableInstance();
+
+            /* this is how device table looks like:
+            *
+            * typedef struct VkLayerDispatchTable_ {
+            * PFN_vkGetDeviceProcAddr GetDeviceProcAddr;
+            * PFN_vkDestroyDevice DestroyDevice;
+            * ...
+            * } VkLayerDispatchTable;
+            */
+            generateTableDevice();
+
+            dispatchTableFile.close();
+        }
+
+        /* vk_layer_generated.cpp generation */
+        {
+            staticLayerFile.open(LAYER_STATIC_PATH);
+            generatedLayerFile.open(LAYER_GENERATED_PATH);
+            if (!staticLayerFile || !generatedLayerFile)
+            {
+                throw std::runtime_error("cannot open the layer files");
+            }
+            generateHeaders();
+            generateCmdDeclarations("device");
+            generateCmdDeclarations("instance");
+            /* copy static part of the layer to generated layer file*/
+            generatedLayerFile << staticLayerFile.rdbuf();
+            staticLayerFile.close();
+
+            /* generate the generated part */
+            generateGeneratedLayer();
+
+            /* generate device proc addr call */
+            generatedLayerFile << VK_DEBUGGER_GPA << std::endl;
+
+            generateGenLayerFooter("device");
+            generateGenLayerFooter("instance");
+
+            /* generate instancce proc addr call */
+
+            generatedLayerFile.close();
+        }
     }
-    bool LayerGenerator::IsStruct(std::string type)
+    /* generate IDT */
+    void LayerGenerator::generateTableInstance()
     {
-        auto* mapped = &xmlp.structList;
 
-        auto item = mapped->find(type.substr(0,type.size() - 1));
-        if(item == mapped->end())
+        /* Instance commands */
+        dispatchTableFile << INSTANCE_TABLE_HEADER;
+
+        for (auto& item : xmlp.commandListInstances)
         {
-            return false;
+            /* if there is a specific command user wants to ignore, skip it */
+            if (std::find(ignoreCmdList.begin(), ignoreCmdList.end(), item.functName) != ignoreCmdList.end())
+            {
+                continue;
+            }
+
+            bool printGuard = false;
+            std::string guardContent;
+            if (cmdPlatformProtection)
+            {
+                guardContent = GetGuardString(item.functName, xmlp.cmdGuard);
+                if (strcmp(guardContent.c_str(), "") != 0)
+                    printGuard = true;
+            }
+            if (printGuard)
+                dispatchTableFile << "\n#if defined(" << GetGuardString(item.functName, xmlp.cmdGuard) << ")";
+            dispatchTableFile << "\n\tPFN_" + item.functName + " " + item.functName.substr(2, item.functName.size()) + ";";
+            if (printGuard)
+                dispatchTableFile << "\n#endif";
         }
-        else
-        {
-            return true;
-        }
+
+        dispatchTableFile << INSTANCE_TABLE_FOOTER;
+
     }
+    /* generate DDT */
+    void LayerGenerator::generateTableDevice()
+    {
+        /* Device commands */
+
+        dispatchTableFile << DEVICE_TABLE_HEADER;
+
+        for (auto& item : xmlp.commandListDevices)
+        {
+            /* if there is a specific command user wants to ignore, skip it */
+            if (std::find(ignoreCmdList.begin(), ignoreCmdList.end(), item.functName) != ignoreCmdList.end())
+            {
+                continue;
+            }
+            bool printGuard = false;
+            std::string guardContent;
+            if (cmdPlatformProtection)
+            {
+                guardContent = GetGuardString(item.functName, xmlp.cmdGuard);
+                if (strcmp(guardContent.c_str(), "") != 0)
+                    printGuard = true;
+            }
+            if (printGuard)
+                dispatchTableFile << "\n#if defined(" << GetGuardString(item.functName, xmlp.cmdGuard) << ")";
+            dispatchTableFile << "\n\tPFN_" + item.functName + " " + item.functName.substr(2, item.functName.size()) + ";";
+            if (printGuard)
+                dispatchTableFile << "\n#endif";
+        }
+
+        dispatchTableFile << DEVICE_TABLE_FOOTER;
+
+    }
+
+    /* CORE FUNCTIONS */
+    /* prints a single message sending operation that sends the parameter's name and value to the vkDebuggerApp*/
     bool LayerGenerator::PrintParameterSendStruct(std::ofstream* output, std::string type, std::string name, std::string prefix, int attempts)
     {
         attempts--;
@@ -68,7 +203,7 @@ namespace laygen
                 else
                 {
                     /* not a struct anymore */
-                    PrintParameterSend(output, outputType, item.name, prefix);
+                    PrintParameterSendSingle(output, outputType, item.name, prefix);
                 }
 
             }
@@ -78,7 +213,8 @@ namespace laygen
         }
         return false;
     }
-    bool LayerGenerator::PrintParameterSend(std::ofstream* output,std::string type, std::string name, std::string prefix)
+    /* prints a single send message to the VkDebuggerApp */
+    bool LayerGenerator::PrintParameterSendSingle(std::ofstream* output,std::string type, std::string name, std::string prefix)
     {
         bool ret = false;
         std::string outputStr = "winsockSendToUI(&ConnectSocket,";
@@ -158,16 +294,18 @@ namespace laygen
 
         return ret;
     }
-    void LayerGenerator::PrintParemeterSends(std::ofstream* output, std::map<std::string, XmlParser::Struct>* structs, auto* parameterList)
+    /* analyzes every parameter included in the parameter list and calls PrintParameterSendSingle or PrintParameterSendStruct for each (if possible) */
+    void LayerGenerator::PrintParemetersSendAll(std::ofstream* output, std::map<std::string, XmlParser::xStruct>* structs, auto* parameterList)
     {
-        std::list<XmlParser::Parameter>::iterator it;
+        std::list<XmlParser::xParameter>::iterator it;
         *output << "if(connected){" << std::endl;
         for (it = (*parameterList).begin(); it != (*parameterList).end(); ++it) 
         {
-            PrintParameterSend(output, it->type, it->name, "");
+            PrintParameterSendSingle(output, it->type, it->name, "");
         }
         *output << "}" << std::endl;
     }
+    /* prints all parameters from a list into a line */
     void LayerGenerator::PrintParameters(std::ofstream* output, auto* parameterList, bool typesIncluded)
     {
         uint32_t i = 0;
@@ -187,6 +325,7 @@ namespace laygen
 
         }
     }
+    /* prints a single parameter from a list */
     void LayerGenerator::PrintParameter(std::ofstream* output, auto* parameterList, uint32_t index, bool typesIncluded)
     {
         uint32_t i = 0;
@@ -207,18 +346,21 @@ namespace laygen
             i++;
         }
     }
+    /* starts the definition of a given Vulkan function by printing it into the generated layer */
     void LayerGenerator::PrintCallDefinition(std::ofstream* output, std::string* functType, std::string* functName, auto* parameterList)
     {
-        *output << "\n VK_LAYER_EXPORT " << *functType << " VKAPI_CALL DetailsLayer_" << (*functName).substr(2, (*functName).size()) << "(";
+        *output << VK_CALL_TYPE << *functType << VK_CALL_NAME << (*functName).substr(2, (*functName).size()) << "(";
         uint32_t i = 0;
         PrintParameters(output, parameterList, true);
         *output << ") {" << std::endl;
     }
+    /* prints a global lock that ensures the thread safety within a single Vulkan function call */
     void LayerGenerator::PrintLock(std::ofstream* output)
     {
         *output << "if(skipLock == false) {" << std::endl;
         *output << "\tscoped_lock l(global_lock);" << std::endl;
     }
+    /* prints a call that is referencing the programmer's defined behavior of certain set of Vulkan functions that is described in layer.cpp file  */
     void LayerGenerator::PrintCustomCall(std::ofstream* output, std::string* functName, auto* parameterList, std::string functSuffix, std::string suffix)
     {
         std::string upperName = (*functName).substr(2, (*functName).size());
@@ -233,6 +375,7 @@ namespace laygen
         *output << "#endif " << std::endl;
 
     }
+    /* prints a call that references the next function/point in the dispatch table */
     void LayerGenerator::PrintExecuteCall(std::ofstream* output, std::string* functType, std::string* functName, auto* parameterList, std::string cmdListType)
     {
         if (parameterList->size() > 0)
@@ -255,105 +398,31 @@ namespace laygen
                 *output << "winsockSendToUI(&ConnectSocket, \"vkResult=\" + std::to_string(ret) + '!');" << std::endl;
         }
     }
+    /* prints a simple command that sends the input message to the VkDebuggerApp */
     void LayerGenerator::PrintSendToUI(std::ofstream* output, std::string input)
     {
         *output << "winsockSendToUI(&ConnectSocket, \"" << input << "!\");" << std::endl;
     }
-    std::string LayerGenerator::GetGuardString(std::string commandName, std::list<XmlParser::cGuard> cmdGuard)
-    {
-        for (auto& guard : cmdGuard)
-        {
-            for (auto& cmd : guard.commandList)
-            {
-                if (strcmp(commandName.c_str(), cmd.c_str()) == 0)
-                {
-                    return guard.guard;
-                }
-            }
-        }
-        return "";
-    }
-    void LayerGenerator::generateTableInstance()
-    {
-
-        /* Instance commands */
-        dispatchTableFile << INSTANCE_TABLE_HEADER;
-
-        for (auto& item : xmlp.commandListInstances)
-        {
-            /* if there is a specific command user wants to ignore, skip it */
-            if (std::find(ignoreCmdList.begin(), ignoreCmdList.end(), item.functName) != ignoreCmdList.end())
-            {
-                continue;
-            }
-
-            bool printGuard = false;
-            std::string guardContent;
-            if (cmdPlatformProtection)
-            {
-                guardContent = GetGuardString(item.functName, xmlp.cmdGuard);
-                if (strcmp(guardContent.c_str(), "") != 0)
-                    printGuard = true;
-            }
-            if (printGuard)
-                dispatchTableFile << "\n#if defined(" << GetGuardString(item.functName, xmlp.cmdGuard) << ")";
-            dispatchTableFile << "\n\tPFN_" + item.functName + " " + item.functName.substr(2, item.functName.size()) + ";";
-            if (printGuard)
-                dispatchTableFile << "\n#endif";
-        }
-
-        dispatchTableFile << INSTANCE_TABLE_FOOTER;
-
-    }
-    void LayerGenerator::generateTableDevice()
-    {
-        /* Device commands */
-
-        dispatchTableFile << DEVICE_TABLE_HEADER;
-
-        for (auto& item : xmlp.commandListDevices)
-        {
-            /* if there is a specific command user wants to ignore, skip it */
-            if (std::find(ignoreCmdList.begin(), ignoreCmdList.end(), item.functName) != ignoreCmdList.end())
-            {
-                continue;
-            }
-            bool printGuard = false;
-            std::string guardContent;
-            if (cmdPlatformProtection)
-            {
-                guardContent = GetGuardString(item.functName, xmlp.cmdGuard);
-                if (strcmp(guardContent.c_str(), "") != 0)
-                    printGuard = true;
-            }
-            if (printGuard)
-                dispatchTableFile << "\n#if defined(" << GetGuardString(item.functName, xmlp.cmdGuard) << ")";
-            dispatchTableFile << "\n\tPFN_" + item.functName + " " + item.functName.substr(2, item.functName.size()) + ";";
-            if (printGuard)
-                dispatchTableFile << "\n#endif";
-        }
-
-        dispatchTableFile << DEVICE_TABLE_FOOTER;
-
-    }
+    /* prints the includes and other vital constructs for the generated layer, this part is always generated at the start of the generated layer */
     void LayerGenerator::generateHeaders()
     {
         generatedLayerFile << "#include \"layer.hpp\"" << std::endl;
         generatedLayerFile << "#include <mutex>" << std::endl;
         generatedLayerFile << "#include <ws2tcpip.h>" << std::endl;
-        generatedLayerFile << "#include \"../layergen/vk_layer_dispatch_table.h\"" << std::endl;
-        generatedLayerFile << "#include \"../vklayer/vk_layer_table.h\"" << std::endl << std::endl;
+        generatedLayerFile << "#include \"" << LAYER_GENERATED_NAME  << ".h\"" << std::endl;
+        generatedLayerFile << "#include \"vk_layer_table.h\"" << std::endl << std::endl;
 
         generatedLayerFile << "std::map<void*, VkLayerInstanceDispatchTable> instance_dispatch;" << std::endl;
-        generatedLayerFile << "std::map<void*, VkLayerDispatchTable> device_dispatch;" << std::endl;       
+        generatedLayerFile << "std::map<void*, VkLayerDispatchTable> device_dispatch;" << std::endl;
         generatedLayerFile << "std::mutex global_lock;" << std::endl;
         generatedLayerFile << "typedef std::lock_guard<std::mutex> scoped_lock;" << std::endl;
 
         generatedLayerFile << "template<typename DispatchableType>" << std::endl;
         generatedLayerFile << "void* GetKey(DispatchableType inst)" << std::endl;
-        generatedLayerFile << "{ return *(void**)inst; }" << std::endl;
+        generatedLayerFile << "{ \n\treturn *(void**)inst; \n}" << std::endl;
     }
-    void LayerGenerator::generateCmdDeclaration(std::list<XmlParser::Command> inputCmdList, std::string cmdListType)
+    /* print a single function address reference */
+    void LayerGenerator::generateCmdDeclaration(std::list<XmlParser::xCommand> inputCmdList, std::string cmdListType)
     {
         /* list of instance inputCmdList cmd names */
         for (auto& item : inputCmdList)
@@ -396,7 +465,8 @@ namespace laygen
                 generatedLayerFile << "#endif" << std::endl;
         }
     }
-    void LayerGenerator::generateCmdProcCalls(std::list<XmlParser::Command> inputCmdList)
+    /* prints the initialization functions that refer to the functions generated by this layer */
+    void LayerGenerator::generateCmdProcCalls(std::list<XmlParser::xCommand> inputCmdList)
     {
         /* list of instance inputCmdList cmd names */
         for (auto& item : inputCmdList)
@@ -423,9 +493,13 @@ namespace laygen
                 generatedLayerFile << "#endif" << std::endl;
         }
     }
+    /*
+    * prints the Vulkan vkGetProcInstanceAddr and vkGetDevuceInstanceAddr for layer initialization
+    * and also everything to close generated file up, this is always generated at the end of the generated layer source file
+    */
     void LayerGenerator::generateGenLayerFooter(std::string cmdListType)
     {
-        generatedLayerFile << "VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DetailsLayer_Get";
+        generatedLayerFile << VK_DEBUGGER_FOOTER;
         if (strcmp(cmdListType.c_str(), "instance") == 0)
         {
             generatedLayerFile << "InstanceProcAddr(VkInstance instance, const char* pName) {" << std::endl;
@@ -454,7 +528,8 @@ namespace laygen
         /* enclose skip lock definition*/
         generatedLayerFile << "}";
     }
-    void LayerGenerator::generateForCmdList(std::list<XmlParser::Command> inputCmdList, std::string cmdListType)
+    /* prints the Vulkan functions that are caught by this layer during the runtime */
+    void LayerGenerator::generateForCmdList(std::list<XmlParser::xCommand> inputCmdList, std::string cmdListType)
     {
         for (auto& item : inputCmdList)
         {
@@ -529,7 +604,7 @@ namespace laygen
             * print parameters that can be sent
             */
 
-            PrintParemeterSends(&generatedLayerFile, &(xmlp.structList), &(item.parameterList));
+            PrintParemetersSendAll(&generatedLayerFile, &(xmlp.structList), &(item.parameterList));
 
             /*
             * additional functionality (if) defined in layer.cpp
@@ -575,6 +650,7 @@ namespace laygen
                 generatedLayerFile << "\n#endif";
         }
     }
+    /* generate debugger layer */
     void LayerGenerator::generateGeneratedLayer()
     {
         /* generate Instance commands */
@@ -583,6 +659,7 @@ namespace laygen
         /* generate Device commands */
         generateForCmdList(xmlp.commandListDevices, "device");
     }
+    /* prints all the instance/device function addresses included in this layer */
     void LayerGenerator::generateCmdDeclarations(std::string cmdListType)
     {
         generatedLayerFile << "void Create";
@@ -604,94 +681,49 @@ namespace laygen
         }
         generatedLayerFile << " " << std::endl;
     }
-    void LayerGenerator::run()
+
+
+    /* HELPER FUNCTIONS */
+    /* fetch the platform's macro definition that enables the use of the certain set of functions */
+    std::string LayerGenerator::GetGuardString(std::string commandName, std::list<XmlParser::xGuard> cmdGuard)
     {
-        /* xml parse */
+        /* find the specific function's platform, get the macro name (if it exists) */
+        for (auto& guard : cmdGuard)
         {
-            /* new class that handles the vk.xml document */
-            if (xmlp.openXmlDoc(XML_PATH) == false)
+            for (auto& cmd : guard.commandList)
             {
-                throw std::runtime_error("cannot open the xml document");
+                if (strcmp(commandName.c_str(), cmd.c_str()) == 0)
+                {
+                    return guard.guard;
+                }
             }
-            /* if there are commands defined in the xml doc, get the parent node of the commands */
-            cmdDefinitions = xmlp.containsCommands();
-            /* if there are platform protections defined in the xml doc, get their parent node */
-            cmdPlatformProtection = xmlp.containsPlatformProtection();
-
-            if (cmdDefinitions == false)
-            {
-                throw std::runtime_error("No vulkan commands definitions were found inside the vk.xml file");
-            }
-
-            if (cmdPlatformProtection == true)
-            {
-                xmlp.getProtectionGuards();
-            }
-
-            xmlp.assignCmdsToTables();
-            xmlp.assignAliasesToTables();
-            xmlp.assignStructsToTables();
-            xmlp.assignEnumsToTables();
         }
-
-        /* vk_layer_dispatch_table.h generation */
+        return "";
+    }
+    /* identifies whether the input type is Vulkan enum typed */
+    bool LayerGenerator::IsEnum(std::string type)
+    {
+        auto mapped = xmlp.enumList;
+        auto item = mapped.find(type);
+        if (item == mapped.end())
         {
-            dispatchTableFile.open(VK_TABLE_PATH);
-            if (!dispatchTableFile)
-            {
-                throw std::runtime_error("cannot open the dispatch table file");
-            }
-
-            /* this is how instance table looks like
-            * 
-            * typedef struct VkLayerInstanceDispatchTable_ {
-            * PFN_vkCreateInstance CreateInstance;
-            * PFN_vkDestroyInstance DestroyInstance;
-            * ...
-            * } VkLayerInstanceDispatchTable;
-            */
-            generateTableInstance();
-
-            /* this is how device table looks like:
-            * 
-            * typedef struct VkLayerDispatchTable_ {
-            * PFN_vkGetDeviceProcAddr GetDeviceProcAddr;
-            * PFN_vkDestroyDevice DestroyDevice;
-            * ...
-            * } VkLayerDispatchTable;
-            */
-            generateTableDevice();
-
-            dispatchTableFile.close();
+            return false;
         }
-
-        /* vk_layer_generated.cpp generation */
+        return true;
+    }
+    /* identifies whether the input type is Vulkan struct typed */
+    bool LayerGenerator::IsStruct(std::string type)
+    {
+        auto* mapped = &xmlp.structList;
+        auto item = mapped->find(type.substr(0, type.size() - 1));
+        if (item == mapped->end())
         {
-            staticLayerFile.open(LAYER_STATIC_PATH);
-            generatedLayerFile.open(LAYER_GENERATED_PATH);
-            if (!staticLayerFile || !generatedLayerFile)
-            {
-                throw std::runtime_error("cannot open the layer files");
-            }
-            generateHeaders();
-            generateCmdDeclarations("device");
-            generateCmdDeclarations("instance");
-            /* copy static part of the layer to generated layer file*/
-            generatedLayerFile << staticLayerFile.rdbuf();
-            staticLayerFile.close();
-
-            /* generate the generated part */
-            generateGeneratedLayer();
-
-            /* generate device proc addr call */
-            generatedLayerFile << "#define GETPROCADDR(func) if(!strcmp(pName, \"vk\" #func)) return (PFN_vkVoidFunction)&DetailsLayer_##func;" << std::endl;
-
-            generateGenLayerFooter("device");
-            generateGenLayerFooter("instance");
-
-            /* generate instancce proc addr call */
-
-            generatedLayerFile.close();
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
+
 }
