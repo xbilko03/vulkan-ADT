@@ -1,5 +1,4 @@
 # VkDebugger
-## SYNOPSIS
 A Debugging Tool for Vulkan API
 
 ## DESCRIPTION
