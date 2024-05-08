@@ -1,42 +1,24 @@
 ﻿/*
 * Name		    : appUI.cpp
 * Project	    : A Debugging Tool for Vulkan API (VkDebugger)
-* Description   : Header file of the Vulkan window and image rendering VkDebuggerApp
+* Description   : Source file of the UI application
 *
-* This template is available online by: Omar Cornut (ocornut)
-* https://github.com/ocornut/imgui/tree/master/examples/example_glfw_vulkan
-* Minor adjustments: Jozef Bilko (xbilko03), supervised by Ing. Ján Peciva Ph.D.
+* Author: Jozef Bilko (xbilko03), supervised by Ing. Ján Peciva Ph.D.
 */
 #include "appUI.hpp"
 #include <iostream>
 #include <map>
 
 namespace details {
-    #define MAX_TABLE_SIZE 10
-
-    std::map < std::string, bool> apiDetails;
-    std::map < unsigned long long, bool> texDetails;
-    std::map < unsigned long long, bool> texLoaded;
-    float zoom = 1.0f;
-
-    bool apiCalls = false;
-    bool buffers = false;
-    bool demo = false;
-    bool texture = false;
-    bool appInfo = false;
-    bool images = false;
-    bool memories = false;
-    bool warnings = false;
-    bool breaks = false;
-
+    /* render a window that shows history of warnings */
     void appUI::ShowWarnings(details::appWindow* window, details::events* dataObject)
     {
+        /* if the window has been opened for the first time, adjust it for a better use */
         ImGui::SetNextWindowSize(ImVec2(512, 768), ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowPos(ImVec2(192, 0), ImGuiCond_FirstUseEver);
         ImGui::Begin("Warnings", &warnings, ImGuiWindowFlags_NoCollapse);
 
         auto warningsList = (*dataObject).getWarningsList();
-
         for (auto item : *warningsList)
         {
             ImGui::Text(item.c_str());
@@ -44,14 +26,15 @@ namespace details {
 
         ImGui::End();
     }
+    /* render a window that shows history of breakpoint occurances */
     void appUI::ShowBreaks(details::appWindow* window, details::events* dataObject)
     {
+        /* if the window has been opened for the first time, adjust it for a better use */
         ImGui::SetNextWindowSize(ImVec2(512, 768), ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowPos(ImVec2(192, 0), ImGuiCond_FirstUseEver);
         ImGui::Begin("Breakpoints", &breaks, ImGuiWindowFlags_NoCollapse);
 
         auto breaksList = (*dataObject).getBreaksList();
-
         for (auto item : *breaksList)
         {
             ImGui::Text(item.c_str());
@@ -59,25 +42,28 @@ namespace details {
 
         ImGui::End();
     }
+    /* render a window that shows the state of the VkMemory */
     void appUI::ShowMemories(details::appWindow* window, details::events* dataObject)
     {
+        /* if the window has been opened for the first time, adjust it for a better use */
         ImGui::SetNextWindowSize(ImVec2(512, 768), ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowPos(ImVec2(192, 0), ImGuiCond_FirstUseEver);
-        ImGui::Begin("Memory", &memories, ImGuiWindowFlags_NoCollapse);
+        ImGui::Begin("VkMemory", &memories, ImGuiWindowFlags_NoCollapse);
         
         unsigned long long memoryCount = (*dataObject).getMemoriesCount();
-
+        /* make each memory expandable for detailed view */
         for (unsigned long long i = 0; i < memoryCount;i++)
         {
             std::string hdrName = "vkMemory #" + std::to_string(i);
             std::string output = hdrName + "[" + (*dataObject).getMemoryState(i) + "]";
             if(ImGui::CollapsingHeader(output.c_str()))
             {
+                /* make each buffer expandable for detailed view */
                 output = (*dataObject).getMemoryPointer(i);
-                ImGui::SeparatorText("VkImage Handle Address");
-                ImGui::Text(output.c_str());
-                output = std::to_string((*dataObject).getBufferDataSize(i));
-                ImGui::Text(output.c_str());
+                ImGui::SeparatorText("VkMemory details");
+                ImGui::Text(("VkMemory handle = " + output).c_str());
+                output = std::to_string((*dataObject).getMemoryDataSize(i));
+                ImGui::Text(("Size = " + output).c_str());
 
                 if (dataObject->getCallsSettings() && output != "new")
                 {
@@ -88,18 +74,20 @@ namespace details {
                     ImGui::Text(output.c_str());
                 }
 
+                /* show data if there are any */
                 ImGui::SeparatorText("Data");
                 ImGui::Text((*dataObject).getMemoryData(i).c_str());
             }
         }
-
         ImGui::End();
     }
+    /* render a window that shows the state of the VkImages */
     void appUI::ShowImages(details::appWindow* window, details::events* dataObject)
     {
+        /* if the window has been opened for the first time, adjust it for a better use */
         ImGui::SetNextWindowSize(ImVec2(512, 768), ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowPos(ImVec2(192, 0), ImGuiCond_FirstUseEver);
-        ImGui::Begin("Images", &images, ImGuiWindowFlags_NoCollapse);
+        ImGui::Begin("VkImages", &images, ImGuiWindowFlags_NoCollapse);
 
         unsigned long long imageCount = (*dataObject).getImagesCount();
 
@@ -110,11 +98,10 @@ namespace details {
             std::string output = hdrName + "[" + (*dataObject).getImageState(i) + "]";
             if (ImGui::CollapsingHeader(output.c_str()))
             {
-                ImGui::SeparatorText("VkImage Handle Address");
-                output = (*dataObject).getImagePointer(i);
-                ImGui::Text(output.c_str());
+                ImGui::SeparatorText("VkImage details");
+                ImGui::Text(("VkImage handle = " + output).c_str());
                 output = std::to_string((*dataObject).getImageDataSize(i));
-                ImGui::Text(output.c_str());
+                ImGui::Text(("Size = " + output).c_str());
 
                 if (dataObject->getCallsSettings() && output != "")
                 {
@@ -125,14 +112,16 @@ namespace details {
                     ImGui::Text(output.c_str());
                 }
 
+                /* show data if there are any */
                 if ((*dataObject).getImageData(i) != "")
                 {
                     ImGui::SeparatorText("Data");
                     ImGui::Text((*dataObject).getImageData(i).c_str());
                 }
 
+                /* give an option to render image */
                 if ((*dataObject).getImageData(i) != "")
-                {
+                {   
                     ImGui::SeparatorText("Image");
                     std::string buttonName = "Load Image Data #" + std::to_string(i);
                     if (ImGui::Button(buttonName.c_str()))
@@ -140,9 +129,9 @@ namespace details {
                         (*dataObject).loadTexture(i);
                         texLoaded[i] = true;
                     }
-                    ImGui::Text("size = %d x %d", (*window).getImageWidth(i), (*window).getImageHeight(i));
+                    ImGui::Text("Dimensions = %d x %d", (*window).getImageWidth(i), (*window).getImageHeight(i));
 
-                    buttonName = "Native size and zoom #" + std::to_string(i);
+                    buttonName = "Show in native size #" + std::to_string(i);
                     if (ImGui::Button(buttonName.c_str()))
                         texDetails[i] = true;
 
@@ -150,7 +139,6 @@ namespace details {
                     ImVec4 tint_col = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
                     ImVec4 border_col = ImGui::GetStyleColorVec4(ImGuiCol_Border);
 
-                    /* FIXED IMAGIZE SIZE = 256 x 256+- */
                     ImTextureID my_tex_id = (ImTextureID)(*window).getImageDS(i);
                     float width = (*window).getImageWidth(i);
                     float height = (*window).getImageHeight(i);
@@ -158,13 +146,13 @@ namespace details {
                     {
                         if (width >= height)
                         {
-                            double scale = 512 / (double)width;
+                            double scale = IMAGE_REVIEW_SIZE / (double)width;
                             width *= scale;
                             height *= scale;
                         }
                         else
                         {
-                            double scale = 512 / (double)height;
+                            double scale = IMAGE_REVIEW_SIZE / (double)height;
                             width *= scale;
                             height *= scale;
                         }
@@ -173,10 +161,11 @@ namespace details {
 
                     if (texDetails[i])
                     {
+                        /* show native size and give the option to zoom in */
                         std::string detailsStr = "texDetails #" + std::to_string(i);
                         ImGui::Begin(detailsStr.c_str(), &texDetails[i], ImGuiWindowFlags_HorizontalScrollbar);
 
-                        ImGui::DragFloat("zoom", &zoom, 0.10f, 1.0f, 256.0f);
+                        ImGui::DragFloat("zoom", &zoom, IMAGE_ZOOM_SPEED, 1.0f, MAX_IMAGE_ZOOM);
                         float width = (*window).getImageWidth(i);
                         float height = (*window).getImageHeight(i);
                         width *= zoom;
@@ -190,23 +179,27 @@ namespace details {
         }
         ImGui::End();
     }
+    /* render a window that shows the state of the VkBuffers */
     void appUI::ShowBuffers(details::appWindow* window, details::events* dataObject)
     {
+        /* if the window has been opened for the first time, adjust it for a better use */
         ImGui::SetNextWindowSize(ImVec2(512, 768), ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowPos(ImVec2(192, 0), ImGuiCond_FirstUseEver);
-        ImGui::Begin("Vk_Buffers", &buffers, ImGuiWindowFlags_NoCollapse);
+        ImGui::Begin("VkBuffers", &buffers, ImGuiWindowFlags_NoCollapse);
 
         unsigned long long bufferCount = (*dataObject).getBufferCount();
-
+        /* make each buffer expandable for detailed view */
         for (unsigned long long i = 0; i < bufferCount;i++)
         {
             std::string hdrName = "vkBuffer #" + std::to_string(i);
             std::string output = hdrName + "[" + (*dataObject).getBufferState(i) + "]";
             if (ImGui::CollapsingHeader(output.c_str()))
             {
-                ImGui::SeparatorText("VkBuffer Handle Address");
-                output = (*dataObject).getBufferPointer(i);
-                ImGui::Text(output.c_str());
+                /* further details */
+                ImGui::SeparatorText("VkBuffer details");
+                ImGui::Text(("VkBuffer handle = " + output).c_str());
+                output = std::to_string((*dataObject).getBufferDataSize(i));
+                ImGui::Text(("Size = " + output).c_str());
 
                 if (dataObject->getCallsSettings() && output != "new")
                 {
@@ -217,6 +210,7 @@ namespace details {
                     ImGui::Text(output.c_str());
                 }
 
+                /* show data if there are any */
                 ImGui::SeparatorText("Data");
                 ImGui::Text((*dataObject).getBufferData(i).c_str());
             }
@@ -224,8 +218,10 @@ namespace details {
 
         ImGui::End();
     }
+    /* render a window that shows details about Vulkan on the current device */
     void appUI::ShowAppInfo(details::appWindow* window, details::events* dataObject)
     {
+        /* if the window has been opened for the first time, adjust it for a better use */
         ImGui::SetNextWindowSize(ImVec2(512, 768), ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowPos(ImVec2(192, 0), ImGuiCond_FirstUseEver);
         ImGui::Begin("Vulkan Info", &appInfo, ImGuiWindowFlags_NoCollapse);
@@ -245,29 +241,37 @@ namespace details {
         }
         ImGui::End();
     }
+    /* render a window that shows the collected apiCalls */
     void appUI::ShowApiCalls(details::appWindow *window, details::events *dataObject)
     {
+        /* if the window has been opened for the first time, adjust it for a better use */
         ImGui::SetNextWindowSize(ImVec2(512, 768), ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowPos(ImVec2(192, 0), ImGuiCond_FirstUseEver);
+        
+        /* table style and feature flags */
         static ImGuiTableFlags flags =
-            ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable | ImGuiTableFlags_SortMulti
-            | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_NoBordersInBody
-            | ImGuiTableFlags_ScrollY || ImGuiTableFlags_SizingStretchProp;
+            ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable | ImGuiTableFlags_Sortable |
+            ImGuiTableFlags_SortMulti | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | 
+            ImGuiTableFlags_NoBordersInBody | ImGuiTableFlags_ScrollY || ImGuiTableFlags_SizingStretchProp;
 
-        const float TEXT_BASE_HEIGHT = ImGui::GetTextLineHeightWithSpacing();
+        /* table will be sized based on text height */
+        const float textHeight = ImGui::GetTextLineHeightWithSpacing();
 
+        /* starts a new window */
         ImGui::Begin("Vk_API_Calls", &apiCalls, ImGuiWindowFlags_NoCollapse);
 
-        unsigned long long frameRangesCount;
+        /* to prevent clutter and performance issues, api calls are separated into frames which are separated into groups of frames */
+        unsigned long long frameGroupsCount;
         unsigned long long framesCount = (*dataObject).getFrameCount();
-        unsigned long long groupFrameSingleCount = 1000;
-        frameRangesCount = framesCount / groupFrameSingleCount + 1;
+        unsigned long long groupFrameSingleCount = MAX_FRAMES_IN_GROUP;
+        frameGroupsCount = framesCount / groupFrameSingleCount + 1;
 
-        for (unsigned long long i = 0; i < frameRangesCount; i++)
+        /* for each frame group, */
+        for (unsigned long long i = 0; i < frameGroupsCount; i++)
         {
             std::string headerName = "frames " + std::to_string(i * groupFrameSingleCount) + "-" + std::to_string((i + 1) * groupFrameSingleCount) + '\0';
 
-
+            /* allow each frame group to be expanded for inspection */
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(7.0f, 7.0f));
             if (ImGui::CollapsingHeader(headerName.c_str()))
             {
@@ -280,11 +284,11 @@ namespace details {
                 {
                     framesPerThisRange = framesCount % groupFrameSingleCount;
                 }
+                /* make each frame expandable in this group */
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(1.0f, 1.0f));
                 ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.2f));
                 for (unsigned long long index = 0; index < framesPerThisRange; index++)
                 {
-
                     if (i + index == 0)
                     {
                         headerName = "before frames" + '\0';
@@ -293,14 +297,17 @@ namespace details {
                     {
                         headerName = "frame #" + std::to_string(i * groupFrameSingleCount + index) + '\0';
                     }
+                    /* expand this particular frame */
                     if (ImGui::CollapsingHeader(headerName.c_str()))
                     {
+                        /* frame details */
                         auto frame = (*dataObject).getFrameCalls(i * groupFrameSingleCount + index);
 
                         int tableSize = frame.size();
                         if (MAX_TABLE_SIZE < tableSize)
                             tableSize = MAX_TABLE_SIZE;
-                        if (ImGui::BeginTable("table_sorting", 4, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * tableSize), 0.0f))
+                        /* details about API calls in this frame */
+                        if (ImGui::BeginTable("callTable", 4, flags, ImVec2(0.0f, textHeight * tableSize), 0.0f))
                         {
                             ImGui::TableSetupColumn("Call_ID", ImGuiTableColumnFlags_DefaultSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, 0);
                             ImGui::TableSetupColumn("Vk_Call", ImGuiTableColumnFlags_WidthFixed, 0.0f, 1);
@@ -308,37 +315,32 @@ namespace details {
                             ImGui::TableSetupColumn("Detail", ImGuiTableColumnFlags_NoSort | ImGuiTableColumnFlags_WidthFixed, 0.0f, 2);
                             ImGui::TableHeadersRow();
 
-                            /*
-                            // Sort our data if sort specs have been changed!
-                            if (ImGuiTableSortSpecs* sort_specs = ImGui::TableGetSortSpecs())
-                                if (sort_specs->SpecsDirty)
-                                {
-                                    item::SortWithSortSpecs(sort_specs, frame.Data, frame.Size);
-                                    sort_specs->SpecsDirty = false;
-                                }
-                            */
-
                             int tableItemID = 0;
+                            /* put for each API call from this frame into this table */
                             for (auto item : frame)
                             {
-                                // Display a data item
+                                /* table item ID */
                                 ImGui::PushID(tableItemID++);
                                 ImGui::TableNextRow();
                                 ImGui::TableNextColumn();
+                                /* call ID */
                                 ImGui::Text("%llu", item->getID());
                                 ImGui::TableNextColumn();
+                                /* call name */
                                 ImGui::TextUnformatted(item->getName().c_str());
                                 ImGui::TableNextColumn();
+                                /* call ret val */
                                 if (item->getRetVal())
                                 {
                                     ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "VK_SUCCESS");
                                 }
                                 else
                                 {
-                                    ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "NOT SUCCESS");
+                                    std::string out = "NOT SUCCESS [VK_RESULT=" + std::to_string(item->getRetVal()) + "]";
+                                    ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), out.c_str() );
                                 }
                                 ImGui::TableNextColumn();
-
+                                /* detailed call view */
                                 std::string IdStr = ("vk_Call [ID=" + std::to_string(item->getID()) + "]");
                                 if (ImGui::Button("",ImVec2(ImGui::GetContentRegionAvail().x,20)))
                                 {
@@ -346,9 +348,11 @@ namespace details {
                                 }
                                 if(apiDetails[IdStr])
                                 {
+                                    /* detailed call view window */
                                     ImGui::Begin(IdStr.c_str(), &apiDetails[IdStr], 0);
                                     ImGui::Text(item->getName().c_str());
-                                    if (ImGui::BeginTable((IdStr + "table").c_str(), 2, flags, ImVec2(0.0f, TEXT_BASE_HEIGHT * tableSize), 0.0f))
+                                    /* for each parameter, put a type and its value into a table */
+                                    if (ImGui::BeginTable((IdStr + "table").c_str(), 2, flags, ImVec2(0.0f, textHeight * tableSize), 0.0f))
                                     {
                                         ImGui::TableSetupColumn("Parameter_Name", ImGuiTableColumnFlags_DefaultSort, 0.0f, 0);
                                         ImGui::TableSetupColumn("Value", NULL, 0.0f, 1);
@@ -385,12 +389,15 @@ namespace details {
 
     void appUI::run()
     {
+        /* window object to handle rendering */
         details::appWindow window;
+        /* event manager to handle data */
         details::events eventManager;
 
+        /* connect to VkDebuggerLayer */
         eventManager.connectToLayer(&window);
         
-        /* init App */
+        /* init VkDebuggerApp */
         window.dataInit();
         window.glfwWindowInit();
         window.setupVulkan();
@@ -398,6 +405,7 @@ namespace details {
         window.framebufferInit();
         window.imGuiInit();
 
+        /* main menu window flags */
         ImGuiWindowFlags mainWindowFlags = 0;
         mainWindowFlags |= ImGuiWindowFlags_NoMove;
         mainWindowFlags |= ImGuiWindowFlags_NoResize;
@@ -405,7 +413,7 @@ namespace details {
         mainWindowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
         mainWindowFlags |= ImGuiWindowFlags_NoTitleBar;
 
-        /* menu and general colors */
+        /* main menu and general colors */
         ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.4f));
         ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.6f));
         ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.8f));
@@ -413,18 +421,16 @@ namespace details {
         ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.5f));
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.6f));
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.7f));
-
-        /* feature windows colors */
         ImGui::PushStyleColor(ImGuiCol_TitleBg, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.4f));
         ImGui::PushStyleColor(ImGuiCol_TitleBgActive, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.5f));
         ImGui::PushStyleColor(ImGuiCol_Header, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.5f));
         ImGui::PushStyleColor(ImGuiCol_HeaderHovered, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.6f));
         ImGui::PushStyleColor(ImGuiCol_HeaderActive, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.7f));
 
-        /* tables */
+        /* table colors */
         ImGui::PushStyleColor(ImGuiCol_TableHeaderBg, (ImVec4)ImColor::HSV(0.5f, 1.0f, 0.4f));
 
-
+        /* main menu window */
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(20.0f, 20.0f));
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 8.0f));
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f));
@@ -447,6 +453,7 @@ namespace details {
 
                 ImGui::Begin("Menu", NULL, mainWindowFlags);
 
+                /* enable the button for a feature in case it is activate */
                 if(eventManager.getCallsSettings())
                     ImGui::Checkbox("Api_Calls", &apiCalls);
                 if (eventManager.getBuffersSettings())
@@ -461,7 +468,6 @@ namespace details {
                     ImGui::Checkbox("Breakpoints", &breaks);
 
                 ImGui::Checkbox("App_Info", &appInfo);
-                //ImGui::Checkbox("Demo_Window", &demo);
 
                 if (ImGui::Button("Exit", ImVec2(128,64)))
                 {
@@ -471,12 +477,13 @@ namespace details {
                 ImGui::End();
             }
 
-
+            /* global styles for all VkDebuggerApp windows */
             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8.0f, 8.0f));
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 4.0f));
             ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(8.0f, 8.0f));
             ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(8.0f, 0.0f));
 
+            /* show a window containing said feature */
             if (apiCalls == true)
                 ShowApiCalls(&window, &eventManager);
             if(buffers == true)
@@ -494,14 +501,14 @@ namespace details {
             if (memories == true)
                 ShowMemories(&window, &eventManager);
 
-
             ImGui::PopStyleVar(4);
 
             window.renderNewFrame();
         }
 
         ImGui::PopStyleVar(4);
-        ImGui::PopStyleColor(7);
+        ImGui::PopStyleColor(12);
+        ImGui::PopStyleColor(1);
 
         /* clean */
         window.cleanupImGui();

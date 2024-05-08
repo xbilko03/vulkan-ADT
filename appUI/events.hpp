@@ -35,6 +35,7 @@ namespace details {
 		std::string getMemoryPointer(unsigned long long ID) { return memMan->getPointer(ID); }
 		std::string getMemoryState(unsigned long long ID) { return memMan->getState(ID); }
 		std::string getMemoryData(unsigned long long ID) { return memMan->getDataReadable(ID); }
+		unsigned long long getMemoryDataSize(unsigned long long ID) { return memMan->getDataSize(ID); }
 		/* about VkBuffer */
 		unsigned long long getBufferCount() { return bufMan->getBufferCount(); }
 		std::string getBufferPointer(unsigned long long ID) { return bufMan->getPointer(ID); }

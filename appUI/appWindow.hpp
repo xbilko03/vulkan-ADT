@@ -122,6 +122,7 @@ namespace details {
         /* app settings */
         #define WINDOWNAME "VkDebugger"
         #define MAX_TEXTURES_COUNT 800
+        #define MAX_FRAMES_IN_GROUP 1000
 
         /* settings to help with the VkDebuggerApp rendering */
         VkAllocationCallbacks* pAllocator;
