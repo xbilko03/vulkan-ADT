@@ -3,9 +3,7 @@ A Debugging Tool for Vulkan API
 
 ## DESCRIPTION
 VkDebugger is an application dedicated to help with debugging 2D/3D Vulkan graphics applications. It is implemented in a form of a separated Vulkan layer
-
 and an application (VkDebuggerApp) with UI that makes the debugging easier. This tool collects data from a program and crafts a current state representation
-
 of it, this representation is then accessible to user via the already mentioned UI.
 
 ## Requirements
