@@ -3,7 +3,7 @@
 * Project	    : A Debugging Tool for Vulkan API (VkDebugger)
 * Description   : Entry point for the layer generator
 *
-* Author : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
+* Author        : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
 */
 
 #include "layer_generator.hpp"

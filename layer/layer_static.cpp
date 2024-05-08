@@ -1,24 +1,28 @@
-
-/* actual data we're recording in this layer */
-
-/*struct CommandStats
-{
-    uint32_t drawCount = 0, instanceCount = 0, vertCount = 0;
-};
-std::map<VkCommandBuffer, CommandStats> commandbuffer_stats;
+﻿/*
+* Name		    : layer_static.cpp
+* Project	    : A Debugging Tool for Vulkan API (VkDebugger)
+* Description   : Source file of the generated layer that is manually written in case a code generation would be too uncomfortable
+*
+* Based on the template available online by : Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann) sample_layer 
+* https ://github.com/baldurk/sample_layer/blob/master 
+* Changes made by : Jozef Bilko (xbilko03), supervised by Ing. Ján Peciva Ph.D.
 */
+
 bool connected = false;
 bool skipLock = false;
-#include <memory>
 #include <fstream>
 
+/* author of this function: Jozef Bilko (xbilko03) */
+/* converts bool to text, useful when sending the bool parameter to VkDebuggerApp */
 std::string bool_as_text(VkBool32 b)
 {
     std::stringstream converter;
-    converter << std::boolalpha << b;   // flag boolalpha calls converter.setf(std::ios_base::boolalpha)
+    converter << std::boolalpha << b;
     return converter.str();
 }
 
+/* author of this function: Jozef Bilko (xbilko03) */
+/* returns this application's name, useful when recognizing what application is this layer intercepting */
 std::string GetWindowName()
 {
     /* get the name of the program the layer is on [windows only] */
@@ -29,55 +33,50 @@ std::string GetWindowName()
     return filename;
 }
 
-/* Layer init and shutdown */
+/*
+* Authors of this function: Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann), expanded upon by: Jozef Bilko (xbilko03)
+* 
+* initializes the layer, it's instance functions, starts the VkDebuggerApp.exe & constructs IDT
+*/
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
 {
-    /* create new process */
-    STARTUPINFO info = { sizeof(info) };
-    PROCESS_INFORMATION processInfo;
-
-    /* prevent opening vkDetails on appUI startup */
-    if (GetWindowName() != "vkDetails.exe")
+    /* prevent opening VkDebugger on appUI startup */
+    if (GetWindowName() != "VkDebugger.exe")
     {
-        /* open new vkDetails window */
-        CreateProcess("C:\\Users\\jozef\\Desktop\\vk details\\out\\build\\x64-debug\\vkDetails.exe", NULL, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo);
-        CloseHandle(processInfo.hProcess);
-        CloseHandle(processInfo.hThread);
+        /* fetch enviroment variables */
+        try
+        {
+            char* appdata = getenv("APPDATA");
+            std::string configPath = appdata;
+
+            /* WINDOWS vk_layer_settings.txt path, these are the variables that influence the layer's functionality */
+            configPath += "\\..\\Local\\LunarG\\vkconfig\\override\\vk_layer_settings.txt";
+
+            std::ifstream configFile(configPath);
+            if (configFile.is_open())
+            {
+                std::stringstream buffer;
+                buffer << configFile.rdbuf();
+                layer_AppStarter(buffer.str());
+            }
+            else
+            {
+                /* could not find settings, vkDetails layer will use default settings */
+            }
+
+        }
+        catch (std::exception e)
+        {
+            /* do nothing, vkDetails layer will use default settings */
+        }
+
 
         /* connect layer to vkDetails */
         if (layerWinsockInit(&ConnectSocket) == 0)
         {
             connected = true;
         }
-        if (connected)
-        {
-            /* fetch enviroment variables */
-            try
-            {
-                char* appdata = getenv("APPDATA");
-                std::string configPath = appdata;
-
-                /* WINDOWS vk_layer_settings.txt path */
-                configPath += "\\..\\Local\\LunarG\\vkconfig\\override\\vk_layer_settings.txt";
-
-                std::ifstream configFile(configPath);
-                if (configFile.is_open())
-                {
-                    std::stringstream buffer;
-                    buffer << configFile.rdbuf();
-                    SetMemoryVariables(buffer.str());
-                }
-                else
-                {
-                    //could not find settings, vkDetails layer will use default settings
-                }
-
-            }
-            catch (std::exception e)
-            {
-                //do nothing, vkDetails layer will use default settings
-            }
-        }
+        layer_SetEnvVariables();
     }
 
     VkLayerInstanceCreateInfo* layerCreateInfo = (VkLayerInstanceCreateInfo*)pCreateInfo->pNext;
@@ -114,7 +113,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanc
     }
     #endif
 
-    /* send to loader */
+    /* send to forward to the loader terminator code */
     VkResult ret = createFunc(pCreateInfo, pAllocator, pInstance);
 
     /* additional call if defined by user [on the way back out of loader] */
@@ -144,12 +143,18 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanc
         winsockSendToUI(&ConnectSocket, "end_vkCreateInstance!");
 
         if (callEveryBreak || callAtBreak)
-            newCall();
+            layer_newCall();
     }
 
     return ret;
 }
 
+
+/*
+* Authors of this function: Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann), expanded upon by: Jozef Bilko (xbilko03)
+*
+* destroys the layer & instance functions interception
+*/
 VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyInstance(VkInstance instance, const VkAllocationCallbacks* pAllocator)
 {
     scoped_lock l(global_lock);
@@ -181,13 +186,19 @@ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyInstance(VkInstance instanc
         winsockSendToUI(&ConnectSocket, "end_vkDestroyInstance!");
 
         if (callEveryBreak || callAtBreak)
-            newCall();
+            layer_newCall();
     }
 
     /* Disconnect from the VkDetails */
     layerWinsockExit(&ConnectSocket);
 }
 
+
+/*
+* Authors of this function: Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann), expanded upon by: Jozef Bilko (xbilko03)
+*
+* initializes the layer's device functions & DDT construction
+*/
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(VkPhysicalDevice physicalDevice, const VkDeviceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDevice* pDevice)
 {
     VkLayerDeviceCreateInfo* layerCreateInfo = (VkLayerDeviceCreateInfo*)pCreateInfo->pNext;
@@ -224,7 +235,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(VkPhysicalDevice 
     }
     #endif
         
-    /* send to loader */
+    /* send to forward to the loader terminator code */
     VkResult ret = createFunc(physicalDevice, pCreateInfo, pAllocator, pDevice);
 
     /* additional call if defined by user [on the way back out of loader] */
@@ -257,7 +268,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(VkPhysicalDevice 
         winsockSendToUI(&ConnectSocket, "end_vkCreateDevice!");
 
         if (callEveryBreak || callAtBreak)
-            newCall();
+            layer_newCall();
     }
 
     /* fetch our own dispatch table for the functions we need, into the next layer */
@@ -266,6 +277,11 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateDevice(VkPhysicalDevice 
     return ret;
 }
 
+/*
+* Authors of this function: Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann), expanded upon by: Jozef Bilko (xbilko03)
+*
+* destroys the layer's device funtions interception
+*/
 VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDevice(VkDevice device, const VkAllocationCallbacks* pAllocator)
 {
     scoped_lock l(global_lock);
@@ -296,11 +312,12 @@ VK_LAYER_EXPORT void VKAPI_CALL DebuggerLayer_DestroyDevice(VkDevice device, con
         winsockSendToUI(&ConnectSocket, "end_vkDestroyDevice!");
 
         if (callEveryBreak || callAtBreak)
-            newCall();
+            layer_newCall();
     }
 }
 
-/* Enumeration function */
+
+/* Authors of this function: Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann), expanded upon by: Jozef Bilko (xbilko03) */
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceLayerProperties(uint32_t* pPropertyCount, VkLayerProperties* pProperties)
 {
     /* send call before loader */
@@ -318,7 +335,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceLayerProperti
 
     if (pProperties)
     {
-        strcpy_s(pProperties->layerName, "vkDetailsLayer");
+        strcpy_s(pProperties->layerName, "vkDebuggerLayer");
         strcpy_s(pProperties->description, "https://github.com/xbilko03/ADT_VAPI");
         pProperties->implementationVersion = 1;
         pProperties->specVersion = VK_API_VERSION_1_0;
@@ -328,12 +345,13 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceLayerProperti
     if (connected) {
         winsockSendToUI(&ConnectSocket, "end_vkEnumerateInstanceLayerProperties!");
         if (callEveryBreak || callAtBreak)
-            newCall();
+            layer_newCall();
     }
 
     return VK_SUCCESS;
 }
 
+/* Authors of this function: Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann), expanded upon by: Jozef Bilko (xbilko03) */
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceLayerProperties(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkLayerProperties* pProperties)
 {
 
@@ -353,7 +371,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceLayerProperties
 
     if (pProperties)
     {
-        strcpy_s(pProperties->layerName, "vkDetailsLayer");
+        strcpy_s(pProperties->layerName, "vkDebuggerLayer");
         strcpy_s(pProperties->description, "https://github.com/xbilko03/ADT_VAPI");
         pProperties->implementationVersion = 1;
         pProperties->specVersion = VK_API_VERSION_1_0;
@@ -362,12 +380,13 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceLayerProperties
     if (connected) {
         winsockSendToUI(&ConnectSocket, "end_vkEnumerateDeviceLayerProperties!");
         if (callEveryBreak || callAtBreak)
-            newCall();
+            layer_newCall();
     }
 
     return VK_SUCCESS;
 }
 
+/* Authors of this function: Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann), expanded upon by: Jozef Bilko (xbilko03) */
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceExtensionProperties(const char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
 {
     /* send call before loader */
@@ -386,10 +405,10 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceExtensionProp
         winsockSendToUI(&ConnectSocket, "end_vkEnumerateInstanceExtensionProperties!");
 
         if (callEveryBreak || callAtBreak)
-            newCall();
+            layer_newCall();
     }
 
-    if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DetailsLayer"))
+    if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_VUT_DebuggerLayer"))
         return VK_ERROR_LAYER_NOT_PRESENT;
 
     /* don't expose any extensions */
@@ -397,6 +416,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateInstanceExtensionProp
     return VK_SUCCESS;
 }
 
+/* Authors of this function: Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann), expanded upon by: Jozef Bilko (xbilko03) */
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice, const char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties)
 {
 
@@ -418,12 +438,12 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceExtensionProper
 
 
         if (callEveryBreak || callAtBreak)
-            newCall();
+            layer_newCall();
     }
 
 
     /*  pass through any queries that aren't to us */
-    if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_SAMPLE_DetailsLayer"))
+    if (pLayerName == NULL || strcmp(pLayerName, "VK_LAYER_VUT_DebuggerLayer"))
     {
         if (physicalDevice == VK_NULL_HANDLE)
             return VK_SUCCESS;
@@ -439,4 +459,6 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_EnumerateDeviceExtensionProper
     return VK_SUCCESS;
 }
 
-/* Generated part */
+
+/* Authors of this next entire section's template: Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann), expanded upon by: Jozef Bilko (xbilko03) */
+/* [entirely generated] */

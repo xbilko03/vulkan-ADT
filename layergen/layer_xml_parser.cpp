@@ -3,7 +3,7 @@
 * Project	    : A Debugging Tool for Vulkan API (VkDebugger)
 * Description   : Source file of an XML parser, used by the layer_generator.cpp to load data from 'vk.xml'
 *
-* Author : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
+* Author        : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
 */
 #include "layer_xml_parser.hpp"
 /* iostream included to warn the user in case something gets ignored or handled incorrectly */
@@ -92,7 +92,7 @@ namespace laygen {
     /* extracts the information about required necessities for a given set of functions out of vk.xml file */
     void XmlParser::getProtectionGuards()
     {
-        /* for each node of the platform list, get the ifndef constant and the list of Vulkan functions that depend on this platform */
+        /* for each node of the platform list, get the ifdef constant and the list of Vulkan functions that depend on this platform */
         for (auto& node : platformProtectionRootNode)
         {
             auto platformName = node.attribute("name").value();

@@ -1,3 +1,19 @@
+/*
+* Name		    : layer_generated.h
+* Project	    : A Debugging Tool for Vulkan API (VkDebugger)
+* Description  : Header file of the generated layer defining IDT and DDT structs
+* [Careful! This file is generated] 
+* due to this, there is little handholding when reading this code 
+* to attempt and make up for this, here is the basic structure to help you understand 
+*
+* in this file, there are IDT and DDT structures defined 
+* VkLayerInstanceDispatchTable_ and VkLayerDeviceDispatchTable_
+* they are used in the layer_generated.cpp file to make dispatch chain initialization successful
+* 
+* Based on the template available online by : Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann) sample_layer 
+* https ://github.com/baldurk/sample_layer/blob/master 
+* No relevant changes, it is just expanded by : Jozef Bilko (xbilko03), supervised by Ing. Ján Peciva Ph.D.
+*/
 #pragma once
         
 #if !defined(PFN_GetPhysicalDeviceProcAddr)         

@@ -1,3 +1,10 @@
+﻿/*
+* Name		    : layer_data.hpp
+* Project	    : A Debugging Tool for Vulkan API (VkDebugger)
+* Description   : Header file to store the current state of the Vulkan constructs and perform operations on them
+*
+* Author        : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
+*/
 #pragma once
 
 #include <vulkan/vulkan.h>
@@ -15,10 +22,10 @@ extern bool skipLock;
 extern bool callAtBreak;
 extern bool callEveryBreak;
 
-void newCall();
+void layer_newCall();
 
 std::string GetWindowName();
-void SetMemoryVariables(std::string configContent);
+void layer_SetEnvVariables();
 
 #define FREEMEMORY_BEFORE_EXEC_EXISTS
 void layer_FreeMemory_before(VkDevice device, VkDeviceMemory memory, VkAllocationCallbacks* pAllocator);
@@ -81,6 +88,7 @@ void layer_CreateDevice_after(VkPhysicalDevice physicalDevice, const VkDeviceCre
 #define CMDDRAW_AFTER_EXEC_EXISTS
 void layer_CmdDraw_after(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance);
 
+void layer_AppStarter(std::string configContent);
 
 //#pragma comment(lib, "Ws2_32.lib")
 #define WINDOW_NAME "VK_DEBUGGER"

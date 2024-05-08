@@ -3,7 +3,7 @@
 * Project	    : A Debugging Tool for Vulkan API (VkDebugger)
 * Description   : Header file of an XML parser, used by the layer_generator.cpp to load data from 'vk.xml'
 *
-* Author : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
+* Author		: Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
 */
 #pragma once
 
@@ -14,7 +14,7 @@
 namespace laygen {
 	class XmlParser {
 	public:
-		/* this structure holds the list of what commands are defined per platform and the 'guard' which should be used to ifndef these commands */
+		/* this structure holds the list of what commands are defined per platform and the 'guard' which should be used to ifdef these commands */
 		struct xGuard {
 			std::string substr;
 			std::string guard;

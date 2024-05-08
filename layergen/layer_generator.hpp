@@ -1,9 +1,9 @@
 ﻿/*
 * Name		    : layer_generator.hpp
 * Project	    : A Debugging Tool for Vulkan API (VkDebugger)
-* Description   : Header file of the layer generator to construct vk_layer_generated.h and vk_layer_generated.cpp
+* Description   : Header file of the layer generator to construct layer_generated.h and layer_generated.cpp
 *
-* Author : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
+* Author		: Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
 */
 #pragma once
 
@@ -58,7 +58,51 @@ namespace laygen {
 		#define XML_PATH \
 		"..\\..\\..\\layergen\\vk.xml"
 
+		#define HEADER_NOTE_DT \
+		"/*\n" \
+		"* Name		    : layer_generated.h\n" \
+		"* Project	    : A Debugging Tool for Vulkan API (VkDebugger)\n" \
+		"* Description  : Header file of the generated layer defining IDT and DDT structs\n" \
+		"* [Careful! This file is generated] \n" \
+		"* due to this, there is little handholding when reading this code \n" \
+		"* to attempt and make up for this, here is the basic structure to help you understand \n" \
+		"*\n"\
+		"* in this file, there are IDT and DDT structures defined \n"\
+		"* VkLayerInstanceDispatchTable_ and VkLayerDeviceDispatchTable_\n"\
+		"* they are used in the layer_generated.cpp file to make dispatch chain initialization successful\n" \
+		"* \n"\
+		"* Based on the template available online by : Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann) sample_layer \n" \
+		"* https ://github.com/baldurk/sample_layer/blob/master \n" \
+		"* No relevant changes, it is just expanded by : Jozef Bilko (xbilko03), supervised by Ing. Ján Peciva Ph.D.\n" \
+		"*/\n"
+
+		#define HEADER_NOTE_GL \
+		"/*\n" \
+		"* Name		    : layer_generated.cpp\n" \
+		"* Project	    : A Debugging Tool for Vulkan API (VkDebugger)\n" \
+		"* Description  : Source file of the generated layer, this includes layer initialization, list of intercepted functions along their behavior\n" \
+		"* [Careful! This file is generated] \n" \
+		"* due to this, there is little handholding when reading this code \n" \
+		"* to attempt and make up for this, here is the basic structure to help you understand \n" \
+		"*\n"\
+		"* CreateDeviceDispatch & CreateInstanceDispatch -- these fill the DT structs defined in layer_generated.h\n"\
+		"*\n"\
+		"* DebuggerLayer_CreateInstance & DebuggerLayer_DeviceInstance: \n" \
+		"* these functions start the initialization process by filling the IDT and DDT structs with addresses\n"\
+		"* from the next point in the dispatch chain (so the layer knows how to pass the program control and doesn't get stuck here)\n" \
+		"*\n"\
+		"* Next section is just all the Vulkan function calls we're intercepting\n"\
+		"*\n" \
+		"* DebuggerLayer_GetInstanceProcAddr & DebuggerLayer_GetDeviceProcAddr -- this is where previous points of the dispatch chain refer to\n" \
+		"* when they're trying to figure out whether this layer intercepts the given function or not\n" \
+		"*\n" \
+		"* Based on the template available online by : Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann) sample_layer \n" \
+		"* https ://github.com/baldurk/sample_layer/blob/master \n" \
+		"* Changes made by : Jozef Bilko (xbilko03), supervised by Ing. Ján Peciva Ph.D.\n" \
+		"*/\n"
+
 		#define INSTANCE_TABLE_HEADER \
+        HEADER_NOTE_DT \
 		"#pragma once\n\
         \n#if !defined(PFN_GetPhysicalDeviceProcAddr) \
         \n\ttypedef PFN_vkVoidFunction(VKAPI_PTR* PFN_GetPhysicalDeviceProcAddr)(VkInstance instance, const char* pName); \
@@ -122,9 +166,9 @@ namespace laygen {
 		/* analyzes every parameter included in the parameter list and calls PrintParameterSendSingle or PrintParameterSendStruct for each (if possible) */
 		void PrintParemetersSendAll(std::ofstream* output, std::map<std::string, XmlParser::xStruct>* structs, auto* parameterList);
 		/* prints a single send message to the VkDebuggerApp */
-		bool PrintParameterSendSingle(std::ofstream* output, std::string type, std::string name, std::string prefix);
+		void PrintParameterSendSingle(std::ofstream* output, std::string type, std::string name, std::string prefix);
 		/* prints a single message sending operation that sends the parameter's name and value to the vkDebuggerApp*/
-		bool PrintParameterSendStruct(std::ofstream* output, std::string type, std::string name, std::string prefix, int attempts);
+		void PrintParameterSendStruct(std::ofstream* output, std::string type, std::string name, std::string prefix, int attempts);
 		/* prints all parameters from a list into a line */
 		void PrintParameters(std::ofstream* output, auto* parameterList, bool typesIncluded);
 		/* prints a single parameter from a list */

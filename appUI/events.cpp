@@ -39,7 +39,6 @@ namespace details {
     details::appWindow* winMan;
     bool dataLoad = false;
 
-
     /* Init objects that hold the data */
     void events::createDataManagers()
     {
@@ -256,6 +255,7 @@ namespace details {
 
             else if (omitValue(input) == "layer_delim")
             {
+                std::cout << "delime ready " << std::endl;
                 if (omitMessage(input) == "vkAcquireNextImageKHR")
                     delimStr = "vkAcquireNextImageKHR";
                 else if (omitMessage(input) == "vkQueueSubmit")

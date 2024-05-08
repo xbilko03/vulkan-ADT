@@ -1,10 +1,9 @@
 ﻿/*
-* Name		: appUI.cpp
-* Project	: A Debugging Tool for Vulkan API
+* Name		    : layer_data.hpp
+* Project	    : A Debugging Tool for Vulkan API (VkDebugger)
+* Description   : Header file to store the current state of the Vulkan constructs and perform operations on them
 *
-* Based on  : Baldur Karlsson (baldurk) and Johannes Kuhlmann's (jkuhlmann) sample_layer
-* https://github.com/baldurk/sample_layer/blob/master
-* Minor changes : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
+* Author        : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
 */
 
 #include "layer.hpp"
@@ -38,12 +37,13 @@ bool callEveryBreak = false;
 bool memoryNewBreak = false;
 bool bufferNewBreak = false;
 bool imageNewBreak = false;
+std::string appPath;
 unsigned long long fpsBelowBreakTrigger;
 unsigned long long frameEveryBreakTrigger;
 unsigned long long frameAtBreakTrigger;
 unsigned long long callEveryBreakTrigger;
 unsigned long long callAtBreakTrigger;
-
+#include <filesystem>
 bool logBuffers;
 bool logImages;
 bool logMemory;
@@ -57,7 +57,7 @@ enum delim
 };
 
 unsigned long long callCount = 0;
-void newCall()
+void layer_newCall()
 {
     callCount++;
     if (callAtBreak)
@@ -78,30 +78,8 @@ void newCall()
     }
 }
 
-void SetMemoryVariables(std::string configContent)
+void layer_SetEnvVariables()
 {
-    std::string token;
-    std::string s = configContent;
-
-    int pos;
-    while ((pos = s.find("\n")) != std::string::npos) {
-        token = s.substr(0, pos);
-        s.erase(0, pos + 1);
-
-        if (token[0] == '#' || token[0] == '\0')
-            continue;
-
-        auto pos1 = token.find(".");
-        auto pos2 = token.substr(pos1 + 1, token.size()).find("=");
-        std::string t1 = token.substr(pos1 + 1, pos2 - 1);
-
-        pos2 = token.find("=");
-        std::string t2 = token.substr(pos2 + 2, token.size());
-
-        envVar[t1] = t2;
-    }
-
-
     if (envVar["enable_warnings"] == "true")
     {
         warnings = true;
@@ -200,6 +178,7 @@ void SetMemoryVariables(std::string configContent)
             callEveryBreakTrigger = std::stol(envVar["break_call_every"]);
         }
     }
+
     if (envVar["break_memory_at"] == "true" && breaks == true)
     {
         memoryNewBreak = true;
@@ -229,16 +208,85 @@ void SetMemoryVariables(std::string configContent)
         winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "delim=", "vkCmdDraw"));
     }
 
-    if (std::stol(envVar["fps_below"]) > 0 && warnings == true)
+    if (warnings == true)
     {
-        fpsBelowOption = true;
-        fpsBelowTrigger = std::stol(envVar["fps_below"]);
+        if (std::stol(envVar["fps_below"]) > 0)
+        {
+            fpsBelowOption = true;
+            fpsBelowTrigger = std::stol(envVar["fps_below"]);
+        }
     }
-    if (std::stol(envVar["fps_every"]) > 0 && warnings == true)
+    if (warnings == true)
     {
-        fpsEveryOption = true;
-        fpsEveryTrigger = std::stol(envVar["fps_every"]);
+        if (std::stol(envVar["fps_every"]) > 0)
+        {
+            fpsEveryOption = true;
+            fpsEveryTrigger = std::stol(envVar["fps_every"]);
+        }
     }
+}
+
+void layer_AppStarter(std::string configContent)
+{
+    std::string token;
+    std::string s = configContent;
+    
+
+    int pos;
+    while ((pos = s.find("\n")) != std::string::npos) {
+        token = s.substr(0, pos);
+        s.erase(0, pos + 1);
+
+        if (token[0] == '#' || token[0] == '\0')
+            continue;
+
+        auto pos1 = token.find(".");
+        auto pos2 = token.substr(pos1 + 1, token.size()).find("=");
+        std::string t1 = token.substr(pos1 + 1, pos2 - 1);
+
+        pos2 = token.find("=");
+        std::string t2 = token.substr(pos2 + 2, token.size());
+
+        envVar[t1] = t2;
+    }
+
+    std::string appPath;
+    if (envVar["app_path"] == "default")
+    {
+        appPath = std::filesystem::current_path().string() + "\\";
+        appPath += "VkDebugger.exe";
+    }
+    else
+    {
+        appPath = envVar["app_path"];
+        std::string s = appPath;
+        std::string result = "";
+        size_t index;
+        while ((index = s.find("/")) != std::string::npos)
+        {
+            result += s.substr(0,index);
+            s.erase(0, index+1);
+            result += "\\\\";
+        }
+        /* file name */
+        result += s;
+        appPath = result;
+
+        if (s != "VkDebugger.exe")
+            std::cerr << "VkDebugger: could not open " << appPath << " it is not a VkDebugger.exe application" << std::endl;
+    }
+
+    if (!std::filesystem::exists(appPath))
+        std::cerr << "VkDebugger: VkDebugger.exe could not be found at " << appPath << std::endl;
+
+    /* create new process */
+    STARTUPINFO info = { sizeof(info) };
+    PROCESS_INFORMATION processInfo;
+
+    /* open new vkDetails window */
+    CreateProcess(appPath.c_str(), NULL, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo);
+    CloseHandle(processInfo.hProcess);
+    CloseHandle(processInfo.hThread);
 }
 
 details::layerData* data;

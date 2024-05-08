@@ -1,7 +1,7 @@
 ﻿# CMakeList.txt : CMake project for vk details, include source and define
 cmake_minimum_required (VERSION 3.11.0)
 
-set(project_name vkDetails)
+set(project_name VkDebugger)
 set(generator_name vkGen)
 project(${project_name} C CXX)
 if(NOT "${CMAKE_CXX_STANDARD}")
@@ -91,7 +91,7 @@ ${Vulkan_LIBRARIES}
 "layer/layer_messages.h"
 "layer/layer_messages.cpp"
 "layer/layer_generated.cpp"
-"layer/vk_layer_generated.h"
+"layer/layer_generated.h"
 
 "layer/layer_data.hpp"
 "layer/layer_data.cpp"
