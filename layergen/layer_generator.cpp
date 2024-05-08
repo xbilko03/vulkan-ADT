@@ -436,9 +436,8 @@ namespace laygen
     void LayerGenerator::generateHeaders()
     {
         generatedLayerFile << HEADER_NOTE_GL << std::endl;
-        generatedLayerFile << "#include \"layer.hpp\"" << std::endl;
+        generatedLayerFile << "#include \"layer.h\"" << std::endl;
 
-        generatedLayerFile << "#include \"layer.hpp\"" << std::endl;
         generatedLayerFile << "#include <mutex>" << std::endl;
         generatedLayerFile << "#include <ws2tcpip.h>" << std::endl;
         generatedLayerFile << "#include \"" << LAYER_GENERATED_NAME  << ".h\"" << std::endl;

@@ -6,7 +6,7 @@
 * Author        : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
 */
 #include "layer_data.hpp"
-#include "layer.hpp"
+#include "layer.h"
 
 namespace details {
 

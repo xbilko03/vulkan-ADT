@@ -86,7 +86,7 @@ option(BUILD_SHARED_LIBS ON)
 add_library(dbgrvlayer SHARED 
 ${Glfw_LIBRARY}
 ${Vulkan_LIBRARIES}
-"layer/layer.hpp"
+"layer/layer.h"
 "layer/layer.cpp"
 "layer/layer_messages.h"
 "layer/layer_messages.cpp"

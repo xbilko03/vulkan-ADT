@@ -338,7 +338,11 @@ namespace details {
     void appWindow::cleanupImGui()
     {
         auto err = vkDeviceWaitIdle(g_Device);
-        check_vk_result(err);
+        if (err != VK_SUCCESS)
+        {
+            throw std::runtime_error("ImGui: failed to cleanup");
+            return;
+        }
         RemoveTexture(&my_texture);
         ImGui_ImplVulkan_Shutdown();
         ImGui_ImplGlfw_Shutdown();
@@ -394,7 +398,11 @@ namespace details {
     void appWindow::surfaceInit()
     {
         VkResult err = glfwCreateWindowSurface(g_Instance, window, g_Allocator, &surface);
-        check_vk_result(err);
+        if (err != VK_SUCCESS)
+        {
+            throw std::runtime_error("GLFW: failed to initialize");
+            return;
+        }
     }
 
     void appWindow::glfwWindowInit()
@@ -442,13 +450,21 @@ namespace details {
     VkPhysicalDevice appWindow::SetupVulkan_SelectPhysicalDevice()
     {
         VkResult err = vkEnumeratePhysicalDevices(g_Instance, &physicalDeviceCount, nullptr);
-        check_vk_result(err);
+        if (err != VK_SUCCESS)
+        {
+            throw std::runtime_error("Vulkan: failed to get physical device list");
+            return nullptr;
+        }
         IM_ASSERT(physicalDeviceCount > 0);
 
         ImVector<VkPhysicalDevice> gpus;
         gpus.resize(physicalDeviceCount);
         err = vkEnumeratePhysicalDevices(g_Instance, &physicalDeviceCount, gpus.Data);
-        check_vk_result(err);
+        if (err != VK_SUCCESS)
+        {
+            throw std::runtime_error("Vulkan: failed to get physical device list");
+            return nullptr;
+        }
 
         VkPhysicalDevice chosenDevice = nullptr;
         for (VkPhysicalDevice& device : gpus)
@@ -495,7 +511,11 @@ namespace details {
             vkEnumerateInstanceExtensionProperties(nullptr, &properties_count, nullptr);
             instanceExtensions.resize(properties_count);
             err = vkEnumerateInstanceExtensionProperties(nullptr, &properties_count, instanceExtensions.Data);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                throw std::runtime_error("Vulkan: failed to get instance extension list");
+                return;
+            }
 
             // Enable required extensions
             if (IsExtensionAvailable(instanceExtensions, VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME))
@@ -511,7 +531,11 @@ namespace details {
             create_info.enabledExtensionCount = (uint32_t)reqInstanceExtensions.Size;
             create_info.ppEnabledExtensionNames = reqInstanceExtensions.Data;
             err = vkCreateInstance(&create_info, g_Allocator, &g_Instance);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                throw std::runtime_error("Vulkan: failed to create an instance");
+                return;
+            }
     }
 
         // Select Physical Device (GPU)
@@ -557,7 +581,11 @@ namespace details {
             create_info.enabledExtensionCount = (uint32_t)deviceExt.Size;
             create_info.ppEnabledExtensionNames = deviceExt.Data;
             err = vkCreateDevice(g_PhysicalDevice, &create_info, g_Allocator, &g_Device);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                throw std::runtime_error("Vulkan: failed to createa a physical device");
+                return;
+            }
             vkGetDeviceQueue(g_Device, g_QueueFamily, 0, &g_Queue);
         }
 
@@ -576,7 +604,11 @@ namespace details {
             pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
             pool_info.pPoolSizes = pool_sizes;
             err = vkCreateDescriptorPool(g_Device, &pool_info, g_Allocator, &g_DescriptorPool);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                throw std::runtime_error("Vulkan: failed to create descriptor pool");
+                return;
+            }
         }
 }
 
@@ -643,24 +675,44 @@ namespace details {
             g_SwapChainRebuild = true;
             return;
         }
-        check_vk_result(err);
+        if (err != VK_SUCCESS)
+        {
+            throw std::runtime_error("Vulkan: failed to get next image");
+            return;
+        }
 
         ImGui_ImplVulkanH_Frame* fd = &wd->Frames[wd->FrameIndex];
         {
             err = vkWaitForFences(g_Device, 1, &fd->Fence, VK_TRUE, UINT64_MAX);    // wait indefinitely instead of periodically checking
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                throw std::runtime_error("Vulkan: failed wait for fences operation");
+                return;
+            }
 
             err = vkResetFences(g_Device, 1, &fd->Fence);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                throw std::runtime_error("Vulkan: failed to reset fences");
+                return;
+            }
         }
         {
             err = vkResetCommandPool(g_Device, fd->CommandPool, 0);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                throw std::runtime_error("Vulkan: failed to reset command pool");
+                return;
+            }
             VkCommandBufferBeginInfo info = {};
             info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
             info.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
             err = vkBeginCommandBuffer(fd->CommandBuffer, &info);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                throw std::runtime_error("Vulkan: failed to reset command buffer");
+                return;
+            }
         }
         {
             VkRenderPassBeginInfo info = {};
@@ -692,9 +744,17 @@ namespace details {
             info.pSignalSemaphores = &render_complete_semaphore;
 
             err = vkEndCommandBuffer(fd->CommandBuffer);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                throw std::runtime_error("Vulkan: failed end command buffer");
+                return;
+            }
             err = vkQueueSubmit(g_Queue, 1, &info, fd->Fence);
-            check_vk_result(err);
+            if (err != VK_SUCCESS)
+            {
+                throw std::runtime_error("Vulkan: failed to submit a queue");
+                return;
+            }
         }
     }
 
@@ -716,7 +776,11 @@ namespace details {
             g_SwapChainRebuild = true;
             return;
         }
-        check_vk_result(err);
+        if (err != VK_SUCCESS)
+        {
+            throw std::runtime_error("Vulkan: failed to present queue");
+            return;
+        }
         wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->ImageCount; // Now we can use the next set of semaphores
     }
 

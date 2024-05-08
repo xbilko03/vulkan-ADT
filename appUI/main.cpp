@@ -1,6 +1,12 @@
+﻿/*
+* Name		    : main.cpp
+* Project	    : A Debugging Tool for Vulkan API (VkDebugger)
+* Description   : Entry point for VkDebuggerApp
+*
+* Author        : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
+*/
 #include "appUI.hpp"
 
-#include <cstdlib>
 #include <iostream>
 #include <stdexcept>
 

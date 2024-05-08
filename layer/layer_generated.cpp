@@ -22,8 +22,7 @@
 * Changes made by : Jozef Bilko (xbilko03), supervised by Ing. Ján Peciva Ph.D.
 */
 
-#include "layer.hpp"
-#include "layer.hpp"
+#include "layer.h"
 #include <mutex>
 #include <ws2tcpip.h>
 #include "layer_generated.h"

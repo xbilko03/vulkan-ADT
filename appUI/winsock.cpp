@@ -1,19 +1,19 @@
 ﻿/*
-* Name		: winsock.cpp
-* Project	: A Debugging Tool for Vulkan API
-* Director  : Ing. Ján Pečiva Ph.D.
-* Author	: Jozef Bilko (xbilko03)
+* Name		    : winsock.cpp
+* Project	    : A Debugging Tool for Vulkan API (VkDebugger)
+* Description   : Source file to ensure the communication between VkDebuggerLayer and VkDebuggerApp
+*
+* Author        : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
 */
 #include "winsock.h"
 
 #define DEFAULT_PORT "27015"
-
 /* initializes and establishes the CLIENT, continuously try to connect to the SERVER */
 int layerWinsockInit(SOCKET* ConnectSocket)
 {
     struct addrinfo* result = NULL, * ptr = NULL, hints;
-    WSADATA wsaData;
-    int ret = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    WSADATA data;
+    int ret = WSAStartup(MAKEWORD(2, 2), &data);
     if (ret != 0)
         return 1;
 
@@ -66,17 +66,15 @@ int layerWinsockInit(SOCKET* ConnectSocket)
 int uiWinsockInit(SOCKET* ConnectSocket)
 {
     SOCKET ListenSocket = INVALID_SOCKET;
-    WSADATA wsaData;
+    WSADATA data;
     int ret;
-
     struct addrinfo* result = NULL;
     struct addrinfo hints;
 
     /* init winsock */
-    ret = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    ret = WSAStartup(MAKEWORD(2, 2), &data);
     if (ret != 0)
         return 1;
-
 
     ZeroMemory(&hints, sizeof(hints));
     hints.ai_family = AF_INET;
@@ -126,7 +124,6 @@ int uiWinsockInit(SOCKET* ConnectSocket)
     closesocket(ListenSocket);
     return 0;
 }
-
 /* sends the 'sendbuf' array of chars from the CLIENT to the SERVER */
 int winsockSendToUI(SOCKET* ConnectSocket, std::string sendbuf)
 {
@@ -139,7 +136,7 @@ int winsockSendToUI(SOCKET* ConnectSocket, std::string sendbuf)
     }
     return 0;
 }
-/* sends the 'sendbuf' array of chars from the CLIENT to the SERVER */
+/* sends the 'sendbuf' binary data with a fixed size from the CLIENT to the SERVER */
 int winsockSendToUIraw(SOCKET* ConnectSocket, const char* sendbuf, unsigned long long size)
 {
     /* Send 'sendbuf' data */
@@ -151,7 +148,6 @@ int winsockSendToUIraw(SOCKET* ConnectSocket, const char* sendbuf, unsigned long
     }
     return 0;
 }
-
 /* shuts down connection from the CLIENT side */
 int layerWinsockExit(SOCKET* ConnectSocket)
 {

@@ -1,6 +1,13 @@
+﻿/*
+* Name		    : class_apiCall.cpp
+* Project	    : A Debugging Tool for Vulkan API (VkDebugger)
+* Description   : Source file for data class that represents a single Vulkan function call
+*
+* Author        : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
+*/
 #include "class_apiCall.hpp"
 namespace details {
-
+	/* parse a stream of function parameters and have them saved */
 	void apiCall::assignParameter(std::string input)
 	{
 		std::string s = input;

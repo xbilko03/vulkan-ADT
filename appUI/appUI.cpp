@@ -74,10 +74,12 @@ namespace details {
                 output = (*dataObject).getMemoryPointer(i);
                 ImGui::SeparatorText("VkImage Handle Address");
                 ImGui::Text(output.c_str());
+                output = std::to_string((*dataObject).getBufferDataSize(i));
+                ImGui::Text(output.c_str());
 
                 if (dataObject->getCallsSettings() && output != "new")
                 {
-                    ImGui::SeparatorText("Culprit");
+                    ImGui::SeparatorText("Relations");
                     output = std::to_string((*dataObject).getMemoryCulpritID(i));
                     output += ":";
                     output += (*dataObject).getMemoryCulpritName(i);
@@ -109,10 +111,12 @@ namespace details {
                 ImGui::SeparatorText("VkImage Handle Address");
                 output = (*dataObject).getImagePointer(i);
                 ImGui::Text(output.c_str());
+                output = std::to_string((*dataObject).getImageDataSize(i));
+                ImGui::Text(output.c_str());
 
                 if (dataObject->getCallsSettings() && output != "")
                 {
-                    ImGui::SeparatorText("Culprit");
+                    ImGui::SeparatorText("Relations");
                     output = std::to_string((*dataObject).getImageCulpritID(i));
                     output += ":";
                     output += (*dataObject).getImageCulpritName(i);

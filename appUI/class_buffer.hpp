@@ -1,3 +1,10 @@
+﻿/*
+* Name		    : class_buffer.hpp
+* Project	    : A Debugging Tool for Vulkan API (VkDebugger)
+* Description   : Header file for data class that handles the VkBuffer state and its data
+*
+* Author        : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
+*/
 #pragma once
 #include <list>
 #include <string>
@@ -9,38 +16,39 @@
 namespace details {
     class vkBufferManager {
     public:
-        /* state change */
+        /* create a new BufferObject */
         void newBuffer(unsigned long long inputID) { bufferCount++; bufferMap[inputID] = vkBuffer(); bufferMap[inputID].bufferState = "allocated"; }
-        void SetState(unsigned long long inputID, std::string input) { BOUNDARYCHECK; bufferMap[inputID].bufferState = input; }
-
-        /* getInfo */
-        std::string GetState(unsigned long long inputID) { return bufferMap[inputID].bufferState; }
-        unsigned long long GetBufferCount() { return bufferCount; }
-        unsigned long long GetFromPointerID(std::string message);
-
-        std::string GetPointer(unsigned long long inputID) { return bufferMap[inputID].localPointer; }
-        std::string GetBoundObj(unsigned long long inputID) { return bufferMap[inputID].attachedMemoryPtr; }
+        /* get BufferObject state */
+        void setState(unsigned long long inputID, std::string input) { BOUNDARYCHECK; bufferMap[inputID].bufferState = input; }
+        std::string getState(unsigned long long inputID) { return bufferMap[inputID].bufferState; }
+        /* get the total allocated BufferObjects */
+        unsigned long long getBufferCount() { return bufferCount; }
+        /* pointer operations */
+        /* look for an bufferID based on the pointer */
+        unsigned long long getFromPointerID(std::string message);
+        std::string getPointer(unsigned long long inputID) { return bufferMap[inputID].localPointer; }
+        /* return the pointer to the bound MemoryObject*/
+        std::string getBoundObj(unsigned long long inputID) { return bufferMap[inputID].attachedMemoryPtr; }
         
-        /* new data*/
-        void AssignPointer(unsigned long long inputID, std::string ptr) { BOUNDARYCHECK; bufferMap[inputID].localPointer = ptr; this->bufferMap[inputID].bufferState = "created"; }
-        void AssignBoundObj(unsigned long long inputID, std::string inputData) { BOUNDARYCHECK; bufferMap[inputID].attachedMemoryPtr = inputData; }
-        void AssignMemory(unsigned long long inputID, vkMemoryManager::vkMemory* ptr) { BOUNDARYCHECK; bufferMap[inputID].attachedMemory = ptr; }
-        void AssignCulprit(unsigned long long inputID, details::apiCall* inputCulprit) { BOUNDARYCHECK; bufferMap[inputID].culprit = inputCulprit; }
+        /* new data & state change */
+        void assignPointer(unsigned long long inputID, std::string ptr) { BOUNDARYCHECK; bufferMap[inputID].localPointer = ptr; this->bufferMap[inputID].bufferState = "created"; }
+        void assignBoundObj(unsigned long long inputID, std::string inputData) { BOUNDARYCHECK; bufferMap[inputID].attachedMemoryPtr = inputData; }
+        void assignMemory(unsigned long long inputID, vkMemoryManager::vkMemory* ptr) { BOUNDARYCHECK; bufferMap[inputID].attachedMemory = ptr; }
+        void assignCulprit(unsigned long long inputID, details::apiCall* inputCulprit) { BOUNDARYCHECK; bufferMap[inputID].culprit = inputCulprit; }
 
-        char* GetData(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return NULL; else return bufferMap[inputID].attachedMemory->memoryData; }
-        unsigned long long GetDataSize(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return NULL; else return bufferMap[inputID].attachedMemory->dataSize; };
-        std::string GetDataReadable(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return ""; else return bufferMap[inputID].attachedMemory->readableMemoryData; }
-        vkMemoryManager::vkMemory* GetMemory(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return NULL; else return bufferMap[inputID].attachedMemory; }
-        details::apiCall* GetCulprit(unsigned long long inputID) { return bufferMap[inputID].culprit; }
-
-        
+        /* data operations */
+        char* getData(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return NULL; else return bufferMap[inputID].attachedMemory->memoryData; }
+        unsigned long long getDataSize(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return NULL; else return bufferMap[inputID].attachedMemory->dataSize; };
+        std::string getDataReadable(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return ""; else return bufferMap[inputID].attachedMemory->readableMemoryData; }
+        /* get BufferObject related data */
+        vkMemoryManager::vkMemory* getMemory(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return NULL; else return bufferMap[inputID].attachedMemory; }
+        details::apiCall* getCulprit(unsigned long long inputID) { return bufferMap[inputID].culprit; }
 
         /* saved data */
         struct vkBuffer {
             std::string localPointer;
             std::string bufferState;
             std::string attachedMemoryPtr;
-
             vkMemoryManager::vkMemory* attachedMemory;
             details::apiCall* culprit;
         };

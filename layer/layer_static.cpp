@@ -7,10 +7,8 @@
 * https ://github.com/baldurk/sample_layer/blob/master 
 * Changes made by : Jozef Bilko (xbilko03), supervised by Ing. Ján Peciva Ph.D.
 */
-
 bool connected = false;
 bool skipLock = false;
-#include <fstream>
 
 /* author of this function: Jozef Bilko (xbilko03) */
 /* converts bool to text, useful when sending the bool parameter to VkDebuggerApp */

@@ -1,3 +1,10 @@
+﻿/*
+* Name		    : callbacks.cpp
+* Project	    : A Debugging Tool for Vulkan API (VkDebugger)
+* Description   : Header file for data class that represents a single Vulkan function call
+*
+* Author        : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
+*/
 #include "callbacks.h"
 
 void glfw_error_callback(int error, const char* description)
