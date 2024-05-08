@@ -7,6 +7,9 @@ and an application (VkDebuggerApp) with UI that makes the debugging easier. This
 representation based on what is collected, this representation is then accessible to user via the already mentioned UI.
 
 A part of this tool is also a code generator that is used to list the full vulkan API function calls list based on provided XML file.
+    
+## PREVIEW
+![alt text](https://github.com/xbilko03/ADT_VAPI/blob/master/view.jpg?raw=true)
 
 ## Requirements
 The program uses following technologies to make it work:
@@ -34,9 +37,6 @@ As per version 1.3 of VkDebugger the following features are available:
 Can be found within the following .pdf file:
 
 [setup.pdf {SLOVAK}](https://github.com/xbilko03/ADT_VAPI/blob/master/setup.pdf)
-    
-## USE-EXAMPLE
-![alt text](https://github.com/xbilko03/ADT_VAPI/blob/master/view.jpg?raw=true)
 
 ## AUTHOR
 Jozef Bilko (xbilko03)
