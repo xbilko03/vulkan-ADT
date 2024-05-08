@@ -12,17 +12,17 @@ namespace details {
     vkSystemManager::vkSystemManager(details::appWindow * winMan) {
         
         long long unsigned counter = 1;
-        for (auto& item : winMan->GetDeviceExtensions())
+        for (auto& item : winMan->getDeviceExtensions())
         {
             this->newVkInfo("device extension #" + std::to_string(counter++) + " " + item.extensionName);
         }
         counter = 1;
-        for (auto& item : winMan->GetInstanceExtensions())
+        for (auto& item : winMan->getInstanceExtensions())
         {
             this->newVkInfo("instance extension #" + std::to_string(counter++) + " " + item.extensionName);
         }
         counter = 1;
-        for (auto& item : winMan->GetPhysicalDeviceProperties())
+        for (auto& item : winMan->getPhysicalDeviceProperties())
         {
             this->newVkInfo("physical device #" + std::to_string(counter++) + " " + item.deviceName);
         }

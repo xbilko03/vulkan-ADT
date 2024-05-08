@@ -1,9 +1,11 @@
 ﻿/*
-* Name		: appUI.cpp
-* Project	: A Debugging Tool for Vulkan API
-* Director  : Ing. Ján Pečiva Ph.D.
-* Author	: Jozef Bilko (xbilko03) {excluding the explicitly marked parts of the code}
-* Licence   : MIT
+* Name		    : appUI.cpp
+* Project	    : A Debugging Tool for Vulkan API (VkDebugger)
+* Description   : Header file of the Vulkan window and image rendering VkDebuggerApp
+*
+* This template is available online by: Omar Cornut (ocornut)
+* https://github.com/ocornut/imgui/tree/master/examples/example_glfw_vulkan
+* Minor adjustments: Jozef Bilko (xbilko03), supervised by Ing. Ján Peciva Ph.D.
 */
 #include "appUI.hpp"
 #include <iostream>
@@ -395,7 +397,6 @@ namespace details {
         window.surfaceInit();
         window.framebufferInit();
         window.imGuiInit();
-        window.CreateTexture();
 
         ImGuiWindowFlags mainWindowFlags = 0;
         mainWindowFlags |= ImGuiWindowFlags_NoMove;

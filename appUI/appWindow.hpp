@@ -1,114 +1,146 @@
+﻿/*
+* Name		    : appWindow.hpp
+* Project	    : A Debugging Tool for Vulkan API (VkDebugger)
+* Description   : Header file of the Vulkan window and image rendering VkDebuggerApp
+* 
+* This template is available online by: Omar Cornut (ocornut) : MIT license
+* https://github.com/ocornut/imgui/tree/master/examples/example_glfw_vulkan
+* Minor adjustments: Jozef Bilko (xbilko03), supervised by Ing. Ján Peciva Ph.D.
+*/
 #pragma once
 
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.h>
-
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_vulkan.h"
-
 #include <stdlib.h>
 #include <iostream>
 #include <stdio.h>
 #include <string>
 #include <list>
 #include <map>
-
 #include "winsock.h"
-
 
 namespace details {
 	class appWindow {
 	public:
-        /* some of these might be just private */
-        void imGuiInit();   
+        /* init */
+        /* initilize ImGui */
+        void imGuiInit();
+        /* initialize framebuffer */
         void framebufferInit();
+        /* initialize surface */
         void surfaceInit();
+        /* initialize window */
         void glfwWindowInit();
+        /* initialize data */
         void dataInit();
-        bool IsExtensionAvailable(const ImVector<VkExtensionProperties>& properties, const char* extension);
-        VkPhysicalDevice SetupVulkan_SelectPhysicalDevice();
+        /* initializes the physicalDev setup and returns the handle to it */
+        VkPhysicalDevice setupVulkan_SelectPhysicalDevice();
+        /* initializes Vulkan */
         void setupVulkan();
-        void SetupVulkanWindow(ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height);
+        /* initializes the Vulkan window */
+        void setupVulkanWindow(ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface, int width, int height);
+        /* returns true if the extension is available */
+        bool isExtensionAvailable(const ImVector<VkExtensionProperties>& properties, const char* extension);
 
+        /* free Vulkan resources */
         void cleanupVulkan();
+        /* free Vulkan window resources */
         void cleanupVulkanWindow();
+        /* free imGui resources */
         void cleanupImGui();
+        /* free glfw resources */
         void cleanupGLFW();
 
-        void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data);
-        void FramePresent(ImGui_ImplVulkanH_Window* wd);
+        /* renders frame and prepares it for the presenting */
+        void frameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data);
+        /* presents the previously rendered frame */
+        void framePresent(ImGui_ImplVulkanH_Window* wd);
 
+        /* start frame */
         void startNewFrame();
+        /* render frame */
         void renderNewFrame();
 
         GLFWwindow* window;
-        ImVec4 clear_color;
+        ImVec4 clearColor;
 
-        void CreateTexture();
-        void ShowTexture();
+        /* export properties about Vulkan */
+        uint32_t getPhysicalDeviceCount() { return physicalDeviceCount; }
+        std::list<VkPhysicalDeviceProperties> getPhysicalDeviceProperties() { return physicalDevicePropertiesList; }
+        ImVector<VkExtensionProperties> getInstanceExtensions() { return instanceExtensions; }
+        ImVector<VkExtensionProperties> getDeviceExtensions() { return deviceExtensions; }
 
-        uint32_t GetPhysicalDeviceCount() { return physicalDeviceCount; }
-        std::list<VkPhysicalDeviceProperties> GetPhysicalDeviceProperties() { return physicalDevicePropertiesList; }
-        ImVector<VkExtensionProperties> GetInstanceExtensions() { return instanceExtensions; }
-        ImVector<VkExtensionProperties> GetDeviceExtensions() { return deviceExtensions; }
-        bool LoadImageTexture(unsigned long long ID, int width, int height, int channels, void* imageData);
+        /* loads an image texture and renders it using imGui and Vulkan */
+        bool loadImageTexture(unsigned long long ID, int width, int height, int channels, void* imageData);
 
+        /* return properties about texture */
         VkDescriptorSet getImageDS(unsigned long long ID) { return loadedImages[ID].DS; }
-        unsigned long long getImageWidth(unsigned long long ID) { return loadedImages[ID].Width; }
-        unsigned long long getImageHeight(unsigned long long ID) { return loadedImages[ID].Height; }
-        unsigned long long getImageChannels(unsigned long long ID) { return loadedImages[ID].Channels; }
+        unsigned long long getImageWidth(unsigned long long ID) { return loadedImages[ID].width; }
+        unsigned long long getImageHeight(unsigned long long ID) { return loadedImages[ID].height; }
+        unsigned long long getImageChannels(unsigned long long ID) { return loadedImages[ID].channels; }
+
 	private:
-        // A struct to manage data related to one image in vulkan
-        struct MyTextureData
+        /* a struct to manage data related to one image in vulkan */
+        struct textureData
         {
-            VkDescriptorSet DS;         // Descriptor set: this is what you'll pass to Image()
-            unsigned long long Width;
-            unsigned long long Height;
-            unsigned long long Channels;
+            /* texture descriptor */
+            VkDescriptorSet DS;
+            unsigned long long width;
+            unsigned long long height;
+            unsigned long long channels;
 
-            // Need to keep track of these to properly cleanup
-            VkImageView     ImageView;
-            VkImage         Image;
-            VkDeviceMemory  ImageMemory;
-            VkSampler       Sampler;
-            VkBuffer        UploadBuffer;
-            VkDeviceMemory  UploadBufferMemory;
+            /* need to keep track of these to properly cleanup */
+            VkImageView     imageView;
+            VkImage         image;
+            VkDeviceMemory  imageMemory;
+            VkSampler       sampler;
+            VkBuffer        uploadBuffer;
+            VkDeviceMemory  uploadBufferMemory;
 
-            MyTextureData() { memset(this, 0, sizeof(*this)); }
+            textureData() { memset(this, 0, sizeof(*this)); }
         };
-        MyTextureData my_texture;
-        std::map<unsigned long long, MyTextureData> loadedImages;
 
+        /* current texture is after rendering mapped to the particular imageID */
+        textureData currentTexture;
+        std::map<unsigned long long, textureData> loadedImages;
+
+        /* helper function to find Vulkan memory type bits.See ImGui_ImplVulkan_MemoryType() in imgui_impl_vulkan.cpp */
         uint32_t findMemoryType(uint32_t type_filter, VkMemoryPropertyFlags properties);
-        bool LoadTextureFromFile(const char* filename, MyTextureData* tex_data);
-        void RemoveTexture(MyTextureData* tex_data);
+
+        /* helper function to cleanup an image loaded */
+        void removeTexture(textureData* tex_data);
+
+        /* info about Vulkan */
         ImVector<VkExtensionProperties> instanceExtensions;
         ImVector<VkExtensionProperties> deviceExtensions;
 
+        /* app settings */
+        #define WINDOWNAME "VkDebugger"
+        #define MAX_TEXTURES_COUNT 800
 
-        #define WINDOWNAME "vkDetails"
-        VkAllocationCallbacks* g_Allocator;
-        VkInstance g_Instance;
-        VkPhysicalDevice g_PhysicalDevice;
-        VkDevice g_Device;
-        uint32_t g_QueueFamily;
-        VkQueue g_Queue;
-        VkDebugReportCallbackEXT g_DebugReport;
-        VkPipelineCache g_PipelineCache;
-        VkDescriptorPool g_DescriptorPool;
-        ImGui_ImplVulkanH_Window g_MainWindowData;
-        int g_MinImageCount;
-        bool g_SwapChainRebuild;
+        /* settings to help with the VkDebuggerApp rendering */
+        VkAllocationCallbacks* pAllocator;
+        VkInstance pInstance;
+        VkPhysicalDevice pPhysicalDevice;
+        VkDevice pDevice;
+        uint32_t pQueueFamily;
+        VkQueue pQueue;
+        VkDebugReportCallbackEXT pDebugReport;
+        VkPipelineCache pPipelineCache;
+        VkDescriptorPool pDescriptorPool;
+        ImGui_ImplVulkanH_Window pMainWindowData;
+        int pMinImageCount;
+        bool pSwapChainRebuild;
         VkSurfaceKHR surface;
         ImGui_ImplVulkanH_Window* wd;
 
-        /* Physical devices */
+        /* physical devices */
         uint32_t physicalDeviceCount;
         std::list<VkPhysicalDeviceProperties> physicalDevicePropertiesList;
-
-        DWORD __stdcall layerReceiver(LPVOID lpParameter);
     };
 }

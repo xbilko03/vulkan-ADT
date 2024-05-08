@@ -11,7 +11,6 @@ endif()
 # imgui
 set(IMGUI_DIR ${CMAKE_SOURCE_DIR}/libs/imgui)
 include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends ..)
-include_directories("${CMAKE_SOURCE_DIR}/libs/stbimage")
 
 # app src
 add_executable(${project_name}

@@ -1,3 +1,10 @@
+﻿/*
+* Name		    : callbacks.h
+* Project	    : A Debugging Tool for Vulkan API (VkDebugger)
+* Description   : Header file for callback functions used by appWindow.cpp
+*
+* Author        : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
+*/
 #pragma once
 
 #include <vulkan/vulkan.h>
@@ -6,5 +13,5 @@
 #include <iostream>
 #include <string>
 
-void glfw_error_callback(int error, const char* description);
-void check_vk_result(VkResult err);
+void glfwErrorCallback(int err, const char* text);
+void vkErrorCallback(VkResult err);

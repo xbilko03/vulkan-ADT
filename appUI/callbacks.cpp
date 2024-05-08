@@ -1,21 +1,22 @@
 ﻿/*
 * Name		    : callbacks.cpp
 * Project	    : A Debugging Tool for Vulkan API (VkDebugger)
-* Description   : Header file for data class that represents a single Vulkan function call
+* Description   : Source file for callback functions used by appWindow.cpp
 *
 * Author        : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
 */
 #include "callbacks.h"
-
-void glfw_error_callback(int error, const char* description)
+/* function called when an glfw error occurs */
+void glfwErrorCallback(int err, const char* text)
 {
-    throw std::runtime_error("GLFW: Error " + std::to_string(error) + ": " + description);
+    throw std::runtime_error("GLFW - " + std::to_string(err) + " - " + text);
 }
-void check_vk_result(VkResult err)
+/* function called when Vulkan error occurs */
+void vkErrorCallback(VkResult err)
 {
     if (err == 0)
         return;
-    throw std::runtime_error("Vulkan Error: VkResult = " + std::to_string(err));
+    throw std::runtime_error("Vulkan - VkResult - " + std::to_string(err));
     if (err < 0)
         abort();
 }
