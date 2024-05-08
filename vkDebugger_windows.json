@@ -1,0 +1,266 @@
+{
+  "file_format_version" : "1.0.0",
+  "layer" : {
+    "name": "VK_LAYER_VUT_DebuggerLayer",
+    "type": "GLOBAL",
+    "library_path": ".\\VkDebuggerLayer.dll",
+    "api_version": "1.3.0",
+    "implementation_version": "1",
+    "description": "DebuggerLayer is an app to review the state of your Vulkan applications",
+    "functions": {
+      "vkGetInstanceProcAddr": "DebuggerLayer_GetInstanceProcAddr",
+      "vkGetDeviceProcAddr": "DebuggerLayer_GetDeviceProcAddr"
+    },
+    "enable_environment": {
+      "ENABLE_VUT_LAYER": "1"
+    },
+    "disable_environment": {
+      "DISABLE_VUT_LAYER": "1"
+    },
+    "features" : {
+      "settings":[
+        {
+        "key": "app_path",
+        "label": "App Path",
+        "description": "Specifies the app filename.",
+        "type": "LOAD_FILE",
+        "default": "default"
+        },
+        {
+          "key": "frame_delim",
+          "label": "Frame Delimiter",
+          "description": "Specifies the vkCall that will separate them.",
+          "type": "ENUM",
+          "default": "delim_vkAcquireNextImageKHR",
+          "expanded": true,
+          "flags": [
+            
+              {
+                  "key": "delim_vkAcquireNextImageKHR",
+                  "label": "vkAcquireNextImageKHR",
+                  "description": "Separates calls when vkAcquireNextImageKHR is called."
+              },
+              {
+                  "key": "delim_vkQueueSubmit",
+                  "label": "vkQueueSubmit",
+                  "description": "Separates calls when vkQueueSubmit is called."
+              },
+              {
+                  "key": "delim_enum_vkQueuePresentKHR",
+                  "label": "vkQueuePresentKHR",
+                  "description": "Separates calls when vkQueuePresentKHR is called."
+              }
+          ]
+      },
+        {
+        "key": "log_calls",
+        "label": "Log Vulkan API calls",
+        "description": "Enables the layer to send the data about the calls to the application.",
+        "type": "BOOL",
+        "default": true
+        },
+        {
+        "key": "log_memory",
+        "label": "Log VkMemory",
+        "description": "Enables the layer to send the data about VkMemory to the application.",
+        "type": "BOOL",
+        "default": true
+        },
+        {
+        "key": "log_buffers",
+        "label": "Log VkBuffers",
+        "description": "Enables the layer to send the data about VkBuffers to the application.",
+        "type": "BOOL",
+        "default": true
+        },
+        {
+        "key": "log_images",
+        "label": "Log VkImages",
+        "description": "Enables the layer to send the data about VkImages to the application.",
+        "type": "BOOL",
+        "default": true
+        },
+        {
+          "key": "enable_warnings",
+          "label": "Warnings",
+          "description": "Enables the layer warning messages triggers.",
+          "type": "BOOL",
+          "default": false,
+          "settings":
+          [
+            {
+              "key": "fps_below",
+              "label": "Warn when below X FPS",
+              "description": "Logs when below X FPS.",
+              "type": "INT",
+              "default": "0",
+              "dependence": {
+                "mode": "ALL",
+                "settings": [
+                    {
+                        "key": "enable_warnings",
+                        "value": true
+                    }
+                ]
+            }
+            },
+            {
+              "key": "fps_every",
+              "label": "Warn about FPS every X Frames",
+              "description": "Logs FPS every X frames.",
+              "type": "INT",
+              "default": "0",
+              "dependence": {
+                "mode": "ALL",
+                "settings": [
+                    {
+                        "key": "enable_warnings",
+                        "value": true
+                    }
+                ]
+            }
+            }
+          ]
+        },
+        {
+          "key": "enable_breaks",
+          "label": "Breakpoints",
+          "description": "Enables the layer breakpoint triggers.",
+          "type": "BOOL",
+          "default": false,
+          "settings":
+          [
+            {
+              "key": "break_fps_below",
+              "label": "Set breakpoint when below X FPS",
+              "description": "Pauses the application when below X FPS.",
+              "type": "INT",
+              "default": "0",
+              "dependence": {
+                "mode": "ALL",
+                "settings": [
+                    {
+                        "key": "enable_breaks",
+                        "value": true
+                    }
+                ]
+            }
+            },
+            {
+              "key": "break_frame_at",
+              "label": "Set breakpoint at Xth Frame",
+              "description": "Pauses the application at Xth frame.",
+              "type": "INT",
+              "default": "0",
+              "dependence": {
+                "mode": "ALL",
+                "settings": [
+                    {
+                        "key": "enable_breaks",
+                        "value": true
+                    }
+                ]
+            }
+            },
+            {
+              "key": "break_frame_every",
+              "label": "Set breakpoint every Xth Frame",
+              "description": "Pauses the application every Xth frame.",
+              "type": "INT",
+              "default": "0",
+              "dependence": {
+                "mode": "ALL",
+                "settings": [
+                    {
+                        "key": "enable_breaks",
+                        "value": true
+                    }
+                ]
+            }
+            },
+            {
+              "key": "break_call_at",
+              "label": "Set breakpoint at Xth API call",
+              "description": "Pauses the application at Xth API call.",
+              "type": "INT",
+              "default": "0",
+              "dependence": {
+                "mode": "ALL",
+                "settings": [
+                    {
+                        "key": "enable_breaks",
+                        "value": true
+                    }
+                ]
+            }
+            },
+            {
+              "key": "break_call_every",
+              "label": "Set breakpoint every Xth Vulkan API call",
+              "description": "Pauses the application every X Vulkan API call.",
+              "type": "INT",
+              "default": "0",
+              "dependence": {
+                "mode": "ALL",
+                "settings": [
+                    {
+                        "key": "enable_breaks",
+                        "value": true
+                    }
+                ]
+            }
+            },
+            {
+              "key": "break_memory_at",
+              "label": "Set breakpoint at every new VkMemory allocation",
+              "description": "Pauses the application at every new VkMemory allocation.",
+              "type": "BOOL",
+              "default": false,
+              "dependence": {
+                "mode": "ALL",
+                "settings": [
+                    {
+                        "key": "enable_breaks",
+                        "value": true
+                    }
+                ]
+            }
+            },
+            {
+              "key": "break_buffer_at",
+              "label": "Set breakpoint at every new VkBuffer creation",
+              "description": "Pauses the application at every new VkBuffer creation.",
+              "type": "BOOL",
+              "default": false,
+              "dependence": {
+                "mode": "ALL",
+                "settings": [
+                    {
+                        "key": "enable_breaks",
+                        "value": true
+                    }
+                ]
+            }
+            },
+            {
+              "key": "break_image_at",
+              "label": "Set breakpoint at every new VkImage creation",
+              "description": "Pauses the application at every new VkImage creation.",
+              "type": "BOOL",
+              "default": false,
+              "dependence": {
+                "mode": "ALL",
+                "settings": [
+                    {
+                        "key": "enable_breaks",
+                        "value": true
+                    }
+                ]
+            }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

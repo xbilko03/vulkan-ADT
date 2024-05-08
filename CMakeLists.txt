@@ -54,8 +54,10 @@ ${IMGUI_DIR}/imgui_widgets.cpp
 )
 
 # vulkan
+# fix this path in case of failure
 set(ENV{VULKAN_SDK} "C:/VulkanSDK/1.3.275.0")
 find_package(Vulkan REQUIRED FATAL_ERROR)
+# fix this path in case of failure
 include_directories("C:/VulkanSDK/1.3.275.0/include")
 target_link_libraries(${project_name} ${Vulkan_LIBRARIES})
 
@@ -63,7 +65,9 @@ target_link_libraries(${project_name} ${Vulkan_LIBRARIES})
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+# fix this path in case of failure
 include_directories("C:/GLFW/glfw-3.4.bin.WIN64/include")
+# fix this path in case of failure
 set(Glfw_LIBRARY "C:/GLFW/glfw-3.4.bin.WIN64/lib/glfw3.lib")
 target_link_libraries(${project_name} ${Glfw_LIBRARY} wsock32 ws2_32)
 
