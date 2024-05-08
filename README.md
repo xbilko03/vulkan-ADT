@@ -6,7 +6,7 @@ VkDebugger is an application dedicated to help with debugging of 2D/3D Vulkan gr
 and an application (VkDebuggerApp) with UI that makes the debugging easier. This tool collects data from a program and crafts a current state 
 representation based on what is collected, this representation is then accessible to user via the already mentioned UI.
 
-A part of this tool is a code generator that is used to list the full vulkan API function calls list based on provided XML file.
+A part of this tool is also a code generator that is used to list the full vulkan API function calls list based on provided XML file.
 
 ## Requirements
 The program uses following technologies to make it work:
@@ -44,7 +44,11 @@ Jozef Bilko (xbilko03)
 ## LICENSE
 Can be found within this project's licenses folder or at:
 
+MIT:
+
     https://opensource.org/license/MIT
+
+BSD-2-CLAUSE:
 
     https://opensource.org/license/bsd-2-clause
 
