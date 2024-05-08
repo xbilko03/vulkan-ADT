@@ -34,7 +34,7 @@ As per version 1.3 of VkDebugger the following features are available:
 ## SETUP
 Can be found within the following .pdf file:
 
-    [a link](https://github.com/xbilko03/ADT_VAPI/blob/master/setup.pdf)
+[a link](https://github.com/xbilko03/ADT_VAPI/blob/master/setup.pdf)
     
 ## USE-EXAMPLE
 ![alt text](https://github.com/xbilko03/ADT_VAPI/blob/master/view.jpg?raw=true)
