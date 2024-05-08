@@ -571,13 +571,12 @@ namespace details {
             /* create Descriptor Pool */
             VkDescriptorPoolSize pool_sizes[] =
             {
-                { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1 },
+                { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 2 },
             };
             VkDescriptorPoolCreateInfo pool_info = {};
             pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
             pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-            /* there can be only so many textures rendered at the same time */
-            pool_info.maxSets = MAX_TEXTURES_COUNT;
+            pool_info.maxSets = 4;
             pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
             pool_info.pPoolSizes = pool_sizes;
             if (vkCreateDescriptorPool(pDevice, &pool_info, pAllocator, &pDescriptorPool) != VK_SUCCESS)

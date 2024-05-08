@@ -82,7 +82,7 @@ include_directories("libs/pugixml/")
 
 # layer
 option(BUILD_SHARED_LIBS ON)
-add_library(dbgrvlayer SHARED 
+add_library(VkDebuggerLayer SHARED 
 ${Glfw_LIBRARY}
 ${Vulkan_LIBRARIES}
 "layer/layer.h"
@@ -96,5 +96,5 @@ ${Vulkan_LIBRARIES}
 "layer/layer_data.cpp"
  "appUI/winsock.h"
  "appUI/winsock.cpp")
-target_link_libraries(dbgrvlayer wsock32 ws2_32 ${Vulkan_LIBRARIES})
+target_link_libraries(VkDebuggerLayer wsock32 ws2_32 ${Vulkan_LIBRARIES})
 
