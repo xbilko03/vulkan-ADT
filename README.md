@@ -38,6 +38,8 @@ Can be found within the following .pdf file:
 
 [setup.pdf {SLOVAK}](https://github.com/xbilko03/ADT_VAPI/blob/master/setup.pdf)
 
+## COMPILE
+
 ## AUTHOR
 Jozef Bilko (xbilko03)
 
@@ -51,6 +53,10 @@ MIT:
 BSD-2-CLAUSE:
 
     https://opensource.org/license/bsd-2-clause
+
+APACHE-2.0
+
+    https://opensource.org/license/apache-2-0
 
 ## LAST-UPDATE
 8th of May 2024

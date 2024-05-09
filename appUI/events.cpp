@@ -70,6 +70,7 @@ namespace details {
                 /* new API call has been started, the following messages without proper prefix will be considered as parameters to this call */
                 currentCall = new apiCall(callID++);
                 currentCall->assignName(input);
+                currentCall->assignRetVal("0");
             }
             if (receptionState == "begin_" + delimStr)
             {
@@ -481,8 +482,10 @@ namespace details {
         }
         else if(logCalls)
         {
-            if (omitValue(input) == "result")
+            if (omitValue(input) == "vkResult")
+            {
                 currentCall->assignRetVal(omitMessage(input));
+            }
             currentCall->assignParameter(input);
         }
 

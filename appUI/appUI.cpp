@@ -61,6 +61,7 @@ namespace details {
                 /* make each buffer expandable for detailed view */
                 output = (*dataObject).getMemoryPointer(i);
                 ImGui::SeparatorText("VkMemory details");
+                output = (*dataObject).getBufferPointer(i);
                 ImGui::Text(("VkMemory handle = " + output).c_str());
                 output = std::to_string((*dataObject).getMemoryDataSize(i));
                 ImGui::Text(("Size = " + output).c_str());
@@ -72,6 +73,9 @@ namespace details {
                     output += ":";
                     output += (*dataObject).getMemoryCulpritName(i);
                     ImGui::Text(output.c_str());
+                    output = (*dataObject).getMemoryBound(i);
+                    if(output != "")
+                        ImGui::Text(( "Bound VkObject Handle = " + output).c_str());
                 }
 
                 /* show data if there are any */
@@ -99,6 +103,7 @@ namespace details {
             if (ImGui::CollapsingHeader(output.c_str()))
             {
                 ImGui::SeparatorText("VkImage details");
+                output = (*dataObject).getImagePointer(i);
                 ImGui::Text(("VkImage handle = " + output).c_str());
                 output = std::to_string((*dataObject).getImageDataSize(i));
                 ImGui::Text(("Size = " + output).c_str());
@@ -110,6 +115,8 @@ namespace details {
                     output += ":";
                     output += (*dataObject).getImageCulpritName(i);
                     ImGui::Text(output.c_str());
+                    output = (*dataObject).getImageBound(i);
+                    ImGui::Text(("VkMemory Handle = " + output).c_str());
                 }
 
                 /* show data if there are any */
@@ -197,13 +204,14 @@ namespace details {
             {
                 /* further details */
                 ImGui::SeparatorText("VkBuffer details");
+                output = (*dataObject).getBufferPointer(i);
                 ImGui::Text(("VkBuffer handle = " + output).c_str());
                 output = std::to_string((*dataObject).getBufferDataSize(i));
                 ImGui::Text(("Size = " + output).c_str());
 
                 if (dataObject->getCallsSettings() && output != "new")
                 {
-                    ImGui::SeparatorText("Culprit");
+                    ImGui::SeparatorText("Relations");
                     output = std::to_string((*dataObject).getBufferCulpritID(i));
                     output += ":";
                     output += (*dataObject).getBufferCulpritName(i);
@@ -330,7 +338,7 @@ namespace details {
                                 ImGui::TextUnformatted(item->getName().c_str());
                                 ImGui::TableNextColumn();
                                 /* call ret val */
-                                if (item->getRetVal())
+                                if (item->getRetVal() == 0)
                                 {
                                     ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "VK_SUCCESS");
                                 }

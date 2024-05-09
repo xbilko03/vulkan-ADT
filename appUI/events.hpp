@@ -35,18 +35,21 @@ namespace details {
 		std::string getMemoryPointer(unsigned long long ID) { return memMan->getPointer(ID); }
 		std::string getMemoryState(unsigned long long ID) { return memMan->getState(ID); }
 		std::string getMemoryData(unsigned long long ID) { return memMan->getDataReadable(ID); }
+		std::string getMemoryBound(unsigned long long ID) { return memMan->getBoundObj(ID); }
 		unsigned long long getMemoryDataSize(unsigned long long ID) { return memMan->getDataSize(ID); }
 		/* about VkBuffer */
 		unsigned long long getBufferCount() { return bufMan->getBufferCount(); }
 		std::string getBufferPointer(unsigned long long ID) { return bufMan->getPointer(ID); }
 		std::string getBufferState(unsigned long long ID) { return bufMan->getState(ID); }
 		std::string getBufferData(unsigned long long ID) { return bufMan->getDataReadable(ID); }
+		std::string getBufferBound(unsigned long long ID) { return bufMan->getBoundObj(ID); }
 		unsigned long long getBufferDataSize(unsigned long long ID) { return bufMan->getDataSize(ID); }
 		/* about VkImage */
 		unsigned long long getImagesCount() { return imgMan->getBufferCount(); }
 		std::string getImagePointer(unsigned long long ID) { return imgMan->getPointer(ID); }
 		std::string getImageState(unsigned long long ID) { return imgMan->getState(ID); }
 		std::string getImageData(unsigned long long ID) { return imgMan->getDataReadable(ID); }
+		std::string getImageBound(unsigned long long ID) { return imgMan->getBoundObj(ID); }
 		unsigned long long getImageDataSize(unsigned long long ID) { return imgMan->getDataSize(ID); }
 		/* get data about Vulkan object */
 		/* about VkDeviceMemory */
