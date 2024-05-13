@@ -14,8 +14,15 @@
 #include <map>
 #include <filesystem>
 #include <iostream>
-#include <windows.h>
+#include <cstring>
 #include "layer_messages.h"
+
+
+#ifdef __linux__
+  
+#elifdef __WIN32__
+  #include <windows.h>
+#endif
 
 /* this layer's socket */
 extern SOCKET ConnectSocket;
@@ -35,8 +42,19 @@ void layer_SetEnvVariables();
 #define WINDOW_NAME "VkDebugger.exe"
 /* starts the new VkDebuggerApp in case the .exe is found */
 void layer_AppStarter(std::string configContent);
-/* macro to ensure the export of these functions to a .dll */
-#define VK_LAYER_EXPORT extern "C" __declspec(dllexport)
+
+
+#ifdef __linux__
+  #define VK_LAYER_EXPORT extern "C" __attribute((visibility("default")))
+  #define VKAPI_CALL
+  #define strcpy_s strcpy
+  #define MAX_PATH 1024
+#elifdef __WIN32__
+  /* macro to ensure the export of these functions to a .dll */
+  #define VK_LAYER_EXPORT extern "C" __declspec(dllexport)
+#endif
+
+
 /* checks for the frame warn and breakpoint conditions */
 void frameWarnBreak();
 /* 

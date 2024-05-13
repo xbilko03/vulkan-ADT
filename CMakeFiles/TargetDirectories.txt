@@ -1,0 +1,5 @@
+/home/jozef/Downloads/vulkan-ADT-master/CMakeFiles/VkDebugger.dir
+/home/jozef/Downloads/vulkan-ADT-master/CMakeFiles/vkGen.dir
+/home/jozef/Downloads/vulkan-ADT-master/CMakeFiles/VkDebuggerLayer.dir
+/home/jozef/Downloads/vulkan-ADT-master/CMakeFiles/edit_cache.dir
+/home/jozef/Downloads/vulkan-ADT-master/CMakeFiles/rebuild_cache.dir

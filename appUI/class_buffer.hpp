@@ -12,6 +12,7 @@
 
 #include <iostream>
 
+#undef BOUNDARYCHECK
 #define BOUNDARYCHECK if (bufferMap.count(inputID) == 0) return
 namespace details {
     class vkBufferManager {
@@ -38,7 +39,7 @@ namespace details {
 
         /* data operations */
         char* getData(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return NULL; else return bufferMap[inputID].attachedMemory->memoryData; }
-        unsigned long long getDataSize(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return NULL; else return bufferMap[inputID].attachedMemory->dataSize; };
+        unsigned long long getDataSize(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return -1; else return bufferMap[inputID].attachedMemory->dataSize; };
         std::string getDataReadable(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return ""; else return bufferMap[inputID].attachedMemory->readableMemoryData; }
         /* get BufferObject related data */
         vkMemoryManager::vkMemory* getMemory(unsigned long long inputID) { if (bufferMap[inputID].attachedMemory == NULL) return NULL; else return bufferMap[inputID].attachedMemory; }

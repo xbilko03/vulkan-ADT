@@ -9,7 +9,7 @@
 
 #include <vulkan/vulkan.h>
 #include <stdio.h>
-#include <ws2tcpip.h>
+//#include <ws2tcpip.h>
 #include <iostream>
 #include <string>
 

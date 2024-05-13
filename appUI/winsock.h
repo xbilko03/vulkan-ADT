@@ -6,10 +6,20 @@
 * Author        : Jozef Bilko (xbilko03), supervised by Ing. Ján Pečiva Ph.D.
 */
 #pragma once
-#include <winsock2.h>
-#include <ws2tcpip.h>
+
+#ifdef __linux__
+  #include <sys/socket.h>
+  #include <netinet/in.h>
+  #define INVALID_SOCKET ~0
+#elif __WIN32__
+  #include <winsock2.h>
+  #include <ws2tcpip.h>
+#endif
+
 #include <stdio.h>
 #include <string>
+
+typedef int SOCKET;
 
 /* initializes and establishes the CLIENT, continuously try to connect to the SERVER */
 int layerWinsockInit(SOCKET* ConnectSocket);

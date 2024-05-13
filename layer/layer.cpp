@@ -125,16 +125,22 @@ void layer_AppStarter(std::string configContent)
     if (!std::filesystem::exists(appPath))
         std::cerr << "VkDebugger: " << WINDOW_NAME << " could not be found at " << appPath << std::endl;
 
-    /* create new process */
-    STARTUPINFO info = { sizeof(info) };
-    PROCESS_INFORMATION processInfo;
+      
+    #ifdef __linux__
+      std::cout << "starting new process of name " << appPath << std::endl;
+      std::system(appPath.c_str());
+    #elifdef __WIN32__
+      /* create new process */
+      STARTUPINFO info = { sizeof(info) };
+      PROCESS_INFORMATION processInfo;
 
-    /* open new VkDebuggerApp window */
-    CreateProcess(appPath.c_str(), NULL, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo);
+      /* open new VkDebuggerApp window */
+      CreateProcess(appPath.c_str(), NULL, NULL, NULL, FALSE, 0, NULL, NULL, &info, &processInfo);
 
-    /* close process handles */
-    CloseHandle(processInfo.hProcess);
-    CloseHandle(processInfo.hThread);
+      /* close process handles */
+      CloseHandle(processInfo.hProcess);
+      CloseHandle(processInfo.hThread);
+    #endif
 }
 /* extracts the starting parameters out of 'VkConfig' */
 void layer_SetEnvVariables()
@@ -414,8 +420,13 @@ void layer_CreateInstance_after(const VkInstanceCreateInfo* pCreateInfo, const V
 {
     data = new details::layerData();
     data->newInstance(*pInstance);
+    
+#ifdef __linux__
+  
+#elifdef __WIN32__
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "appName=", GetWindowName()));
     winsockSendToUI(&ConnectSocket, formulateMessage(CUSTOM_PARAM_PREFIX, "proccessID=", std::to_string(GetCurrentProcessId())));
+#endif
 }
 /* change state of the relationship between the VkBuffer and VkDeviceMemory, inform the VkDebuggerApp about it too */
 void layer_BindBufferMemory_after(VkDevice device, VkBuffer buffer, VkDeviceMemory memory, VkDeviceSize memoryOffset)

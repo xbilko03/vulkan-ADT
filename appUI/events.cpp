@@ -580,7 +580,12 @@ namespace details {
     }
 
     /* thread to catch layer data */
-    DWORD WINAPI events::listenForData(__in LPVOID lpParameter)
+    
+    #ifdef __linux__
+      void events::listenForData()
+    #elif __WIN32__
+      DWORD WINAPI events::listenForData(__in LPVOID lpParameter)
+    #endif
     {
         /* create socket */
         int ret;
@@ -589,7 +594,12 @@ namespace details {
         uiWinsockInit(&ClientSocket);
 
         /* receive data unless the other end is disconnected */
-        details::events* myObj = (details::events*)lpParameter;
+        
+        #ifdef __linux__
+          details::events* myObj = new details::events;
+        #elif __WIN32__
+          details::events* myObj = (details::events*)lpParameter;
+        #endif
         (*myObj).createDataManagers();
         do {
             /* ret is the length of successfully received data */
@@ -606,16 +616,24 @@ namespace details {
             }
             else
             {
-                /* recv failed */
-                closesocket(ClientSocket);
-                WSACleanup();
-                break;
+                #ifdef __linux__
+                  
+                #elif __WIN32__
+                  /* recv failed */
+                  closesocket(ClientSocket);
+                  WSACleanup();
+                #endif
+                  break;
             }
         } while (ret > 0);
 
         /* Destroy socket */
         uiWinsockExit(&ClientSocket);
-        return 0;
+        #ifdef __linux__
+           return;   
+        #elif __WIN32__
+          return 0;
+        #endif
     }
 
     /* establish connection between VkDebuggerApp and VkDebuggerLayer */
@@ -623,8 +641,13 @@ namespace details {
     {
         /* receive window object reference from appUI.cpp */
         winMan = windowManager;
-        DWORD mythreadId;
-        /* Collect data from socket continuously */
-        CreateThread(0, 0, events::listenForData, this, 0, &mythreadId);
+        
+        #ifdef __linux__
+          
+        #elif __WIN32__
+          DWORD mythreadId;
+          /* Collect data from socket continuously */
+          CreateThread(0, 0, events::listenForData, this, 0, &mythreadId);
+        #endif
     }
 }

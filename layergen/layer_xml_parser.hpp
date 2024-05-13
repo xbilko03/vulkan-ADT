@@ -10,6 +10,9 @@
 #include "pugixml.hpp"
 #include <list>
 #include <map>
+#include <cstring>
+#include <stdint.h>
+#include <string.h>
 
 namespace laygen {
 	class XmlParser {

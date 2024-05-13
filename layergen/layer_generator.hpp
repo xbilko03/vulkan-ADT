@@ -14,6 +14,9 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <cstring>
+#include <stdint.h>
+#include <string.h>
 
 namespace laygen {
 	class LayerGenerator {

@@ -92,8 +92,12 @@ namespace details {
 		#define DEFAULT_BUFLEN 500
 
 		/* thread to catch layer data */
-		static DWORD WINAPI listenForData(__in LPVOID lpParameter);
-
+                #ifdef __linux__
+                  static void listenForData();
+                #elif __WIN32__
+		  static DWORD WINAPI listenForData(__in LPVOID lpParameter);
+                #endif
+            
 		/* receive potentially incomplete, meshed data and break them into comprehensive messages */
 		void newInfo(const char* input, int index);
 		/* based on the input message, manipulate the currently debugged application state */

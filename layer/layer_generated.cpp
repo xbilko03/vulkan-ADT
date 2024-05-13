@@ -19,12 +19,11 @@
 *
 * Based on the template available online by : Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann) sample_layer 
 * https ://github.com/baldurk/sample_layer/blob/master 
-* Changes made by : Jozef Bilko (xbilko03), supervised by Ing. Ján Peciva Ph.D.
+* Changes made by : Jozef Bilko (xbilko03), supervised by Ing. JÃ¡n Peciva Ph.D.
 */
 
 #include "layer.h"
 #include <mutex>
-#include <ws2tcpip.h>
 #include "layer_generated.h"
 #include "vk_layer_table.h"
 
@@ -52,6 +51,9 @@ dispatchTable.AllocateMemory = (PFN_vkAllocateMemory)gdpa(*pDevice, "vkAllocateM
 dispatchTable.FreeMemory = (PFN_vkFreeMemory)gdpa(*pDevice, "vkFreeMemory");
 dispatchTable.MapMemory = (PFN_vkMapMemory)gdpa(*pDevice, "vkMapMemory");
 dispatchTable.UnmapMemory = (PFN_vkUnmapMemory)gdpa(*pDevice, "vkUnmapMemory");
+
+return;
+
 dispatchTable.FlushMappedMemoryRanges = (PFN_vkFlushMappedMemoryRanges)gdpa(*pDevice, "vkFlushMappedMemoryRanges");
 dispatchTable.InvalidateMappedMemoryRanges = (PFN_vkInvalidateMappedMemoryRanges)gdpa(*pDevice, "vkInvalidateMappedMemoryRanges");
 dispatchTable.GetDeviceMemoryCommitment = (PFN_vkGetDeviceMemoryCommitment)gdpa(*pDevice, "vkGetDeviceMemoryCommitment");
@@ -717,17 +719,28 @@ device_dispatch[GetKey(*pDevice)] = dispatchTable;
  
 void CreateInstanceDispatch(PFN_vkGetInstanceProcAddr gpa, VkInstance* pInstance) {
 VkLayerInstanceDispatchTable dispatchTable;
+
+
 dispatchTable.CreateInstance = (PFN_vkCreateInstance)gpa(*pInstance, "vkCreateInstance");
+std::cout<<"ok" << std::endl;
+dispatchTable.GetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)gpa(*pInstance, "vkGetInstanceProcAddr");
+std::cout<<"ok" << std::endl;
+dispatchTable.CreateDevice = (PFN_vkCreateDevice)gpa(*pInstance, "vkCreateDevice");
+std::cout<<"ok" << std::endl;
+
+
+return;
+
 dispatchTable.DestroyInstance = (PFN_vkDestroyInstance)gpa(*pInstance, "vkDestroyInstance");
 dispatchTable.EnumeratePhysicalDevices = (PFN_vkEnumeratePhysicalDevices)gpa(*pInstance, "vkEnumeratePhysicalDevices");
-dispatchTable.GetInstanceProcAddr = (PFN_vkGetInstanceProcAddr)gpa(*pInstance, "vkGetInstanceProcAddr");
+
 dispatchTable.GetPhysicalDeviceProperties = (PFN_vkGetPhysicalDeviceProperties)gpa(*pInstance, "vkGetPhysicalDeviceProperties");
 dispatchTable.GetPhysicalDeviceQueueFamilyProperties = (PFN_vkGetPhysicalDeviceQueueFamilyProperties)gpa(*pInstance, "vkGetPhysicalDeviceQueueFamilyProperties");
 dispatchTable.GetPhysicalDeviceMemoryProperties = (PFN_vkGetPhysicalDeviceMemoryProperties)gpa(*pInstance, "vkGetPhysicalDeviceMemoryProperties");
 dispatchTable.GetPhysicalDeviceFeatures = (PFN_vkGetPhysicalDeviceFeatures)gpa(*pInstance, "vkGetPhysicalDeviceFeatures");
 dispatchTable.GetPhysicalDeviceFormatProperties = (PFN_vkGetPhysicalDeviceFormatProperties)gpa(*pInstance, "vkGetPhysicalDeviceFormatProperties");
 dispatchTable.GetPhysicalDeviceImageFormatProperties = (PFN_vkGetPhysicalDeviceImageFormatProperties)gpa(*pInstance, "vkGetPhysicalDeviceImageFormatProperties");
-dispatchTable.CreateDevice = (PFN_vkCreateDevice)gpa(*pInstance, "vkCreateDevice");
+
 dispatchTable.EnumerateInstanceExtensionProperties = (PFN_vkEnumerateInstanceExtensionProperties)gpa(*pInstance, "vkEnumerateInstanceExtensionProperties");
 dispatchTable.EnumerateDeviceLayerProperties = (PFN_vkEnumerateDeviceLayerProperties)gpa(*pInstance, "vkEnumerateDeviceLayerProperties");
 dispatchTable.EnumerateDeviceExtensionProperties = (PFN_vkEnumerateDeviceExtensionProperties)gpa(*pInstance, "vkEnumerateDeviceExtensionProperties");
@@ -904,14 +917,21 @@ std::string bool_as_text(VkBool32 b)
 /* returns this application's name, useful when recognizing what application is this layer intercepting */
 std::string GetWindowName()
 {
-    /* get the name of the program the layer is on [windows only] */
-    char buf[MAX_PATH];
-    GetModuleFileNameA(nullptr, buf, MAX_PATH);
-    std::filesystem::path progPath(buf);
-    auto filename = progPath.filename().string();
-    return filename;
+    #ifdef __linux__
+      std::string filename;
+      std::ifstream("proc/self/comm") >> filename;
+      return filename;
+    #elifdef __WIN32__
+      /* get the name of the program the layer is on [windows only] */
+      char buf[MAX_PATH];
+      GetModuleFileNameA(nullptr, buf, MAX_PATH);
+      std::filesystem::path progPath(buf);
+      auto filename = progPath.filename().string();
+      return filename;
+    #endif
 }
-
+#include <iostream>
+#include <stdbool.h>
 /*
 * Authors of this function: Baldur Karlsson(baldurk) and Johannes Kuhlmann's (jkuhlmann), expanded upon by: Jozef Bilko (xbilko03)
 * 
@@ -919,8 +939,16 @@ std::string GetWindowName()
 */
 VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanceCreateInfo* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkInstance* pInstance)
 {
+
+
+std::cout << "start " << GetWindowName() << std::endl;  
+
     /* prevent opening VkDebugger on appUI startup */
-    if (GetWindowName() != "VkDebugger.exe")
+    #ifdef __linux__
+      if (GetWindowName() != "VkDebugger")
+    #elifdef __WIN32__
+      if (GetWindowName() != "VkDebugger.exe")
+    #endif
     {
         /* fetch enviroment variables */
         try
@@ -956,8 +984,9 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanc
             connected = true;
         }
 
-		layer_SetEnvVariables();
+	layer_SetEnvVariables();
     }
+    std::cout << "mid " << GetWindowName() << std::endl;
 
     VkLayerInstanceCreateInfo* layerCreateInfo = (VkLayerInstanceCreateInfo*)pCreateInfo->pNext;
 
@@ -973,18 +1002,22 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanc
         return VK_ERROR_INITIALIZATION_FAILED;
     }
 
+    
     /* map this function to dispatch table */
     PFN_vkGetInstanceProcAddr gpa = layerCreateInfo->u.pLayerInfo->pfnNextGetInstanceProcAddr;
     layerCreateInfo->u.pLayerInfo = layerCreateInfo->u.pLayerInfo->pNext;
     PFN_vkCreateInstance createFunc = (PFN_vkCreateInstance)gpa(VK_NULL_HANDLE, "vkCreateInstance");
-
+    
     /* fetch our own dispatch table for the functions we need, into the next layer */
+    std::cout << "critical " << connected << std::endl;
     CreateInstanceDispatch(gpa, pInstance);
+    std::cout << "critical " << connected << std::endl;
 
     /* send call before loader */
     if (connected) {
         winsockSendToUI(&ConnectSocket, "begin_vkCreateInstance!");
     }
+    std::cout << "mid " << connected << std::endl;
 
     /* additional call if defined by user [before taken to loader] */
     #ifdef CREATEINSTANCE_BEFORE_EXEC_EXISTS
@@ -993,9 +1026,10 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanc
     }
     #endif
 
+    std::cout << "core " << GetWindowName() << std::endl;
     /* send to forward to the loader terminator code */
     VkResult ret = createFunc(pCreateInfo, pAllocator, pInstance);
-
+    std::cout << "core " << GetWindowName() << std::endl;
     /* additional call if defined by user [on the way back out of loader] */
     #ifdef CREATEINSTANCE_AFTER_EXEC_EXISTS
     if (connected) {
@@ -1026,6 +1060,7 @@ VK_LAYER_EXPORT VkResult VKAPI_CALL DebuggerLayer_CreateInstance(const VkInstanc
             layer_newCall();
     }
 
+    std::cout << "end " << GetWindowName() << std::endl;
     return ret;
 }
 
@@ -27874,7 +27909,16 @@ device_dispatch[GetKey(device)].GetImageSubresourceLayout2EXT(device, image, pSu
 }
 #define GETPROCADDR(func) if(!strcmp(pName, "vk" #func)) return (PFN_vkVoidFunction)&DebuggerLayer_##func;
 VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetDeviceProcAddr(VkDevice device, const char* pName) {
-if (GetWindowName() == "VkDebugger.exe") { return device_dispatch[GetKey(device)].GetDeviceProcAddr(device, pName); }
+
+
+
+    #ifdef __linux__
+      if (GetWindowName() != "VkDebugger" || true)
+    #elifdef __WIN32__
+      if (GetWindowName() != "VkDebugger.exe")
+    #endif
+
+{ return device_dispatch[GetKey(device)].GetDeviceProcAddr(device, pName); }
 GETPROCADDR(GetDeviceProcAddr);
 GETPROCADDR(DestroyDevice);
 GETPROCADDR(GetDeviceQueue);
@@ -28545,9 +28589,23 @@ GETPROCADDR(GetImageSubresourceLayout2EXT);
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 return device_dispatch[GetKey(device)].GetDeviceProcAddr(device, pName);}
-}VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetInstanceProcAddr(VkInstance instance, const char* pName) {
-if (GetWindowName() == "VkDebugger.exe") { GETPROCADDR(CreateDevice); GETPROCADDR(CreateInstance); return instance_dispatch[GetKey(instance)].GetInstanceProcAddr(instance, pName); }
+else
+  return device_dispatch[GetKey(device)].GetDeviceProcAddr(device, pName);
+}
+
+VK_LAYER_EXPORT PFN_vkVoidFunction VKAPI_CALL DebuggerLayer_GetInstanceProcAddr(VkInstance instance, const char* pName) {
+
+
 GETPROCADDR(CreateInstance);
+GETPROCADDR(CreateDevice);
+return instance_dispatch[GetKey(instance)].GetInstanceProcAddr(instance, pName);
+
+    #ifdef __linux__
+      if (GetWindowName() != "VkDebugger" || true)
+    #elifdef __WIN32__
+      if (GetWindowName() != "VkDebugger.exe")
+    #endif
+{ GETPROCADDR(CreateDevice); GETPROCADDR(CreateInstance); return instance_dispatch[GetKey(instance)].GetInstanceProcAddr(instance, pName); }
 GETPROCADDR(DestroyInstance);
 GETPROCADDR(EnumeratePhysicalDevices);
 GETPROCADDR(GetInstanceProcAddr);
@@ -28557,7 +28615,6 @@ GETPROCADDR(GetPhysicalDeviceMemoryProperties);
 GETPROCADDR(GetPhysicalDeviceFeatures);
 GETPROCADDR(GetPhysicalDeviceFormatProperties);
 GETPROCADDR(GetPhysicalDeviceImageFormatProperties);
-GETPROCADDR(CreateDevice);
 GETPROCADDR(EnumerateInstanceExtensionProperties);
 GETPROCADDR(EnumerateDeviceLayerProperties);
 GETPROCADDR(EnumerateDeviceExtensionProperties);
@@ -29381,4 +29438,6 @@ GETPROCADDR(GetImageSubresourceLayout2EXT);
 if(skipLock == false) {
 	scoped_lock l(global_lock);
 return instance_dispatch[GetKey(instance)].GetInstanceProcAddr(instance, pName);}
+else
+  return instance_dispatch[GetKey(instance)].GetInstanceProcAddr(instance, pName);
 }

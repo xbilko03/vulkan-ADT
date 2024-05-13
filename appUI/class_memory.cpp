@@ -11,6 +11,11 @@
 #include <sstream>
 #include <iomanip>
 
+
+    #ifdef __linux__
+      #include <cstdint>
+    #elif __WIN32__
+    #endif
 namespace details {
     /* look for an memoryID based on the pointer */
     unsigned long long vkMemoryManager::getFromPointerID(std::string message)
@@ -52,7 +57,11 @@ namespace details {
                 stream = {};
             }
 
-            stream << std::uppercase << std::hex << (int)(inputData + i);
+            #ifdef __linux__
+              stream << std::uppercase << std::hex << (intptr_t)(inputData + i);
+            #elif __WIN32__
+              stream << std::uppercase << std::hex << (int)(inputData + i);
+            #endif
             output += stream.str();
             if ((i / sizeof(int) + 1) % rows == 0)
                 output += "\n";
